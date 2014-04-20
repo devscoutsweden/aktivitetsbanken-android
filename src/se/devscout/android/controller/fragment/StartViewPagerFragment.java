@@ -8,10 +8,11 @@ public class StartViewPagerFragment extends ViewPagerFragment {
     @Override
     protected StaticFragmentsPagerAdapter createPagerAdapter(FragmentManager fragmentManager) {
         StaticFragmentsPagerAdapter pagerAdapter = new StaticFragmentsPagerAdapter(fragmentManager);
-        pagerAdapter.addTab(R.string.startTabHome, HomeFragment.create());
-        pagerAdapter.addTab(R.string.startTabAgeGroups, AgeGroupListFragment.create());
-        pagerAdapter.addTab(R.string.startTabConcepts, CategoryConceptListFragment.create());
-        pagerAdapter.addTab(R.string.startTabTracks, CategoryTrackListFragment.create());
+        pagerAdapter.addTab(R.string.startTabHome, 0, HomeFragment.create());
+        pagerAdapter.addTab(R.string.startTabSearch, 0, SearchFragment.create());
+        pagerAdapter.addTab(R.string.startTabAgeGroups, 0, AgeGroupListFragment.create());
+        pagerAdapter.addTab(R.string.startTabConcepts, 0, CategoryConceptListFragment.create());
+        pagerAdapter.addTab(R.string.startTabTracks, 0, CategoryTrackListFragment.create());
         return pagerAdapter;
     }
 }

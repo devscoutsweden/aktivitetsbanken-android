@@ -8,15 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StaticFragmentsPagerAdapter extends FragmentPagerAdapter {
-    private List<Integer> mTabNameResourceIds = new ArrayList<Integer>();
+    private List<TabInfo> mTabInfoList = new ArrayList<TabInfo>();
     private List<Fragment> mFragments = new ArrayList<Fragment>();
 
     public StaticFragmentsPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
-    public void addTab(int tabNameResId, Fragment fragment) {
-        mTabNameResourceIds.add(tabNameResId);
+    public void addTab(int tabNameResId, int iconResId, Fragment fragment) {
+        mTabInfoList.add(new TabInfo(iconResId, tabNameResId));
         mFragments.add(fragment);
     }
 
@@ -30,7 +30,25 @@ public class StaticFragmentsPagerAdapter extends FragmentPagerAdapter {
         return mFragments.size();
     }
 
-    public List<Integer> getTabNameResourceIds() {
-        return mTabNameResourceIds;
+    public List<TabInfo> getTabInfoList() {
+        return mTabInfoList;
+    }
+
+    public static class TabInfo {
+        private int mNameResId;
+        private int mIconResId;
+
+        public TabInfo(int iconResId, int nameResId) {
+            mIconResId = iconResId;
+            mNameResId = nameResId;
+        }
+
+        public int getIconResId() {
+            return mIconResId;
+        }
+
+        public int getNameResId() {
+            return mNameResId;
+        }
     }
 }

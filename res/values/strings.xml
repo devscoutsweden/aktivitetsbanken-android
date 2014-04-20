@@ -44,8 +44,8 @@
         mi ac, pretium velit. Etiam enim sapien, bibendum quis consequat sit amet, scelerisque ut tellus. Etiam lobortis
         tortor ac lectus aliquam, vitae porttitor est convallis. Etiam feugiat faucibus nunc eu tincidunt.
     </string>
-    <string name="activity_tab_photos">Bild</string>
-    <string name="activity_tab_description">Hur?</string>
+    <string name="activity_tab_photos">Bilder</string>
+    <string name="activity_tab_description">Om</string>
     <string name="startTabHome">Hem</string>
     <string name="startTabConcepts">Upplägg</string>
     <string name="startTabAgeGroups">Ålder</string>
@@ -61,4 +61,11 @@
     <string name="activitiesListItemParticipants">%1$s st</string>
     <string name="activitiesListItemAges">%1$s år</string>
     <string name="activitiesListItemTime">%1$s min</string>
+    <string name="activity_introduction">Introduktion</string>
+    <string name="activity_preparations">Förberedelser</string>
+    <string name="activity_how_to_do">Genomförande</string>
+    <string name="activity_safety">Säkerhet</string>
+    <string name="activity_notes">Noteringar</string>
+    <string name="startTabSearch">Sök</string>
+    <string name="searchResultIsEmpty">Inga träffar</string>
 </resources>

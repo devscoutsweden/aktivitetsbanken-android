@@ -26,9 +26,18 @@ public abstract class ViewPagerFragment extends Fragment implements ActionBar.Ta
         mViewPager.setAdapter(pageAdapter);
 
         ActionBar actionBar = getActivity().getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        for (int tabNameResourceId : pageAdapter.getTabNameResourceIds()) {
-            actionBar.addTab(actionBar.newTab().setText(tabNameResourceId).setTabListener(this));
+        if (pageAdapter.getTabInfoList().size() > 1) {
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        }
+        for (StaticFragmentsPagerAdapter.TabInfo tabNameResourceId : pageAdapter.getTabInfoList()) {
+            ActionBar.Tab tab = actionBar.newTab().setTabListener(this);
+            if (tabNameResourceId.getIconResId() > 0) {
+                tab.setIcon(tabNameResourceId.getIconResId());
+            }
+            if (tabNameResourceId.getNameResId() > 0) {
+                tab.setText(tabNameResourceId.getNameResId());
+            }
+            actionBar.addTab(tab);
         }
 
         return mViewPager;

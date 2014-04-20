@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import se.devscout.android.R;
-import se.devscout.shared.data.model.ActivityRevisionProperties;
 
 import java.util.ArrayList;
 import java.util.regex.Pattern;
@@ -41,23 +40,23 @@ public class SimpleDocumentFragment extends Fragment {
             imageView.setLayoutParams(new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     layout.getContext().getResources().getDimensionPixelSize(android.R.dimen.thumbnail_height)));
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             imageView.setImageResource(mImageResId);
             layout.addView(imageView);
         }
     }
 
     private static class HeaderItem implements Item {
-        private String mText;
+        private int mHeaderResId;
 
-        private HeaderItem(String text) {
-            mText = text;
+        private HeaderItem(int headerResId) {
+            mHeaderResId = headerResId;
         }
 
         @Override
         public void append(LinearLayout layout) {
             TextView textView = new TextView(layout.getContext());
-            textView.setText(mText);
+            textView.setText(mHeaderResId);
             textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, layout.getResources().getDimensionPixelSize(R.dimen.mediumTextSize));
             textView.setTypeface(null, Typeface.BOLD);
             textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -86,8 +85,6 @@ public class SimpleDocumentFragment extends Fragment {
             layout.addView(textView);
         }
     }
-
-    private ActivityRevisionProperties mProperties;
 
     private ArrayList<Item> mItems = new ArrayList<Item>();
 
@@ -118,8 +115,8 @@ public class SimpleDocumentFragment extends Fragment {
         outState.putSerializable("mItems", mItems);
     }
 
-    public SimpleDocumentFragment addHeader(String text) {
-        mItems.add(new HeaderItem(text));
+    public SimpleDocumentFragment addHeader(int headerResId) {
+        mItems.add(new HeaderItem(headerResId));
         return this;
     }
 
@@ -128,9 +125,9 @@ public class SimpleDocumentFragment extends Fragment {
         return this;
     }
 
-    public SimpleDocumentFragment addHeaderAndText(String header, String body) {
+    public SimpleDocumentFragment addHeaderAndText(int headerResId, String body) {
         if (body != null && body.length() > 0) {
-            addHeader(header);
+            addHeader(headerResId);
             addBodyText(body);
         }
         return this;
@@ -141,9 +138,7 @@ public class SimpleDocumentFragment extends Fragment {
         return this;
     }
 
-    public static SimpleDocumentFragment create(ActivityRevisionProperties properties) {
-        SimpleDocumentFragment fragment = new SimpleDocumentFragment();
-        fragment.mProperties = properties;
-        return fragment;
+    public static SimpleDocumentFragment create() {
+        return new SimpleDocumentFragment();
     }
 }

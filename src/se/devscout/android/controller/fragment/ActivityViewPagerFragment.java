@@ -1,5 +1,6 @@
 package se.devscout.android.controller.fragment;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -9,8 +10,8 @@ import se.devscout.android.R;
 import se.devscout.android.model.LocalActivity;
 import se.devscout.android.util.ResourceUtil;
 import se.devscout.android.view.StaticFragmentsPagerAdapter;
-import se.devscout.shared.data.model.ActivityRevision;
-import se.devscout.shared.data.model.Media;
+import se.devscout.server.api.model.ActivityRevision;
+import se.devscout.server.api.model.Media;
 
 public class ActivityViewPagerFragment extends ViewPagerFragment {
     private LocalActivity key;
@@ -50,30 +51,32 @@ public class ActivityViewPagerFragment extends ViewPagerFragment {
 
         ResourceUtil resourceUtil = new ResourceUtil(getActivity());
 
-        SimpleDocumentFragment mainTabFragment = SimpleDocumentFragment.create(revision);
+        boolean isLandscape = getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+
+        SimpleDocumentFragment mainTabFragment = SimpleDocumentFragment.create();
         if (revision.getCoverMedia() != null) {
             mainTabFragment.addImage(resourceUtil.toResourceId(revision.getCoverMedia().getURI()));
         }
         mainTabFragment
-                .addHeaderAndText("Introduktion", revision.getDescriptionIntroduction())
-                .addHeaderAndText("Förberedelser", revision.getDescriptionPreparation())
-                .addHeaderAndText("Genomförande", revision.getDescription())
-                .addHeaderAndText("Säkerhet", revision.getDescriptionSafety())
-                .addHeaderAndText("Noteringar", revision.getDescriptionNotes());
+                .addHeaderAndText(R.string.activity_introduction, revision.getDescriptionIntroduction())
+                .addHeaderAndText(R.string.activity_preparations, revision.getDescriptionPreparation())
+                .addHeaderAndText(R.string.activity_how_to_do, revision.getDescription())
+                .addHeaderAndText(R.string.activity_safety, revision.getDescriptionSafety())
+                .addHeaderAndText(R.string.activity_notes, revision.getDescriptionNotes());
 
-        pagerAdapter.addTab(R.string.activity_tab_description, mainTabFragment);
+        pagerAdapter.addTab(isLandscape ? R.string.activity_tab_description : 0, android.R.drawable.ic_menu_info_details, mainTabFragment);
 
         if (revision.getDescriptionMaterial() != null && revision.getDescriptionMaterial().length() > 0) {
-            SimpleDocumentFragment materialTabFragment = SimpleDocumentFragment.create(revision)
+            SimpleDocumentFragment materialTabFragment = SimpleDocumentFragment.create()
                     .addBodyText(revision.getDescriptionMaterial());
-            pagerAdapter.addTab(R.string.activity_tab_material, materialTabFragment);
+            pagerAdapter.addTab(isLandscape ? R.string.activity_tab_material : 0, R.drawable.ic_action_paste, materialTabFragment);
         }
         if (!revision.getMediaItems().isEmpty()) {
-            SimpleDocumentFragment mediaTabFragment = SimpleDocumentFragment.create(revision);
+            SimpleDocumentFragment mediaTabFragment = SimpleDocumentFragment.create();
             for (Media media : revision.getMediaItems()) {
                 mediaTabFragment.addImage(resourceUtil.toResourceId(media.getURI()));
             }
-            pagerAdapter.addTab(R.string.activity_tab_photos, mediaTabFragment);
+            pagerAdapter.addTab(isLandscape ? R.string.activity_tab_photos : 0, android.R.drawable.ic_menu_gallery, mediaTabFragment);
         }
         return pagerAdapter;
     }
