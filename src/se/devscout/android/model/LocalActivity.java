@@ -1,6 +1,6 @@
 package se.devscout.android.model;
 
-import se.devscout.shared.data.model.*;
+import se.devscout.server.api.model.*;
 
 import java.io.Serializable;
 import java.net.URI;

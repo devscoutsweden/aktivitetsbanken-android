@@ -1,6 +1,6 @@
 package se.devscout.android.model;
 
-import se.devscout.shared.data.model.Range;
+import se.devscout.server.api.model.Range;
 
 import java.io.Serializable;
 

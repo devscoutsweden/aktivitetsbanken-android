@@ -12,8 +12,8 @@ import android.widget.TextView;
 import se.devscout.android.R;
 import se.devscout.android.model.LocalActivity;
 import se.devscout.android.util.ResourceUtil;
-import se.devscout.shared.data.model.ActivityRevision;
-import se.devscout.shared.data.model.Media;
+import se.devscout.server.api.model.ActivityRevision;
+import se.devscout.server.api.model.Media;
 
 public class ActivityCoverFragment extends Fragment implements View.OnClickListener {
 

@@ -1,6 +1,6 @@
 package se.devscout.android;
 
-import se.devscout.shared.data.model.ScoutCategoryConcept;
+import se.devscout.server.api.model.ScoutCategoryConcept;
 
 public enum CategoryConcept {
     SCOUTSOWN(R.string.category_concept_SCOUTSOWN, ScoutCategoryConcept.SCOUTSOWN, -1),

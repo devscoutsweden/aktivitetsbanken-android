@@ -1,6 +1,6 @@
 package se.devscout.android;
 
-import se.devscout.shared.data.model.ScoutCategoryTrack;
+import se.devscout.server.api.model.ScoutCategoryTrack;
 
 public enum CategoryTrack {
 

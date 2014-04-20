@@ -1,7 +1,7 @@
 package se.devscout.android;
 
-import se.devscout.shared.data.model.Range;
-import se.devscout.shared.data.model.ScoutAgeRange;
+import se.devscout.server.api.model.Range;
+import se.devscout.server.api.model.ScoutAgeRange;
 
 public enum AgeGroup implements Range<Integer> {
     TRACKER(R.string.age_group_TRACKER, ScoutAgeRange.TRACKER, R.drawable.logo_tracker),

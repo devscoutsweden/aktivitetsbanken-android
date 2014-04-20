@@ -1,7 +1,7 @@
 package se.devscout.android.model;
 
-import se.devscout.shared.data.model.Media;
-import se.devscout.shared.data.model.Status;
+import se.devscout.server.api.model.Media;
+import se.devscout.server.api.model.Status;
 
 import java.io.Serializable;
 import java.net.URI;

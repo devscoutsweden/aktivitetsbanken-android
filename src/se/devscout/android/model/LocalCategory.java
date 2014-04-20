@@ -1,14 +1,17 @@
 package se.devscout.android.model;
 
-import se.devscout.shared.data.model.Category;
-import se.devscout.shared.data.model.CategoryKey;
+import com.google.gson.annotations.SerializedName;
+import se.devscout.server.api.model.Category;
+import se.devscout.server.api.model.CategoryKey;
 
 import java.io.Serializable;
 import java.util.UUID;
 
 public class LocalCategory implements Category, Serializable {
-    private String mGroup;
+    @SerializedName("name")
     private String mName;
+    @SerializedName("group")
+    private String mGroup;
 
     public LocalCategory(String group, String name) {
         mGroup = group;

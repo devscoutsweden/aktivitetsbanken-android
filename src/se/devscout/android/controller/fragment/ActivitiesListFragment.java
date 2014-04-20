@@ -13,7 +13,7 @@ import android.widget.TextView;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.ActivityActivity;
 import se.devscout.android.model.LocalActivity;
-import se.devscout.shared.data.model.Range;
+import se.devscout.server.api.model.Range;
 
 import java.util.ArrayList;
 import java.util.Collections;

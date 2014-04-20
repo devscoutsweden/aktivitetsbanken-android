@@ -9,7 +9,7 @@ import se.devscout.android.model.LocalActivity;
 import se.devscout.android.model.LocalRange;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.ActivityFilter;
-import se.devscout.shared.data.model.*;
+import se.devscout.server.api.model.*;
 
 import java.io.IOException;
 import java.net.URI;
