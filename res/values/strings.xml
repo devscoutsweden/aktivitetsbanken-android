@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Aktivitetsbanken</string>
+    <string name="age_group_TRACKER">Spårare</string>
+    <string name="age_group_DISCOVERER">Upptäckare</string>
+    <string name="age_group_ADVENTURER">Äventyrare</string>
+    <string name="age_group_CHALLENGER">Utmanare</string>
+    <string name="age_group_ROVER">Rover</string>
+
+    <string name="category_concept_SCOUTSOWN">Andakt, stilla stund</string>
+    <string name="category_concept_CEREMONY">Ceremonier</string>
+    <string name="category_concept_DISCUSSION">Diskussion</string>
+    <string name="category_concept_HIKE">Hajk</string>
+    <string name="category_concept_HANDICRAFT">Hantverk, pyssel</string>
+    <string name="category_concept_CAMPFIRE">Lägerbål</string>
+    <string name="category_concept_PLAYTIME">Lekar</string>
+    <string name="category_concept_COOK">Matlagning</string>
+    <string name="category_concept_OUTDOOR_INLAND">Friluftsliv land</string>
+    <string name="category_concept_OUTDOOR_LAKE">Friluftsliv sjö</string>
+    <string name="category_concept_ART">Teater, musik, sång</string>
+    <string name="category_concept_OUTDOOR">Utomhus</string>
+
+    <string name="category_track_ACTIVE_GROUP">Aktiv i gruppen</string>
+    <string name="category_track_ACTIVE_COMMUNITY">Aktiv i samhället</string>
+    <string name="category_track_PERSONAL_VIEWS">Egna värderingar</string>
+    <string name="category_track_EXISTENCE">Existens</string>
+    <string name="category_track_CREATIVE_EXPRESSION">Fantasi och kreativt uttryck</string>
+    <string name="category_track_PHYSICAL_CHALLENGES">Fysiska utmaningar</string>
+    <string name="category_track_UNDERSTANDING_SOCIETY">Förståelse för omvärlden</string>
+    <string name="category_track_ANALYTIC_THINKING">Kritiskt tänkande</string>
+    <string name="category_track_NATURE">Känsla för naturen</string>
+    <string name="category_track_LEADERSHIP">Ledarskap</string>
+    <string name="category_track_PROBLEM_SOLVING">Problemlösning</string>
+    <string name="category_track_RELATIONS">Relationer</string>
+    <string name="category_track_SELF_ESTEEM">Självinsikt och självkänsla</string>
+    <string name="category_track_PHYSICAL_HEALTH">Ta hand om sin kropp</string>
+
+    <string name="ageGroupListItemSubtitleFormat">%1$d-%2$d</string>
+    <string name="lipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla in fermentum dui. Etiam egestas
+        ultricies tellus id venenatis. Maecenas metus nulla, molestie non ipsum eu, aliquam scelerisque nisi.
+        Suspendisse eget justo nisl. Maecenas ullamcorper libero quis ligula dignissim, nec laoreet massa blandit.
+        Nullam eget urna sed velit ornare adipiscing. Class aptent taciti sociosqu ad litora torquent per conubia
+        nostra, per inceptos himenaeos. Pellentesque congue est a sollicitudin pretium. Sed in lorem venenatis, lobortis
+        mi ac, pretium velit. Etiam enim sapien, bibendum quis consequat sit amet, scelerisque ut tellus. Etiam lobortis
+        tortor ac lectus aliquam, vitae porttitor est convallis. Etiam feugiat faucibus nunc eu tincidunt.
+    </string>
+    <string name="activity_tab_photos">Bild</string>
+    <string name="activity_tab_description">Hur?</string>
+    <string name="startTabHome">Hem</string>
+    <string name="startTabConcepts">Upplägg</string>
+    <string name="startTabAgeGroups">Ålder</string>
+    <string name="startTabTracks">Målspår</string>
+    <string name="searchResultTitle">Sökresultat</string>
+    <string name="searchResultTitleCategoryTrack">Målspår %1$s</string>
+    <string name="searchResultTitleCategoryConcept">Upplägg %1$s</string>
+    <string name="searchResultTitleAgeGroup">Åldersgrupp %1$s</string>
+    <string name="startIntroText">Utvalda aktiviterer syns här nedan. Använd flikarna här ovanför för att hitta andra
+        aktivititer.
+    </string>
+    <string name="activity_tab_material">Material</string>
+    <string name="activitiesListItemParticipants">%1$s st</string>
+    <string name="activitiesListItemAges">%1$s år</string>
+    <string name="activitiesListItemTime">%1$s min</string>
+</resources>

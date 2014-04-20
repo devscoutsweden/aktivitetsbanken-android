@@ -1,0 +1,89 @@
+package se.devscout.android.controller.fragment;
+
+import android.content.Context;
+import android.graphics.PorterDuff;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+import se.devscout.android.R;
+import se.devscout.android.model.LocalActivity;
+import se.devscout.android.util.ResourceUtil;
+import se.devscout.shared.data.model.ActivityRevision;
+import se.devscout.shared.data.model.Media;
+
+public class ActivityCoverFragment extends Fragment implements View.OnClickListener {
+
+    public static interface OnClickListener {
+
+        void onImageClick(View view, LocalActivity localActivity, Context ctx);
+    }
+
+    private LocalActivity mLocalActivity;
+
+    private OnClickListener mOnClickListener;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = initListItemView(inflater, container, null, mLocalActivity.getRevisions().get(0));
+
+        if (mOnClickListener != null) {
+            view.setOnClickListener(this);
+        }
+
+        return view;
+    }
+
+    public static View initListItemView(LayoutInflater inflater, final ViewGroup container, View view, ActivityRevision activityRevision) {
+        if (view == null) {
+            view = inflater.inflate(R.layout.activity_cover, container, false);
+        }
+
+        Media coverMedia = activityRevision.getCoverMedia();
+        if (coverMedia != null) {
+            final ImageView imageView = (ImageView) view.findViewById(R.id.activityCoverImage);
+            imageView.setImageResource(new ResourceUtil(container.getContext()).toResourceId(coverMedia.getURI()));
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        }
+
+        final ImageView favIcon = (ImageView) view.findViewById(R.id.activityCoverFavoriteIcon);
+        favIcon.setColorFilter(container.getResources().getColor(R.color.favoriteTintColor), PorterDuff.Mode.SRC_IN);
+/*
+        favIcon.setOnClickListener(new View.OnClickListener() {
+            private boolean tinted = false;
+            @Override
+            public void onClick(View view) {
+                if (tinted) {
+                    favIcon.clearColorFilter();
+                } else {
+                    favIcon.setColorFilter(container.getResources().getColor(R.color.favoriteTintColor), PorterDuff.Mode.SRC_IN);
+                }
+                tinted = !tinted;
+            }
+        });
+*/
+
+        TextView textView = (TextView) view.findViewById(R.id.activityCoverLabel);
+        textView.setText(activityRevision.getName());
+
+        return view;
+    }
+
+
+    @Override
+    public void onClick(View view) {
+        if (mOnClickListener != null) {
+            mOnClickListener.onImageClick(view, mLocalActivity, getActivity());
+        }
+    }
+
+    public static ActivityCoverFragment create(LocalActivity properties, OnClickListener onClickListener) {
+        ActivityCoverFragment fragment = new ActivityCoverFragment();
+        fragment.mLocalActivity = properties;
+        fragment.mOnClickListener = onClickListener;
+        return fragment;
+    }
+}

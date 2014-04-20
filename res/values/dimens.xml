@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="smallTextSize">14sp</dimen>
+    <dimen name="mediumTextSize">18sp</dimen>
+    <dimen name="largeTextSize">22sp</dimen>
+
+    <dimen name="uiBlockSize">48dp</dimen>
+
+    <dimen name="defaultMargin">4dp</dimen>
+    <dimen name="iconButtonMargin">8dp</dimen>
+    <dimen name="iconButtonSize">32dp</dimen>
+</resources>
