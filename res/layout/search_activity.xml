@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sök..."
+        android:id="@+id/searchButton"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true" />
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView"
+        android:layout_alignRight="@+id/searchButton"
+        android:layout_above="@+id/searchButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" >
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="hajk"
+                android:id="@+id/searchText" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <ToggleButton
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:id="@+id/searchAgeTracker"
+                    android:textOff=""
+                    android:textOn=""
+                    android:drawableTop="@drawable/logo_tracker_black" />
+
+                <ToggleButton
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:id="@+id/searchAgeDiscoverer"
+                    android:textOff=""
+                    android:textOn=""
+                    android:drawableTop="@drawable/logo_discoverer_black" />
+
+                <ToggleButton
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:id="@+id/searchAgeAdventurer"
+                    android:textOff=""
+                    android:textOn=""
+                    android:drawableTop="@drawable/logo_adventurer_black" />
+
+                <ToggleButton
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:id="@+id/searchAgeChallenger"
+                    android:textOff=""
+                    android:textOn=""
+                    android:drawableTop="@drawable/logo_challenger_black" />
+
+                <ToggleButton
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:id="@+id/searchAgeRover"
+                    android:textOff=""
+                    android:textOn=""
+                    android:drawableTop="@drawable/logo_rover_black" />
+            </LinearLayout>
+
+            <CheckBox
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Enbart utvalda"
+                android:id="@+id/searchFeaturedOnly"
+                android:singleLine="false" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

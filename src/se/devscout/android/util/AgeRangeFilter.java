@@ -1,32 +1,20 @@
 package se.devscout.android.util;
 
-import se.devscout.server.api.ActivityFilter;
-import se.devscout.shared.data.model.ActivityProperties;
-import se.devscout.shared.data.model.Range;
+import se.devscout.server.api.model.ActivityProperties;
+import se.devscout.server.api.model.Range;
 
 /**
  * Tests if the age interval of an activity intersects a certain age range.
  */
-public class AgeRangeFilter implements ActivityFilter {
-    private final Range<Integer> mRange;
+public class AgeRangeFilter extends RangeFilter {
 
     public AgeRangeFilter(Range<Integer> range) {
-        mRange = range;
+        super(range);
     }
 
     @Override
     public boolean matches(ActivityProperties properties) {
-        Range<Integer> candidateAgeRange = properties.getRevisions().get(0).getAges();
-        return matches(candidateAgeRange);
+        return matches(properties.getRevisions().get(0).getAges());
     }
 
-    private boolean matches(Range<Integer> candidate) {
-        if ((mRange.getMax() >= candidate.getMin() && mRange.getMax() <= candidate.getMax())
-                ||
-                (mRange.getMin() <= candidate.getMax() && mRange.getMin() >= candidate.getMin())) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 }

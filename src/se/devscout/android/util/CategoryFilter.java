@@ -1,10 +1,10 @@
 package se.devscout.android.util;
 
 import se.devscout.server.api.ActivityFilter;
-import se.devscout.shared.data.model.ActivityProperties;
-import se.devscout.shared.data.model.ActivityRevision;
-import se.devscout.shared.data.model.Category;
-import se.devscout.shared.data.model.CategoryProperties;
+import se.devscout.server.api.model.ActivityProperties;
+import se.devscout.server.api.model.ActivityRevision;
+import se.devscout.server.api.model.Category;
+import se.devscout.server.api.model.CategoryProperties;
 
 /**
  * Tests if activity is assigned to a certain category.
