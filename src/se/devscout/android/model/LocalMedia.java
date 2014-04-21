@@ -6,12 +6,18 @@ import se.devscout.server.api.model.Status;
 import java.io.Serializable;
 import java.net.URI;
 
-public class LocalMedia implements Media, Serializable {
-    private Integer mId = -1;
+public class LocalMedia extends LocalObjectIdentifier implements Media, Serializable {
+    public static int debugCounter;
     private URI mUri;
+    private String mMimeType;
 
-    public LocalMedia(URI uri) {
+    public LocalMedia() {
+    }
+
+    public LocalMedia(URI uri, String mimeType, Integer id) {
+        super(id);
         mUri = uri;
+        mMimeType = mimeType;
     }
 
     @Override
@@ -26,11 +32,6 @@ public class LocalMedia implements Media, Serializable {
 
     @Override
     public String getMimeType() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Integer getId() {
-        return mId;
+        return mMimeType;
     }
 }

@@ -48,7 +48,6 @@ public class DemoActivityRepo implements ActivityBank {
                             String name = parser.getAttributeValue(null, "name");
                             localActivity = new LocalActivity(
                                     name,
-                                    featuredImageResId,
                                     featured,
                                     mActivities.size());
                             mActivities.add(localActivity);
@@ -82,7 +81,7 @@ public class DemoActivityRepo implements ActivityBank {
                                     parser.getAttributeValue(null, "name"));
                         } else if ("media".equals(parser.getName())) {
                             URI uri = URI.create(parser.getAttributeValue(null, "uri"));
-                            localActivity.addMediaItem(uri);
+                            localActivity.addMediaItem(uri, null);
                         } else if ("participants".equals(parser.getName())) {
                             localActivity.setParticipants(new LocalRange(
                                     parser.getAttributeIntValue(null, "min", 1),

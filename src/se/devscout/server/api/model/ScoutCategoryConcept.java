@@ -29,10 +29,12 @@ public enum ScoutCategoryConcept implements CategoryProperties {
         return name;
     }
 
+/*
     @Override
     public UUID getUniqueID() {
         return uuid;
     }
+*/
 
     @Override
     public String getGroup() {

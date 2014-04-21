@@ -9,6 +9,9 @@ public class LocalRange implements Range<Integer>, Serializable {
     private Integer mMin = Integer.MIN_VALUE;
     private Integer mMax = Integer.MAX_VALUE;
 
+    public LocalRange() {
+    }
+
     public LocalRange(Integer min, Integer max) {
         mMax = max;
         mMin = min;
