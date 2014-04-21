@@ -53,12 +53,12 @@
     <string name="searchResultTitle">Sökresultat</string>
     <string name="searchResultTitleCategoryTrack">Målspår %1$s</string>
     <string name="searchResultTitleCategoryConcept">Upplägg %1$s</string>
-    <string name="searchResultTitleAgeGroup">Åldersgrupp %1$s</string>
+    <string name="searchResultTitleAgeGroup">För %1$s</string>
     <string name="startIntroText">Utvalda aktiviterer syns här nedan. Använd flikarna här ovanför för att hitta andra
         aktivititer.
     </string>
     <string name="activity_tab_material">Material</string>
-    <string name="activitiesListItemParticipants">%1$s st</string>
+    <string name="activitiesListItemParticipants">%1$s pers.</string>
     <string name="activitiesListItemAges">%1$s år</string>
     <string name="activitiesListItemTime">%1$s min</string>
     <string name="activity_introduction">Introduktion</string>

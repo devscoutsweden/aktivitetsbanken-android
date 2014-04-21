@@ -86,6 +86,10 @@ public class DemoActivityRepo implements ActivityBank {
                             localActivity.setParticipants(new LocalRange(
                                     parser.getAttributeIntValue(null, "min", 1),
                                     parser.getAttributeIntValue(null, "max", 99)));
+                        } else if ("time".equals(parser.getName())) {
+                            localActivity.setTimeActivity(new LocalRange(
+                                    parser.getAttributeIntValue(null, "min", 1),
+                                    parser.getAttributeIntValue(null, "max", 99)));
                         }
                         break;
                 }

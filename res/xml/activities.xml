@@ -11,6 +11,7 @@
         <participants
             min="1"
             max="15" />
+        <time min="30" max="60" />
         <description type="activity-name">Bra-bok</description>
         <media uri="app-drawable:img_0979" />
         <description>Mia Törnblom som är känd coach har kommit på den här metoden. Hon menar att precis som att vi måste träna
@@ -71,6 +72,7 @@
             På http://www.mtgruppen.com om Mia och de kurser hon och hennes kollegor genomför.</description>
     </activity>
     <activity featured="true">
+        <time min="10" max="30" />
         <category
             group="scout-concept"
             name="Ceremonier" />
@@ -126,6 +128,7 @@
             Tänk på brandrisken då ni använder levande eld.</description>
     </activity>
     <activity featured="true">
+        <time min="5" max="15" />
         <media uri="app-drawable:img_1447" />
         <category
             group="scout-concept"
@@ -164,6 +167,7 @@
             människor, oavsett bakgrund.</description>
     </activity>
     <activity>
+        <time min="5" max="15" />
         <category
             group="scout-concept"
             name="Ceremonier" />
@@ -205,6 +209,7 @@
             inte behöver vänta ett helt år till för att få vara med om det.</description>
     </activity>
     <activity>
+        <time min="10" max="30" />
         <category
             group="scout-concept"
             name="Ceremonier" />
@@ -258,6 +263,7 @@
             Patrullen</description>
     </activity>
     <activity>
+        <time min="5" max="15" />
         <category
             group="scout-concept"
             name="Ceremonier" />
@@ -283,6 +289,7 @@
             någon skillnad? Och hade scouterna varit annorlunda om de fötts någon annanstans i världen, tror de?</description>
     </activity>
     <activity>
+        <time min="10" max="30" />
         <category
             group="scout-concept"
             name="Diskussion" />
@@ -330,6 +337,7 @@
             http://www.nbv.se</description>
     </activity>
     <activity>
+        <time min="15" max="60" />
         <category
             group="scout-concept"
             name="Diskussion" />

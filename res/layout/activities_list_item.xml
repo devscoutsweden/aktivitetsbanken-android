@@ -1,19 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:devscout="http://schemas.android.com/apk/res/se.devscout.android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <TextView
-        android:layout_width="100dp"
-        android:layout_height="@dimen/largeTextSize"
-        android:text="5-15 min"
-        android:id="@+id/activitiesListItemTime"
-        android:layout_alignParentRight="true"
-        android:drawableLeft="@drawable/ic_action_time"
-        android:gravity="center_vertical"
-        android:textSize="@dimen/smallTextSize"
-        android:layout_alignParentTop="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -26,7 +16,7 @@
         android:ellipsize="end"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@id/activitiesListItemTime"
+        android:layout_toLeftOf="@+id/linearLayout"
         android:singleLine="true" />
 
     <TextView
@@ -41,20 +31,49 @@
         android:paddingTop="0dp"
         android:textSize="@dimen/smallTextSize"
         android:layout_below="@id/activitiesListItemTitle"
-        android:layout_alignRight="@id/activitiesListItemTitle"
+        android:layout_alignRight="@+id/activitiesListItemTitle"
         android:ellipsize="end"
         android:layout_alignParentLeft="true"
         android:singleLine="true" />
 
-    <TextView
-        android:layout_width="100dp"
-        android:layout_height="@dimen/largeTextSize"
-        android:text="8-16"
-        android:id="@+id/activitiesListItemParticipants"
-        android:drawableLeft="@drawable/ic_action_cc_bcc"
-        android:gravity="center_vertical"
-        android:layout_below="@id/activitiesListItemTime"
-        android:textSize="@dimen/smallTextSize"
-        android:layout_alignParentRight="true" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:id="@+id/linearLayout"
+        android:gravity="center_vertical|right"
+        android:layout_alignBottom="@+id/activitiesListItemSubtitle">
+
+        <se.devscout.android.view.AgeGroupView
+            android:layout_width="60sp"
+            android:layout_height="@dimen/smallTextSize"
+            devscout:maxAge="16"
+            devscout:minAge="12"
+            devscout:inactivePaint="@android:color/darker_gray"
+            android:layout_alignLeft="@+id/activitiesListItemTime"
+            android:layout_below="@+id/activitiesListItemParticipants"
+            android:id="@+id/activitiesListItemAgeGroups"
+            android:padding="@dimen/defaultMargin" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="8-16 pers"
+            android:id="@+id/activitiesListItemParticipants"
+            android:layout_below="@id/activitiesListItemTime"
+            android:textSize="@dimen/microTextSize"
+            android:layout_alignParentRight="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5-15 min"
+            android:id="@+id/activitiesListItemTime"
+            android:layout_alignParentRight="true"
+            android:textSize="@dimen/microTextSize"
+            android:layout_alignParentTop="true" />
+    </LinearLayout>
 
 </RelativeLayout>

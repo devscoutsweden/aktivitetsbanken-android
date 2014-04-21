@@ -13,6 +13,7 @@ import android.widget.TextView;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.ActivityActivity;
 import se.devscout.android.model.LocalActivity;
+import se.devscout.android.view.AgeGroupView;
 import se.devscout.server.api.model.Range;
 
 import java.util.ArrayList;
@@ -86,9 +87,21 @@ public class ActivitiesListFragment extends ListFragment {
 
             initTime(convertView, activity);
 
+            initAgeGroups(convertView, activity);
+
             initPeople(convertView, activity);
 
             return convertView;
+        }
+
+        private void initAgeGroups(View convertView, LocalActivity activity) {
+            AgeGroupView view = (AgeGroupView) convertView.findViewById(R.id.activitiesListItemAgeGroups);
+            Range<Integer> ages = activity.getAges();
+            if (ages != null) {
+                view.setMaxAge(ages.getMax());
+                view.setMinAge(ages.getMin());
+            }
+            view.setVisibility(view != null ? View.VISIBLE : View.GONE);
         }
 
         private void initTitle(View convertView, LocalActivity activity) {
@@ -102,16 +115,16 @@ public class ActivitiesListFragment extends ListFragment {
             if (participants != null) {
                 participantsTextView.setText(getContext().getResources().getString(R.string.activitiesListItemParticipants, participants.toString()));
             }
-            participantsTextView.setVisibility(participants != null ? View.VISIBLE : View.INVISIBLE);
+            participantsTextView.setVisibility(participantsTextView != null ? View.VISIBLE : View.GONE);
         }
 
         private void initTime(View convertView, LocalActivity activity) {
-            Range<Integer> ages = activity.getAges();
+            Range<Integer> timeActivity = activity.getTimeActivity();
             TextView timeTextView = (TextView) convertView.findViewById(R.id.activitiesListItemTime);
-            if (ages != null) {
-                timeTextView.setText(getContext().getResources().getString(R.string.activitiesListItemAges, ages.toString()));
+            if (timeActivity != null) {
+                timeTextView.setText(getContext().getResources().getString(R.string.activitiesListItemTime, timeActivity.toString()));
             }
-            timeTextView.setVisibility(ages != null ? View.VISIBLE : View.INVISIBLE);
+            timeTextView.setVisibility(timeActivity != null ? View.VISIBLE : View.GONE);
         }
 
         private void initDescription(View convertView, LocalActivity activity) {
