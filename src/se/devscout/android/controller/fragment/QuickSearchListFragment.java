@@ -4,10 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 import se.devscout.android.DemoActivityRepo;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.SearchResultActivity;
@@ -34,7 +31,12 @@ abstract class QuickSearchListFragment<T> extends ListFragment {
     public void onListItemClick(ListView l, View v, final int position, long id) {
         T item = mListAdapter.getItem(position);
         List<LocalActivity> activities = DemoActivityRepo.getInstance(getActivity()).find(createFilter(item));
-        startActivity(SearchResultActivity.createIntent(getActivity(), activities, getSearchResultTitle(item)));
+
+        if (activities.isEmpty()) {
+            Toast.makeText(getActivity(), R.string.searchResultIsEmpty, 2000).show();
+        } else {
+            startActivity(SearchResultActivity.createIntent(getActivity(), activities, getSearchResultTitle(item)));
+        }
     }
 
     @Override
