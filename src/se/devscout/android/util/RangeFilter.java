@@ -10,10 +10,10 @@ public abstract class RangeFilter implements ActivityFilter {
         mRange = range;
     }
 
-    protected boolean matches(Range<Integer> candidate) {
-        if ((mRange.getMax() >= candidate.getMin() && mRange.getMax() <= candidate.getMax())
+    public boolean matches(Range<Integer> candidate) {
+        if ((mRange.getMax() > candidate.getMin() && mRange.getMax() < candidate.getMax())
                 ||
-                (mRange.getMin() <= candidate.getMax() && mRange.getMin() >= candidate.getMin())) {
+                (mRange.getMin() < candidate.getMax() && mRange.getMin() > candidate.getMin())) {
             return true;
         } else {
             return false;

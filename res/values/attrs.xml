@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="AgeGroupView">
+        <attr name="minAge" format="integer"/>
+        <attr name="maxAge" format="integer"/>
+        <attr name="inactivePaint" format="color"/>
+    </declare-styleable>
+</resources>
