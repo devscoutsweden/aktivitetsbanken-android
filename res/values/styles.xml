@@ -4,9 +4,9 @@
     <style name="AppTheme" parent="android:Theme.Holo.Light" />
 
     <style name="ImageOverlay">
-        <item name="android:alpha">0.8</item>
-        <item name="android:background">@android:color/background_light</item>
-        <item name="android:textColor">@android:color/primary_text_light</item>
+        <!--<item name="android:alpha">0.6</item>-->
+        <item name="android:background">#afff</item>
+        <item name="android:textColor">#f000</item>
     </style>
 
     <style name="ImageOverlay_ImageButton" parent="ImageOverlay">
