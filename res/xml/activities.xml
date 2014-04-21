@@ -12,6 +12,7 @@
             min="1"
             max="15" />
         <description type="activity-name">Bra-bok</description>
+        <media uri="app-drawable:img_0979" />
         <description>Mia Törnblom som är känd coach har kommit på den här metoden. Hon menar att precis som att vi måste träna
             för att hålla uppe konditionen måste vi öva och öva för att hålla uppe självkänslan. Ett sätt att göra det
             på är att varje dag skriva Bra-bok.
@@ -82,6 +83,7 @@
             min="1"
             max="8" />
         <description>16-100, 8-15</description>
+        <media uri="app-drawable:img_0781" />
         <description type="activity">
             • Scoutinvigning
 
@@ -124,6 +126,7 @@
             Tänk på brandrisken då ni använder levande eld.</description>
     </activity>
     <activity featured="true">
+        <media uri="app-drawable:img_1447" />
         <category
             group="scout-concept"
             name="Ceremonier" />
