@@ -2,6 +2,7 @@ package se.devscout.android.controller.fragment;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,7 +15,7 @@ import se.devscout.android.view.StaticFragmentsPagerAdapter;
 
 public abstract class ViewPagerFragment extends Fragment implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
 
-    protected abstract StaticFragmentsPagerAdapter createPagerAdapter(FragmentManager fragmentManager);
+    protected abstract StaticFragmentsPagerAdapter createPagerAdapter(FragmentManager fragmentManager, boolean landscape);
 
     private ViewPager mViewPager;
 
@@ -22,7 +23,8 @@ public abstract class ViewPagerFragment extends Fragment implements ActionBar.Ta
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mViewPager = (ViewPager) inflater.inflate(R.layout.view_pager, container, false);
         mViewPager.setOnPageChangeListener(this);
-        StaticFragmentsPagerAdapter pageAdapter = createPagerAdapter(getChildFragmentManager());
+        boolean landscape = getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        StaticFragmentsPagerAdapter pageAdapter = createPagerAdapter(getChildFragmentManager(), landscape);
         mViewPager.setAdapter(pageAdapter);
 
         ActionBar actionBar = getActivity().getActionBar();

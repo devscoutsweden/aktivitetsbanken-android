@@ -1,6 +1,5 @@
 package se.devscout.android.controller.fragment;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -44,14 +43,12 @@ public class ActivityViewPagerFragment extends ViewPagerFragment {
     }
 
     @Override
-    protected StaticFragmentsPagerAdapter createPagerAdapter(FragmentManager fragmentManager) {
+    protected StaticFragmentsPagerAdapter createPagerAdapter(FragmentManager fragmentManager, boolean landscape) {
         StaticFragmentsPagerAdapter pagerAdapter = new StaticFragmentsPagerAdapter(fragmentManager);
 
         ActivityRevision revision = key.getRevisions().get(0);
 
         ResourceUtil resourceUtil = new ResourceUtil(getActivity());
-
-        boolean isLandscape = getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
         SimpleDocumentFragment mainTabFragment = SimpleDocumentFragment.create();
         if (revision.getCoverMedia() != null) {
@@ -64,19 +61,19 @@ public class ActivityViewPagerFragment extends ViewPagerFragment {
                 .addHeaderAndText(R.string.activity_safety, revision.getDescriptionSafety())
                 .addHeaderAndText(R.string.activity_notes, revision.getDescriptionNotes());
 
-        pagerAdapter.addTab(isLandscape ? R.string.activity_tab_description : 0, android.R.drawable.ic_menu_info_details, mainTabFragment);
+        pagerAdapter.addTab(landscape ? R.string.activity_tab_description : 0, R.drawable.ic_action_about, mainTabFragment);
 
         if (revision.getDescriptionMaterial() != null && revision.getDescriptionMaterial().length() > 0) {
             SimpleDocumentFragment materialTabFragment = SimpleDocumentFragment.create()
                     .addBodyText(revision.getDescriptionMaterial());
-            pagerAdapter.addTab(isLandscape ? R.string.activity_tab_material : 0, R.drawable.ic_action_paste, materialTabFragment);
+            pagerAdapter.addTab(landscape ? R.string.activity_tab_material : 0, R.drawable.ic_action_paste, materialTabFragment);
         }
         if (!revision.getMediaItems().isEmpty()) {
             SimpleDocumentFragment mediaTabFragment = SimpleDocumentFragment.create();
             for (Media media : revision.getMediaItems()) {
                 mediaTabFragment.addImage(resourceUtil.toResourceId(media.getURI()));
             }
-            pagerAdapter.addTab(isLandscape ? R.string.activity_tab_photos : 0, android.R.drawable.ic_menu_gallery, mediaTabFragment);
+            pagerAdapter.addTab(landscape ? R.string.activity_tab_photos : 0, R.drawable.ic_action_picture, mediaTabFragment);
         }
         return pagerAdapter;
     }
