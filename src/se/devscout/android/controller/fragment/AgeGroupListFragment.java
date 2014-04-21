@@ -33,7 +33,7 @@ public class AgeGroupListFragment extends QuickSearchListFragment<AgeGroup> {
 
     @Override
     protected String getSearchResultTitle(AgeGroup option) {
-        return getString(R.string.searchResultTitleAgeGroup, option.getName());
+        return getString(R.string.searchResultTitleAgeGroup, getString(option.getTitleResId()).toLowerCase());
     }
 
     public static AgeGroupListFragment create() {
