@@ -5,11 +5,11 @@ import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import se.devscout.android.DemoActivityRepo;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.SearchResultActivity;
-import se.devscout.android.model.LocalActivity;
+import se.devscout.android.model.SQLiteActivityRepo;
 import se.devscout.server.api.ActivityFilter;
+import se.devscout.server.api.model.Activity;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +30,7 @@ abstract class QuickSearchListFragment<T> extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, final int position, long id) {
         T item = mListAdapter.getItem(position);
-        List<LocalActivity> activities = DemoActivityRepo.getInstance(getActivity()).find(createFilter(item));
+        List<? extends Activity> activities = SQLiteActivityRepo.getInstance(getActivity()).find(createFilter(item));
 
         if (activities.isEmpty()) {
             Toast.makeText(getActivity(), R.string.searchResultIsEmpty, 2000).show();

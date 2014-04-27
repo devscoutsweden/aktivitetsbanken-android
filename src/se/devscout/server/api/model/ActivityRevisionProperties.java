@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 
 public interface ActivityRevisionProperties {
+    ActivityKey getActivityKey();
+
     Status getStatus();
 
     int getVersion();

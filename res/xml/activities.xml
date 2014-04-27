@@ -397,63 +397,6 @@
         <description type="safety">
             Beroende på valt material, annars inget märkvärdigt.</description>
     </activity>
-    <activity>
-        <category
-            group="scout-concept"
-            name="Diskussion" />
-        <description>Bli en patrull</description>
-        <description type="activity-name">Bli en patrull</description>
-        <description>För att förbättra gruppdynamiken och låta scouterna lära känna varandra samt sin roll i gruppen</description>
-        <description type="ages">10-12, 12-15, 15-19, 19-25, 8-10.</description>
-        <participants
-            min="1"
-            max="8" />
-        <description type="activity">
-            ”’Backloppet”’
-
-            Patrullen ska stående på ett antal backar eller motsvarande ta sig från starten, runda ett markerat träd och
-            tillbaka till starten utan att någon nuddar marken. Ge patrullen så många backar så att det är ganska trångt
-            från början. För att flytta backarna framåt måste de tränga ihop sig tillräckligt för att frigöra den sista
-            backen och skicka den framåt. Fundera i förväg på hur ni hanterar om någon trillar eller råkar sätta ner
-            foten på marken.
-
-            ”’Vattenhinderbana”’
-
-            Fäst i ovankanten på en plastburk lika många snören som scouter i patrullen. Alla scouter ska sedan hålla i
-            varsitt snöre och transportera burken full med vatten runt en enklare hinderbana utan att spilla. Sätt upp
-            ett mål för hur mycket vatten som ska vara kvar när de når slutet.
-
-            ”’Stocken”’
-
-            Patrullen ska med alla medlemmar stående på en liggande stock, planka eller motsvarande som utgångsläge
-            ställa sig i en given ordning, t.ex. åldersordning, längdordning mm utan att trilla ner. För att göra det
-            hela svårare kan man göra patrullen stum eller blind. Går det fort kan de få ett par olika uppgifter efter
-            varandra.
-
-            ”’Gungbrädan”’
-
-            Bygg en gungbräda som klarar en hel patrull. Uppgiften för scouterna är att med hela patrullen på gungbrädan
-            hålla jämvikt så länge som möjligt utan att varken brädan eller någon scout nuddar marken. Lättast är om
-            scouterna sitter ner men vill man ha det lite svårare kan de stå upp.
-
-            ”’Svävande kubb”’
-
-            Fäst i en träkubb lika många snören som scouter i patrullen. Varje scout håller i varsitt snöre och med
-            kubben ska de slå ner ett antal (ca 7 st) stående kubbar i en markerad yta om ca 2×2 meter. Scouterna ska
-            stå utanför markeringen och måste stå still. De får endast förflytta kubben genom att dra och släppa efter i
-            snörena. Om de klarar det kan de även få regeln att den svävande kubben inte får nudda mark.
-
-            ”’Reflektion”’
-
-            För att övningarna ska vara värdefulla är det viktigt att ledaren tar sig tid att reflektera med scouterna
-            kring hur samarbetet fungerat. Be deltagarna själva berätta vad som gick bra och vad de skulle göra
-            annorlunda om de fick göra om övningen. Fråga om det är något de lärt sig om sig själva, om varandra, samt
-            om gruppens samarbete som de kan ha nytta av vid andra tillfällen.</description>
-        <description type="material">
-            Beroende på vilka av dessa eller andra aktiviteter ni väljer.</description>
-        <description type="scout-method">
-            Patrullsammarbete.</description>
-    </activity>
     <activity featured="true">
         <category
             group="scout-concept"
@@ -1156,6 +1099,9 @@
         <category
             group="scout-concept"
             name="Lekar" />
+        <category
+            group="scout-concept"
+            name="Diskussion" />
         <description>Bli en patrull</description>
         <description type="activity-name">Bli en patrull</description>
         <description>För att förbättra gruppdynamiken och låta scouterna lära känna varandra samt sin roll i gruppen</description>

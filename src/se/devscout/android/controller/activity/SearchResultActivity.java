@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 import se.devscout.android.controller.fragment.ActivitiesListFragment;
-import se.devscout.android.model.LocalActivity;
+import se.devscout.android.controller.fragment.KeyPojo;
+import se.devscout.android.model.SQLiteActivityRepo;
+import se.devscout.server.api.model.ActivityKey;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +28,13 @@ public class SearchResultActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
-        ArrayList<LocalActivity> activities = (ArrayList<LocalActivity>) getIntent().getSerializableExtra(INTENT_EXTRA_ACTIVITIES);
+        ArrayList<KeyPojo> keys = (ArrayList<KeyPojo>) getIntent().getSerializableExtra(INTENT_EXTRA_ACTIVITIES);
 
+
+        List<ActivityKey> activities = new ArrayList<ActivityKey>();
+        for (ActivityKey key : keys) {
+            activities.add(SQLiteActivityRepo.getInstance(this).read(key));
+        }
         return ActivitiesListFragment.create(activities);
     }
 
@@ -42,9 +49,15 @@ public class SearchResultActivity extends SingleFragmentActivity {
         }
     }
 
-    public static Intent createIntent(Context ctx, List<LocalActivity> activities, String title) {
+    public static Intent createIntent(Context ctx, List<? extends se.devscout.server.api.model.Activity> activities, String title) {
+
+        ArrayList<KeyPojo> keys = new ArrayList<KeyPojo>();
+        for (se.devscout.server.api.model.Activity activity : activities) {
+            keys.add(new KeyPojo(activity.getId()));
+        }
+
         Intent intent = new Intent(ctx, SearchResultActivity.class);
-        intent.putExtra(INTENT_EXTRA_ACTIVITIES, new ArrayList<LocalActivity>(activities));
+        intent.putExtra(INTENT_EXTRA_ACTIVITIES, keys);
         intent.putExtra(TITLE_RES_ID, title);
         return intent;
     }

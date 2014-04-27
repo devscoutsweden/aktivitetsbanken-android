@@ -6,19 +6,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import se.devscout.android.R;
-import se.devscout.android.model.LocalActivity;
+import se.devscout.android.model.SQLiteActivityRepo;
 import se.devscout.android.util.ResourceUtil;
 import se.devscout.android.view.StaticFragmentsPagerAdapter;
+import se.devscout.server.api.model.Activity;
 import se.devscout.server.api.model.ActivityRevision;
 import se.devscout.server.api.model.Media;
 
 public class ActivityViewPagerFragment extends ViewPagerFragment {
-    private LocalActivity key;
+    private KeyPojo key;
 
     public ActivityViewPagerFragment() {
     }
 
-    public ActivityViewPagerFragment(LocalActivity key) {
+    public ActivityViewPagerFragment(KeyPojo key) {
         this.key = key;
     }
 
@@ -28,7 +29,7 @@ public class ActivityViewPagerFragment extends ViewPagerFragment {
             /*
              * Restore fields from saved state, for example after the device has been rotated.
              */
-            key = (LocalActivity) savedInstanceState.getSerializable("key");
+            key = (KeyPojo) savedInstanceState.getSerializable("key");
         }
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -46,7 +47,8 @@ public class ActivityViewPagerFragment extends ViewPagerFragment {
     protected StaticFragmentsPagerAdapter createPagerAdapter(FragmentManager fragmentManager, boolean landscape) {
         StaticFragmentsPagerAdapter pagerAdapter = new StaticFragmentsPagerAdapter(fragmentManager);
 
-        ActivityRevision revision = key.getRevisions().get(0);
+        Activity activity = SQLiteActivityRepo.getInstance(getActivity()).read(key);
+        ActivityRevision revision = activity.getRevisions().get(activity.getRevisions().size() - 1);
 
         ResourceUtil resourceUtil = new ResourceUtil(getActivity());
 

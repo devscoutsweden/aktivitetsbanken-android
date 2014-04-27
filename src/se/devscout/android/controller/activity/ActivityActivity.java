@@ -6,7 +6,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 import se.devscout.android.controller.fragment.ActivityViewPagerFragment;
-import se.devscout.android.model.LocalActivity;
+import se.devscout.android.controller.fragment.KeyPojo;
+import se.devscout.android.model.SQLiteActivityRepo;
+import se.devscout.server.api.model.Activity;
+import se.devscout.server.api.model.ActivityKey;
 
 public class ActivityActivity extends SingleFragmentActivity {
 
@@ -14,7 +17,7 @@ public class ActivityActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
-        LocalActivity key = (LocalActivity) getIntent().getSerializableExtra(INTENT_EXTRA_ACTIVITY_KEY);
+        KeyPojo key = (KeyPojo) getIntent().getSerializableExtra(INTENT_EXTRA_ACTIVITY_KEY);
         return new ActivityViewPagerFragment(key);
     }
 
@@ -34,15 +37,16 @@ public class ActivityActivity extends SingleFragmentActivity {
         super.onCreate(savedInstanceState);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        LocalActivity key = (LocalActivity) getIntent().getSerializableExtra(INTENT_EXTRA_ACTIVITY_KEY);
+        KeyPojo key = (KeyPojo) getIntent().getSerializableExtra(INTENT_EXTRA_ACTIVITY_KEY);
         if (key != null) {
-            setTitle(key.getRevisions().get(0).getName());
+            Activity activity = SQLiteActivityRepo.getInstance(this).read(key);
+            setTitle(activity.getRevisions().get(activity.getRevisions().size() - 1).getName());
         }
     }
 
-    public static Intent createIntent(Context ctx, LocalActivity key) {
+    public static Intent createIntent(Context ctx, ActivityKey key) {
         Intent intent = new Intent(ctx, ActivityActivity.class);
-        intent.putExtra(INTENT_EXTRA_ACTIVITY_KEY, key);
+        intent.putExtra(INTENT_EXTRA_ACTIVITY_KEY, new KeyPojo(key.getId()));
         return intent;
     }
 

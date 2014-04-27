@@ -1,15 +1,12 @@
-package se.devscout.android;
+package se.devscout.android.model;
 
 import android.content.Context;
 import android.content.res.XmlResourceParser;
 import android.util.Log;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
-import se.devscout.android.model.LocalActivity;
-import se.devscout.android.model.LocalRange;
-import se.devscout.server.api.ActivityBank;
-import se.devscout.server.api.ActivityFilter;
-import se.devscout.server.api.model.*;
+import se.devscout.android.R;
+import se.devscout.server.api.model.Range;
 
 import java.io.IOException;
 import java.net.URI;
@@ -17,22 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class DemoActivityRepo implements ActivityBank {
-    private static DemoActivityRepo ourInstance;
-
-    public static DemoActivityRepo getInstance(Context ctx) {
-        if (ourInstance == null) {
-            ourInstance = new DemoActivityRepo(ctx);
-        }
-        return ourInstance;
-    }
-
-    private static List<LocalActivity> mActivities = new ArrayList<LocalActivity>();
-
-    private DemoActivityRepo(Context ctx) {
+public class TestDataUtil {
+    public static List<LocalActivity> readXMLTestData(Context ctx) {
+        List<LocalActivity> mActivities = new ArrayList<LocalActivity>();
         XmlResourceParser parser = ctx.getResources().getXml(R.xml.activities);
         int eventType = 0;
         LocalActivity localActivity = null;
+        LocalActivityRevision revision = null;
         try {
             while ((eventType = parser.next()) != XmlPullParser.END_DOCUMENT) {
                 switch (eventType) {
@@ -47,47 +35,48 @@ public class DemoActivityRepo implements ActivityBank {
                             boolean featured = parser.getAttributeBooleanValue(null, "featured", false);
                             String name = parser.getAttributeValue(null, "name");
                             localActivity = new LocalActivity(
-                                    name,
-                                    featured,
-                                    mActivities.size());
+                                    null,
+                                    LocalActivity.debugCounter++);
                             mActivities.add(localActivity);
+                            revision = new LocalActivityRevision(name, featured, localActivity, LocalActivityRevision.debugCounter++);
+                            localActivity.getRevisions().add(revision);
                         } else if ("introduction".equals(parser.getName())) {
-                            localActivity.setIntroduction(parser.nextText());
+                            revision.setIntroduction(parser.nextText());
                         } else if ("description".equals(parser.getName())) {
                             String type = parser.getAttributeValue(null, "type");
                             String descr = parser.nextText().trim();
                             if ("activity".equals(type)) {
-                                localActivity.setDescription(descr);
+                                revision.setDescription(descr);
                             } else if ("safety".equals(type)) {
-                                localActivity.setSafety(descr);
+                                revision.setSafety(descr);
                             } else if ("references".equals(type)) {
 //                                localActivity.setDescription(descr);
                             } else if ("material".equals(type)) {
-                                localActivity.setMaterial(descr);
+                                revision.setMaterial(descr);
                             } else if ("activity-name".equals(type)) {
-                                localActivity.setName(descr);
+                                revision.setName(descr);
                             } else if ("ages".equals(type)) {
-                                localActivity.setAges(toRange(descr));
+                                revision.setAges(toRange(descr));
                             } else if ("participant-count".equals(type)) {
-                                localActivity.setParticipants(toRange(descr));
+                                revision.setParticipants(toRange(descr));
                             } else if ("scout-method".equals(type)) {
-                                localActivity.addCategory("scout-method", descr);
+                                revision.addCategory("scout-method", descr);
                             } else {
-                                localActivity.addDescriptionNode(descr);
+                                revision.addDescriptionNote(descr);
                             }
                         } else if ("category".equals(parser.getName())) {
-                            localActivity.addCategory(
+                            revision.addCategory(
                                     parser.getAttributeValue(null, "group"),
                                     parser.getAttributeValue(null, "name"));
                         } else if ("media".equals(parser.getName())) {
                             URI uri = URI.create(parser.getAttributeValue(null, "uri"));
-                            localActivity.addMediaItem(uri, null);
+                            revision.addMediaItem(uri, null);
                         } else if ("participants".equals(parser.getName())) {
-                            localActivity.setParticipants(new LocalRange(
+                            revision.setParticipants(new LocalRange(
                                     parser.getAttributeIntValue(null, "min", 1),
                                     parser.getAttributeIntValue(null, "max", 99)));
                         } else if ("time".equals(parser.getName())) {
-                            localActivity.setTimeActivity(new LocalRange(
+                            revision.setTimeActivity(new LocalRange(
                                     parser.getAttributeIntValue(null, "min", 1),
                                     parser.getAttributeIntValue(null, "max", 99)));
                         }
@@ -99,9 +88,10 @@ public class DemoActivityRepo implements ActivityBank {
         } catch (IOException e) {
             Log.e(ctx.getString(R.string.app_name), "Could not initialize repository.", e);
         }
+        return mActivities;
     }
 
-    private Range<Integer> toRange(String s) {
+    private static Range<Integer> toRange(String s) {
         int min = Integer.MAX_VALUE;
         int max = Integer.MIN_VALUE;
         Scanner scanner = new Scanner(s);
@@ -112,61 +102,5 @@ public class DemoActivityRepo implements ActivityBank {
             max = Math.max(max, value);
         }
         return new LocalRange(min, max);
-    }
-
-    @Override
-    public List<LocalActivity> find(String name, Boolean featured) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public List<LocalActivity> find(ActivityFilter condition) {
-        ArrayList<LocalActivity> res = new ArrayList<LocalActivity>();
-        for (LocalActivity activity : mActivities) {
-            if (condition.matches(activity)) {
-                res.add(activity);
-            }
-        }
-        return res;
-    }
-
-    @Override
-    public Activity create(ActivityProperties properties) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void delete(ActivityKey key) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public ActivityProperties update(ActivityKey key, ActivityProperties properties) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public LocalActivity read(ActivityKey key) {
-        for (LocalActivity activity : mActivities) {
-            if (key.getId().equals(activity.getId())) {
-                return activity;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public Reference createReference(ActivityKey key, ReferenceProperties properties) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void deleteReference(ActivityKey key, ReferenceKey referenceKey) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public List<Reference> readReferences(ActivityKey key) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

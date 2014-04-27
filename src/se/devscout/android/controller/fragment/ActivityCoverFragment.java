@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import se.devscout.android.R;
-import se.devscout.android.model.LocalActivity;
 import se.devscout.android.util.ResourceUtil;
+import se.devscout.server.api.model.Activity;
 import se.devscout.server.api.model.ActivityRevision;
 import se.devscout.server.api.model.Media;
 
@@ -19,16 +19,16 @@ public class ActivityCoverFragment extends Fragment implements View.OnClickListe
 
     public static interface OnClickListener {
 
-        void onImageClick(View view, LocalActivity localActivity, Context ctx);
+        void onImageClick(View view, Activity localActivity, Context ctx);
     }
 
-    private LocalActivity mLocalActivity;
+    private Activity mActivity;
 
     private OnClickListener mOnClickListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = initListItemView(inflater, container, null, mLocalActivity.getRevisions().get(0));
+        View view = initListItemView(inflater, container, null, mActivity.getRevisions().get(0));
 
         if (mOnClickListener != null) {
             view.setOnClickListener(this);
@@ -76,13 +76,13 @@ public class ActivityCoverFragment extends Fragment implements View.OnClickListe
     @Override
     public void onClick(View view) {
         if (mOnClickListener != null) {
-            mOnClickListener.onImageClick(view, mLocalActivity, getActivity());
+            mOnClickListener.onImageClick(view, mActivity, getActivity());
         }
     }
 
-    public static ActivityCoverFragment create(LocalActivity properties, OnClickListener onClickListener) {
+    public static ActivityCoverFragment create(Activity properties, OnClickListener onClickListener) {
         ActivityCoverFragment fragment = new ActivityCoverFragment();
-        fragment.mLocalActivity = properties;
+        fragment.mActivity = properties;
         fragment.mOnClickListener = onClickListener;
         return fragment;
     }

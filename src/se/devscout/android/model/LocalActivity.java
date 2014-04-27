@@ -10,36 +10,17 @@ import java.util.Date;
 import java.util.List;
 
 @JsonFilter("LocalActivity")
-public class LocalActivity extends LocalObjectIdentifier implements ActivityCurrent, Activity, ActivityRevision, Serializable, Comparable<LocalActivity> {
-//    private String mName;
-//    private Date mDatePublished = new Date();
-//    private Date mDateCreated = new Date();
-//    private String mIntroduction;
-//    private String mPreparation;
-//    private String mDescription;
-//    private String mSafety;
-//    private boolean mFeatured;
-//    private Range<Integer> mAges;
-//    private List<LocalCategory> mCategories = new ArrayList<LocalCategory>();
-//    private StringBuilder mNotes = new StringBuilder();
-//    private String mMaterial;
-//    private Range<Integer> mTimeActivity;
-//    private Range<Integer> mTimePreparation;
-//    private Range<Integer> mParticipants;
-//    private List<LocalMedia> mMediaItems = new ArrayList<LocalMedia>();
-//    private URI mSourceURI;
-//    private LocalUser mAuthor;
-//    private List<LocalReference> mReferences = new ArrayList<LocalReference>();
+class LocalActivity extends ActivityPropertiesPojo implements Activity, ActivityRevision, Serializable, Comparable<LocalActivity> {
+    public static long debugCounter;
     private List<LocalActivityRevision> mRevisions = new ArrayList<LocalActivityRevision>();
     private LocalUser mOwner;
+    private Long mId;
 
-    public LocalActivity() {
+    LocalActivity(LocalUser owner, Long id) {
+        super(owner);
+        mId = id;
     }
 
-    public LocalActivity(String name, boolean featured, Integer id) {
-        super(id);
-        addRevisions(new LocalActivityRevision(name, featured, null, null));
-    }
 
     @Override
     public List<LocalActivityRevision> getRevisions() {
@@ -109,8 +90,8 @@ public class LocalActivity extends LocalObjectIdentifier implements ActivityCurr
         return getLatestRevisions().getDescriptionNotes();
     }
 
-    public void addDescriptionNode(String note) {
-        getLatestRevisions().addDescriptionNode(note);
+    public void addDescriptionNote(String note) {
+        getLatestRevisions().addDescriptionNote(note);
     }
 
     @Override
@@ -246,5 +227,14 @@ public class LocalActivity extends LocalObjectIdentifier implements ActivityCurr
     @Override
     public ActivityKey getActivityKey() {
         return getLatestRevisions().getActivityKey();
+    }
+
+    @Override
+    public Long getId() {
+        return mId;
+    }
+
+    public void setFeatured(boolean featured) {
+        getLatestRevisions().setFeatured(featured);
     }
 }

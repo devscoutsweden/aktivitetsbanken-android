@@ -5,5 +5,6 @@ public enum Status {
     PUBLISHING_REQUESTED,
     DELETED,
     DELETING_REQUESTED,
-    SPAM
+    SPAM,
+    NEW
 }

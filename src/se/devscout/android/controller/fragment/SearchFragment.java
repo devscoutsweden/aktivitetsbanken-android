@@ -7,11 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import se.devscout.android.AgeGroup;
-import se.devscout.android.DemoActivityRepo;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.SearchResultActivity;
-import se.devscout.android.model.LocalActivity;
+import se.devscout.android.model.SQLiteActivityRepo;
 import se.devscout.android.util.*;
+import se.devscout.server.api.model.Activity;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class SearchFragment extends Fragment {
 
                 initAgeFilter(filter);
 
-                List<LocalActivity> activities = DemoActivityRepo.getInstance(getActivity()).find(filter);
+                List<? extends Activity> activities = SQLiteActivityRepo.getInstance(getActivity()).find(filter);
 
                 if (activities.isEmpty()) {
                     Toast.makeText(getActivity(), R.string.searchResultIsEmpty, 2000).show();

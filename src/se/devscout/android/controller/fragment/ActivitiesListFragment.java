@@ -12,16 +12,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.ActivityActivity;
-import se.devscout.android.model.LocalActivity;
+import se.devscout.android.model.SQLiteActivityRepo;
 import se.devscout.android.view.AgeGroupView;
+import se.devscout.server.api.model.Activity;
+import se.devscout.server.api.model.ActivityKey;
+import se.devscout.server.api.model.ActivityRevision;
 import se.devscout.server.api.model.Range;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ActivitiesListFragment extends ListFragment {
-    protected ArrayList<LocalActivity> mActivities;
+    protected ArrayList<KeyPojo> mActivities;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,7 +33,7 @@ public class ActivitiesListFragment extends ListFragment {
                 /*
                  * Restore fields from saved state, for example after the device has been rotated.
                  */
-                mActivities = (ArrayList<LocalActivity>) savedInstanceState.getSerializable("mActivities");
+                mActivities = (ArrayList<KeyPojo>) savedInstanceState.getSerializable("mActivities");
             }
             setListAdapter(createAdapter());
         } catch (RuntimeException e) {
@@ -49,8 +51,16 @@ public class ActivitiesListFragment extends ListFragment {
         outState.putSerializable("mActivities", mActivities);
     }
 
-    protected ArrayAdapter<LocalActivity> createAdapter() {
-        return new ActivitiesListAdapter(getActivity(), mActivities, getActivity().getLayoutInflater());
+    protected ArrayAdapter<Activity> createAdapter() {
+        return new ActivitiesListAdapter(getActivity(), getActivities(), getActivity().getLayoutInflater());
+    }
+
+    protected ArrayList<Activity> getActivities() {
+        ArrayList<Activity> activities = new ArrayList<Activity>();
+        for (KeyPojo activity : mActivities) {
+            activities.add(SQLiteActivityRepo.getInstance(getActivity()).read(activity));
+        }
+        return activities;
     }
 
     @Override
@@ -58,18 +68,28 @@ public class ActivitiesListFragment extends ListFragment {
         startActivity(ActivityActivity.createIntent(getActivity(), mActivities.get(position)));
     }
 
-    public static ActivitiesListFragment create(List<LocalActivity> activities) {
+    public static ActivitiesListFragment create(List<ActivityKey> activities) {
         ActivitiesListFragment fragment = new ActivitiesListFragment();
-        ArrayList<LocalActivity> sortedList = new ArrayList<LocalActivity>(activities);
-        Collections.sort(sortedList);
+        ArrayList<KeyPojo> sortedList = new ArrayList<KeyPojo>();
+        for (ActivityKey key : activities) {
+            sortedList.add(new KeyPojo(key.getId()));
+        }
+/*
+        Collections.sort(sortedList, new Comparator<Activity>() {
+            @Override
+            public int compare(Activity activity, Activity activity2) {
+                return activity != null ? getLatestActivityRevision(activity).getName().compareTo(getLatestActivityRevision(activity).getName()) : 0;
+            }
+        });
+*/
         fragment.mActivities = sortedList;
         return fragment;
     }
 
-    private static class ActivitiesListAdapter extends ArrayAdapter<LocalActivity> {
+    private static class ActivitiesListAdapter extends ArrayAdapter<Activity> {
         private LayoutInflater layoutInflater;
 
-        public ActivitiesListAdapter(Context context, List<LocalActivity> activities, LayoutInflater layoutInflater) {
+        public ActivitiesListAdapter(Context context, List<Activity> activities, LayoutInflater layoutInflater) {
             super(context, android.R.layout.simple_list_item_1, activities);
             this.layoutInflater = layoutInflater;
         }
@@ -79,7 +99,7 @@ public class ActivitiesListFragment extends ListFragment {
             if (convertView == null) {
                 convertView = layoutInflater.inflate(R.layout.activities_list_item, parent, false);
             }
-            LocalActivity activity = getItem(position);
+            Activity activity = getItem(position);
 
             initTitle(convertView, activity);
 
@@ -94,9 +114,9 @@ public class ActivitiesListFragment extends ListFragment {
             return convertView;
         }
 
-        private void initAgeGroups(View convertView, LocalActivity activity) {
+        private void initAgeGroups(View convertView, Activity activity) {
             AgeGroupView view = (AgeGroupView) convertView.findViewById(R.id.activitiesListItemAgeGroups);
-            Range<Integer> ages = activity.getAges();
+            Range<Integer> ages = getLatestActivityRevision(activity).getAges();
             if (ages != null) {
                 view.setMaxAge(ages.getMax());
                 view.setMinAge(ages.getMin());
@@ -104,22 +124,22 @@ public class ActivitiesListFragment extends ListFragment {
             view.setVisibility(view != null ? View.VISIBLE : View.GONE);
         }
 
-        private void initTitle(View convertView, LocalActivity activity) {
+        private void initTitle(View convertView, Activity activity) {
             TextView titleTextView = (TextView) convertView.findViewById(R.id.activitiesListItemTitle);
-            titleTextView.setText(activity.getName());
+            titleTextView.setText(getLatestActivityRevision(activity).getName());
         }
 
-        private void initPeople(View convertView, LocalActivity activity) {
+        private void initPeople(View convertView, Activity activity) {
             TextView participantsTextView = (TextView) convertView.findViewById(R.id.activitiesListItemParticipants);
-            Range<Integer> participants = activity.getParticipants();
+            Range<Integer> participants = getLatestActivityRevision(activity).getParticipants();
             if (participants != null) {
                 participantsTextView.setText(getContext().getResources().getString(R.string.activitiesListItemParticipants, participants.toString()));
             }
             participantsTextView.setVisibility(participantsTextView != null ? View.VISIBLE : View.GONE);
         }
 
-        private void initTime(View convertView, LocalActivity activity) {
-            Range<Integer> timeActivity = activity.getTimeActivity();
+        private void initTime(View convertView, Activity activity) {
+            Range<Integer> timeActivity = getLatestActivityRevision(activity).getTimeActivity();
             TextView timeTextView = (TextView) convertView.findViewById(R.id.activitiesListItemTime);
             if (timeActivity != null) {
                 timeTextView.setText(getContext().getResources().getString(R.string.activitiesListItemTime, timeActivity.toString()));
@@ -127,13 +147,17 @@ public class ActivitiesListFragment extends ListFragment {
             timeTextView.setVisibility(timeActivity != null ? View.VISIBLE : View.GONE);
         }
 
-        private void initDescription(View convertView, LocalActivity activity) {
+        private void initDescription(View convertView, Activity activity) {
             TextView descriptionTextView = (TextView) convertView.findViewById(R.id.activitiesListItemSubtitle);
-            String description = activity.getDescription();
+            String description = getLatestActivityRevision(activity).getDescription();
             if (description != null) {
                 descriptionTextView.setText(description.substring(0, Math.min(100, description.length())));
             }
             descriptionTextView.setVisibility(description != null ? View.VISIBLE : View.INVISIBLE);
         }
+    }
+
+    private static ActivityRevision getLatestActivityRevision(Activity activity) {
+        return activity.getRevisions().get(activity.getRevisions().size() - 1);
     }
 }
