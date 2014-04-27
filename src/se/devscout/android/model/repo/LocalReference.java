@@ -1,5 +1,6 @@
-package se.devscout.android.model;
+package se.devscout.android.model.repo;
 
+import se.devscout.android.model.ReferencePropertiesPojo;
 import se.devscout.server.api.model.Reference;
 import se.devscout.server.api.model.ReferenceType;
 

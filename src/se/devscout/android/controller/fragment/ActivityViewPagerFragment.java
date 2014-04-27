@@ -6,7 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import se.devscout.android.R;
-import se.devscout.android.model.SQLiteActivityRepo;
+import se.devscout.android.model.ObjectIdentifierPojo;
+import se.devscout.android.model.repo.SQLiteActivityRepo;
 import se.devscout.android.util.ResourceUtil;
 import se.devscout.android.view.StaticFragmentsPagerAdapter;
 import se.devscout.server.api.model.Activity;
@@ -14,12 +15,12 @@ import se.devscout.server.api.model.ActivityRevision;
 import se.devscout.server.api.model.Media;
 
 public class ActivityViewPagerFragment extends ViewPagerFragment {
-    private KeyPojo key;
+    private ObjectIdentifierPojo key;
 
     public ActivityViewPagerFragment() {
     }
 
-    public ActivityViewPagerFragment(KeyPojo key) {
+    public ActivityViewPagerFragment(ObjectIdentifierPojo key) {
         this.key = key;
     }
 
@@ -29,7 +30,7 @@ public class ActivityViewPagerFragment extends ViewPagerFragment {
             /*
              * Restore fields from saved state, for example after the device has been rotated.
              */
-            key = (KeyPojo) savedInstanceState.getSerializable("key");
+            key = (ObjectIdentifierPojo) savedInstanceState.getSerializable("key");
         }
         return super.onCreateView(inflater, container, savedInstanceState);
     }

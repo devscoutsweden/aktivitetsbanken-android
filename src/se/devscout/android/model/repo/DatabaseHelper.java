@@ -1,4 +1,4 @@
-package se.devscout.android.model;
+package se.devscout.android.model.repo;
 
 import android.content.ContentValues;
 import android.content.Context;

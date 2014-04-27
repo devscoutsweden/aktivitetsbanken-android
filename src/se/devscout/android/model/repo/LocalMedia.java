@@ -1,5 +1,6 @@
-package se.devscout.android.model;
+package se.devscout.android.model.repo;
 
+import se.devscout.android.model.MediaPropertiesPojo;
 import se.devscout.server.api.model.Media;
 
 import java.io.Serializable;

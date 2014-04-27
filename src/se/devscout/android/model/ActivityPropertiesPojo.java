@@ -2,6 +2,7 @@ package se.devscout.android.model;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 import se.devscout.server.api.model.ActivityProperties;
+import se.devscout.server.api.model.ActivityRevision;
 import se.devscout.server.api.model.Status;
 import se.devscout.server.api.model.User;
 
@@ -10,16 +11,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @JsonFilter("LocalActivity")
-class ActivityPropertiesPojo implements ActivityProperties, Serializable {
-    private List<LocalActivityRevision> mRevisions = new ArrayList<LocalActivityRevision>();
-    private LocalUser mOwner;
+public class ActivityPropertiesPojo implements ActivityProperties, Serializable {
+    private List<ActivityRevision> mRevisions = new ArrayList<ActivityRevision>();
+    private User mOwner;
 
-    ActivityPropertiesPojo(LocalUser owner) {
+    protected ActivityPropertiesPojo(User owner) {
         mOwner = owner;
     }
 
     @Override
-    public List<LocalActivityRevision> getRevisions() {
+    public List<? extends ActivityRevision> getRevisions() {
         return mRevisions;
     }
 
@@ -29,7 +30,7 @@ class ActivityPropertiesPojo implements ActivityProperties, Serializable {
     }
 */
 
-    public void addRevisions(LocalActivityRevision revision) {
+    public void addRevisions(ActivityRevision revision) {
         mRevisions.add(revision);
     }
 
@@ -44,7 +45,7 @@ class ActivityPropertiesPojo implements ActivityProperties, Serializable {
     }
 
 
-    public void setOwner(LocalUser owner) {
+    public void setOwner(User owner) {
         mOwner = owner;
     }
 

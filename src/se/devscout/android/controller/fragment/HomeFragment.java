@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import se.devscout.android.R;
-import se.devscout.android.model.SQLiteActivityRepo;
+import se.devscout.android.model.repo.SQLiteActivityRepo;
 
 public class HomeFragment extends Fragment {
     @Override

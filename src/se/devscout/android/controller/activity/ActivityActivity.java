@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 import se.devscout.android.controller.fragment.ActivityViewPagerFragment;
-import se.devscout.android.controller.fragment.KeyPojo;
-import se.devscout.android.model.SQLiteActivityRepo;
+import se.devscout.android.model.ObjectIdentifierPojo;
+import se.devscout.android.model.repo.SQLiteActivityRepo;
 import se.devscout.server.api.model.Activity;
 import se.devscout.server.api.model.ActivityKey;
 
@@ -17,7 +17,7 @@ public class ActivityActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
-        KeyPojo key = (KeyPojo) getIntent().getSerializableExtra(INTENT_EXTRA_ACTIVITY_KEY);
+        ObjectIdentifierPojo key = (ObjectIdentifierPojo) getIntent().getSerializableExtra(INTENT_EXTRA_ACTIVITY_KEY);
         return new ActivityViewPagerFragment(key);
     }
 
@@ -37,7 +37,7 @@ public class ActivityActivity extends SingleFragmentActivity {
         super.onCreate(savedInstanceState);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        KeyPojo key = (KeyPojo) getIntent().getSerializableExtra(INTENT_EXTRA_ACTIVITY_KEY);
+        ObjectIdentifierPojo key = (ObjectIdentifierPojo) getIntent().getSerializableExtra(INTENT_EXTRA_ACTIVITY_KEY);
         if (key != null) {
             Activity activity = SQLiteActivityRepo.getInstance(this).read(key);
             setTitle(activity.getRevisions().get(activity.getRevisions().size() - 1).getName());
@@ -46,7 +46,7 @@ public class ActivityActivity extends SingleFragmentActivity {
 
     public static Intent createIntent(Context ctx, ActivityKey key) {
         Intent intent = new Intent(ctx, ActivityActivity.class);
-        intent.putExtra(INTENT_EXTRA_ACTIVITY_KEY, new KeyPojo(key.getId()));
+        intent.putExtra(INTENT_EXTRA_ACTIVITY_KEY, new ObjectIdentifierPojo(key.getId()));
         return intent;
     }
 

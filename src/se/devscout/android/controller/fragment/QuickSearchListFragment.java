@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.SearchResultActivity;
-import se.devscout.android.model.SQLiteActivityRepo;
+import se.devscout.android.model.repo.SQLiteActivityRepo;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.model.Activity;
 

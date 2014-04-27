@@ -5,7 +5,7 @@ import se.devscout.server.api.model.Status;
 
 import java.net.URI;
 
-class MediaPropertiesPojo implements MediaProperties {
+public class MediaPropertiesPojo implements MediaProperties {
     private URI mUri;
     private String mMimeType;
 

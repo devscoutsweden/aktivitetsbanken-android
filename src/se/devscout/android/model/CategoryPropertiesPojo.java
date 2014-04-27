@@ -4,11 +4,11 @@ import se.devscout.server.api.model.CategoryProperties;
 
 import java.io.Serializable;
 
-class CategoryPropertiesPojo implements CategoryProperties, Serializable {
+public class CategoryPropertiesPojo implements CategoryProperties, Serializable {
     private String mName;
     private String mGroup;
 
-    CategoryPropertiesPojo(String group, String name) {
+    protected CategoryPropertiesPojo(String group, String name) {
         mGroup = group;
         mName = name;
     }

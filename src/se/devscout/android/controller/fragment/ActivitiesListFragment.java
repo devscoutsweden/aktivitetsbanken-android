@@ -12,7 +12,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.ActivityActivity;
-import se.devscout.android.model.SQLiteActivityRepo;
+import se.devscout.android.model.ObjectIdentifierPojo;
+import se.devscout.android.model.repo.SQLiteActivityRepo;
 import se.devscout.android.view.AgeGroupView;
 import se.devscout.server.api.model.Activity;
 import se.devscout.server.api.model.ActivityKey;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ActivitiesListFragment extends ListFragment {
-    protected ArrayList<KeyPojo> mActivities;
+    protected ArrayList<ObjectIdentifierPojo> mActivities;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,7 +34,7 @@ public class ActivitiesListFragment extends ListFragment {
                 /*
                  * Restore fields from saved state, for example after the device has been rotated.
                  */
-                mActivities = (ArrayList<KeyPojo>) savedInstanceState.getSerializable("mActivities");
+                mActivities = (ArrayList<ObjectIdentifierPojo>) savedInstanceState.getSerializable("mActivities");
             }
             setListAdapter(createAdapter());
         } catch (RuntimeException e) {
@@ -57,7 +58,7 @@ public class ActivitiesListFragment extends ListFragment {
 
     protected ArrayList<Activity> getActivities() {
         ArrayList<Activity> activities = new ArrayList<Activity>();
-        for (KeyPojo activity : mActivities) {
+        for (ObjectIdentifierPojo activity : mActivities) {
             activities.add(SQLiteActivityRepo.getInstance(getActivity()).read(activity));
         }
         return activities;
@@ -70,9 +71,9 @@ public class ActivitiesListFragment extends ListFragment {
 
     public static ActivitiesListFragment create(List<ActivityKey> activities) {
         ActivitiesListFragment fragment = new ActivitiesListFragment();
-        ArrayList<KeyPojo> sortedList = new ArrayList<KeyPojo>();
+        ArrayList<ObjectIdentifierPojo> sortedList = new ArrayList<ObjectIdentifierPojo>();
         for (ActivityKey key : activities) {
-            sortedList.add(new KeyPojo(key.getId()));
+            sortedList.add(new ObjectIdentifierPojo(key.getId()));
         }
 /*
         Collections.sort(sortedList, new Comparator<Activity>() {

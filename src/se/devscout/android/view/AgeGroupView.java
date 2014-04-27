@@ -9,7 +9,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import se.devscout.android.AgeGroup;
 import se.devscout.android.R;
-import se.devscout.android.model.LocalRange;
+import se.devscout.android.model.repo.LocalRange;
 import se.devscout.android.util.AgeRangeFilter;
 
 public class AgeGroupView extends View {

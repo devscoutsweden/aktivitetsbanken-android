@@ -1,4 +1,4 @@
-package se.devscout.android.model;
+package se.devscout.android.model.repo;
 
 import android.content.Context;
 import se.devscout.server.api.ActivityBank;

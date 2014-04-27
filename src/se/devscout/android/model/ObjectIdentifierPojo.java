@@ -1,13 +1,13 @@
-package se.devscout.android.controller.fragment;
+package se.devscout.android.model;
 
 import se.devscout.server.api.model.ActivityKey;
 
 import java.io.Serializable;
 
-public class KeyPojo implements Serializable, ActivityKey {
+public class ObjectIdentifierPojo implements Serializable, ActivityKey {
     private Long mId;
 
-    public KeyPojo(Long id) {
+    public ObjectIdentifierPojo(Long id) {
         mId = id;
     }
 

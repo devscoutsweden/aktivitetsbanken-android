@@ -1,16 +1,17 @@
-package se.devscout.android.model;
+package se.devscout.android.model.repo;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
-import se.devscout.server.api.model.*;
+import se.devscout.android.model.ActivityPropertiesPojo;
+import se.devscout.server.api.model.Activity;
+import se.devscout.server.api.model.Status;
+import se.devscout.server.api.model.User;
 
 import java.io.Serializable;
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @JsonFilter("LocalActivity")
-class LocalActivity extends ActivityPropertiesPojo implements Activity, ActivityRevision, Serializable, Comparable<LocalActivity> {
+class LocalActivity extends ActivityPropertiesPojo implements Activity, /*ActivityRevision, */Serializable, Comparable<LocalActivity> {
     public static long debugCounter;
     private List<LocalActivityRevision> mRevisions = new ArrayList<LocalActivityRevision>();
     private LocalUser mOwner;
@@ -40,6 +41,7 @@ class LocalActivity extends ActivityPropertiesPojo implements Activity, Activity
         return Status.PUBLISHED;
     }
 
+/*
     @Override
     public int getVersion() {
         return 0;
@@ -152,6 +154,7 @@ class LocalActivity extends ActivityPropertiesPojo implements Activity, Activity
     public Media getCoverMedia() {
         return !getMediaItems().isEmpty() ? getMediaItems().get(0) : null;
     }
+*/
 
     @Override
     public User getOwner() {
@@ -163,6 +166,7 @@ class LocalActivity extends ActivityPropertiesPojo implements Activity, Activity
         return getLatestRevisions().getName();
     }
 
+/*
     public void addCategory(String group, String name) {
         getLatestRevisions().addCategory(group, name);
     }
@@ -182,12 +186,14 @@ class LocalActivity extends ActivityPropertiesPojo implements Activity, Activity
     public void setParticipants(Range<Integer> participants) {
         getLatestRevisions().setParticipants(participants);
     }
+*/
 
     @Override
     public int compareTo(LocalActivity localActivity) {
         return localActivity != null ? getLatestRevisions().getName().compareTo(localActivity.getLatestRevisions().getName()) : 0;
     }
 
+/*
     public void setSourceURI(URI sourceURI) {
         getLatestRevisions().setSourceURI(sourceURI);
     }
@@ -195,11 +201,13 @@ class LocalActivity extends ActivityPropertiesPojo implements Activity, Activity
     public void setTimePreparation(Range<Integer> timePreparation) {
         getLatestRevisions().setTimePreparation(timePreparation);
     }
+*/
 
     public void setOwner(LocalUser owner) {
         mOwner = owner;
     }
 
+/*
     public void setAuthor(LocalUser author) {
         getLatestRevisions().setAuthor(author);
     }
@@ -228,6 +236,7 @@ class LocalActivity extends ActivityPropertiesPojo implements Activity, Activity
     public ActivityKey getActivityKey() {
         return getLatestRevisions().getActivityKey();
     }
+*/
 
     @Override
     public Long getId() {

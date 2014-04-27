@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 import se.devscout.android.controller.fragment.ActivitiesListFragment;
-import se.devscout.android.controller.fragment.KeyPojo;
-import se.devscout.android.model.SQLiteActivityRepo;
+import se.devscout.android.model.ObjectIdentifierPojo;
+import se.devscout.android.model.repo.SQLiteActivityRepo;
 import se.devscout.server.api.model.ActivityKey;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class SearchResultActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
-        ArrayList<KeyPojo> keys = (ArrayList<KeyPojo>) getIntent().getSerializableExtra(INTENT_EXTRA_ACTIVITIES);
+        ArrayList<ObjectIdentifierPojo> keys = (ArrayList<ObjectIdentifierPojo>) getIntent().getSerializableExtra(INTENT_EXTRA_ACTIVITIES);
 
 
         List<ActivityKey> activities = new ArrayList<ActivityKey>();
@@ -51,9 +51,9 @@ public class SearchResultActivity extends SingleFragmentActivity {
 
     public static Intent createIntent(Context ctx, List<? extends se.devscout.server.api.model.Activity> activities, String title) {
 
-        ArrayList<KeyPojo> keys = new ArrayList<KeyPojo>();
+        ArrayList<ObjectIdentifierPojo> keys = new ArrayList<ObjectIdentifierPojo>();
         for (se.devscout.server.api.model.Activity activity : activities) {
-            keys.add(new KeyPojo(activity.getId()));
+            keys.add(new ObjectIdentifierPojo(activity.getId()));
         }
 
         Intent intent = new Intent(ctx, SearchResultActivity.class);

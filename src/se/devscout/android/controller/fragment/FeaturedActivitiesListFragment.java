@@ -5,7 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
-import se.devscout.android.model.SQLiteActivityRepo;
+import se.devscout.android.model.ObjectIdentifierPojo;
+import se.devscout.android.model.repo.SQLiteActivityRepo;
 import se.devscout.android.util.IsFeaturedFilter;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.model.Activity;
@@ -35,9 +36,9 @@ public class FeaturedActivitiesListFragment extends ActivitiesListFragment {
     public static FeaturedActivitiesListFragment create(ActivityBank repo) {
         FeaturedActivitiesListFragment fragment = new FeaturedActivitiesListFragment();
         ArrayList<Activity> activities = new ArrayList<Activity>(repo.find(new IsFeaturedFilter()));
-        fragment.mActivities = new ArrayList<KeyPojo>();
+        fragment.mActivities = new ArrayList<ObjectIdentifierPojo>();
         for (Activity activity : activities) {
-            fragment.mActivities.add(new KeyPojo(activity.getId()));
+            fragment.mActivities.add(new ObjectIdentifierPojo(activity.getId()));
         }
         return fragment;
     }

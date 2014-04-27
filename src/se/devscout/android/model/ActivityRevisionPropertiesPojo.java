@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 @JsonFilter("LocalActivityRevision")
-class ActivityRevisionPropertiesPojo implements ActivityRevisionProperties {
+public class ActivityRevisionPropertiesPojo implements ActivityRevisionProperties {
     private String mName;
     private Date mDatePublished = new Date();
     private Date mDateCreated = new Date();
@@ -19,23 +19,23 @@ class ActivityRevisionPropertiesPojo implements ActivityRevisionProperties {
     private String mSafety;
     private boolean mFeatured;
     private Range<Integer> mAges;
-    private List<LocalCategory> mCategories = new ArrayList<LocalCategory>();
+    protected List<Category> mCategories = new ArrayList<Category>();
     private StringBuilder mNotes = new StringBuilder();
     private String mMaterial;
     private Range<Integer> mTimeActivity;
     private Range<Integer> mTimePreparation;
     private Range<Integer> mParticipants;
-    private List<LocalMedia> mMediaItems = new ArrayList<LocalMedia>();
+    protected List<Media> mMediaItems = new ArrayList<Media>();
     private URI mSourceURI;
-    private LocalUser mAuthor;
-    private List<LocalReference> mReferences = new ArrayList<LocalReference>();
-    private LocalUser mOwner;
+    private User mAuthor;
+    protected List<Reference> mReferences = new ArrayList<Reference>();
+    private User mOwner;
     private ActivityKey mActivityKey;
 
     public ActivityRevisionPropertiesPojo() {
     }
 
-    void setFeatured(boolean featured) {
+    public void setFeatured(boolean featured) {
         mFeatured = featured;
     }
 
@@ -164,21 +164,18 @@ class ActivityRevisionPropertiesPojo implements ActivityRevisionProperties {
     }
 
     @Override
-    public List<LocalMedia> getMediaItems() {
+    public List<Media> getMediaItems() {
         return mMediaItems;
     }
 
-    public void addMediaItem(URI uri, String mimeType) {
-        mMediaItems.add(new LocalMedia(uri, mimeType, LocalMedia.debugCounter++));
-    }
 
     @Override
-    public List<LocalReference> getReferences() {
+    public List<Reference> getReferences() {
         return mReferences;
     }
 
     @Override
-    public List<LocalCategory> getCategories() {
+    public List<Category> getCategories() {
         return mCategories;
     }
 
@@ -190,14 +187,6 @@ class ActivityRevisionPropertiesPojo implements ActivityRevisionProperties {
     @Override
     public String toString() {
         return mName;
-    }
-
-    public void addCategory(String group, String name) {
-        mCategories.add(new LocalCategory(group, name, LocalCategory.debugCounter++));
-    }
-
-    public void addReference(URI uri, ReferenceType type) {
-        mReferences.add(new LocalReference(LocalReference.debugCounter++, type, uri));
     }
 
     public void setMaterial(String material) {
@@ -220,11 +209,11 @@ class ActivityRevisionPropertiesPojo implements ActivityRevisionProperties {
         mTimePreparation = timePreparation;
     }
 
-    public void setOwner(LocalUser owner) {
+    public void setOwner(User owner) {
         mOwner = owner;
     }
 
-    public void setAuthor(LocalUser author) {
+    public void setAuthor(User author) {
         mAuthor = author;
     }
 
