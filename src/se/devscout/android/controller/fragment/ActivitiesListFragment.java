@@ -26,6 +26,45 @@ import java.util.List;
 
 public class ActivitiesListFragment extends ListFragment {
     protected ArrayList<ObjectIdentifierPojo> mActivities;
+    private Sorter mSortOrder;
+
+    public static enum Sorter implements Comparator<Activity> {
+        NAME(new Comparator<Activity>() {
+            @Override
+            public int compare(Activity localActivity, Activity localActivity2) {
+                return ActivityUtil.getLatestActivityRevision(localActivity).getName().compareTo(ActivityUtil.getLatestActivityRevision(localActivity2).getName());
+            }
+        }),
+        PARTICIPANT_COUNT(new RangeComparator() {
+            @Override
+            protected Range<Integer> getRange(Activity activity) {
+                return ActivityUtil.getLatestActivityRevision(activity).getParticipants();
+            }
+        }),
+        AGES(new RangeComparator() {
+            @Override
+            protected Range<Integer> getRange(Activity activity) {
+                return ActivityUtil.getLatestActivityRevision(activity).getAges();
+            }
+        }),
+        TIME(new RangeComparator() {
+            @Override
+            protected Range<Integer> getRange(Activity activity) {
+                return ActivityUtil.getLatestActivityRevision(activity).getTimeActivity();
+            }
+        });
+
+        private final Comparator<Activity> mComparator;
+
+        Sorter(Comparator<Activity> comparator) {
+            mComparator = comparator;
+        }
+        @Override
+        public int compare(Activity activity, Activity activity2) {
+            return mComparator.compare(activity, activity2);
+        }
+
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,19 +75,30 @@ public class ActivitiesListFragment extends ListFragment {
                  * Restore fields from saved state, for example after the device has been rotated.
                  */
                 mActivities = (ArrayList<ObjectIdentifierPojo>) savedInstanceState.getSerializable("mActivities");
+                mSortOrder = (Sorter) savedInstanceState.getSerializable("mSortOrder");
             }
-            ArrayAdapter<Activity> adapter = createAdapter();
-            adapter.sort(new Comparator<Activity>() {
-                @Override
-                public int compare(Activity activity, Activity activity2) {
-                    return activity != null ? ActivityUtil.getLatestActivityRevision(activity).getName().compareTo(ActivityUtil.getLatestActivityRevision(activity2).getName()) : 0;
-                }
-            });
-            setListAdapter(adapter);
+            setListAdapter(createAdapter());
+            setSortOrder(mSortOrder);
         } catch (RuntimeException e) {
             Log.e(getClass().getName(), "Error during onCreate", e);
             throw e;
         }
+    }
+
+    @Override
+    public ArrayAdapter<Activity> getListAdapter() {
+        return (ArrayAdapter<Activity>) super.getListAdapter();    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    public void setSortOrder(Sorter sortOrder) {
+        mSortOrder = sortOrder;
+        if (mSortOrder != null) {
+            getListAdapter().sort(mSortOrder);
+        }
+    }
+
+    public Sorter getSortOrder() {
+        return mSortOrder;
     }
 
     @Override
@@ -58,6 +108,7 @@ public class ActivitiesListFragment extends ListFragment {
          * Store fields into saved state, for example when the activity is destroyed after the device has been rotated.
          */
         outState.putSerializable("mActivities", mActivities);
+        outState.putSerializable("mSortOrder", mSortOrder);
     }
 
     protected ArrayAdapter<Activity> createAdapter() {
@@ -77,7 +128,7 @@ public class ActivitiesListFragment extends ListFragment {
         startActivity(ActivityActivity.createIntent(getActivity(), (ActivityKey) getListAdapter().getItem(position)));
     }
 
-    public static ActivitiesListFragment create(List<ActivityKey> activities) {
+    public static ActivitiesListFragment create(List<ActivityKey> activities, Sorter defaultSortOrder) {
         ActivitiesListFragment fragment = new ActivitiesListFragment();
         ArrayList<ObjectIdentifierPojo> sortedList = new ArrayList<ObjectIdentifierPojo>();
         for (ActivityKey key : activities) {
@@ -92,6 +143,7 @@ public class ActivitiesListFragment extends ListFragment {
         });
 */
         fragment.mActivities = sortedList;
+        fragment.mSortOrder = defaultSortOrder;
         return fragment;
     }
 

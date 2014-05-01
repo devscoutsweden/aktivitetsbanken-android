@@ -6,23 +6,26 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import se.devscout.android.R;
 
-abstract class SingleFragmentActivity extends FragmentActivity {
+abstract class SingleFragmentActivity<T extends Fragment> extends FragmentActivity {
+
+    protected T mFragment;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.empty);
 
         FragmentManager fm = getSupportFragmentManager();
 
-        Fragment fragment = fm.findFragmentById(R.id.emptyContainer);
-        if (fragment == null) {
-            fragment = createFragment();
-            fm.beginTransaction().add(R.id.emptyContainer, fragment).commit();
+        mFragment = (T) fm.findFragmentById(R.id.emptyContainer);
+        if (mFragment == null) {
+            mFragment = createFragment();
+            fm.beginTransaction().add(R.id.emptyContainer, mFragment).commit();
         }
 
         if (savedInstanceState != null) {
             Fragment.SavedState state = (Fragment.SavedState) savedInstanceState.getParcelable("state");
             if (state != null) {
-                fragment.setInitialSavedState(state);
+                mFragment.setInitialSavedState(state);
             }
         }
     }
@@ -39,5 +42,5 @@ abstract class SingleFragmentActivity extends FragmentActivity {
         }
     }
 
-    protected abstract Fragment createFragment();
+    protected abstract T createFragment();
 }

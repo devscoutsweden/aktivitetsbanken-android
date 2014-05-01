@@ -68,4 +68,9 @@
     <string name="activity_notes">Noteringar</string>
     <string name="startTabSearch">Sök</string>
     <string name="searchResultIsEmpty">Inga träffar</string>
+    <string name="sortByName">Sortera efter namn</string>
+    <string name="sortByTime">Sortera efter tidsåtgång</string>
+    <string name="sortByParticipants">Sortera efter antal deltagare</string>
+    <string name="sortByAges">Sortera efter ålder</string>
+    <string name="activitiesListMenuSort">Sortera</string>
 </resources>

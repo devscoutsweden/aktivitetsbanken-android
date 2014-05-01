@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/activitiesListMenu"
+        android:title="@string/activitiesListMenuSort"
+        android:icon="@drawable/ic_action_sort_by_size"
+        android:showAsAction="ifRoom|withText">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/activitiesListMenuSortByName"
+                    android:title="@string/sortByName" />
+                <item
+                    android:id="@+id/activitiesListMenuSortByTime"
+                    android:title="@string/sortByTime" />
+                <item
+                    android:id="@+id/activitiesListMenuSortByParticipants"
+                    android:title="@string/sortByParticipants" />
+                <item
+                    android:id="@+id/activitiesListMenuSortByAges"
+                    android:title="@string/sortByAges" />
+            </group>
+        </menu>
+    </item>
+</menu>
