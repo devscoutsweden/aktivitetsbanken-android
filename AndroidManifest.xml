@@ -20,5 +20,10 @@
         </activity>
         <activity android:name=".controller.activity.ActivityActivity"></activity>
         <activity android:name=".controller.activity.SearchResultActivity"></activity>
+        <activity android:name=".controller.activity.DatabaseActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
     </application>
 </manifest>
