@@ -6,6 +6,7 @@ import android.util.Log;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import se.devscout.android.R;
+import se.devscout.android.model.IntegerRangePojo;
 import se.devscout.server.api.model.Range;
 
 import java.io.IOException;
@@ -21,6 +22,7 @@ public class TestDataUtil {
         int eventType = 0;
         LocalActivity localActivity = null;
         LocalActivityRevision revision = null;
+        LocalActivityRevision firstRevision = null;
         try {
             while ((eventType = parser.next()) != XmlPullParser.END_DOCUMENT) {
                 switch (eventType) {
@@ -38,6 +40,8 @@ public class TestDataUtil {
                                     null,
                                     LocalActivity.debugCounter++);
                             mActivities.add(localActivity);
+                            firstRevision = new LocalActivityRevision("." + name, featured, localActivity, LocalActivityRevision.debugCounter++);
+                            localActivity.getRevisions().add(firstRevision);
                             revision = new LocalActivityRevision(name, featured, localActivity, LocalActivityRevision.debugCounter++);
                             localActivity.getRevisions().add(revision);
                         } else if ("introduction".equals(parser.getName())) {
@@ -46,6 +50,7 @@ public class TestDataUtil {
                             String type = parser.getAttributeValue(null, "type");
                             String descr = parser.nextText().trim();
                             if ("activity".equals(type)) {
+                                firstRevision.setDescription("_" + descr);
                                 revision.setDescription(descr);
                             } else if ("safety".equals(type)) {
                                 revision.setSafety(descr);
@@ -54,6 +59,7 @@ public class TestDataUtil {
                             } else if ("material".equals(type)) {
                                 revision.setMaterial(descr);
                             } else if ("activity-name".equals(type)) {
+                                firstRevision.setName("." + descr);
                                 revision.setName(descr);
                             } else if ("ages".equals(type)) {
                                 revision.setAges(toRange(descr));
@@ -72,11 +78,11 @@ public class TestDataUtil {
                             URI uri = URI.create(parser.getAttributeValue(null, "uri"));
                             revision.addMediaItem(uri, null);
                         } else if ("participants".equals(parser.getName())) {
-                            revision.setParticipants(new LocalRange(
+                            revision.setParticipants(new IntegerRangePojo(
                                     parser.getAttributeIntValue(null, "min", 1),
                                     parser.getAttributeIntValue(null, "max", 99)));
                         } else if ("time".equals(parser.getName())) {
-                            revision.setTimeActivity(new LocalRange(
+                            revision.setTimeActivity(new IntegerRangePojo(
                                     parser.getAttributeIntValue(null, "min", 1),
                                     parser.getAttributeIntValue(null, "max", 99)));
                         }
@@ -101,6 +107,6 @@ public class TestDataUtil {
             min = Math.min(min, value);
             max = Math.max(max, value);
         }
-        return new LocalRange(min, max);
+        return new IntegerRangePojo(min, max);
     }
 }

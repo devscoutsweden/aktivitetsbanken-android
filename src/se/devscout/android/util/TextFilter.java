@@ -12,6 +12,6 @@ public class TextFilter implements ActivityFilter {
 
     @Override
     public boolean matches(ActivityProperties properties) {
-        return properties.getRevisions().get(0).getName().contains(mCondition);
+        return ActivityUtil.getLatestActivityRevision(properties).getName().contains(mCondition);
     }
 }

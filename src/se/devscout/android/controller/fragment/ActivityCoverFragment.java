@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import se.devscout.android.R;
+import se.devscout.android.util.ActivityUtil;
 import se.devscout.android.util.ResourceUtil;
 import se.devscout.server.api.model.Activity;
 import se.devscout.server.api.model.ActivityRevision;
@@ -28,7 +29,7 @@ public class ActivityCoverFragment extends Fragment implements View.OnClickListe
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = initListItemView(inflater, container, null, mActivity.getRevisions().get(0));
+        View view = initListItemView(inflater, container, null, ActivityUtil.getLatestActivityRevision(mActivity));
 
         if (mOnClickListener != null) {
             view.setOnClickListener(this);

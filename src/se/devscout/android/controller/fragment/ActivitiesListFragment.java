@@ -14,13 +14,14 @@ import se.devscout.android.R;
 import se.devscout.android.controller.activity.ActivityActivity;
 import se.devscout.android.model.ObjectIdentifierPojo;
 import se.devscout.android.model.repo.SQLiteActivityRepo;
+import se.devscout.android.util.ActivityUtil;
 import se.devscout.android.view.AgeGroupView;
 import se.devscout.server.api.model.Activity;
 import se.devscout.server.api.model.ActivityKey;
-import se.devscout.server.api.model.ActivityRevision;
 import se.devscout.server.api.model.Range;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class ActivitiesListFragment extends ListFragment {
@@ -36,7 +37,14 @@ public class ActivitiesListFragment extends ListFragment {
                  */
                 mActivities = (ArrayList<ObjectIdentifierPojo>) savedInstanceState.getSerializable("mActivities");
             }
-            setListAdapter(createAdapter());
+            ArrayAdapter<Activity> adapter = createAdapter();
+            adapter.sort(new Comparator<Activity>() {
+                @Override
+                public int compare(Activity activity, Activity activity2) {
+                    return activity != null ? ActivityUtil.getLatestActivityRevision(activity).getName().compareTo(ActivityUtil.getLatestActivityRevision(activity2).getName()) : 0;
+                }
+            });
+            setListAdapter(adapter);
         } catch (RuntimeException e) {
             Log.e(getClass().getName(), "Error during onCreate", e);
             throw e;
@@ -66,7 +74,7 @@ public class ActivitiesListFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        startActivity(ActivityActivity.createIntent(getActivity(), mActivities.get(position)));
+        startActivity(ActivityActivity.createIntent(getActivity(), (ActivityKey) getListAdapter().getItem(position)));
     }
 
     public static ActivitiesListFragment create(List<ActivityKey> activities) {
@@ -117,40 +125,43 @@ public class ActivitiesListFragment extends ListFragment {
 
         private void initAgeGroups(View convertView, Activity activity) {
             AgeGroupView view = (AgeGroupView) convertView.findViewById(R.id.activitiesListItemAgeGroups);
-            Range<Integer> ages = getLatestActivityRevision(activity).getAges();
-            if (ages != null) {
+            Range<Integer> ages = ActivityUtil.getLatestActivityRevision(activity).getAges();
+            boolean show = ages != null && ages.toString().length() > 0;
+            if (show) {
                 view.setMaxAge(ages.getMax());
                 view.setMinAge(ages.getMin());
             }
-            view.setVisibility(view != null ? View.VISIBLE : View.GONE);
+            view.setVisibility(show ? View.VISIBLE : View.GONE);
         }
 
         private void initTitle(View convertView, Activity activity) {
             TextView titleTextView = (TextView) convertView.findViewById(R.id.activitiesListItemTitle);
-            titleTextView.setText(getLatestActivityRevision(activity).getName());
+            titleTextView.setText(ActivityUtil.getLatestActivityRevision(activity).getName());
         }
 
         private void initPeople(View convertView, Activity activity) {
             TextView participantsTextView = (TextView) convertView.findViewById(R.id.activitiesListItemParticipants);
-            Range<Integer> participants = getLatestActivityRevision(activity).getParticipants();
-            if (participants != null) {
+            Range<Integer> participants = ActivityUtil.getLatestActivityRevision(activity).getParticipants();
+            boolean show = participants != null && participants.toString().length() > 0;
+            if (show) {
                 participantsTextView.setText(getContext().getResources().getString(R.string.activitiesListItemParticipants, participants.toString()));
             }
-            participantsTextView.setVisibility(participantsTextView != null ? View.VISIBLE : View.GONE);
+            participantsTextView.setVisibility(show ? View.VISIBLE : View.GONE);
         }
 
         private void initTime(View convertView, Activity activity) {
-            Range<Integer> timeActivity = getLatestActivityRevision(activity).getTimeActivity();
+            Range<Integer> timeActivity = ActivityUtil.getLatestActivityRevision(activity).getTimeActivity();
             TextView timeTextView = (TextView) convertView.findViewById(R.id.activitiesListItemTime);
-            if (timeActivity != null) {
+            boolean show = timeActivity != null && timeActivity.toString().length() > 0;
+            if (show) {
                 timeTextView.setText(getContext().getResources().getString(R.string.activitiesListItemTime, timeActivity.toString()));
             }
-            timeTextView.setVisibility(timeActivity != null ? View.VISIBLE : View.GONE);
+            timeTextView.setVisibility(show ? View.VISIBLE : View.GONE);
         }
 
         private void initDescription(View convertView, Activity activity) {
             TextView descriptionTextView = (TextView) convertView.findViewById(R.id.activitiesListItemSubtitle);
-            String description = getLatestActivityRevision(activity).getDescription();
+            String description = ActivityUtil.getLatestActivityRevision(activity).getDescription();
             if (description != null) {
                 descriptionTextView.setText(description.substring(0, Math.min(100, description.length())));
             }
@@ -158,7 +169,4 @@ public class ActivitiesListFragment extends ListFragment {
         }
     }
 
-    private static ActivityRevision getLatestActivityRevision(Activity activity) {
-        return activity.getRevisions().get(activity.getRevisions().size() - 1);
-    }
 }

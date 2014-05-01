@@ -14,7 +14,7 @@ public class AgeRangeFilter extends RangeFilter {
 
     @Override
     public boolean matches(ActivityProperties properties) {
-        return matches(properties.getRevisions().get(0).getAges());
+        return matches(ActivityUtil.getLatestActivityRevision(properties).getAges());
     }
 
 }

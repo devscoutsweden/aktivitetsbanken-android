@@ -9,6 +9,6 @@ import se.devscout.server.api.model.ActivityProperties;
 public class IsFeaturedFilter implements ActivityFilter {
     @Override
     public boolean matches(ActivityProperties properties) {
-        return properties.getRevisions().get(0).isFeatured();
+        return ActivityUtil.getLatestActivityRevision(properties).isFeatured();
     }
 }

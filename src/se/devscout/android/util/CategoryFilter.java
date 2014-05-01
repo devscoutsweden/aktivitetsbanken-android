@@ -18,7 +18,7 @@ public class CategoryFilter implements ActivityFilter {
 
     @Override
     public boolean matches(ActivityProperties properties) {
-        ActivityRevision revision = properties.getRevisions().get(0);
+        ActivityRevision revision = ActivityUtil.getLatestActivityRevision(properties);
         for (Category category : revision.getCategories()) {
             if (matches(category)) {
                 return true;
