@@ -10,33 +10,39 @@
         android:id="@+id/quickSearchListItemTitle"
         android:textStyle="bold"
         android:textSize="@dimen/mediumTextSize"
-        android:padding="@dimen/defaultMargin"
-        android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@+id/quickSearchListItemImage"
-        android:layout_alignParentTop="true" />
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:layout_toRightOf="@+id/quickSearchListItemImage"
+        android:layout_alignTop="@+id/quickSearchListItemImage"
+        android:paddingLeft="@dimen/defaultMargin"
+        android:paddingTop="@dimen/defaultMargin"
+        android:paddingRight="@dimen/defaultMargin" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Text"
         android:id="@+id/quickSearchListItemSubtitle"
-        android:layout_below="@+id/quickSearchListItemTitle"
         android:textColor="@android:color/secondary_text_light"
         android:paddingLeft="@dimen/defaultMargin"
         android:paddingRight="@dimen/defaultMargin"
         android:paddingBottom="@dimen/defaultMargin"
         android:paddingTop="0dp"
         android:textSize="@dimen/smallTextSize"
-        android:layout_alignRight="@+id/quickSearchListItemTitle"
-        android:layout_alignParentLeft="true" />
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:layout_alignLeft="@+id/quickSearchListItemTitle"
+        android:layout_below="@+id/quickSearchListItemTitle" />
 
     <ImageView
         android:layout_width="@dimen/uiBlockSize"
         android:layout_height="@dimen/uiBlockSize"
         android:id="@+id/quickSearchListItemImage"
-        android:src="@drawable/ic_launcher"
+        android:src="@drawable/icon"
         android:baselineAlignBottom="false"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true" />
+        android:scaleType="fitCenter"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="@dimen/defaultMargin" />
 
 </RelativeLayout>
