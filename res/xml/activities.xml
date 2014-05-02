@@ -258,9 +258,12 @@
         <description type="material">
             Det blir roligare om man har tillgång till rekvisita men låt scouterna vara kreativa och hitta på själva hur
             de vill illustrera sin roll.</description>
-        <description type="scout-method">
-            Symboler och ceremonier
-            Patrullen</description>
+        <category
+            group="scout-method"
+            name="Symboler och ceremonier" />
+        <category
+            group="scout-method"
+            name="Patrullen" />
     </activity>
     <activity>
         <time min="5" max="15" />
@@ -502,8 +505,9 @@
             Att tänka på när man vadar
             jpg"
             Vadning.JPG</description>
-        <description type="scout-method">
-            Friluftsliv</description>
+        <category
+            group="scout-method"
+            name="Friluftsliv" />
     </activity>
     <activity>
         <category
@@ -738,7 +742,7 @@
             Eller annat material om ni väljer det.</description>
         <description type="notes">
             Det kan kladda väldigt mycket, se till att skydda borden innan ni börjar.</description>
-        <description type="scout-method">
+        <description>
             Scouterna får välja och diskutera, reflektera gärna med dem om det är någon som blir väldigt missnöjd med
             majoritetens beslut.</description>
         <description type="safety">
@@ -811,7 +815,10 @@
         <description type="notes">
             Det tar tid att förbereda. Prova om du själv eller någon annan kan läsa det du skrivit innan du delar ut
             uppgiften på riktigt.</description>
-        <description type="scout-method">
+        <category
+            group="scout-method"
+            name="Learning by doing" />
+        <description>
             Learning by doing – både för den som skriver och den som läser.
             Samarbete underlättar vid läsningen.</description>
         <description type="safety">
@@ -883,9 +890,12 @@
             eld och därför bör vi alltid bygga en eldstad, en eldstad som skyddar marken. Då skyddas marken men det blir
             även bättre eld tack vare att den syresätts mer och värmen från elden sprids bättre då den kommer upp en bit
             från marken.</description>
-        <description type="scout-method">
-            Learning by doing
-            Friluftsliv</description>
+        <category
+            group="scout-method"
+            name="Learning by doing" />
+        <category
+            group="scout-method"
+            name="Friluftsliv" />
         <description type="safety">
             Att bära sten kan vara tungt. Ta inte större stenar än vad deltagarna orkar bära. Sten behövs av olika
             storlekar så anpassa storleken på sten som tas efter ålder och styrkan. en för tung sten kan risker att
@@ -1001,8 +1011,9 @@
 
             Gör invigningen till en inkluderande högtid, öppen för intresserade icke-scouter, och få ett
             rekryteringstillfälle på köpet!</description>
-        <description type="scout-method">
-            Scoutlag och scoutlöfte</description>
+        <category
+            group="scout-method"
+            name="Scoutlag och scoutlöfte" />
         <description type="safety">
             Säkerhetsavstånd till ev. ljus och lyktor.
 
@@ -1041,8 +1052,6 @@
             Förbered noga! Vi har kört flera förträffar för att informera, utbilda, svara på frågor etc.
 
             Var beredd på att ändra i programmet – fjällväder kan vara nyckfullt!</description>
-        <description type="scout-method">
-            Alla!</description>
         <description type="safety">
             Noga genomtänkt. Alltid ledare med på varje gruppaktivitet.
             Första hjälpen-kit med.
@@ -1152,8 +1161,6 @@
             om gruppens samarbete som de kan ha nytta av vid andra tillfällen.</description>
         <description type="material">
             Beroende på vilka av dessa eller andra aktiviteter ni väljer.</description>
-        <description type="scout-method">
-            Patrullsammarbete.</description>
     </activity>
     <activity>
         <category
@@ -1185,8 +1192,9 @@
             Om ni inte har eller vill använda ett vanligt plank, kan ni istället surra fast en stor spånskiva lodrätt
             emellan två träd. Väljer ni att göra det kan ni ju även välja att spela ute i skogen i dess terräng, då
             bollen kan studsa oförutsägbart och öka svårighetsgraden.</description>
-        <description type="scout-method">
-            Patrullsystemet</description>
+        <category
+            group="scout-method"
+            name="Patrullsystemet" />
         <description type="safety">
             Välj inte en för hård boll, då det kan göra ont om man skulle få den i huvudet.</description>
         <description type="references">
@@ -1408,9 +1416,12 @@
             beredda på att ledarna kan bli stående med disken
 
             Sök recept på internet.</description>
-        <description type="scout-method">
-            Friluftsliv
-            Learning by doing</description>
+        <category
+            group="scout-method"
+            name="Friluftsliv" />
+        <category
+            group="scout-method"
+            name="Learning by doing" />
         <description type="safety">
             Vatten för släckning
             Förbandslåda</description>
@@ -1454,7 +1465,7 @@
 
             Du kan också läsa mer om att fika rättvist i Utmanarboken, s 14, ”Se upp för fikadöden”. Boken kan du köpa i
             scOUT-shopen på www.scout.se/shop</description>
-        <description type="scout-method">
+        <description>
             Reflektera och diskutera hur människor i andra länder lever. Vilken skillnad gör det för dem att vi köper
             rättvisemärkt till vårt fika?</description>
         <description type="references">
@@ -1757,8 +1768,9 @@
             personalen i simhallen om de kan hjälpa er eller om ni kan få låna flaket när ni är och badar!)
 
             Isdubbar och hjälm är bra för säkerheten på isen!</description>
-        <description type="scout-method">
-            Friluftsliv</description>
+        <category
+            group="scout-method"
+            name="Friluftsliv" />
         <description type="safety">
             Ge dig aldrig ensam ut på sjöis. Alla i gruppen måste ha säkerhetsutrustning (dubbar och flythjälp), och bör
             vara simkunniga. Det ska finnas minst två kastlinor och en ispik per grupp. I ryggsäcken kan det vara
@@ -1858,9 +1870,12 @@
         <description type="material">
             Det blir roligare om man har tillgång till rekvisita men låt scouterna vara kreativa och hitta på själva hur
             de vill illustrera sin roll.</description>
-        <description type="scout-method">
-            Symboler och Ceremonier
-            Patrullen</description>
+        <category
+            group="scout-method"
+            name="Symboler och Ceremonier" />
+        <category
+            group="scout-method"
+            name="Patrullen" />
         <description type="references">
             Maria Andersson SMU Scout</description>
     </activity>
@@ -2004,7 +2019,7 @@
             Tipsa scouterna om att om de är med och dansar så vågar de små också göra det.
 
             Tänk på att det tar tid att förbereda och städa lokalen innan och efter discot.</description>
-        <description type="scout-method">
+        <description>
             Detta bygger på samarbete och scouten får på ett roligt sätt lära sig att organisera. Glöm inte att följa
             upp efteråt för att se hur de tycker att det har gått.</description>
         <description type="safety">
@@ -2117,7 +2132,7 @@
             100% ylle (ej syntetblandat), t ex yllesockor, ylletröja, yllevantar…
             100% syntet, t ex fleece, vattenavvisande material, syntettröja….
             Nål och tråd att sy på kläderna.</description>
-        <description type="scout-method">
+        <description>
             Ger scouterna ökad förståelse och kunskap i släckning av brand i kläder.</description>
         <description type="safety">
             Detta ska ske utomhus, då syntetkläderna kan bilda obehaglig rök. Även om det är små tygbitar kan det vara
@@ -2321,7 +2336,7 @@
             ”- Tror ni att ni kan missförstå andra människors kultur på liknande sätt?”</description>
         <description type="material">
             Ingetmaterial behövs utöver sagan.</description>
-        <description type="scout-method">
+        <description>
             Ge alla möjlighet att ge sin åsikt till berättelsen.</description>
         <description type="references">
             Denna aktivitet fanns med på lägret Jiingijamborii 2007.</description>

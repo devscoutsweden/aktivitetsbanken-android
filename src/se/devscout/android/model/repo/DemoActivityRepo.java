@@ -79,4 +79,9 @@ public class DemoActivityRepo implements ActivityBank {
     public List<Reference> readReferences(ActivityKey key) {
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    public List<Category> readCategories() {
+        throw new UnsupportedOperationException();
+    }
 }

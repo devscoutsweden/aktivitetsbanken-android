@@ -21,5 +21,7 @@ public interface ActivityBank {
 
     void deleteReference(ActivityKey key, ReferenceKey referenceKey);
 
-    List<Reference> readReferences(ActivityKey key);
+    List<? extends Reference> readReferences(ActivityKey key);
+
+    List<? extends Category> readCategories();
 }

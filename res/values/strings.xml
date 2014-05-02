@@ -73,4 +73,6 @@
     <string name="sortByParticipants">Sortera efter antal deltagare</string>
     <string name="sortByAges">Sortera efter ålder</string>
     <string name="activitiesListMenuSort">Sortera</string>
+
+    <string name="scoutmethod">Scoutmetod</string>
 </resources>

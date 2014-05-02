@@ -75,6 +75,11 @@ public class SQLiteActivityRepo implements ActivityBank {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public List<LocalCategory> readCategories() {
+        return mDatabaseHelper.readCategories();
+    }
+
     public void resetDatabase(boolean addTestData) {
         mDatabaseHelper.dropDatabase(addTestData);
     }

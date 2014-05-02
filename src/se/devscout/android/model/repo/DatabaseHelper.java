@@ -438,6 +438,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return activities;
     }
 
+    public List<LocalCategory> readCategories() {
+        ArrayList<LocalCategory> categories = new ArrayList<LocalCategory>();
+        CategoryCursor catCursor = new CategoryCursor(getDb().query(
+                Database.category.T,
+                new String[]{Database.category.id, Database.category.group_name, Database.category.name},
+                null,
+                null,
+                null,
+                null,
+                Database.category.group_name + ", " + Database.category.name));
+//        CategoryCursor catCursor = new CategoryCursor(getDb().rawQuery("" +
+//                "select " +
+//                "   c." + Database.category.id + ", " +
+//                "   c." + Database.category.group_name + ", " +
+//                "   c." + Database.category.name + " " +
+//                "from " +
+//                "   " + Database.category.T + " a " +
+//                "order by " +
+//                "   c." + Database.category.group_name + ", " +
+//                "   c." + Database.category.name, null));
+
+        while (catCursor.moveToNext()) {
+            long categoryId = catCursor.getId();
+            if (!mCacheCategory.containsKey(categoryId)) {
+                mCacheCategory.put(categoryId, catCursor.getCategory());
+            }
+            categories.add(mCacheCategory.get(categoryId));
+        }
+        catCursor.close();
+        return categories;
+    }
+
     private void initActivityDataReferences(LocalActivityRevision revision) {
         ReferenceCursor refCursor = new ReferenceCursor(getDb().rawQuery("" +
                 "select " +
