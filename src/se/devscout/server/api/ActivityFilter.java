@@ -2,6 +2,8 @@ package se.devscout.server.api;
 
 import se.devscout.server.api.model.ActivityProperties;
 
-public interface ActivityFilter {
+import java.io.Serializable;
+
+public interface ActivityFilter extends Serializable {
     boolean matches(ActivityProperties properties);
 }

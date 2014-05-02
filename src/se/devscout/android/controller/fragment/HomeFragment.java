@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import se.devscout.android.R;
-import se.devscout.android.model.repo.SQLiteActivityRepo;
 
 public class HomeFragment extends Fragment {
     @Override
@@ -16,7 +15,7 @@ public class HomeFragment extends Fragment {
         FragmentManager fm = getChildFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.homeList);
         if (fragment == null) {
-            fragment = FeaturedActivitiesListFragment.create(SQLiteActivityRepo.getInstance(getActivity()));
+            fragment = FeaturedActivitiesListFragment.create(ActivitiesListFragment.Sorter.NAME);
             fm.beginTransaction().add(R.id.homeList, fragment).commit();
         }
         return view;

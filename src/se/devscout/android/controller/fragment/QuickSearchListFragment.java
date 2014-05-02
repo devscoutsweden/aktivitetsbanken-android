@@ -4,12 +4,13 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.SearchResultActivity;
-import se.devscout.android.model.repo.SQLiteActivityRepo;
 import se.devscout.server.api.ActivityFilter;
-import se.devscout.server.api.model.Activity;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,13 +31,13 @@ abstract class QuickSearchListFragment<T> extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, final int position, long id) {
         T item = mListAdapter.getItem(position);
-        List<? extends Activity> activities = SQLiteActivityRepo.getInstance(getActivity()).find(createFilter(item));
-
-        if (activities.isEmpty()) {
-            Toast.makeText(getActivity(), R.string.searchResultIsEmpty, 2000).show();
-        } else {
-            startActivity(SearchResultActivity.createIntent(getActivity(), activities, getSearchResultTitle(item)));
-        }
+//        List<? extends Activity> activities = SQLiteActivityRepo.getInstance(getActivity()).find(createFilter(item));
+//
+//        if (activities.isEmpty()) {
+//            Toast.makeText(getActivity(), R.string.searchResultIsEmpty, 2000).show();
+//        } else {
+            startActivity(SearchResultActivity.createIntent(getActivity(), createFilter(item), getSearchResultTitle(item)));
+//        }
     }
 
     @Override

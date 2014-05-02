@@ -6,14 +6,18 @@ import se.devscout.server.api.model.ActivityRevision;
 import se.devscout.server.api.model.Category;
 import se.devscout.server.api.model.CategoryProperties;
 
+import java.io.Serializable;
+
 /**
  * Tests if activity is assigned to a certain category.
  */
-public class CategoryFilter implements ActivityFilter {
-    private final CategoryProperties condition;
+public class CategoryFilter implements ActivityFilter, Serializable {
+    private final String name;
+    private final String group;
 
     public CategoryFilter(CategoryProperties properties) {
-        condition = properties;
+        name = properties.getName();
+        group = properties.getGroup();
     }
 
     @Override
@@ -28,16 +32,16 @@ public class CategoryFilter implements ActivityFilter {
     }
 
     private boolean matches(Category candidate) {
-        boolean isGroupCorrect = condition.getGroup() == null
+        boolean isGroupCorrect = group == null
                 ?
                 candidate.getGroup() == null
                 :
-                condition.getGroup().equals(candidate.getGroup());
-        boolean isNameCorrect = condition.getName() == null
+                group.equals(candidate.getGroup());
+        boolean isNameCorrect = name == null
                 ?
                 candidate.getName() == null
                 :
-                condition.getName().equals(candidate.getName());
+                name.equals(candidate.getName());
         return isNameCorrect && isGroupCorrect;
     }
 }

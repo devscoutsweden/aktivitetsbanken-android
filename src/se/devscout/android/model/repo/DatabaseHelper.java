@@ -4,12 +4,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.*;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 import se.devscout.android.R;
+import se.devscout.android.util.IsFeaturedFilter;
+import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.model.*;
 
 import java.io.InputStream;
@@ -21,6 +22,13 @@ import java.util.*;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
+    private static final SQLiteDatabase.CursorFactory LOGGING_CURSOR_FACTORY = new SQLiteDatabase.CursorFactory() {
+        @Override
+        public Cursor newCursor(SQLiteDatabase sqLiteDatabase, SQLiteCursorDriver sqLiteCursorDriver, String s, SQLiteQuery sqLiteQuery) {
+            Log.d(DatabaseHelper.class.getName(), sqLiteQuery.toString());
+            return new SQLiteCursor(sqLiteCursorDriver, s, sqLiteQuery);
+        }
+    };
     private SQLiteDatabase db;
 
     public SQLiteDatabase getDb() {
@@ -32,7 +40,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public Activity readActivity(ActivityKey key) {
         if (!mCacheActivity.containsKey(key.getId())) {
-            readActivities();
+            readActivities(null);
         }
         return mCacheActivity.get(key.getId());
     }
@@ -43,6 +51,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private final Context mContext;
     private Toast mCurrentToast;
     private static final String STATUS_NEW = Status.NEW.name().substring(0, 1);
+
+    //TODO: Everything is added to the cache (it is never cleared/purged). This is obviously not good.
     private Map<Long, LocalActivity> mCacheActivity;
     private Map<Long, LocalUser> mCacheUser;
     private Map<Long, LocalCategory> mCacheCategory;
@@ -50,7 +60,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private Map<Long, LocalReference> mCacheReference;
 
     public DatabaseHelper(Context context) {
-        super(context, NAME, null, VERSION);
+        super(context, NAME, LOGGING_CURSOR_FACTORY, VERSION);
         mContext = context;
         clearCaches();
     }
@@ -343,7 +353,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
     }
 
-    public Iterable<? extends LocalActivity> readActivities() {
+    public Iterable<? extends LocalActivity> readActivities(ActivityFilter filter) {
+        List<String> sqlWhere = new ArrayList<String>();
+        if (filter instanceof IsFeaturedFilter) {
+            sqlWhere.add("ad." + Database.activity_data.featured + " = 1");
+        }
         ArrayList<LocalActivity> activities = new ArrayList<LocalActivity>();
         ActivityDataCursor cursor = new ActivityDataCursor(getDb().rawQuery("" +
                 "select " +
@@ -370,7 +384,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "   ad." + Database.activity_data.author_id + ", " +
                 "   ad." + Database.activity_data.source_uri + " " +
                 "from " +
-                "   " + Database.activity.T + " a inner join " + Database.activity_data.T + " ad on a." + Database.activity.id + " = ad." + Database.activity_data.activity_id + " " +
+                "   " + Database.activity.T + " a " +
+                "   inner join " + Database.activity_data.T + " admax on a." + Database.activity.id + " = admax." + Database.activity_data.activity_id + " " +
+                "   inner join " + Database.activity_data.T + " ad on a." + Database.activity.id + " = ad." + Database.activity_data.activity_id + " " +
+                (!sqlWhere.isEmpty() ? "where " + TextUtils.join(" and ", sqlWhere) : "") + " " +
+                "group by " +
+                "   a." + Database.activity.id + ", " +
+                "   ad." + Database.activity_data.id + " " +
+                "having " +
+                "   ad." + Database.activity_data.id + " = max(admax." + Database.activity_data.id + ") " +
                 "order by " +
                 "   a." + Database.activity.id + ", " +
                 "   ad." + Database.activity_data.id, null));
@@ -383,16 +405,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 if (!mCacheActivity.containsKey(activityId)) {
                     currentActivityToAdd = new LocalActivity(readUser(cursor.getLong(cursor.getColumnIndex("owner_id"))), activityId);
                     mCacheActivity.put(activityId, currentActivityToAdd);
-                } else {
-                    currentActivityToAdd = null;
                 }
                 activities.add(mCacheActivity.get(activityId));
             }
+            //TODO Should the cache be cleared? Are the revisions lists getting longer and longer for each search?
             currentActivityToAdd = mCacheActivity.get(activityId);
-            /*if (currentActivityToAdd != null) */{
-                LocalActivityRevision revision = cursor.getActivityData(currentActivityToAdd);
 
-//                logDebug("readActivities " + activityId + " " + revision.getName());
+            boolean revisionExistsInActivity = false;
+            for (LocalActivityRevision revision : currentActivityToAdd.getRevisions()) {
+                if (revision.getId() == cursor.getId()) {
+                    revisionExistsInActivity = true;
+                    break;
+                }
+            }
+            if (!revisionExistsInActivity) {
+                LocalActivityRevision revision = cursor.getActivityData(currentActivityToAdd);
 
                 revision.setAuthor(readUser(cursor.getAuthorId()));
 

@@ -31,7 +31,7 @@ public class SQLiteActivityRepo implements ActivityBank {
     @Override
     public List<LocalActivity> find(ActivityFilter condition) {
         ArrayList<LocalActivity> res = new ArrayList<LocalActivity>();
-        for (LocalActivity activity : mDatabaseHelper.readActivities()) {
+        for (LocalActivity activity : mDatabaseHelper.readActivities(condition)) {
             if (condition.matches(activity)) {
                 res.add(activity);
             }

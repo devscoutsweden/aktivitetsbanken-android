@@ -2,20 +2,19 @@ package se.devscout.android.controller.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.ActivityActivity;
 import se.devscout.android.model.ObjectIdentifierPojo;
 import se.devscout.android.model.repo.SQLiteActivityRepo;
 import se.devscout.android.util.ActivityUtil;
 import se.devscout.android.view.AgeGroupView;
+import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.model.Activity;
 import se.devscout.server.api.model.ActivityKey;
 import se.devscout.server.api.model.Range;
@@ -24,9 +23,20 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class ActivitiesListFragment extends ListFragment {
+public class ActivitiesListFragment extends Fragment implements AdapterView.OnItemClickListener {
     protected ArrayList<ObjectIdentifierPojo> mActivities;
     private Sorter mSortOrder;
+    private ListView mList;
+    private FrameLayout mProgressView;
+    private ActivityFilter mFilter;
+
+    public ActivitiesListFragment() {
+    }
+
+    public ActivitiesListFragment(ActivityFilter filter, Sorter sortOrder) {
+        mFilter = filter;
+        mSortOrder = sortOrder;
+    }
 
     public static enum Sorter implements Comparator<Activity> {
         NAME(new Comparator<Activity>() {
@@ -67,27 +77,67 @@ public class ActivitiesListFragment extends ListFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        try {
-            super.onCreate(savedInstanceState);
-            if (savedInstanceState != null) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        final View view = inflater.inflate(R.layout.search_result, container, false);
+
+        mProgressView = (FrameLayout) view.findViewById(R.id.searchResultProgress);
+
+        mList = (ListView) view.findViewById(R.id.searchResultList);
+        mList.setVisibility(View.INVISIBLE);
+        mList.setOnItemClickListener(this);
+
+        if (savedInstanceState != null) {
                 /*
                  * Restore fields from saved state, for example after the device has been rotated.
                  */
-                mActivities = (ArrayList<ObjectIdentifierPojo>) savedInstanceState.getSerializable("mActivities");
-                mSortOrder = (Sorter) savedInstanceState.getSerializable("mSortOrder");
-            }
-            setListAdapter(createAdapter());
+            mActivities = (ArrayList<ObjectIdentifierPojo>) savedInstanceState.getSerializable("mActivities");
+            mSortOrder = (Sorter) savedInstanceState.getSerializable("mSortOrder");
+            Log.d(ActivitiesListFragment.class.getName(), "State (e.g. search result) has been restored.");
+        }
+
+        if (mActivities != null) {
+            // Result exits
+            Log.d(ActivitiesListFragment.class.getName(), "Result exists. Display it.");
+            showResult();
+        } else {
+            // Start search in separate thread
+            Log.d(ActivitiesListFragment.class.getName(), "Result has not been returned/cached. Starting search task in new thread.");
+
+            // TODO Use some kind of factory for accessing/creating the ActivityBank instead of forcing SQLiteActivityRepo?
+            SearchActivitiesTask searchTask = new SearchActivitiesTask(SQLiteActivityRepo.getInstance(getActivity()), mFilter) {
+                @Override
+                protected void onPostExecute(List<? extends Activity> activities) {
+                    Log.d(ActivitiesListFragment.class.getName(), "Search task has completed. " + activities.size() + " were returned.");
+                    ArrayList<ObjectIdentifierPojo> sortedList = new ArrayList<ObjectIdentifierPojo>();
+                    for (ActivityKey key : activities) {
+                        sortedList.add(new ObjectIdentifierPojo(key.getId()));
+                    }
+                    mActivities = sortedList;
+
+                    showResult();
+                }
+            };
+            searchTask.execute();
+        }
+
+        return view;
+    }
+
+    private void showResult() {
+        if (getActivity() != null) {
+            mList.setVisibility(View.VISIBLE);
+            mList.setAdapter(createAdapter());
             setSortOrder(mSortOrder);
-        } catch (RuntimeException e) {
-            Log.e(getClass().getName(), "Error during onCreate", e);
-            throw e;
+
+            mProgressView.setVisibility(View.GONE);
+            Log.d(ActivitiesListFragment.class.getName(), "Progress view has been hidden and list view has been shown.");
+        } else {
+            Log.d(ActivitiesListFragment.class.getName(), "No activity available. Result cannot be shown.");
         }
     }
 
-    @Override
     public ArrayAdapter<Activity> getListAdapter() {
-        return (ArrayAdapter<Activity>) super.getListAdapter();    //To change body of overridden methods use File | Settings | File Templates.
+        return (ArrayAdapter<Activity>) mList.getAdapter();
     }
 
     public void setSortOrder(Sorter sortOrder) {
@@ -107,8 +157,10 @@ public class ActivitiesListFragment extends ListFragment {
         /*
          * Store fields into saved state, for example when the activity is destroyed after the device has been rotated.
          */
+        Log.d(ActivitiesListFragment.class.getName(), "Saving state");
         outState.putSerializable("mActivities", mActivities);
         outState.putSerializable("mSortOrder", mSortOrder);
+        Log.d(ActivitiesListFragment.class.getName(), "State saved");
     }
 
     protected ArrayAdapter<Activity> createAdapter() {
@@ -118,13 +170,14 @@ public class ActivitiesListFragment extends ListFragment {
     protected ArrayList<Activity> getActivities() {
         ArrayList<Activity> activities = new ArrayList<Activity>();
         for (ObjectIdentifierPojo activity : mActivities) {
+            //TODO: Save complete Activity objects in mActivities instead of only the keys? Performance gain or performance loss?
             activities.add(SQLiteActivityRepo.getInstance(getActivity()).read(activity));
         }
         return activities;
     }
 
     @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         startActivity(ActivityActivity.createIntent(getActivity(), (ActivityKey) getListAdapter().getItem(position)));
     }
 
@@ -134,15 +187,14 @@ public class ActivitiesListFragment extends ListFragment {
         for (ActivityKey key : activities) {
             sortedList.add(new ObjectIdentifierPojo(key.getId()));
         }
-/*
-        Collections.sort(sortedList, new Comparator<Activity>() {
-            @Override
-            public int compare(Activity activity, Activity activity2) {
-                return activity != null ? getLatestActivityRevision(activity).getName().compareTo(getLatestActivityRevision(activity).getName()) : 0;
-            }
-        });
-*/
         fragment.mActivities = sortedList;
+        fragment.mSortOrder = defaultSortOrder;
+        return fragment;
+    }
+
+    public static ActivitiesListFragment create(ActivityFilter filter, Sorter defaultSortOrder) {
+        ActivitiesListFragment fragment = new ActivitiesListFragment();
+        fragment.mFilter = filter;
         fragment.mSortOrder = defaultSortOrder;
         return fragment;
     }

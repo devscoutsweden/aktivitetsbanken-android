@@ -9,6 +9,7 @@ import se.devscout.android.R;
 import se.devscout.android.controller.fragment.ActivitiesListFragment;
 import se.devscout.android.model.ObjectIdentifierPojo;
 import se.devscout.android.model.repo.SQLiteActivityRepo;
+import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.model.ActivityKey;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.Map;
 public class SearchResultActivity extends SingleFragmentActivity<ActivitiesListFragment> {
 
     private static final String INTENT_EXTRA_ACTIVITIES = "activities";
+    private static final String INTENT_EXTRA_FILTER = "filter";
     private static final String TITLE_RES_ID = "title";
 
     private Map<Integer, ActivitiesListFragment.Sorter> mListSorters = new LinkedHashMap<Integer, ActivitiesListFragment.Sorter>();
@@ -54,12 +56,20 @@ public class SearchResultActivity extends SingleFragmentActivity<ActivitiesListF
     @Override
     protected ActivitiesListFragment createFragment() {
         ArrayList<ObjectIdentifierPojo> keys = (ArrayList<ObjectIdentifierPojo>) getIntent().getSerializableExtra(INTENT_EXTRA_ACTIVITIES);
-
-        List<ActivityKey> activities = new ArrayList<ActivityKey>();
-        for (ActivityKey key : keys) {
-            activities.add(SQLiteActivityRepo.getInstance(this).read(key));
+        if (keys != null) {
+            List<ActivityKey> activities = new ArrayList<ActivityKey>();
+            for (ActivityKey key : keys) {
+                // TODO Use some kind of factory for accessing/creating the ActivityBank instead of forcing SQLiteActivityRepo?
+                activities.add(SQLiteActivityRepo.getInstance(this).read(key));
+            }
+            return ActivitiesListFragment.create(activities, ActivitiesListFragment.Sorter.NAME);
+        } else {
+            ActivityFilter filter = (ActivityFilter) getIntent().getSerializableExtra(INTENT_EXTRA_FILTER);
+            if (filter != null) {
+                return ActivitiesListFragment.create(filter, ActivitiesListFragment.Sorter.NAME);
+            }
+            throw new IllegalArgumentException("Neither activities nor filter specified when starting activity.");
         }
-        return ActivitiesListFragment.create(activities, ActivitiesListFragment.Sorter.NAME);
     }
 
     @Override
@@ -80,6 +90,15 @@ public class SearchResultActivity extends SingleFragmentActivity<ActivitiesListF
         }
     }
 
+    /**
+     * Create intent for starting search result activity with a specific set of activities (activities which have
+     * already been loaded/fetched from the database).
+     *
+     * @param ctx
+     * @param activities
+     * @param title
+     * @return
+     */
     public static Intent createIntent(Context ctx, List<? extends se.devscout.server.api.model.Activity> activities, String title) {
 
         ArrayList<ObjectIdentifierPojo> keys = new ArrayList<ObjectIdentifierPojo>();
@@ -89,6 +108,22 @@ public class SearchResultActivity extends SingleFragmentActivity<ActivitiesListF
 
         Intent intent = new Intent(ctx, SearchResultActivity.class);
         intent.putExtra(INTENT_EXTRA_ACTIVITIES, keys);
+        intent.putExtra(TITLE_RES_ID, title);
+        return intent;
+    }
+
+    /**
+     * Create intent for starting search result activity with any activities matching a supplied filter. This forces
+     * the result activity to start off by querying the database for a list of activities.
+     *
+     * @param ctx
+     * @param filter
+     * @param title
+     * @return
+     */
+    public static Intent createIntent(Context ctx, ActivityFilter filter, String title) {
+        Intent intent = new Intent(ctx, SearchResultActivity.class);
+        intent.putExtra(INTENT_EXTRA_FILTER, filter);
         intent.putExtra(TITLE_RES_ID, title);
         return intent;
     }

@@ -5,15 +5,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ToggleButton;
 import se.devscout.android.AgeGroup;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.SearchResultActivity;
-import se.devscout.android.model.repo.SQLiteActivityRepo;
 import se.devscout.android.util.*;
-import se.devscout.server.api.model.Activity;
-
-import java.util.List;
 
 public class SearchFragment extends Fragment {
     @Override
@@ -31,13 +30,7 @@ public class SearchFragment extends Fragment {
 
                 initAgeFilter(filter);
 
-                List<? extends Activity> activities = SQLiteActivityRepo.getInstance(getActivity()).find(filter);
-
-                if (activities.isEmpty()) {
-                    Toast.makeText(getActivity(), R.string.searchResultIsEmpty, 2000).show();
-                } else {
-                    startActivity(SearchResultActivity.createIntent(getActivity(), activities, getString(R.string.searchResultTitle)));
-                }
+                startActivity(SearchResultActivity.createIntent(getActivity(), filter, getString(R.string.searchResultTitle)));
             }
 
             private void initAgeFilter(AndFilter filter) {
