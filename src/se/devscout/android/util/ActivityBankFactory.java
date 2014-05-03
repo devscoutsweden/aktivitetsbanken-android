@@ -8,7 +8,7 @@ public class ActivityBankFactory {
     private ActivityBankFactory() {
     }
 
-    public static ActivityBank create(Context context) {
+    public static ActivityBank getInstance(Context context) {
         return SQLiteActivityRepo.getInstance(context);
     }
 }

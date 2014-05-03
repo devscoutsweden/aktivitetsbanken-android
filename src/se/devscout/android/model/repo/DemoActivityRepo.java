@@ -66,6 +66,11 @@ public class DemoActivityRepo implements ActivityBank {
     }
 
     @Override
+    public Activity readFull(ActivityKey key) {
+        return read(key);
+    }
+
+    @Override
     public Reference createReference(ActivityKey key, ReferenceProperties properties) {
         throw new UnsupportedOperationException();
     }
@@ -82,6 +87,11 @@ public class DemoActivityRepo implements ActivityBank {
 
     @Override
     public List<Category> readCategories() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Category readCategoryFull(CategoryKey key) {
         throw new UnsupportedOperationException();
     }
 }

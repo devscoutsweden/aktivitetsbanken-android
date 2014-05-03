@@ -1,8 +1,9 @@
 package se.devscout.android;
 
+import se.devscout.server.api.model.ObjectIdentifier;
 import se.devscout.server.api.model.ScoutCategoryConcept;
 
-public enum CategoryConcept {
+public enum CategoryConcept implements ObjectIdentifier {
     SCOUTSOWN(R.string.category_concept_SCOUTSOWN, ScoutCategoryConcept.SCOUTSOWN, -1),
     CEREMONY(R.string.category_concept_CEREMONY, ScoutCategoryConcept.CEREMONY, -1),
     DISCUSSION(R.string.category_concept_DISCUSSION, ScoutCategoryConcept.DISCUSSION, -1),
@@ -49,5 +50,10 @@ public enum CategoryConcept {
 
     public int getTitleResId() {
         return titleResId;
+    }
+
+    @Override
+    public Long getId() {
+        return Long.valueOf(ordinal());
     }
 }
