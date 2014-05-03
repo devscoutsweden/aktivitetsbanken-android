@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import se.devscout.android.R;
-import se.devscout.android.controller.activity.ActivityActivity;
+import se.devscout.android.controller.activity.ActivitiesActivity;
 import se.devscout.android.model.ObjectIdentifierPojo;
 import se.devscout.android.model.repo.SQLiteActivityRepo;
 import se.devscout.android.util.ActivityUtil;
@@ -178,7 +178,13 @@ public class ActivitiesListFragment extends Fragment implements AdapterView.OnIt
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        startActivity(ActivityActivity.createIntent(getActivity(), (ActivityKey) getListAdapter().getItem(position)));
+        List<ObjectIdentifierPojo> keys = new ArrayList<ObjectIdentifierPojo>();
+        for (int i = 0; i < getListAdapter().getCount(); i++) {
+            Activity activity = getListAdapter().getItem(i);
+            keys.add(new ObjectIdentifierPojo(activity.getId()));
+        }
+        startActivity(ActivitiesActivity.createIntent(getActivity(), keys, position))
+        ;
     }
 
     public static ActivitiesListFragment create(List<ActivityKey> activities, Sorter defaultSortOrder) {

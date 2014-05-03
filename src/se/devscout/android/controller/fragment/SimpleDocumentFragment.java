@@ -1,9 +1,7 @@
 package se.devscout.android.controller.fragment;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import se.devscout.android.R;
+import se.devscout.android.util.ScoutTypeFace;
 
 import java.util.ArrayList;
 import java.util.regex.Pattern;
@@ -23,24 +22,26 @@ public class SimpleDocumentFragment extends Fragment {
     private static final Pattern WHITE_SPACE_PATTERN = Pattern.compile("\\s+");
 
     private static interface Item {
-        void append(LinearLayout layout);
+        void append(LinearLayout layout, LayoutInflater inflater);
     }
 
     private static class ImageItem implements Item {
 
         private int mImageResId;
+        private boolean mZoom;
 
-        private ImageItem(int imageResId) {
+        private ImageItem(int imageResId, boolean zoom) {
             mImageResId = imageResId;
+            mZoom = zoom;
         }
 
         @Override
-        public void append(LinearLayout layout) {
+        public void append(LinearLayout layout, LayoutInflater inflater) {
             ImageView imageView = new ImageView(layout.getContext());
             imageView.setLayoutParams(new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     layout.getContext().getResources().getDimensionPixelSize(android.R.dimen.thumbnail_height)));
-            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            imageView.setScaleType(mZoom ? ImageView.ScaleType.CENTER_CROP : ImageView.ScaleType.FIT_CENTER);
             imageView.setImageResource(mImageResId);
             layout.addView(imageView);
         }
@@ -54,12 +55,10 @@ public class SimpleDocumentFragment extends Fragment {
         }
 
         @Override
-        public void append(LinearLayout layout) {
-            TextView textView = new TextView(layout.getContext());
+        public void append(LinearLayout layout, LayoutInflater inflater) {
+            TextView textView = (TextView) inflater.inflate(R.layout.document_headertextview, layout, false);
             textView.setText(mHeaderResId);
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, layout.getResources().getDimensionPixelSize(R.dimen.mediumTextSize));
-            textView.setTypeface(null, Typeface.BOLD);
-            textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            textView.setTypeface(ScoutTypeFace.getInstance(layout.getContext()).getMedium());
             layout.addView(textView);
         }
     }
@@ -72,8 +71,8 @@ public class SimpleDocumentFragment extends Fragment {
         }
 
         @Override
-        public void append(LinearLayout layout) {
-            TextView textView = new TextView(layout.getContext());
+        public void append(LinearLayout layout, LayoutInflater inflater) {
+            TextView textView = (TextView) inflater.inflate(R.layout.document_bodytext, layout, false);
             StringBuilder sb = new StringBuilder();
             String[] parts = mText.split("\\s*\\n(\\s*\\n)+\\s*");
             for (String part : parts) {
@@ -81,7 +80,6 @@ public class SimpleDocumentFragment extends Fragment {
                 sb.append(part).append('\n').append('\n');
             }
             textView.setText(sb.toString());
-            textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             layout.addView(textView);
         }
     }
@@ -100,7 +98,7 @@ public class SimpleDocumentFragment extends Fragment {
         LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.activityDescriptionList);
 
         for (Item item : mItems) {
-            item.append(linearLayout);
+            item.append(linearLayout, inflater);
         }
 
         return view;
@@ -120,8 +118,8 @@ public class SimpleDocumentFragment extends Fragment {
         return this;
     }
 
-    public SimpleDocumentFragment addImage(int imageResId) {
-        mItems.add(new ImageItem(imageResId));
+    public SimpleDocumentFragment addImage(int imageResId, boolean zoom) {
+        mItems.add(new ImageItem(imageResId, zoom));
         return this;
     }
 

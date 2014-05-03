@@ -19,6 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".controller.activity.ActivityActivity"></activity>
+        <activity android:name=".controller.activity.ActivitiesActivity"></activity>
         <activity android:name=".controller.activity.SearchResultActivity"></activity>
         <activity android:name=".controller.activity.DatabaseActivity">
             <intent-filter>
