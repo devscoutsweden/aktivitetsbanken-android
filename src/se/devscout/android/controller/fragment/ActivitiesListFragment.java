@@ -10,7 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import se.devscout.android.R;
-import se.devscout.android.controller.activity.ActivityActivity;
+import se.devscout.android.controller.activity.ActivitiesActivity;
 import se.devscout.android.model.ObjectIdentifierPojo;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.ActivityUtil;
@@ -38,7 +38,12 @@ public class ActivitiesListFragment extends NonBlockingSearchResultFragment<Acti
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        startActivity(ActivityActivity.createIntent(getActivity(), (ActivityKey) getListAdapter().getItem(position)));
+        List<ObjectIdentifierPojo> keys = new ArrayList<ObjectIdentifierPojo>();
+        for (int i = 0; i < getListAdapter().getCount(); i++) {
+            Activity activity = getListAdapter().getItem(i);
+            keys.add(new ObjectIdentifierPojo(activity.getId()));
+        }
+        startActivity(ActivitiesActivity.createIntent(getActivity(), keys, position));
     }
 
     public static enum Sorter implements Comparator<Activity> {
