@@ -17,6 +17,8 @@ public interface ActivityBank {
 
     ActivityProperties read(ActivityKey key);
 
+    Activity readFull(ActivityKey key);
+
     Reference createReference(ActivityKey key, ReferenceProperties properties);
 
     void deleteReference(ActivityKey key, ReferenceKey referenceKey);
@@ -24,4 +26,6 @@ public interface ActivityBank {
     List<? extends Reference> readReferences(ActivityKey key);
 
     List<? extends Category> readCategories();
+
+    Category readCategoryFull(CategoryKey key);
 }

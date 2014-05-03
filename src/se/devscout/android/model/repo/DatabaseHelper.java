@@ -550,4 +550,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return mCacheUser.get(id);
     }
+
+    public Category readCategory(CategoryKey key) {
+        if (!mCacheCategory.containsKey(key.getId())) {
+            readCategories();
+        }
+        return mCacheCategory.get(key.getId());
+    }
 }

@@ -1,9 +1,11 @@
 package se.devscout.android;
 
+import android.graphics.Color;
+import se.devscout.server.api.model.ObjectIdentifier;
 import se.devscout.server.api.model.Range;
 import se.devscout.server.api.model.ScoutAgeRange;
 
-public enum AgeGroup implements Range<Integer> {
+public enum AgeGroup implements Range<Integer>, ObjectIdentifier {
     TRACKER(R.string.age_group_TRACKER, ScoutAgeRange.TRACKER, R.drawable.logo_tracker, R.color.green),
     DISCOVERER(R.string.age_group_DISCOVERER, ScoutAgeRange.DISCOVERER, R.drawable.logo_discoverer, R.color.blue),
     ADVENTURER(R.string.age_group_ADVENTURER, ScoutAgeRange.ADVENTURER, R.drawable.logo_adventurer, R.color.orange),
@@ -55,5 +57,10 @@ public enum AgeGroup implements Range<Integer> {
 
     public int getColorResId() {
         return mColorResId;
+    }
+
+    @Override
+    public Long getId() {
+        return Long.valueOf(ordinal());
     }
 }
