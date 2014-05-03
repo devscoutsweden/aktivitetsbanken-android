@@ -5,7 +5,7 @@ import se.devscout.android.R;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.view.StaticFragmentsPagerAdapter;
 
-public class StartViewPagerFragment extends ViewPagerFragment {
+public class StartTabsFragment extends TabsFragment {
     @Override
     protected StaticFragmentsPagerAdapter createPagerAdapter(FragmentManager fragmentManager, boolean landscape) {
         StaticFragmentsPagerAdapter pagerAdapter = new StaticFragmentsPagerAdapter(fragmentManager);

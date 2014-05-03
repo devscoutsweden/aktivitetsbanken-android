@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- #ff00: Opaque red -->
+    <color name="accentBlue">#FF003C69</color>
     <color name="favoriteTintColor">#ff00</color>
+    <color name="green">#FF5BAC26</color>
+    <color name="blue">#FF009CDA</color>
+    <color name="orange">#FFED7703</color>
+    <color name="magenta">#FFDC006B</color>
+    <color name="yellow">#FFF1E400</color>
+    <color name="basicVeryLight">#ffff</color>
+    <color name="basicLight">#feee</color>
+    <color name="basicDark">#f555</color>
+    <color name="basicVeryDark">#f333</color>
 </resources>
