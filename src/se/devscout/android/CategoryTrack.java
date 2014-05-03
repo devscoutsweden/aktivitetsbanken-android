@@ -1,8 +1,9 @@
 package se.devscout.android;
 
+import se.devscout.server.api.model.ObjectIdentifier;
 import se.devscout.server.api.model.ScoutCategoryTrack;
 
-public enum CategoryTrack {
+public enum CategoryTrack implements ObjectIdentifier {
 
     ACTIVE_GROUP(R.string.category_track_ACTIVE_GROUP, ScoutCategoryTrack.ACTIVE_GROUP, -1),
     ACTIVE_COMMUNITY(R.string.category_track_ACTIVE_COMMUNITY, ScoutCategoryTrack.ACTIVE_COMMUNITY, -1),
@@ -52,5 +53,10 @@ public enum CategoryTrack {
 
     public int getTitleResId() {
         return mTitleResId;
+    }
+
+    @Override
+    public Long getId() {
+        return Long.valueOf(ordinal());
     }
 }
