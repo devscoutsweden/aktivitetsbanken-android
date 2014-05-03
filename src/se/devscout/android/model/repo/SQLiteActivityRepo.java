@@ -60,6 +60,11 @@ public class SQLiteActivityRepo implements ActivityBank {
     }
 
     @Override
+    public Activity readFull(ActivityKey key) {
+        return read(key);
+    }
+
+    @Override
     public Reference createReference(ActivityKey key, ReferenceProperties properties) {
         long id = mDatabaseHelper.createReference(properties);
         return new LocalReference(id, properties.getType(), properties.getURI());
@@ -78,6 +83,11 @@ public class SQLiteActivityRepo implements ActivityBank {
     @Override
     public List<LocalCategory> readCategories() {
         return mDatabaseHelper.readCategories();
+    }
+
+    @Override
+    public Category readCategoryFull(CategoryKey key) {
+        return mDatabaseHelper.readCategory(key);
     }
 
     public void resetDatabase(boolean addTestData) {
