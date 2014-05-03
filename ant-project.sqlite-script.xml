@@ -1,0 +1,60 @@
+<project name="Converting to SQLite">
+    <target name="mysql-workbench-to-sqlite">
+        <!--
+
+        Instructions:
+        1. Open MWB file in MySQL Workbench.
+        2. Export as SQL ("Forward Engineer SQL Script")
+           Indexed must be created with separate commands (not as part of CREATE TABLE).
+        3. Run this Ant target.
+        -->
+        <loadfile srcfile="docs-and-design/mysql-data-model.sql" property="schemaName">
+            <filterchain>
+                <linecontainsregexp>
+                    <regexp pattern="^USE" />
+                </linecontainsregexp>
+                <replaceregex pattern="^USE\s*`(\w+)`\s*;$" replace="\1" />
+                <striplinebreaks />
+            </filterchain>
+        </loadfile>
+        <echo message="${schemaName}" />
+        <property name="regexpOptionalSize" value="\s*(\(\d+\))?" />
+        <copy file="docs-and-design/mysql-data-model.sql" tofile="res/raw/create_server_database.sql" overwrite="true">
+            <filterchain>
+                <replaceregex pattern="ENGINE\s*=\s*\w+" replace="" flags="gi" />
+                <!-- Delete SET, USE and CREATE SCHEMA commands. Also remove single-line comments.-->
+                <replaceregex pattern="^\s*(SET|USE|CREATE SCHEMA|--).*$" replace="" flags="gi" />
+
+                <!-- Convert datatype definitions -->
+                <replaceregex pattern="`\s+(TINY|SMALL|BIG)?INT\w*${regexpOptionalSize}" replace="&quot; INTEGER "
+                    flags="gi" />
+                <replaceregex pattern="`\s+(VAR)?CHAR${regexpOptionalSize}" replace="&quot; TEXT " flags="gi" />
+                <replaceregex pattern="`\s+(BLOB|BINARY)${regexpOptionalSize}" replace="&quot; NONE " flags="gi" />
+                <replaceregex pattern="`\s+(REAL|FLOAT|DOUBLE)?INT\w*\s" replace="&quot; REAL " flags="gi" />
+                <!-- Everything not match by the previous datatype conversions are converted to NUMERIC. Look for words preceeded by the ` character but NOT followed by the ` character. -->
+                <replaceregex pattern="`\s+\w+\s([^`])" replace="` NUMERIC \1" flags="gi" />
+
+                <!-- Convert auto-incrementing primary key columns. Strip line breaks so that the regular expression finds lingering PRIMARY KEY statements, which are not supported by SQLite. The downside is that line breaks must be added later on to make the script easy to read again. -->
+                <replacestring from="AUTO_INCREMENT" to="PRIMARY KEY AUTOINCREMENT" />
+                <striplinebreaks />
+                <replaceregex pattern=",?\s*PRIMARY KEY \(`[a-z0-9_]+`\)" replace="" flags="gi" />
+
+                <!-- Reformat (strip white space and indent). -->
+                <replaceregex pattern="\s+" replace=" " flags="g" />
+                <replacestring from=";" to=";${line.separator}${line.separator}" />
+                <replacestring from="," to=",${line.separator}    " />
+
+                <!-- Remove schema name references. -->
+                <replacestring from="`${schemaName}`." to="" />
+
+                <!-- Remove lingering NULL definitions (only NOT NULL statements should be kept). -->
+                <replacestring from="NOT NULL" to="NOTNULL" />
+                <replacestring from=" NULL" to="" />
+                <replacestring from="NOTNULL" to="NOT NULL" />
+
+                <!-- Replace ` with regular quotation marks. -->
+                <replacestring from="`" to="&quot;" />
+            </filterchain>
+        </copy>
+    </target>
+</project>

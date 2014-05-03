@@ -13,6 +13,7 @@ import se.devscout.android.util.IsFeaturedFilter;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.model.*;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
@@ -29,6 +30,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return new SQLiteCursor(sqLiteCursorDriver, s, sqLiteQuery);
         }
     };
+    private static final int USER_ID_ANONYMOUS = Integer.MAX_VALUE;
     private SQLiteDatabase db;
 
     public SQLiteDatabase getDb() {
@@ -78,21 +80,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         logInfo("Starting initialising database.");
         db.beginTransaction();
         try {
-            InputStream inputStream = mContext.getResources().openRawResource(R.raw.database);
-            Scanner scanner = new Scanner(inputStream);
-            scanner.useDelimiter(";");
-            while (scanner.hasNext()) {
-                String cmd = scanner.next();
-                cmd = cmd.replaceAll("\\s*--.*", "").trim();
-                if (cmd.toUpperCase().startsWith("BEGIN") || cmd.toUpperCase().startsWith("COMMIT")) {
-                    logDebug("Ignoring SQL: " + cmd);
-                    continue;
-                } else {
-                    logDebug("Executing SQL: " + cmd);
-                    db.execSQL(cmd);
-                }
-            }
-            inputStream.close();
+            executeSQLScript(db, R.raw.create_server_database);
+            executeSQLScript(db, R.raw.convert_server_database);
+
+            createAnonymousUser(db);
+
             db.setTransactionSuccessful();
         } catch (Throwable e) {
             logError(e, "Error!");
@@ -100,6 +92,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.endTransaction();
         }
         logInfo("Done initialising database.");
+    }
+
+    public int getAnonymousUserId() {
+        return USER_ID_ANONYMOUS;
+    }
+
+    private void createAnonymousUser(SQLiteDatabase db) {
+        ContentValues values = new ContentValues();
+        values.put(Database.user.id, USER_ID_ANONYMOUS);
+        values.put(Database.user.display_name, "Anonymous");
+        db.insert(Database.user.T, null, values);
+    }
+
+    private void executeSQLScript(SQLiteDatabase db, int sqlScriptResId) throws IOException {
+        InputStream inputStream = mContext.getResources().openRawResource(sqlScriptResId);
+        Scanner scanner = new Scanner(inputStream);
+        scanner.useDelimiter(";");
+        while (scanner.hasNext()) {
+            String cmd = scanner.next();
+            cmd = cmd.replaceAll("\\s*--.*", "").trim();
+            logDebug("Executing SQL: " + cmd);
+            db.execSQL(cmd);
+        }
+        inputStream.close();
     }
 
     @Override
