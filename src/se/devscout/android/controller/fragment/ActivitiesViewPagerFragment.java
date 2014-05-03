@@ -79,6 +79,7 @@ public class ActivitiesViewPagerFragment extends Fragment implements ViewPager.O
         };
         mViewPager.setAdapter(pageAdapter);
         mViewPager.setCurrentItem(mSelectedIndex);
+        updateActivityTitle(mSelectedIndex);
 
         return mViewPager;
     }
@@ -121,10 +122,14 @@ public class ActivitiesViewPagerFragment extends Fragment implements ViewPager.O
 
     @Override
     public void onPageSelected(int i) {
-        getActivity().setTitle(ActivityUtil.getLatestActivityRevision(getActivities().get(i)).getName());
+        updateActivityTitle(i);
     }
 
     @Override
     public void onPageScrollStateChanged(int i) {
+    }
+
+    private void updateActivityTitle(int selectedActivityIndex) {
+        getActivity().setTitle(ActivityUtil.getLatestActivityRevision(getActivities().get(selectedActivityIndex)).getName());
     }
 }
