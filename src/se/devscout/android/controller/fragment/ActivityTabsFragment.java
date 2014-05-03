@@ -14,13 +14,13 @@ import se.devscout.server.api.model.Activity;
 import se.devscout.server.api.model.ActivityRevision;
 import se.devscout.server.api.model.Media;
 
-public class ActivityViewPagerFragment extends ViewPagerFragment {
+public class ActivityTabsFragment extends TabsFragment {
     private ObjectIdentifierPojo key;
 
-    public ActivityViewPagerFragment() {
+    public ActivityTabsFragment() {
     }
 
-    public ActivityViewPagerFragment(ObjectIdentifierPojo key) {
+    public ActivityTabsFragment(ObjectIdentifierPojo key) {
         this.key = key;
     }
 
@@ -56,7 +56,7 @@ public class ActivityViewPagerFragment extends ViewPagerFragment {
 
         SimpleDocumentFragment mainTabFragment = SimpleDocumentFragment.create();
         if (revision.getCoverMedia() != null) {
-            mainTabFragment.addImage(resourceUtil.toResourceId(revision.getCoverMedia().getURI()));
+            mainTabFragment.addImage(resourceUtil.toResourceId(revision.getCoverMedia().getURI()), false);
         }
         mainTabFragment
                 .addHeaderAndText(R.string.activity_introduction, revision.getDescriptionIntroduction())
@@ -75,7 +75,7 @@ public class ActivityViewPagerFragment extends ViewPagerFragment {
         if (!revision.getMediaItems().isEmpty()) {
             SimpleDocumentFragment mediaTabFragment = SimpleDocumentFragment.create();
             for (Media media : revision.getMediaItems()) {
-                mediaTabFragment.addImage(resourceUtil.toResourceId(media.getURI()));
+                mediaTabFragment.addImage(resourceUtil.toResourceId(media.getURI()), false);
             }
             pagerAdapter.addTab(landscape ? R.string.activity_tab_photos : 0, R.drawable.ic_action_picture, mediaTabFragment);
         }

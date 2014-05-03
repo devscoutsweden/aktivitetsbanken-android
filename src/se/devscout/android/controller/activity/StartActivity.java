@@ -6,13 +6,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import se.devscout.android.R;
-import se.devscout.android.controller.fragment.StartViewPagerFragment;
+import se.devscout.android.controller.fragment.StartTabsFragment;
 import se.devscout.android.model.repo.SQLiteActivityRepo;
 
 public class StartActivity extends SingleFragmentActivity {
     @Override
     protected Fragment createFragment() {
-        return new StartViewPagerFragment();
+        return new StartTabsFragment();
     }
 
     @Override

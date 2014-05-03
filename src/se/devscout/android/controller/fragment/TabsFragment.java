@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import se.devscout.android.R;
 import se.devscout.android.view.StaticFragmentsPagerAdapter;
 
-public abstract class ViewPagerFragment extends Fragment implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
+public abstract class TabsFragment extends Fragment implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
 
     protected abstract StaticFragmentsPagerAdapter createPagerAdapter(FragmentManager fragmentManager, boolean landscape);
 
