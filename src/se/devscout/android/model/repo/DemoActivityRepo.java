@@ -41,6 +41,11 @@ public class DemoActivityRepo implements ActivityBank {
     }
 
     @Override
+    public List<? extends Activity> findFavourites(UserKey userKey) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public Activity create(ActivityProperties properties) {
         throw new UnsupportedOperationException();
     }
@@ -92,6 +97,21 @@ public class DemoActivityRepo implements ActivityBank {
 
     @Override
     public Category readCategoryFull(CategoryKey key) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void setFavourite(ActivityKey activityKey, UserKey userKey) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void unsetFavourite(ActivityKey activityKey, UserKey userKey) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean isFavourite(ActivityKey activityKey, UserKey userKey) {
         throw new UnsupportedOperationException();
     }
 }

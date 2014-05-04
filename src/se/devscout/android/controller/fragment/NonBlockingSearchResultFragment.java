@@ -7,10 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
-import android.widget.ListView;
+import android.widget.*;
 import se.devscout.android.R;
 import se.devscout.android.model.ObjectIdentifierPojo;
 import se.devscout.server.api.model.ObjectIdentifier;
@@ -25,6 +22,18 @@ public abstract class NonBlockingSearchResultFragment<T extends ObjectIdentifier
     private ArrayList<ObjectIdentifierPojo> mObjectIdentifiers;
     private ListView mList;
     private FrameLayout mProgressView;
+    private View mEmptyView;
+    private int mEmptyHeaderTextId;
+    private int mEmptyMessageTextId;
+
+    protected NonBlockingSearchResultFragment() {
+        this(0, R.string.searchResultDefaultEmptyMessage);
+    }
+
+    protected NonBlockingSearchResultFragment(int emptyHeaderTextId, int emptyMessageTextId) {
+        mEmptyHeaderTextId = emptyHeaderTextId;
+        mEmptyMessageTextId = emptyMessageTextId;
+    }
 
     protected abstract List<T> doSearch();
 
@@ -38,14 +47,6 @@ public abstract class NonBlockingSearchResultFragment<T extends ObjectIdentifier
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.search_result, container, false);
-
-        mProgressView = (FrameLayout) view.findViewById(R.id.searchResultProgress);
-
-        mList = (ListView) view.findViewById(R.id.searchResultList);
-        mList.setVisibility(View.INVISIBLE);
-        mList.setOnItemClickListener(this);
-
         if (savedInstanceState != null) {
             /*
              * Restore fields from saved state, for example after the device has been rotated.
@@ -53,6 +54,41 @@ public abstract class NonBlockingSearchResultFragment<T extends ObjectIdentifier
             mObjectIdentifiers = (ArrayList<ObjectIdentifierPojo>) savedInstanceState.getSerializable("mObjectIdentifiers");
             Log.d(ActivitiesListFragment.class.getName(), "State (e.g. search result) has been restored.");
         }
+
+        final View view = inflater.inflate(R.layout.search_result, container, false);
+
+        mProgressView = (FrameLayout) view.findViewById(R.id.searchResultProgress);
+        mList = (ListView) view.findViewById(R.id.searchResultList);
+        mEmptyView = view.findViewById(R.id.searchResultEmpty);
+        initEmptyViewText(view, R.id.searchResultEmptyHeader, mEmptyHeaderTextId);
+        initEmptyViewText(view, R.id.searchResultEmptyMessage, mEmptyMessageTextId);
+        mList.setEmptyView(mEmptyView);
+
+        refreshResultList(false);
+
+        return view;
+    }
+
+    private void initEmptyViewText(View view, int textViewId, int textId) {
+        TextView emptyMessageTextView = (TextView) view.findViewById(textViewId);
+        if (textId > 0) {
+            emptyMessageTextView.setText(textId);
+        } else {
+            emptyMessageTextView.setVisibility(View.GONE);
+        }
+    }
+
+    protected void invalidateResult() {
+        mObjectIdentifiers = null;
+    }
+
+    protected void refreshResultList(boolean force) {
+        if (force) {
+            invalidateResult();
+        }
+        mList.setVisibility(View.INVISIBLE);
+        mEmptyView.setVisibility(View.INVISIBLE);
+        mList.setOnItemClickListener(this);
 
         if (mObjectIdentifiers != null) {
             // Result exits
@@ -77,8 +113,6 @@ public abstract class NonBlockingSearchResultFragment<T extends ObjectIdentifier
             };
             task.execute();
         }
-
-        return view;
     }
 
     @Override
@@ -107,6 +141,7 @@ public abstract class NonBlockingSearchResultFragment<T extends ObjectIdentifier
     protected void showResult(List<T> result) {
         if (getActivity() != null) {
             mList.setVisibility(View.VISIBLE);
+            mEmptyView.setVisibility(View.VISIBLE);
             mList.setAdapter(createAdapter(result));
 
             mProgressView.setVisibility(View.GONE);

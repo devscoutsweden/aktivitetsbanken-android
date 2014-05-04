@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.*;
-import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 import se.devscout.android.R;
@@ -42,7 +41,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public Activity readActivity(ActivityKey key) {
         if (!mCacheActivity.containsKey(key.getId())) {
-            readActivities(null);
+            readActivities(null, null);
         }
         return mCacheActivity.get(key.getId());
     }
@@ -102,6 +101,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(Database.user.id, USER_ID_ANONYMOUS);
         values.put(Database.user.display_name, "Anonymous");
+        values.put(Database.user.is_local_only, true);
         db.insert(Database.user.T, null, values);
     }
 
@@ -369,49 +369,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
     }
 
-    public Iterable<? extends LocalActivity> readActivities(ActivityFilter filter) {
-        List<String> sqlWhere = new ArrayList<String>();
+    public List<? extends LocalActivity> readActivities(ActivityFilter filter, UserKey favouriteForUserKey) {
+        ActivityDataCursor.QueryBuilder queryBuilder = new ActivityDataCursor.QueryBuilder();
         if (filter instanceof IsFeaturedFilter) {
-            sqlWhere.add("ad." + Database.activity_data.featured + " = 1");
+            queryBuilder.addWhereIsFeatured(true);
+        }
+        if (favouriteForUserKey != null) {
+            queryBuilder.addWhereFavourite(favouriteForUserKey);
         }
         ArrayList<LocalActivity> activities = new ArrayList<LocalActivity>();
-        ActivityDataCursor cursor = new ActivityDataCursor(getDb().rawQuery("" +
-                "select " +
-                "   a." + Database.activity.owner_id + ", " +
-                "   ad." + Database.activity_data.id + ", " +
-                "   ad." + Database.activity_data.activity_id + ", " +
-                "   ad." + Database.activity_data.status + ", " +
-                "   ad." + Database.activity_data.name + ", " +
-                "   ad." + Database.activity_data.datetime_published + ", " +
-                "   ad." + Database.activity_data.datetime_created + ", " +
-                "   ad." + Database.activity_data.descr_material + ", " +
-                "   ad." + Database.activity_data.descr_introduction + ", " +
-                "   ad." + Database.activity_data.descr_prepare + ", " +
-                "   ad." + Database.activity_data.descr_activity + ", " +
-                "   ad." + Database.activity_data.descr_safety + ", " +
-                "   ad." + Database.activity_data.descr_notes + ", " +
-                "   ad." + Database.activity_data.age_min + ", " +
-                "   ad." + Database.activity_data.age_max + ", " +
-                "   ad." + Database.activity_data.participants_min + ", " +
-                "   ad." + Database.activity_data.participants_max + ", " +
-                "   ad." + Database.activity_data.time_min + ", " +
-                "   ad." + Database.activity_data.time_max + ", " +
-                "   ad." + Database.activity_data.featured + ", " +
-                "   ad." + Database.activity_data.author_id + ", " +
-                "   ad." + Database.activity_data.source_uri + " " +
-                "from " +
-                "   " + Database.activity.T + " a " +
-                "   inner join " + Database.activity_data.T + " admax on a." + Database.activity.id + " = admax." + Database.activity_data.activity_id + " " +
-                "   inner join " + Database.activity_data.T + " ad on a." + Database.activity.id + " = ad." + Database.activity_data.activity_id + " " +
-                (!sqlWhere.isEmpty() ? "where " + TextUtils.join(" and ", sqlWhere) : "") + " " +
-                "group by " +
-                "   a." + Database.activity.id + ", " +
-                "   ad." + Database.activity_data.id + " " +
-                "having " +
-                "   ad." + Database.activity_data.id + " = max(admax." + Database.activity_data.id + ") " +
-                "order by " +
-                "   a." + Database.activity.id + ", " +
-                "   ad." + Database.activity_data.id, null));
+        ActivityDataCursor cursor = queryBuilder.query(getDb());
         long lastActivityId = 0;
         while (cursor.moveToNext()) {
             long activityId = cursor.getActivityId();
@@ -550,17 +517,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private LocalUser readUser(long id) {
         if (!mCacheUser.containsKey(id)) {
-            Cursor cursor = getReadableDatabase().rawQuery("" +
+            UserCursor cursor = new UserCursor(getDb().rawQuery("" +
                     "select " +
                     "   u.* " +
                     "from " +
                     "   " + Database.user.T + " u " +
                     "where " +
-                    "   u.id = " + id, null);
+                    "   u.id = " + id, null));
             if (cursor.moveToNext()) {
-                LocalUser user = new LocalUser();
-                user.setDisplayName(cursor.getString(cursor.getColumnIndex(Database.user.display_name)));
-                mCacheUser.put(id, user);
+                mCacheUser.put(id, cursor.getUser());
             }
             cursor.close();
         }
@@ -572,5 +537,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             readCategories();
         }
         return mCacheCategory.get(key.getId());
+    }
+
+    public boolean isFavourite(ActivityKey activity, UserKey user) {
+        try {
+            Cursor cursor = getDb().query(Database.favourite_activity.T,
+                    new String[]{Database.favourite_activity.activity_id}, "" +
+                    Database.favourite_activity.user_id + " = " + user.getId() +
+                    " AND "
+                    + Database.favourite_activity.activity_id + " = " + activity.getId(),
+                    null,
+                    null,
+                    null,
+                    null);
+            return cursor.moveToNext();
+        } catch (Exception e) {
+            logError(e, "Could not determine if user " + user.getId() + " has activity " + activity.getId() + " as a favourite");
+            return false;
+        }
+    }
+
+    public void setFavourite(ActivityKey activity, UserKey user) {
+        ContentValues values = new ContentValues();
+        values.put(Database.favourite_activity.user_id, user.getId());
+        values.put(Database.favourite_activity.activity_id, activity.getId());
+        getDb().insert(Database.favourite_activity.T, null, values);
+    }
+
+    public void unsetFavourite(ActivityKey activity, UserKey user) {
+        getDb().delete(Database.favourite_activity.T, "" +
+                Database.favourite_activity.user_id + " = " + user.getId() +
+                " AND "
+                + Database.favourite_activity.activity_id + " = " + activity.getId(),
+                null);
     }
 }

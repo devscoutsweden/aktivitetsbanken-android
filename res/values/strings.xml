@@ -75,4 +75,12 @@
     <string name="activitiesListMenuSort">Sortera</string>
 
     <string name="scoutmethod">Scoutmetod</string>
+    <string name="startTabFavourites">Favoriter</string>
+    <string name="searchResultDefaultEmptyMessage">Listan är tom.</string>
+    <string name="favouritesEmptyHeader">Du har inga favoriter. Ännu.</string>
+    <string name="favouritesEmptyMessage">Tryck på stjärnan i övre högra hörnet om du vill att en aktivitet ska synas
+        här.
+    </string>
+    <string name="searchResultEmptyTitle">Tyvärr, inga träffar.</string>
+    <string name="searchResultEmptyMessage">Inga aktiviteter passade in på dina sökvillkor.</string>
 </resources>

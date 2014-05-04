@@ -10,6 +10,7 @@ public class Database {
         final static String password_hash = "password_hash";
         final static String password_algorithm = "password_algorithm";
         final static String display_name = "display_name";
+        final static String is_local_only = "is_local_only";
     }
 
     public static class category {

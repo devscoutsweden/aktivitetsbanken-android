@@ -29,9 +29,17 @@ public class ActivitiesListFragment extends NonBlockingSearchResultFragment<Acti
     private ActivityFilter mFilter;
 
     public ActivitiesListFragment() {
+        super();
+    }
+
+    public ActivitiesListFragment(int emptyHeaderTextId, int emptyMessageTextId, ActivityFilter filter, Sorter sortOrder) {
+        super(emptyHeaderTextId, emptyMessageTextId);
+        mFilter = filter;
+        mSortOrder = sortOrder;
     }
 
     public ActivitiesListFragment(ActivityFilter filter, Sorter sortOrder) {
+        super();
         mFilter = filter;
         mSortOrder = sortOrder;
     }
@@ -151,10 +159,7 @@ public class ActivitiesListFragment extends NonBlockingSearchResultFragment<Acti
     }
 
     public static ActivitiesListFragment create(ActivityFilter filter, Sorter defaultSortOrder) {
-        ActivitiesListFragment fragment = new ActivitiesListFragment();
-        fragment.mFilter = filter;
-        fragment.mSortOrder = defaultSortOrder;
-        return fragment;
+        return new ActivitiesListFragment(R.string.searchResultEmptyTitle, R.string.searchResultEmptyMessage, filter, defaultSortOrder);
     }
 
     private static class ActivitiesListAdapter extends ArrayAdapter<Activity> {

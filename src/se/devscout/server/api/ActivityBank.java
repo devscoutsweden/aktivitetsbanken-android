@@ -9,6 +9,8 @@ public interface ActivityBank {
 
     List<? extends Activity> find(ActivityFilter condition);
 
+    List<? extends Activity> findFavourites(UserKey userKey);
+
     Activity create(ActivityProperties properties);
 
     void delete(ActivityKey key);
@@ -28,4 +30,10 @@ public interface ActivityBank {
     List<? extends Category> readCategories();
 
     Category readCategoryFull(CategoryKey key);
+
+    void setFavourite(ActivityKey activityKey, UserKey userKey);
+
+    void unsetFavourite(ActivityKey activityKey, UserKey userKey);
+
+    boolean isFavourite(ActivityKey activityKey, UserKey userKey);
 }

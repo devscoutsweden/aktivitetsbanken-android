@@ -5,14 +5,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import se.devscout.android.R;
 import se.devscout.android.model.ObjectIdentifierPojo;
 import se.devscout.android.model.repo.SQLiteActivityRepo;
+import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.ActivityUtil;
 import se.devscout.android.util.ResourceUtil;
+import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.model.Activity;
 import se.devscout.server.api.model.ActivityKey;
 import se.devscout.server.api.model.ActivityRevision;
@@ -38,6 +38,8 @@ public class ActivitiesViewPagerFragment extends Fragment implements ViewPager.O
             mSelectedIndex = savedInstanceState.getInt("mSelectedIndex");
 //            Log.d(ActivitiesListFragment.class.getName(), "State (e.g. search result) has been restored.");
         }
+
+        setHasOptionsMenu(true);
 
         mViewPager = (ViewPager) inflater.inflate(R.layout.view_pager, container, false);
         mViewPager.setOnPageChangeListener(this);
@@ -84,6 +86,39 @@ public class ActivitiesViewPagerFragment extends Fragment implements ViewPager.O
         return mViewPager;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.activity, menu);
+        initFavouriteMenuItem(menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    private void initFavouriteMenuItem(Menu menu) {
+        MenuItem item = menu.findItem(R.id.activityMenuFavourite);
+        Activity activity = getSelectedActivity();
+        boolean favourite = ActivityBankFactory.getInstance(getActivity()).isFavourite(activity, null);
+        item.setIcon(favourite ? R.drawable.ic_action_important : R.drawable.ic_action_not_important);
+    }
+
+    private Activity getSelectedActivity() {
+        return getActivities().get(mSelectedIndex);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.activityMenuFavourite) {
+            ActivityBank activityBank = ActivityBankFactory.getInstance(getActivity());
+            boolean favourite = activityBank.isFavourite(getSelectedActivity(), null);
+            if (favourite) {
+                activityBank.unsetFavourite(getSelectedActivity(), null);
+            } else {
+                activityBank.setFavourite(getSelectedActivity(), null);
+            }
+            item.setIcon(!favourite ? R.drawable.ic_action_important : R.drawable.ic_action_not_important);
+        }
+        return super.onOptionsItemSelected(item);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
     protected ArrayList<Activity> getActivities() {
         ArrayList<Activity> activities = new ArrayList<Activity>();
         for (ObjectIdentifierPojo activity : mActivities) {
@@ -123,6 +158,8 @@ public class ActivitiesViewPagerFragment extends Fragment implements ViewPager.O
     @Override
     public void onPageSelected(int i) {
         updateActivityTitle(i);
+        mSelectedIndex = i;
+        getActivity().invalidateOptionsMenu();
     }
 
     @Override

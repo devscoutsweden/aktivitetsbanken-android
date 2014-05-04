@@ -10,6 +10,21 @@ public class UserPropertiesPojo implements UserProperties {
     private boolean mEmailAddressVerified;
     private HashAlgorithm mPasswordHashAlgorithm;
     private String mPasswordHashAlgorithmParameter;
+    private boolean mIsLocalUser;
+
+    public UserPropertiesPojo() {
+    }
+
+    public UserPropertiesPojo(String displayName, boolean isLocalUser, String emailAddress) {
+        mDisplayName = displayName;
+        mIsLocalUser = isLocalUser;
+        mEmailAddress = emailAddress;
+    }
+
+    public UserPropertiesPojo(String displayName, boolean isLocalUser) {
+        mDisplayName = displayName;
+        mIsLocalUser = isLocalUser;
+    }
 
     @Override
     public String getName() {
@@ -68,5 +83,13 @@ public class UserPropertiesPojo implements UserProperties {
 
     public void setPasswordHashAlgorithmParameter(String passwordHashAlgorithmParameter) {
         mPasswordHashAlgorithmParameter = passwordHashAlgorithmParameter;
+    }
+
+    public boolean isIsLocalUser() {
+        return mIsLocalUser;
+    }
+
+    public void setIsLocalUser(boolean isLocalUser) {
+        mIsLocalUser = isLocalUser;
     }
 }

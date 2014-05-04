@@ -1,6 +1,7 @@
 package se.devscout.android.model.repo;
 
 import android.content.Context;
+import se.devscout.android.model.ObjectIdentifierPojo;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.model.*;
@@ -11,6 +12,7 @@ import java.util.List;
 public class SQLiteActivityRepo implements ActivityBank {
     private static SQLiteActivityRepo ourInstance;
     private final DatabaseHelper mDatabaseHelper;
+    private UserKey mAnonymousUserKey;
 
     public static SQLiteActivityRepo getInstance(Context ctx) {
         if (ourInstance == null) {
@@ -21,6 +23,7 @@ public class SQLiteActivityRepo implements ActivityBank {
 
     public SQLiteActivityRepo(Context ctx) {
         mDatabaseHelper = new DatabaseHelper(ctx);
+        mAnonymousUserKey = new ObjectIdentifierPojo(mDatabaseHelper.getAnonymousUserId());
     }
 
     @Override
@@ -31,12 +34,20 @@ public class SQLiteActivityRepo implements ActivityBank {
     @Override
     public List<LocalActivity> find(ActivityFilter condition) {
         ArrayList<LocalActivity> res = new ArrayList<LocalActivity>();
-        for (LocalActivity activity : mDatabaseHelper.readActivities(condition)) {
+        for (LocalActivity activity : mDatabaseHelper.readActivities(condition, null)) {
             if (condition.matches(activity)) {
                 res.add(activity);
             }
         }
         return res;
+    }
+
+    @Override
+    public List<? extends Activity> findFavourites(UserKey userKey) {
+        if (userKey != null) {
+            throw new UnsupportedOperationException("Finding favourites for specific user is not supported. User must be 'null'.");
+        }
+        return mDatabaseHelper.readActivities(null, mAnonymousUserKey);
     }
 
     @Override
@@ -88,6 +99,21 @@ public class SQLiteActivityRepo implements ActivityBank {
     @Override
     public Category readCategoryFull(CategoryKey key) {
         return mDatabaseHelper.readCategory(key);
+    }
+
+    @Override
+    public void setFavourite(ActivityKey activityKey, UserKey userKey) {
+        mDatabaseHelper.setFavourite(activityKey, mAnonymousUserKey);
+    }
+
+    @Override
+    public void unsetFavourite(ActivityKey activityKey, UserKey userKey) {
+        mDatabaseHelper.unsetFavourite(activityKey, mAnonymousUserKey);
+    }
+
+    @Override
+    public boolean isFavourite(ActivityKey activityKey, UserKey userKey) {
+        return mDatabaseHelper.isFavourite(activityKey, mAnonymousUserKey);
     }
 
     public void resetDatabase(boolean addTestData) {
