@@ -3,19 +3,16 @@ package se.devscout.android.util;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.model.ActivityProperties;
 
-public class AndFilter extends CompoundFilter {
-    public AndFilter() {
-    }
-
-    public AndFilter(ActivityFilter... filters) {
-        super(filters);
-    }
+public class AndFilter extends CompoundFilter implements se.devscout.server.api.activityfilter.AndFilter {
 
     @Override
     public boolean matches(ActivityProperties properties) {
         for (ActivityFilter filter : mFilters) {
-            if (!filter.matches(properties)) {
-                return false;
+            if (filter instanceof PrimitiveFilter) {
+                PrimitiveFilter primitiveFilter = (PrimitiveFilter) filter;
+                if (!primitiveFilter.matches(properties)) {
+                    return false;
+                }
             }
         }
         return true;

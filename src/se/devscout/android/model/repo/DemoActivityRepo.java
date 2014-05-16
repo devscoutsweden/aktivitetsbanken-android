@@ -1,8 +1,11 @@
 package se.devscout.android.model.repo;
 
 import android.content.Context;
+import se.devscout.android.util.PrimitiveActivityFilterFactory;
+import se.devscout.android.util.PrimitiveFilter;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.ActivityFilter;
+import se.devscout.server.api.ActivityFilterFactory;
 import se.devscout.server.api.model.*;
 
 import java.util.ArrayList;
@@ -31,9 +34,10 @@ public class DemoActivityRepo implements ActivityBank {
 
     @Override
     public List<LocalActivity> find(ActivityFilter condition) {
+        PrimitiveFilter primitiveFilter = PrimitiveFilter.fromActivityFilter(condition);
         ArrayList<LocalActivity> res = new ArrayList<LocalActivity>();
         for (LocalActivity activity : mActivities) {
-            if (condition.matches(activity)) {
+            if (primitiveFilter.matches(activity)) {
                 res.add(activity);
             }
         }
@@ -73,6 +77,11 @@ public class DemoActivityRepo implements ActivityBank {
     @Override
     public Activity readFull(ActivityKey key) {
         return read(key);
+    }
+
+    @Override
+    public ActivityFilterFactory getFilterFactory() {
+        return new PrimitiveActivityFilterFactory();
     }
 
     @Override

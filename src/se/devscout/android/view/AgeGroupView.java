@@ -44,7 +44,7 @@ public class AgeGroupView extends View {
         for (int i = 0; i < AgeGroup.values().length; i++) {
             AgeGroup ageGroup = AgeGroup.values()[i];
             AgeRangeFilter ageRangeFilter = new AgeRangeFilter(ageGroup.getScoutAgeRange());
-            mMatchingAgeGroupPainters[i] = (ageRangeFilter.matches(new IntegerRangePojo(mMinAge, mMaxAge)) ? createPaint(getResources().getColor(ageGroup.getColorResId())) : null);
+            mMatchingAgeGroupPainters[i] = (ageRangeFilter.isPartlyWithin(new IntegerRangePojo(mMinAge, mMaxAge)) ? createPaint(getResources().getColor(ageGroup.getColorResId())) : null);
         }
         invalidate();
         requestLayout();

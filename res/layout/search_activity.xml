@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sök..."
+        android:text="@string/searchButtonLabel"
         android:id="@+id/searchButton"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true" />
@@ -18,12 +19,20 @@
         android:layout_alignRight="@+id/searchButton"
         android:layout_above="@+id/searchButton"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" >
+        android:layout_alignParentTop="true">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/searchTextLabel"
+                android:id="@+id/textView"
+                android:layout_marginTop="@dimen/defaultMargin"
+                android:textSize="@dimen/mediumTextSize" />
 
             <EditText
                 android:layout_width="fill_parent"
@@ -31,58 +40,99 @@
                 android:text="hajk"
                 android:id="@+id/searchText" />
 
-            <LinearLayout
-                android:orientation="horizontal"
+            <TextView
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+                android:layout_height="wrap_content"
+                android:text="@string/searchAgeGroupsLabel"
+                android:id="@+id/textView1"
+                android:layout_marginTop="@dimen/defaultMargin"
+                android:textSize="@dimen/mediumTextSize" />
 
-                <ToggleButton
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+            <GridLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:columnCount="5">
+
+                <ImageView
+                    android:id="@+id/searchAgeTrackerLogo"
+                    android:src="@drawable/logo_tracker_black"
+                    style="@style/VerticalCheckbox.Top" />
+
+                <ImageView
+                    android:id="@+id/searchAgeDiscovererLogo"
+                    android:src="@drawable/logo_discoverer_black"
+                    style="@style/VerticalCheckbox.Top" />
+
+                <ImageView
+                    android:id="@+id/searchAgeAdventurerLogo"
+                    android:src="@drawable/logo_adventurer_black"
+                    style="@style/VerticalCheckbox.Top" />
+
+                <ImageView
+                    android:id="@+id/searchAgeChallengerLogo"
+                    android:src="@drawable/logo_challenger_black"
+                    style="@style/VerticalCheckbox.Top" />
+
+                <ImageView
+                    android:id="@+id/searchAgeRoverLogo"
+                    android:src="@drawable/logo_rover_black"
+                    style="@style/VerticalCheckbox.Top" />
+
+                <CheckBox
                     android:id="@+id/searchAgeTracker"
-                    android:textOff=""
-                    android:textOn=""
-                    android:drawableTop="@drawable/logo_tracker_black" />
+                    style="@style/VerticalCheckbox.Bottom" />
 
-                <ToggleButton
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                <CheckBox
                     android:id="@+id/searchAgeDiscoverer"
-                    android:textOff=""
-                    android:textOn=""
-                    android:drawableTop="@drawable/logo_discoverer_black" />
+                    style="@style/VerticalCheckbox.Bottom" />
 
-                <ToggleButton
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                <CheckBox
                     android:id="@+id/searchAgeAdventurer"
-                    android:textOff=""
-                    android:textOn=""
-                    android:drawableTop="@drawable/logo_adventurer_black" />
+                    style="@style/VerticalCheckbox.Bottom" />
 
-                <ToggleButton
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                <CheckBox
                     android:id="@+id/searchAgeChallenger"
-                    android:textOff=""
-                    android:textOn=""
-                    android:drawableTop="@drawable/logo_challenger_black" />
+                    style="@style/VerticalCheckbox.Bottom" />
 
-                <ToggleButton
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                <CheckBox
                     android:id="@+id/searchAgeRover"
-                    android:textOff=""
-                    android:textOn=""
-                    android:drawableTop="@drawable/logo_rover_black" />
-            </LinearLayout>
+                    style="@style/VerticalCheckbox.Bottom" />
+            </GridLayout>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/searchTimeLabel"
+                android:id="@+id/textView2"
+                android:layout_marginTop="@dimen/defaultMargin"
+                android:textSize="@dimen/mediumTextSize" />
+
+            <Spinner
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/searchTimeSpinner"
+                android:spinnerMode="dropdown" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/searchOtherConditionsLabel"
+                android:id="@+id/textView3"
+                android:layout_marginTop="@dimen/defaultMargin"
+                android:textSize="@dimen/mediumTextSize" />
 
             <CheckBox
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Enbart utvalda"
+                android:text="@string/searchFeaturedOnlyLabel"
                 android:id="@+id/searchFeaturedOnly"
                 android:singleLine="false" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/searchFavouritesOnlyLabel"
+                android:id="@+id/searchFavouritesOnly" />
 
         </LinearLayout>
     </ScrollView>

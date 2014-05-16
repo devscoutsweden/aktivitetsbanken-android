@@ -83,4 +83,18 @@
     </string>
     <string name="searchResultEmptyTitle">Tyvärr, inga träffar.</string>
     <string name="searchResultEmptyMessage">Inga aktiviteter passade in på dina sökvillkor.</string>
+    <string name="searchTextLabel">Text i namn eller beskrivning</string>
+    <string name="searchAgeGroupsLabel">Passande åldergrupper</string>
+    <string name="searchTimeLabel">Tidsåtgång</string>
+    <string name="searchOtherConditionsLabel">Övriga sökalternativ</string>
+    <string name="searchFeaturedOnlyLabel">Måste vara utvald av redaktör</string>
+    <string name="searchFavouritesOnlyLabel">Måste vara bland mina favoriter</string>
+    <string name="searchButtonLabel">Sök...</string>
+    <string name="searchTimeOptionAny">Spelar ingen roll</string>
+    <string name="searchTimeOption5min">Högst 5 minuter</string>
+    <string name="searchTimeOption15min">Högst 15 minuter</string>
+    <string name="searchTimeOption15to30min">Omkring 15-30 min</string>
+    <string name="searchTimeOption30to60min">Omkring 30-60 min</string>
+    <string name="searchTimeOption1to2hours">1-2 timmar</string>
+    <string name="searchTimeOptionMoreThan2hours">Över 2 timmar</string>
 </resources>

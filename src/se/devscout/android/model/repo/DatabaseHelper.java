@@ -8,8 +8,9 @@ import android.database.sqlite.*;
 import android.util.Log;
 import android.widget.Toast;
 import se.devscout.android.R;
-import se.devscout.android.util.IsFeaturedFilter;
 import se.devscout.server.api.ActivityFilter;
+import se.devscout.server.api.activityfilter.AndFilter;
+import se.devscout.server.api.activityfilter.OrFilter;
 import se.devscout.server.api.model.*;
 
 import java.io.IOException;
@@ -370,13 +371,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public List<? extends LocalActivity> readActivities(ActivityFilter filter, UserKey favouriteForUserKey) {
-        ActivityDataCursor.QueryBuilder queryBuilder = new ActivityDataCursor.QueryBuilder();
-        if (filter instanceof IsFeaturedFilter) {
-            queryBuilder.addWhereIsFeatured(true);
-        }
-        if (favouriteForUserKey != null) {
-            queryBuilder.addWhereFavourite(favouriteForUserKey);
-        }
+        SQLQueryBuilder queryBuilder = new SQLQueryBuilder();
+        applyFilter(queryBuilder, filter);
         ArrayList<LocalActivity> activities = new ArrayList<LocalActivity>();
         ActivityDataCursor cursor = queryBuilder.query(getDb());
         long lastActivityId = 0;
@@ -413,12 +409,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 initActivityDataReferences(revision);
 
                 currentActivityToAdd.addRevisions(revision);
-
             }
             lastActivityId = activityId;
         }
         cursor.close();
         return activities;
+    }
+
+    private void applyFilter(SQLQueryBuilder queryBuilder, ActivityFilter filter) {
+        if (filter instanceof AndFilter) {
+            AndFilter andFilter = (AndFilter) filter;
+            for (ActivityFilter activityFilter : andFilter.getFilters()) {
+                applyFilter(queryBuilder, activityFilter);
+            }
+        } else if (filter instanceof OrFilter) {
+            OrFilter orFilter = (OrFilter) filter;
+            for (ActivityFilter activityFilter : orFilter.getFilters()) {
+                applyFilter(queryBuilder, activityFilter);
+            }
+        } else if (filter instanceof SQLActivityFilter) {
+            ((SQLActivityFilter) filter).applyFilter(queryBuilder);
+        }
     }
 
     public List<LocalCategory> readCategories() {

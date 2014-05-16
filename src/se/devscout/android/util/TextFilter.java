@@ -1,15 +1,17 @@
 package se.devscout.android.util;
 
-import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.model.ActivityProperties;
 
-import java.io.Serializable;
-
-public class TextFilter implements ActivityFilter, Serializable {
+public class TextFilter extends PrimitiveFilter implements se.devscout.server.api.activityfilter.TextFilter {
     private final String mCondition;
 
     public TextFilter(String condition) {
         mCondition = condition;
+    }
+
+    @Override
+    public String getCondition() {
+        return mCondition;
     }
 
     @Override

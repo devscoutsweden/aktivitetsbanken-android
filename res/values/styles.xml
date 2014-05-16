@@ -48,4 +48,48 @@
         <item name="android:lineSpacingMultiplier">1.25</item>
     </style>
 
+    <style name="ToggleTest" parent="android:Widget.CompoundButton.CheckBox">
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingTop">40dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+        <item name="android:layout_width">@dimen/uiBlockSize</item>
+    </style>
+
+    <style name="VerticalCheckbox">
+        <item name="android:layout_width">@dimen/iconButtonSize</item>
+        <item name="android:layout_marginLeft">@dimen/iconButtonMargin</item>
+        <item name="android:layout_marginRight">@dimen/iconButtonMargin</item>
+    </style>
+
+    <style name="VerticalCheckbox.Top">
+        <item name="android:layout_height">@dimen/iconButtonSize</item>
+        <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:layout_marginTop">@dimen/iconButtonMargin</item>
+    </style>
+
+    <style name="VerticalCheckbox.Bottom">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:layout_marginBottom">@dimen/iconButtonMargin</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+    </style>
+
+    <style name="VerticalRadiobutton" parent="VerticalCheckbox"></style>
+
+    <style name="VerticalRadiobutton.Top">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:layout_marginTop">@dimen/iconButtonMargin</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+    </style>
+
+    <style name="VerticalRadiobutton.Bottom">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:layout_marginBottom">@dimen/iconButtonMargin</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+    </style>
+
+
 </resources>

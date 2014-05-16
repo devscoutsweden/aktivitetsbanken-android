@@ -1,23 +1,30 @@
 package se.devscout.android.util;
 
-import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.model.ActivityProperties;
 import se.devscout.server.api.model.ActivityRevision;
 import se.devscout.server.api.model.Category;
 import se.devscout.server.api.model.CategoryProperties;
 
-import java.io.Serializable;
-
 /**
  * Tests if activity is assigned to a certain category.
  */
-public class CategoryFilter implements ActivityFilter, Serializable {
+public class CategoryFilter extends PrimitiveFilter implements se.devscout.server.api.activityfilter.CategoryFilter {
     private final String name;
     private final String group;
 
     public CategoryFilter(CategoryProperties properties) {
         name = properties.getName();
         group = properties.getGroup();
+    }
+
+    @Override
+    public String getGroup() {
+        return group;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     @Override

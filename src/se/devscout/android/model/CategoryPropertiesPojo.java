@@ -8,7 +8,7 @@ public class CategoryPropertiesPojo implements CategoryProperties, Serializable 
     private String mName;
     private String mGroup;
 
-    protected CategoryPropertiesPojo(String group, String name) {
+    public CategoryPropertiesPojo(String group, String name) {
         mGroup = group;
         mName = name;
     }
