@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
-import se.devscout.android.model.repo.SQLiteActivityRepo;
+import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.server.api.model.Activity;
 import se.devscout.server.api.model.ActivityRevision;
 
@@ -24,7 +24,7 @@ class FeaturedActivitiesArrayAdapter extends ArrayAdapter<Activity> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // TODO Use some kind of factory for accessing/creating the ActivityBank instead of forcing SQLiteActivityRepo?
-        List<? extends ActivityRevision> revisions = SQLiteActivityRepo.getInstance(getContext()).read(mResult.get(position)).getRevisions();
+        List<? extends ActivityRevision> revisions = ActivityBankFactory.getInstance(getContext()).read(mResult.get(position)).getRevisions();
         View view = ActivityCoverFragment.initListItemView(
                 LayoutInflater.from(getContext()),
                 parent,
