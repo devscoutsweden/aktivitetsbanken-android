@@ -11,13 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @JsonFilter("LocalActivity")
-class LocalActivity extends ActivityPropertiesPojo implements Activity, /*ActivityRevision, */Serializable, Comparable<LocalActivity> {
+public class LocalActivity extends ActivityPropertiesPojo implements Activity, /*ActivityRevision, */Serializable, Comparable<LocalActivity> {
     public static long debugCounter;
     private List<LocalActivityRevision> mRevisions = new ArrayList<LocalActivityRevision>();
     private LocalUser mOwner;
     private Long mId;
 
-    LocalActivity(LocalUser owner, Long id) {
+    public LocalActivity(LocalUser owner, Long id) {
         super(owner);
         mId = id;
     }

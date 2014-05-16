@@ -1,7 +1,10 @@
-package se.devscout.android.model.repo;
+package se.devscout.android.model.repo.sql;
 
 import android.content.Context;
 import se.devscout.android.model.ObjectIdentifierPojo;
+import se.devscout.android.model.repo.LocalActivity;
+import se.devscout.android.model.repo.LocalCategory;
+import se.devscout.android.model.repo.LocalReference;
 import se.devscout.android.util.PrimitiveFilter;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.ActivityFilter;

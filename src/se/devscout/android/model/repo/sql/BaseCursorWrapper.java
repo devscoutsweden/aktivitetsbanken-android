@@ -1,4 +1,4 @@
-package se.devscout.android.model.repo;
+package se.devscout.android.model.repo.sql;
 
 import android.database.Cursor;
 import android.database.CursorWrapper;

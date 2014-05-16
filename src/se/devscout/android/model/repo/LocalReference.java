@@ -6,7 +6,7 @@ import se.devscout.server.api.model.ReferenceType;
 
 import java.net.URI;
 
-class LocalReference extends ReferencePropertiesPojo implements Reference {
+public class LocalReference extends ReferencePropertiesPojo implements Reference {
     public static long debugCounter;
     private Long mId;
 

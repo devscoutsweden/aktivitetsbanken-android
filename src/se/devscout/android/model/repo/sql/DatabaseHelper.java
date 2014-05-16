@@ -1,4 +1,4 @@
-package se.devscout.android.model.repo;
+package se.devscout.android.model.repo.sql;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,6 +8,7 @@ import android.database.sqlite.*;
 import android.util.Log;
 import android.widget.Toast;
 import se.devscout.android.R;
+import se.devscout.android.model.repo.*;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.activityfilter.AndFilter;
 import se.devscout.server.api.activityfilter.OrFilter;

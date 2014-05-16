@@ -1,4 +1,4 @@
-package se.devscout.android.model.repo;
+package se.devscout.android.model.repo.sql;
 
 import se.devscout.android.util.IsFeaturedFilter;
 import se.devscout.server.api.model.ActivityProperties;

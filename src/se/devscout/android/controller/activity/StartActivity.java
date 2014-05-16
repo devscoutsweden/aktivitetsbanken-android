@@ -7,7 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.StartTabsFragment;
-import se.devscout.android.model.repo.SQLiteActivityRepo;
+import se.devscout.android.model.repo.sql.SQLiteActivityRepo;
 
 public class StartActivity extends SingleFragmentActivity {
     @Override

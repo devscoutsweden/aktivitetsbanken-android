@@ -1,4 +1,4 @@
-package se.devscout.android.model.repo;
+package se.devscout.android.model.repo.sql;
 
 import se.devscout.android.util.PrimitiveFilter;
 import se.devscout.server.api.activityfilter.IsUserFavouriteFilter;

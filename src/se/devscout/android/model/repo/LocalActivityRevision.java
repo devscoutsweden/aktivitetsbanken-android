@@ -11,11 +11,11 @@ import java.io.Serializable;
 import java.net.URI;
 
 @JsonFilter("LocalActivityRevision")
-class LocalActivityRevision extends ActivityRevisionPropertiesPojo implements ActivityRevision, Serializable {
+public class LocalActivityRevision extends ActivityRevisionPropertiesPojo implements ActivityRevision, Serializable {
     public static long debugCounter;
     private Long mId;
 
-    LocalActivityRevision(String name, boolean featured, ActivityKey activityKey, Long revisionId) {
+    public LocalActivityRevision(String name, boolean featured, ActivityKey activityKey, Long revisionId) {
         super(name, featured, activityKey);
         mId = revisionId;
     }

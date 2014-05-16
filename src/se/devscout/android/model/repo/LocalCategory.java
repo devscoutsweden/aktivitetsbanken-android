@@ -5,11 +5,11 @@ import se.devscout.server.api.model.Category;
 
 import java.io.Serializable;
 
-class LocalCategory extends CategoryPropertiesPojo implements Category, Serializable {
+public class LocalCategory extends CategoryPropertiesPojo implements Category, Serializable {
     public static long debugCounter;
     private Long mId;
 
-    LocalCategory(String group, String name, Long id) {
+    public LocalCategory(String group, String name, Long id) {
         super(group, name);
         mId = id;
     }
