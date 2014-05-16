@@ -10,53 +10,53 @@ import se.devscout.server.api.model.UserKey;
 
 public class PrimitiveActivityFilterFactory implements ActivityFilterFactory {
     @Override
-    public AgeRangeFilter createAgeRangeFilter(int min, int max) {
-        return new AgeRangeFilter(new IntegerRangePojo(min, max));
+    public SimpleAgeRangeFilter createAgeRangeFilter(int min, int max) {
+        return new SimpleAgeRangeFilter(new IntegerRangePojo(min, max));
     }
 
     @Override
-    public TimeRangeFilter createTimeRangeFilter(int min, int max) {
-        return new TimeRangeFilter(new IntegerRangePojo(min, max));
+    public SimpleTimeRangeFilter createTimeRangeFilter(int min, int max) {
+        return new SimpleTimeRangeFilter(new IntegerRangePojo(min, max));
     }
 
     @Override
-    public AndFilter createAndFilter(ActivityFilter... filters) {
-        AndFilter res = new AndFilter();
+    public SimpleAndFilter createAndFilter(ActivityFilter... filters) {
+        SimpleAndFilter res = new SimpleAndFilter();
         fillCompoundFilter(res, filters);
         return res;
     }
 
     @Override
-    public OrFilter createOrFilter(ActivityFilter... filters) {
-        OrFilter res = new OrFilter();
+    public SimpleOrFilter createOrFilter(ActivityFilter... filters) {
+        SimpleOrFilter res = new SimpleOrFilter();
         fillCompoundFilter(res, filters);
         return res;
     }
 
-    private void fillCompoundFilter(CompoundFilter res, ActivityFilter[] filters) {
+    private void fillCompoundFilter(SimpleCompoundFilter res, ActivityFilter[] filters) {
         for (ActivityFilter filter : filters) {
-            if (filter instanceof PrimitiveFilter) {
-                PrimitiveFilter primitiveFilter = (PrimitiveFilter) filter;
-                res.getFilters().add(primitiveFilter);
+            if (filter instanceof SimpleFilter) {
+                SimpleFilter simpleFilter = (SimpleFilter) filter;
+                res.getFilters().add(simpleFilter);
             } else {
-                throw new IllegalArgumentException("Filter must be " + PrimitiveFilter.class.getSimpleName() + " object.");
+                throw new IllegalArgumentException("Filter must be " + SimpleFilter.class.getSimpleName() + " object.");
             }
         }
     }
 
     @Override
-    public CategoryFilter createCategoryFilter(String group, String name) {
-        return new CategoryFilter(new CategoryPropertiesPojo(group, name));
+    public SimpleCategoryFilter createCategoryFilter(String group, String name) {
+        return new SimpleCategoryFilter(new CategoryPropertiesPojo(group, name));
     }
 
     @Override
-    public TextFilter createTextFilter(String condition) {
-        return new TextFilter(condition);
+    public SimpleTextFilter createTextFilter(String condition) {
+        return new SimpleTextFilter(condition);
     }
 
     @Override
-    public IsFeaturedFilter createIsFeaturedFilter() {
-        return new IsFeaturedFilter();
+    public SimpleIsFeaturedFilter createIsFeaturedFilter() {
+        return new SimpleIsFeaturedFilter();
     }
 
     @Override

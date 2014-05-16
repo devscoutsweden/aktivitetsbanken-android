@@ -3,11 +3,11 @@ package se.devscout.android.util;
 import android.util.Log;
 import se.devscout.server.api.model.Range;
 
-public abstract class RangeFilter extends PrimitiveFilter {
+public abstract class SimpleRangeFilter extends SimpleFilter {
     protected final Integer mMin;
     protected final Integer mMax;
 
-    public RangeFilter(Range<Integer> range) {
+    public SimpleRangeFilter(Range<Integer> range) {
         mMin = range.getMin();
         mMax = range.getMax();
     }

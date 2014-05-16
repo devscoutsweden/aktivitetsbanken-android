@@ -2,7 +2,7 @@ package se.devscout.android.controller.fragment;
 
 import se.devscout.android.CategoryTrack;
 import se.devscout.android.R;
-import se.devscout.android.util.CategoryFilter;
+import se.devscout.android.util.SimpleCategoryFilter;
 import se.devscout.server.api.ActivityFilter;
 
 public class CategoryTrackListFragment extends QuickSearchListFragment<CategoryTrack> {
@@ -28,7 +28,7 @@ public class CategoryTrackListFragment extends QuickSearchListFragment<CategoryT
 
     @Override
     protected ActivityFilter createFilter(CategoryTrack option) {
-        return new CategoryFilter(option.getScoutCategoryTrack());
+        return new SimpleCategoryFilter(option.getScoutCategoryTrack());
     }
 
     @Override

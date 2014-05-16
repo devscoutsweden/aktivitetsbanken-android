@@ -5,18 +5,18 @@ import se.devscout.server.api.ActivityFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public abstract class CompoundFilter extends PrimitiveFilter {
+public abstract class SimpleCompoundFilter extends SimpleFilter {
     protected final ArrayList<ActivityFilter> mFilters;
 
-    public CompoundFilter() {
+    public SimpleCompoundFilter() {
         this(new ArrayList<ActivityFilter>());
     }
 
-    public CompoundFilter(ActivityFilter... filters) {
+    public SimpleCompoundFilter(ActivityFilter... filters) {
         this(new ArrayList(Arrays.asList(filters)));
     }
 
-    private CompoundFilter(ArrayList<ActivityFilter> filters) {
+    private SimpleCompoundFilter(ArrayList<ActivityFilter> filters) {
         mFilters = filters;
     }
 

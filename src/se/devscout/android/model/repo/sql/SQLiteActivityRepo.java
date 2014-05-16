@@ -5,7 +5,7 @@ import se.devscout.android.model.ObjectIdentifierPojo;
 import se.devscout.android.model.repo.LocalActivity;
 import se.devscout.android.model.repo.LocalCategory;
 import se.devscout.android.model.repo.LocalReference;
-import se.devscout.android.util.PrimitiveFilter;
+import se.devscout.android.util.SimpleFilter;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.ActivityFilterFactory;
@@ -40,9 +40,9 @@ public class SQLiteActivityRepo implements ActivityBank {
     public List<LocalActivity> find(ActivityFilter condition) {
         ArrayList<LocalActivity> res = new ArrayList<LocalActivity>();
         for (LocalActivity activity : mDatabaseHelper.readActivities(condition, null)) {
-            if (condition instanceof PrimitiveFilter) {
-                PrimitiveFilter primitiveFilter = (PrimitiveFilter) condition;
-                if (primitiveFilter.matches(activity)) {
+            if (condition instanceof SimpleFilter) {
+                SimpleFilter simpleFilter = (SimpleFilter) condition;
+                if (simpleFilter.matches(activity)) {
                     res.add(activity);
                 }
             }

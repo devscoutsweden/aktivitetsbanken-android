@@ -10,7 +10,7 @@ import android.view.View;
 import se.devscout.android.AgeGroup;
 import se.devscout.android.R;
 import se.devscout.android.model.IntegerRangePojo;
-import se.devscout.android.util.AgeRangeFilter;
+import se.devscout.android.util.SimpleAgeRangeFilter;
 
 public class AgeGroupView extends View {
     private static final float INACTIVE_SIZE_RATIO = 0.25f;
@@ -43,8 +43,8 @@ public class AgeGroupView extends View {
     private void onAgeRangeChanged() {
         for (int i = 0; i < AgeGroup.values().length; i++) {
             AgeGroup ageGroup = AgeGroup.values()[i];
-            AgeRangeFilter ageRangeFilter = new AgeRangeFilter(ageGroup.getScoutAgeRange());
-            mMatchingAgeGroupPainters[i] = (ageRangeFilter.isPartlyWithin(new IntegerRangePojo(mMinAge, mMaxAge)) ? createPaint(getResources().getColor(ageGroup.getColorResId())) : null);
+            SimpleAgeRangeFilter simpleAgeRangeFilter = new SimpleAgeRangeFilter(ageGroup.getScoutAgeRange());
+            mMatchingAgeGroupPainters[i] = (simpleAgeRangeFilter.isPartlyWithin(new IntegerRangePojo(mMinAge, mMaxAge)) ? createPaint(getResources().getColor(ageGroup.getColorResId())) : null);
         }
         invalidate();
         requestLayout();

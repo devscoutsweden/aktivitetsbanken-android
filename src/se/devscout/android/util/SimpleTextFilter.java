@@ -2,10 +2,10 @@ package se.devscout.android.util;
 
 import se.devscout.server.api.model.ActivityProperties;
 
-public class TextFilter extends PrimitiveFilter implements se.devscout.server.api.activityfilter.TextFilter {
+public class SimpleTextFilter extends SimpleFilter implements se.devscout.server.api.activityfilter.TextFilter {
     private final String mCondition;
 
-    public TextFilter(String condition) {
+    public SimpleTextFilter(String condition) {
         mCondition = condition;
     }
 

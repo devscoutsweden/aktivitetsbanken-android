@@ -4,7 +4,7 @@ import android.util.Log;
 import se.devscout.android.R;
 import se.devscout.android.model.ObjectIdentifierPojo;
 import se.devscout.android.util.ActivityBankFactory;
-import se.devscout.android.util.CategoryFilter;
+import se.devscout.android.util.SimpleCategoryFilter;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.model.Category;
 
@@ -70,7 +70,7 @@ public class CategoriesListFragment extends QuickSearchListFragment<Category> {
 
     @Override
     protected ActivityFilter createFilter(Category option) {
-        return new CategoryFilter(option);
+        return new SimpleCategoryFilter(option);
     }
 
     @Override

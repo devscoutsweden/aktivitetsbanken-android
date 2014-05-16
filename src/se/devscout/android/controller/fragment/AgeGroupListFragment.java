@@ -2,7 +2,7 @@ package se.devscout.android.controller.fragment;
 
 import se.devscout.android.AgeGroup;
 import se.devscout.android.R;
-import se.devscout.android.util.AgeRangeFilter;
+import se.devscout.android.util.SimpleAgeRangeFilter;
 import se.devscout.server.api.ActivityFilter;
 
 public class AgeGroupListFragment extends QuickSearchListFragment<AgeGroup> {
@@ -28,7 +28,7 @@ public class AgeGroupListFragment extends QuickSearchListFragment<AgeGroup> {
 
     @Override
     protected ActivityFilter createFilter(AgeGroup option) {
-        return new AgeRangeFilter(option.getScoutAgeRange());
+        return new SimpleAgeRangeFilter(option.getScoutAgeRange());
     }
 
     @Override

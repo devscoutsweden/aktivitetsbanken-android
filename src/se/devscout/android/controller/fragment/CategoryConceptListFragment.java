@@ -2,7 +2,7 @@ package se.devscout.android.controller.fragment;
 
 import se.devscout.android.CategoryConcept;
 import se.devscout.android.R;
-import se.devscout.android.util.CategoryFilter;
+import se.devscout.android.util.SimpleCategoryFilter;
 import se.devscout.server.api.ActivityFilter;
 
 public class CategoryConceptListFragment extends QuickSearchListFragment<CategoryConcept> {
@@ -28,7 +28,7 @@ public class CategoryConceptListFragment extends QuickSearchListFragment<Categor
 
     @Override
     protected ActivityFilter createFilter(CategoryConcept option) {
-        return new CategoryFilter(option.getScoutCategoryConcept());
+        return new SimpleCategoryFilter(option.getScoutCategoryConcept());
     }
 
     @Override

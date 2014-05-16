@@ -1,7 +1,7 @@
 package se.devscout.android.controller.fragment;
 
 import android.widget.ArrayAdapter;
-import se.devscout.android.util.IsFeaturedFilter;
+import se.devscout.android.util.SimpleIsFeaturedFilter;
 import se.devscout.server.api.model.Activity;
 
 import java.util.List;
@@ -16,7 +16,7 @@ public class FeaturedActivitiesListFragment extends ActivitiesListFragment {
     }
 
     public FeaturedActivitiesListFragment(Sorter sortOrder) {
-        super(new IsFeaturedFilter(), sortOrder);
+        super(new SimpleIsFeaturedFilter(), sortOrder);
     }
 
     @Override

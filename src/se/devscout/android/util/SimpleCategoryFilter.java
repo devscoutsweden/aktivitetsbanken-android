@@ -8,11 +8,11 @@ import se.devscout.server.api.model.CategoryProperties;
 /**
  * Tests if activity is assigned to a certain category.
  */
-public class CategoryFilter extends PrimitiveFilter implements se.devscout.server.api.activityfilter.CategoryFilter {
+public class SimpleCategoryFilter extends SimpleFilter implements se.devscout.server.api.activityfilter.CategoryFilter {
     private final String name;
     private final String group;
 
-    public CategoryFilter(CategoryProperties properties) {
+    public SimpleCategoryFilter(CategoryProperties properties) {
         name = properties.getName();
         group = properties.getGroup();
     }

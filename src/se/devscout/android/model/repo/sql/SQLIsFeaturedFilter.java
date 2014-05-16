@@ -1,9 +1,9 @@
 package se.devscout.android.model.repo.sql;
 
-import se.devscout.android.util.IsFeaturedFilter;
+import se.devscout.android.util.SimpleIsFeaturedFilter;
 import se.devscout.server.api.model.ActivityProperties;
 
-public class SQLIsFeaturedFilter extends IsFeaturedFilter implements SQLActivityFilter {
+public class SQLIsFeaturedFilter extends SimpleIsFeaturedFilter implements SQLActivityFilter {
     @Override
     public boolean matches(ActivityProperties properties) {
         return true;
