@@ -7,12 +7,12 @@ import se.devscout.server.api.model.UserKey;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SQLQueryBuilder {
+public class QueryBuilder {
     private List<String> mWhere = new ArrayList<String>();
     private List<String> mSelect = new ArrayList<String>();
     private StringBuilder mFrom = new StringBuilder();
 
-    public SQLQueryBuilder() {
+    public QueryBuilder() {
         mSelect.add("a." + Database.activity.owner_id);
         mSelect.add("ad." + Database.activity_data.id);
         mSelect.add("ad." + Database.activity_data.activity_id);
@@ -63,17 +63,17 @@ public class SQLQueryBuilder {
         return new ActivityDataCursor(db.rawQuery(sb.toString(), null));
     }
 
-    public SQLQueryBuilder addWhereFavourite(UserKey userKey) {
+    public QueryBuilder addWhereFavourite(UserKey userKey) {
         mFrom.append("" +
                 "   inner join " + Database.favourite_activity.T + " fa on fa." + Database.favourite_activity.activity_id + " = a." + Database.activity.id + " and fa." + Database.favourite_activity.user_id + " = " + userKey.getId());
         return this;
     }
 
-    public SQLQueryBuilder addWhereIsFeatured(boolean featured) {
+    public QueryBuilder addWhereIsFeatured(boolean featured) {
         return addWhere("ad." + Database.activity_data.featured + " = 1");
     }
 
-    private SQLQueryBuilder addWhere(String expr) {
+    private QueryBuilder addWhere(String expr) {
         mWhere.add(expr);
         return this;
     }

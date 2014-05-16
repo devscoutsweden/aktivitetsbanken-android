@@ -23,7 +23,7 @@ class SQLIsUserFavouriteFilter extends PrimitiveFilter implements IsUserFavourit
     }
 
     @Override
-    public void applyFilter(SQLQueryBuilder queryBuilder) {
+    public void applyFilter(QueryBuilder queryBuilder) {
         queryBuilder.addWhereFavourite(mUserKey);
     }
 }

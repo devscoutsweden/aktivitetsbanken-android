@@ -10,7 +10,7 @@ public class SQLIsFeaturedFilter extends IsFeaturedFilter implements SQLActivity
     }
 
     @Override
-    public void applyFilter(SQLQueryBuilder queryBuilder) {
+    public void applyFilter(QueryBuilder queryBuilder) {
         queryBuilder.addWhereIsFeatured(true);
     }
 }

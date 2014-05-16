@@ -372,7 +372,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public List<? extends LocalActivity> readActivities(ActivityFilter filter, UserKey favouriteForUserKey) {
-        SQLQueryBuilder queryBuilder = new SQLQueryBuilder();
+        QueryBuilder queryBuilder = new QueryBuilder();
         applyFilter(queryBuilder, filter);
         ArrayList<LocalActivity> activities = new ArrayList<LocalActivity>();
         ActivityDataCursor cursor = queryBuilder.query(getDb());
@@ -417,7 +417,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return activities;
     }
 
-    private void applyFilter(SQLQueryBuilder queryBuilder, ActivityFilter filter) {
+    private void applyFilter(QueryBuilder queryBuilder, ActivityFilter filter) {
         if (filter instanceof AndFilter) {
             AndFilter andFilter = (AndFilter) filter;
             for (ActivityFilter activityFilter : andFilter.getFilters()) {
