@@ -11,6 +11,6 @@ public class SQLIsFeaturedFilter extends SimpleIsFeaturedFilter implements SQLAc
 
     @Override
     public void applyFilter(QueryBuilder queryBuilder) {
-        queryBuilder.addWhereIsFeatured(true);
+        queryBuilder.addWhereIsFeatured();
     }
 }

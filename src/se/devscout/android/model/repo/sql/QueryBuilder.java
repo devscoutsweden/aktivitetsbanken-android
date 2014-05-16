@@ -9,6 +9,7 @@ import java.util.List;
 
 public class QueryBuilder {
     private List<String> mWhere = new ArrayList<String>();
+    private List<String> mWhereConditions = new ArrayList<String>();
     private List<String> mSelect = new ArrayList<String>();
     private StringBuilder mFrom = new StringBuilder();
 
@@ -60,7 +61,7 @@ public class QueryBuilder {
                 " order by " +
                 "   a." + Database.activity.id + ", " +
                 "   ad." + Database.activity_data.id);
-        return new ActivityDataCursor(db.rawQuery(sb.toString(), null));
+        return new ActivityDataCursor(db.rawQuery(sb.toString(), mWhereConditions.toArray(new String[mWhereConditions.size()])));
     }
 
     public QueryBuilder addWhereFavourite(UserKey userKey) {
@@ -69,12 +70,19 @@ public class QueryBuilder {
         return this;
     }
 
-    public QueryBuilder addWhereIsFeatured(boolean featured) {
+    public QueryBuilder addWhereIsFeatured() {
         return addWhere("ad." + Database.activity_data.featured + " = 1");
     }
 
-    private QueryBuilder addWhere(String expr) {
+    public QueryBuilder addWhereText(String text) {
+        return addWhere("ad." + Database.activity_data.name + " LIKE ?", "%" + text + "%");
+    }
+
+    private QueryBuilder addWhere(String expr, String... params) {
         mWhere.add(expr);
+        for (String param : params) {
+            mWhereConditions.add(param);
+        }
         return this;
     }
 }
