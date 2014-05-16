@@ -21,6 +21,8 @@ public interface ActivityBank {
 
     Activity readFull(ActivityKey key);
 
+    ActivityFilterFactory getFilterFactory();
+
     Reference createReference(ActivityKey key, ReferenceProperties properties);
 
     void deleteReference(ActivityKey key, ReferenceKey referenceKey);
