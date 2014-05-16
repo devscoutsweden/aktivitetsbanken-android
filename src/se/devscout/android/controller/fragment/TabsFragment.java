@@ -4,7 +4,6 @@ import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -13,7 +12,7 @@ import android.view.ViewGroup;
 import se.devscout.android.R;
 import se.devscout.android.view.StaticFragmentsPagerAdapter;
 
-public abstract class TabsFragment extends Fragment implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
+public abstract class TabsFragment extends ActivityBankFragment implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
 
     protected abstract StaticFragmentsPagerAdapter createPagerAdapter(FragmentManager fragmentManager, boolean landscape);
 

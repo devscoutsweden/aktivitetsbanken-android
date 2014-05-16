@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.*;
 import se.devscout.android.R;
 import se.devscout.android.model.ObjectIdentifierPojo;
-import se.devscout.android.model.repo.SQLiteActivityRepo;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.ActivityUtil;
 import se.devscout.android.util.ResourceUtil;
@@ -21,7 +20,7 @@ import se.devscout.server.api.model.Media;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActivitiesViewPagerFragment extends Fragment implements ViewPager.OnPageChangeListener {
+public class ActivitiesViewPagerFragment extends ActivityBankFragment implements ViewPager.OnPageChangeListener {
 
     protected ArrayList<ObjectIdentifierPojo> mActivities;
     protected int mSelectedIndex;
@@ -123,7 +122,7 @@ public class ActivitiesViewPagerFragment extends Fragment implements ViewPager.O
         ArrayList<Activity> activities = new ArrayList<Activity>();
         for (ObjectIdentifierPojo activity : mActivities) {
             //TODO: Save complete Activity objects in mActivities instead of only the keys? Performance gain or performance loss?
-            activities.add(SQLiteActivityRepo.getInstance(getActivity()).read(activity));
+            activities.add(getActivityBank().readFull(activity));
         }
         return activities;
     }

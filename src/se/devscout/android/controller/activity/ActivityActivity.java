@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 import se.devscout.android.controller.fragment.ActivityTabsFragment;
 import se.devscout.android.model.ObjectIdentifierPojo;
-import se.devscout.android.model.repo.SQLiteActivityRepo;
 import se.devscout.server.api.model.Activity;
 import se.devscout.server.api.model.ActivityKey;
 
@@ -40,7 +39,7 @@ public class ActivityActivity extends SingleFragmentActivity {
         ObjectIdentifierPojo key = (ObjectIdentifierPojo) getIntent().getSerializableExtra(INTENT_EXTRA_ACTIVITY_KEY);
         if (key != null) {
             // TODO Use some kind of factory for accessing/creating the ActivityBank instead of forcing SQLiteActivityRepo?
-            Activity activity = SQLiteActivityRepo.getInstance(this).read(key);
+            Activity activity = getActivityBank().readFull(key);
             setTitle(activity.getRevisions().get(activity.getRevisions().size() - 1).getName());
         }
     }

@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.ActivitiesListFragment;
 import se.devscout.android.model.ObjectIdentifierPojo;
-import se.devscout.android.model.repo.SQLiteActivityRepo;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.model.ActivityKey;
 
@@ -60,7 +59,7 @@ public class SearchResultActivity extends SingleFragmentActivity<ActivitiesListF
             List<ActivityKey> activities = new ArrayList<ActivityKey>();
             for (ActivityKey key : keys) {
                 // TODO Use some kind of factory for accessing/creating the ActivityBank instead of forcing SQLiteActivityRepo?
-                activities.add(SQLiteActivityRepo.getInstance(this).read(key));
+                activities.add(getActivityBank().readFull(key));
             }
             return ActivitiesListFragment.create(activities, ActivitiesListFragment.Sorter.NAME);
         } else {

@@ -1,7 +1,6 @@
 package se.devscout.android.controller.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,7 @@ import java.util.regex.Pattern;
 /**
  * Fragment for displaying (very) simple documents with headings, body paragraphs and images.
  */
-public class SimpleDocumentFragment extends Fragment {
+public class SimpleDocumentFragment extends ActivityBankFragment {
 
     private static final Pattern WHITE_SPACE_PATTERN = Pattern.compile("\\s+");
 

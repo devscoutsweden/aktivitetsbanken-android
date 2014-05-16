@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import se.devscout.android.R;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends ActivityBankFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.home, container, false);

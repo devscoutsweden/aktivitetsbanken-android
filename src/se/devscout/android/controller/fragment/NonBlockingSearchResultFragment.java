@@ -2,7 +2,6 @@ package se.devscout.android.controller.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +14,7 @@ import se.devscout.server.api.model.ObjectIdentifier;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class NonBlockingSearchResultFragment<T extends ObjectIdentifier> extends Fragment implements AdapterView.OnItemClickListener {
+public abstract class NonBlockingSearchResultFragment<T extends ObjectIdentifier> extends ActivityBankFragment implements AdapterView.OnItemClickListener {
     /**
      * Keeps track of which items were shown when the activity (fragment) was "unloaded".
      */

@@ -5,6 +5,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import se.devscout.android.R;
+import se.devscout.android.util.ActivityBankFactory;
+import se.devscout.server.api.ActivityBank;
 
 abstract class SingleFragmentActivity<T extends Fragment> extends FragmentActivity {
 
@@ -28,6 +30,10 @@ abstract class SingleFragmentActivity<T extends Fragment> extends FragmentActivi
                 mFragment.setInitialSavedState(state);
             }
         }
+    }
+
+    protected ActivityBank getActivityBank() {
+        return ActivityBankFactory.getInstance(this);
     }
 
     @Override

@@ -3,7 +3,6 @@ package se.devscout.android.controller.fragment;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,7 @@ import se.devscout.server.api.model.Activity;
 import se.devscout.server.api.model.ActivityRevision;
 import se.devscout.server.api.model.Media;
 
-public class ActivityCoverFragment extends Fragment implements View.OnClickListener {
+public class ActivityCoverFragment extends ActivityBankFragment implements View.OnClickListener {
 
     public static interface OnClickListener {
 

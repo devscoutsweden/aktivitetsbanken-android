@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import se.devscout.android.R;
 import se.devscout.android.model.ObjectIdentifierPojo;
-import se.devscout.android.model.repo.SQLiteActivityRepo;
 import se.devscout.android.util.ResourceUtil;
 import se.devscout.android.view.StaticFragmentsPagerAdapter;
 import se.devscout.server.api.model.Activity;
@@ -49,7 +48,7 @@ public class ActivityTabsFragment extends TabsFragment {
         StaticFragmentsPagerAdapter pagerAdapter = new StaticFragmentsPagerAdapter(fragmentManager);
 
         // TODO Use some kind of factory for accessing/creating the ActivityBank instead of forcing SQLiteActivityRepo?
-        Activity activity = SQLiteActivityRepo.getInstance(getActivity()).read(key);
+        Activity activity = getActivityBank().readFull(key);
         ActivityRevision revision = activity.getRevisions().get(activity.getRevisions().size() - 1);
 
         ResourceUtil resourceUtil = new ResourceUtil(getActivity());
