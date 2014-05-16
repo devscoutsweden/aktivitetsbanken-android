@@ -28,11 +28,6 @@ public class DemoActivityRepo implements ActivityBank {
     }
 
     @Override
-    public List<LocalActivity> find(String name, Boolean featured) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public List<LocalActivity> find(ActivityFilter condition) {
         SimpleFilter simpleFilter = SimpleFilter.fromActivityFilter(condition);
         ArrayList<LocalActivity> res = new ArrayList<LocalActivity>();
@@ -42,11 +37,6 @@ public class DemoActivityRepo implements ActivityBank {
             }
         }
         return res;
-    }
-
-    @Override
-    public List<? extends Activity> findFavourites(UserKey userKey) {
-        throw new UnsupportedOperationException();
     }
 
     @Override

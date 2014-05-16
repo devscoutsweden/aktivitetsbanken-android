@@ -32,14 +32,9 @@ public class SQLiteActivityRepo implements ActivityBank {
     }
 
     @Override
-    public List<LocalActivity> find(String name, Boolean featured) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public List<LocalActivity> find(ActivityFilter condition) {
         ArrayList<LocalActivity> res = new ArrayList<LocalActivity>();
-        for (LocalActivity activity : mDatabaseHelper.readActivities(condition, null)) {
+        for (LocalActivity activity : mDatabaseHelper.readActivities(condition)) {
             if (condition instanceof SimpleFilter) {
                 SimpleFilter simpleFilter = (SimpleFilter) condition;
                 if (simpleFilter.matches(activity)) {
@@ -48,14 +43,6 @@ public class SQLiteActivityRepo implements ActivityBank {
             }
         }
         return res;
-    }
-
-    @Override
-    public List<? extends Activity> findFavourites(UserKey userKey) {
-        if (userKey != null) {
-            throw new UnsupportedOperationException("Finding favourites for specific user is not supported. User must be 'null'.");
-        }
-        return mDatabaseHelper.readActivities(null, mAnonymousUserKey);
     }
 
     @Override

@@ -43,7 +43,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public Activity readActivity(ActivityKey key) {
         if (!mCacheActivity.containsKey(key.getId())) {
-            readActivities(null, null);
+            readActivities(null);
         }
         return mCacheActivity.get(key.getId());
     }
@@ -371,7 +371,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
     }
 
-    public List<? extends LocalActivity> readActivities(ActivityFilter filter, UserKey favouriteForUserKey) {
+    public List<? extends LocalActivity> readActivities(ActivityFilter filter) {
         QueryBuilder queryBuilder = new QueryBuilder();
         applyFilter(queryBuilder, filter);
         ArrayList<LocalActivity> activities = new ArrayList<LocalActivity>();

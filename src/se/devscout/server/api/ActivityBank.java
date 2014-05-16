@@ -5,11 +5,8 @@ import se.devscout.server.api.model.*;
 import java.util.List;
 
 public interface ActivityBank {
-    List<? extends Activity> find(String name, Boolean featured);
 
     List<? extends Activity> find(ActivityFilter condition);
-
-    List<? extends Activity> findFavourites(UserKey userKey);
 
     Activity create(ActivityProperties properties);
 
