@@ -2,8 +2,10 @@ package se.devscout.android.model.repo;
 
 import android.content.Context;
 import se.devscout.android.model.ObjectIdentifierPojo;
+import se.devscout.android.util.PrimitiveFilter;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.ActivityFilter;
+import se.devscout.server.api.ActivityFilterFactory;
 import se.devscout.server.api.model.*;
 
 import java.util.ArrayList;
@@ -35,8 +37,11 @@ public class SQLiteActivityRepo implements ActivityBank {
     public List<LocalActivity> find(ActivityFilter condition) {
         ArrayList<LocalActivity> res = new ArrayList<LocalActivity>();
         for (LocalActivity activity : mDatabaseHelper.readActivities(condition, null)) {
-            if (condition.matches(activity)) {
-                res.add(activity);
+            if (condition instanceof PrimitiveFilter) {
+                PrimitiveFilter primitiveFilter = (PrimitiveFilter) condition;
+                if (primitiveFilter.matches(activity)) {
+                    res.add(activity);
+                }
             }
         }
         return res;
@@ -73,6 +78,11 @@ public class SQLiteActivityRepo implements ActivityBank {
     @Override
     public Activity readFull(ActivityKey key) {
         return read(key);
+    }
+
+    @Override
+    public ActivityFilterFactory getFilterFactory() {
+        return new SQLActivityFilterFactory(new ObjectIdentifierPojo(mDatabaseHelper.getAnonymousUserId()));
     }
 
     @Override
