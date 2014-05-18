@@ -3,14 +3,14 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/scrollView">
+    android:id="@+id/scrollView"
+    android:background="@drawable/card_background">
 
-    <LinearLayout
+    <view
+        class="se.devscout.android.view.SimpleDocumentLayout"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/activityDescriptionList"
-        android:background="@drawable/card_background">
+        android:id="@+id/activityDescriptionList" />
 
-    </LinearLayout>
 </ScrollView>

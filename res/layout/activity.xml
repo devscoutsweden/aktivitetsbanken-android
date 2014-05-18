@@ -1,11 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/card_background">
 
-    <view
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        class="android.support.v4.view.ViewPager"
-        android:id="@+id/activityViewPager" />
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView"
+        android:layout_below="@+id/activityCover"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <FrameLayout
+                android:layout_width="fill_parent"
+                android:layout_height="@android:dimen/thumbnail_height"
+                android:id="@+id/activityCover">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/activityCoverImage"
+                    android:src="@drawable/img_1447"
+                    style="@style/PhotoGallery_Thumbnail" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3+"
+                    android:id="@+id/activityCoverMore"
+                    android:drawableLeft="@drawable/ic_action_picture"
+                    android:layout_gravity="right|bottom"
+                    android:gravity="center_vertical|end"
+                    android:layout_margin="@dimen/iconButtonMargin"
+                    android:height="@dimen/iconButtonSize"
+                    android:paddingRight="@dimen/defaultMargin"
+                    style="@style/ImageOverlay" />
+
+            </FrameLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_gravity="left|center_vertical"
+                android:background="@color/basicLight"
+                android:padding="@dimen/defaultMargin">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/linearLayout"
+                    android:layout_toLeftOf="@+id/linearLayout1"
+                    android:layout_alignParentLeft="true">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1-5 pers, 8-12 år"
+                        android:id="@+id/activityFactAgeAndParticipants"
+                        android:drawableLeft="@drawable/ic_action_group"
+                        android:gravity="center_vertical"
+                        android:singleLine="true"
+                        android:ellipsize="end" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="10-20 min"
+                        android:id="@+id/activityFactTime"
+                        android:drawableLeft="@drawable/ic_action_data_usage"
+                        android:gravity="center_vertical"
+                        android:singleLine="true"
+                        android:ellipsize="end" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="lekar, hösttermin, sjöscout, knopar"
+                        android:id="@+id/activityFactCategories"
+                        android:drawableLeft="@drawable/ic_action_labels"
+                        android:singleLine="true"
+                        android:gravity="center_vertical"
+                        android:ellipsize="end" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/linearLayout1">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="- st"
+                        android:id="@+id/activityFactFavourites"
+                        android:drawableLeft="@drawable/ic_action_important"
+                        android:gravity="center_vertical"
+                        android:layout_gravity="right" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="- st"
+                        android:id="@+id/activityFactComments"
+                        android:drawableLeft="@drawable/ic_action_chat"
+                        android:gravity="center_vertical"
+                        android:layout_gravity="right" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <view
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                class="se.devscout.android.view.SimpleDocumentLayout"
+                android:id="@+id/activityDocument"
+                android:layout_alignParentTop="true"
+                android:layout_alignRight="@+id/activityViewPager"
+                android:layout_alignBottom="@+id/activityViewPager"
+                android:layout_alignLeft="@+id/activityViewPager" />
+
+        </LinearLayout>
+    </ScrollView>
+
+
 </FrameLayout>

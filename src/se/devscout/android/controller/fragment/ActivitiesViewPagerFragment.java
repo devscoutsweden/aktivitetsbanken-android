@@ -10,12 +10,9 @@ import se.devscout.android.R;
 import se.devscout.android.model.ObjectIdentifierPojo;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.ActivityUtil;
-import se.devscout.android.util.ResourceUtil;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.model.Activity;
 import se.devscout.server.api.model.ActivityKey;
-import se.devscout.server.api.model.ActivityRevision;
-import se.devscout.server.api.model.Media;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +43,8 @@ public class ActivitiesViewPagerFragment extends ActivityBankFragment implements
             @Override
             public Fragment getItem(int i) {
                 Activity activity = getActivities().get(i);
+                return ActivityFragment.create(activity);
+/*
                 SimpleDocumentFragment fragment = SimpleDocumentFragment.create();
 
                 ActivityRevision revision = ActivityUtil.getLatestActivityRevision(activity);
@@ -71,6 +70,7 @@ public class ActivitiesViewPagerFragment extends ActivityBankFragment implements
                 }
 
                 return fragment;
+*/
             }
 
             @Override

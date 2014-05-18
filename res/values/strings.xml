@@ -57,6 +57,9 @@
     <string name="startIntroText">Utvalda aktiviterer syns här nedan. Använd flikarna här ovanför för att hitta andra
         aktivititer.
     </string>
+    <string name="activityFactAgeAndParticipants">%1$s år, %2$s pers.</string>
+    <string name="activityFactAge">%1$s år.</string>
+    <string name="activityFactParticipants">%1$s pers.</string>
     <string name="activity_tab_material">Material</string>
     <string name="activitiesListItemParticipants">%1$s pers.</string>
     <string name="activitiesListItemAges">%1$s år</string>

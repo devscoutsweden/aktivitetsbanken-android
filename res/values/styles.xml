@@ -31,14 +31,15 @@
     </style>
 
     <style name="Document_TextItem">
-        <item name="android:layout_margin">@dimen/iconButtonMargin</item>
+        <item name="android:layout_margin">0dp</item>
+        <item name="android:padding">@dimen/iconButtonMargin</item>
         <item name="android:background">@color/basicVeryLight</item>
         <item name="android:textColor">@color/basicVeryDark</item>
     </style>
 
     <style name="Document_Header" parent="Document_TextItem">
         <item name="android:textSize">@dimen/extraLargeTextSize</item>
-        <item name="android:layout_marginTop">@dimen/smallTextSize</item>
+        <item name="android:paddingTop">@dimen/smallTextSize</item>
         <!--<item name="android:textColor">@color/accentBlue</item>-->
         <item name="android:textStyle">bold</item>
     </style>

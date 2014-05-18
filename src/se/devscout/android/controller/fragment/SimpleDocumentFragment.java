@@ -4,11 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import se.devscout.android.R;
-import se.devscout.android.util.ScoutTypeFace;
+import se.devscout.android.view.SimpleDocumentLayout;
 
 import java.util.ArrayList;
 import java.util.regex.Pattern;
@@ -21,7 +18,7 @@ public class SimpleDocumentFragment extends ActivityBankFragment {
     private static final Pattern WHITE_SPACE_PATTERN = Pattern.compile("\\s+");
 
     private static interface Item {
-        void append(LinearLayout layout, LayoutInflater inflater);
+        void append(SimpleDocumentLayout layout, LayoutInflater inflater);
     }
 
     private static class ImageItem implements Item {
@@ -35,14 +32,8 @@ public class SimpleDocumentFragment extends ActivityBankFragment {
         }
 
         @Override
-        public void append(LinearLayout layout, LayoutInflater inflater) {
-            ImageView imageView = new ImageView(layout.getContext());
-            imageView.setLayoutParams(new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    layout.getContext().getResources().getDimensionPixelSize(android.R.dimen.thumbnail_height)));
-            imageView.setScaleType(mZoom ? ImageView.ScaleType.CENTER_CROP : ImageView.ScaleType.FIT_CENTER);
-            imageView.setImageResource(mImageResId);
-            layout.addView(imageView);
+        public void append(SimpleDocumentLayout layout, LayoutInflater inflater) {
+            layout.addImage(mImageResId, mZoom);
         }
     }
 
@@ -54,11 +45,8 @@ public class SimpleDocumentFragment extends ActivityBankFragment {
         }
 
         @Override
-        public void append(LinearLayout layout, LayoutInflater inflater) {
-            TextView textView = (TextView) inflater.inflate(R.layout.document_headertextview, layout, false);
-            textView.setText(mHeaderResId);
-            textView.setTypeface(ScoutTypeFace.getInstance(layout.getContext()).getMedium());
-            layout.addView(textView);
+        public void append(SimpleDocumentLayout layout, LayoutInflater inflater) {
+            layout.addHeader(mHeaderResId);
         }
     }
 
@@ -70,16 +58,8 @@ public class SimpleDocumentFragment extends ActivityBankFragment {
         }
 
         @Override
-        public void append(LinearLayout layout, LayoutInflater inflater) {
-            TextView textView = (TextView) inflater.inflate(R.layout.document_bodytext, layout, false);
-            StringBuilder sb = new StringBuilder();
-            String[] parts = mText.split("\\s*\\n(\\s*\\n)+\\s*");
-            for (String part : parts) {
-                part = WHITE_SPACE_PATTERN.matcher(part).replaceAll(" ");
-                sb.append(part).append('\n').append('\n');
-            }
-            textView.setText(sb.toString());
-            layout.addView(textView);
+        public void append(SimpleDocumentLayout layout, LayoutInflater inflater) {
+            layout.addBodyText(mText);
         }
     }
 
@@ -94,7 +74,7 @@ public class SimpleDocumentFragment extends ActivityBankFragment {
             mItems = (ArrayList<Item>) savedInstanceState.getSerializable("mItems");
         }
         View view = inflater.inflate(R.layout.simple_document, container, false);
-        LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.activityDescriptionList);
+        SimpleDocumentLayout linearLayout = (SimpleDocumentLayout) view.findViewById(R.id.activityDescriptionList);
 
         for (Item item : mItems) {
             item.append(linearLayout, inflater);

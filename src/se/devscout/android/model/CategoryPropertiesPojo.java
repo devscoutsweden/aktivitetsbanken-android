@@ -30,4 +30,9 @@ public class CategoryPropertiesPojo implements CategoryProperties, Serializable 
     void setGroup(String group) {
         mGroup = group;
     }
+
+    @Override
+    public String toString() {
+        return /*(mGroup != null && mGroup.length() > 0 ? mGroup + " " : "") + */mName;
+    }
 }
