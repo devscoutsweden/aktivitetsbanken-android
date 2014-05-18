@@ -1,5 +1,1248 @@
 <?xml version="1.0" encoding="utf-8"?>
 <activities>
+    <activity>
+        <description type="activity-name">Spindelnätet</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>Ta sig igenom ett nätet utan att nudda det.</description>
+    </activity>
+    <activity>
+        <description type="activity-name">Bindbanegång</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>Följa snöre med förbundna ögon.</description>
+    </activity>
+    <activity>
+        <description type="activity-name">Alla på en stol</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>Så många som möjligt ska få plats på en stol.
+
+            Alternativt så börjar man med en stol per person och
+            sedan tar man bor en i taget tills gruppen inte får plats på färre stolar.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Blind fyrkant med rep</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>Gruppen håller i ett rep och ska, med förbundna ögon, ställa sig i en fyr-, sex- eller åttakant.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Sortera på stocken</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>Gruppen ska stå på en stock/rad och arrangera sig i en viss ordning. Förslag: kortast till längst,
+            tystast till pratigast, lättast till tyngst, bokstavsordning, ålder osv.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Vattentransport</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>Flytta så mycket vatten som möjligt från en hink till en annan.
+
+            Använd ex. en kåsa, en påse eller ett rör för att flytta vattnet. Kan arrangeras som stafett mellan två lag.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Storknop</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>Alla ska hålla tag i ett rep gruppen ska sedan knyta en knop, ex. en råbandsknop, på repet utan att
+            släppa händerna.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Knuten</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>Alla ställer sig i en ring, blundar och sträcker ut händerna mot mitten.
+
+            Sakta går alla mot mitten och tar tag i första bästa hand.
+
+            När alla håller någon i händerna så får alla titta och "knuten" ska nu trasslat ut till en ring (eller
+            flera) utan att någon släpper taget om händerna.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Blinggång 1</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>Alla står blinda på led. Den längst bak ser och ska leda de andra utan ord.
+
+            Ljud som inte är ord? Klappa på axlarna? Behövs kommandon för back och stopp eller räcker höger och vänster?
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Blindgång 2</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>En är blind och får bara leda med ord.</description>
+    </activity>
+    <activity>
+        <description type="activity-name">Lappen</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>Lappar med texter slumpas fram. På lapparna står det två kroppsdelar, ex. "hand och fot". Två av
+            deltagarna måste då se till så att kroppsdelarna rör vid varandra.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Lego i låda</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>En enkel Lego-konstruktion placeras i en låda med hål. Hålen ska vara stora nog så att man kan kika
+            in i lådan men inte mycket mer (ca 5 cm i diameter). Deltagarna får kika in i lådan och ska bygga en kopia
+            av konstruktionen inuti låda.
+
+            Uppgiften kan varieras genom att tillåta att deltagarna använder ficklampa,
+            bara får gå fram till lådan en gång var eller bara får titta in i lådan under 1 minut.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Händer och fötter</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>Gruppen ska ha ett visst antal händer och fötter i marken.</description>
+    </activity>
+    <activity>
+        <description type="activity-name">Håll mig på matten</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>Hela gruppen står på en matta och ska vända mattan upp och ner utan att någon ramlar av den.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">En fot i taket</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>Reglerna är enkla: En av gruppmedlemmarna ska ha sin fot i taket när övningen är slut. Ledaren kan
+            bestämma om gruppen får ta stöd mot väggar, använda hjälpmedel osv.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Djurleken</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>
+            Deltagarns står i en ring. Lekledaren i mitten.
+
+            LL pekar på en person coh säger ett djur (elefona, myrslog, kanin).
+
+            Den som blivit utpekat är mitten av djuret och deltagarna brevvid är huvud resp. rumpa på djuret.
+
+            De tre ska nu gestalta djuret i fråga. Den av de reagerar långsammast av de tre får ställa sig i mitten (och
+            får därmed peka ut nästa djur).
+
+            Elefant: Mitten är snabel. Sidorna visar jättestora öron på "snabelpersonen" med båda sina armar.
+
+            Myrslok: Mitten är en snabel. Sidorna visar små öron på "snabelpersonen" med båda sina händer.
+
+            Kanin: Mitten har två framtassar. Sidorna vänder sig om och gör "svansar".
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Kanariefågel</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>
+            Udda antal deltagare.
+
+            Para upp deltagarna två och två som burar och varje bur får en fågel.
+
+            Den fågel som inte har någon bur får ge order; som följer:
+
+            "Kanariefågel": Alla fåglar byter bur.
+
+            "Bur": Fåglarna står stilla och burarna måste hitta en ny fågel.
+
+            "Jordbävning": Fåglar blir burar, burar blir fåglar etc.
+
+            Den som ger order (dvs. är utanför) ska hitta en plats i röran när alla byter plats.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Evolution</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>
+            Alla börjar som stenar: Går och tittar ner i marken.
+
+            Om man stöter ihop med någon så köra man Sten Sax Påse. Vinnaren får evolvera.
+
+            Dinosaurie: Brölar och använder armar som mun.
+
+            Fågel: Kvittrar och flaxar.
+
+            Apa: Apläte och rörelser.
+
+            När man vinner som apa så blir man människa och är ute ur leken.
+
+            Till slut ska det bara finnas en kvar i varje stadie.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Tibetansk bisonoxeelefant</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>
+            I princip samma sak som Kom under hökens vingar.
+
+            "Höken" i mitten ropar "Vem är rädd för den tibetanska bisonoxeelefanten?"
+
+            Övriga skriker "Inte jag" och ska springa över till andra sidan.
+
+            "Höken" ska få tag på någon, hålla upp denne i luften och hinna säga "tibetansk bisonoxeelefant" utan att
+            personen rör vid marken. Lyckas Höken med detta så är båda nu hökar.
+
+            Sist kvar vinner.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Chip Chip Cordi Cordi</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>
+            Två planhalvor som är avgränsade på alla sidor.
+
+            En från det ena laget skall över på motståndarens sida och kulla så många som möjligt.
+
+            Tricket är att den som ska kulla måste säga "chip chip" eller "cordi cordi" tlea tiden på motståndarens sida
+            och på bara ett andetag. Andas personen kan hen bli kullad av motståndarna.
+
+            Går att leka med fasthållning.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">The Muffin Man</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>
+
+            Alla utom en står i ring. Den i mitten börjar med att gå fram till någon och sjunger:
+            "Do you know the muffin man, the muffin man, the muffin man. Du oy know the muffin man who lives on dorey
+            lane.
+
+            Personen som "uppvaktas" svarar:
+            "Yes, I know the muffin min".
+
+            Paret tar armkrok och sjunger dansade:
+            "We all know the muffin man".
+
+            Därefter delar paret upp sig och varje person letar upp någon i ringen och börjar om me "Do you know..."
+
+            Till slut har alla blivit uppvaktade och leken är över.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Kedjekull</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>En börjar att kulla. Blir man kullad armkrokar man ihopp sig. Bara de ytterska armarna får kulla.
+            När alla sitter ihop utaom en är leken slut.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Masken</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>Den som ska kulla läger sig platt på mage och ålar runt för att kulla. Blir man kullad blir man
+            också en mask och lägger sig på mage och hjälper till att kulla. Sist stående vinner.
+
+            Spärra gärna av ett områdea. Var inomhus på relativt rent golv och ev. två maskar i börjar av leken.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Polis och demonstrant</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>Alla deltagare sätte sig på marken i en stor hög och hakar ihop sig så gott de kan.
+            Sen tar polisen och börjar dra loss demonstranter.
+            Tappar någon taget blir denna också polis. Sist kvar vinner.
+
+            Alternativ: Man får åter grepp man har tappat och polisen släpper taget.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Jätten och ynk, alias Pepparkakskull</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>Para upp alla två och två i en stor rign. Ett par är fritt och står i mitten.
+
+            Den ena av det två ska kulla. Den andra blir jagad.
+
+            Man kan rädda sig genom att ta tag i armkrok i ett annar pat. Den som får en ny armkrokskompis är säker men
+            den på andra sidan måste fly och blir den nya som jätten ska jaga.
+
+            Alternativ: den som lossar från ett par blir den nya jagaren/jätten istället för den som blir jagad.
+
+            Alternativ 2: den jagade måste säga "ynk" hela tiden och jätten måste vråla hela tiden.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Pastorn kommer!</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>Det börjar som Norsk kurragömma.
+
+            En person gömmer sig och de andra ska leta.
+
+            När först personen kommer fram till den som gömt sig så skriker den "Pastonr kommer" och då måsnte alla anra
+            deltagare ta sig till den platsen.
+
+            Den som kommer sist dit skriker "Jag är dålig" och springer sin väg. Nu
+            måste alla jaga ikapp den "dåliga" och ge denne en gruppkram. Den som nu kommer sista förlorar.
+
+            Alternativ: Den som är "dålig" får direkt springa iväg och gömma sig medan de övriga stannar kvar och väntar
+            i, säg, en minut.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Norsk kurragömma</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>En person gömmer sig.
+
+            Alla andra måste leta. När man hittar den som gömt sig ska man, utan att någno annan ser, gömma sig på samma
+            ställe.
+
+            Den som sist upptäcker gömstället har förlorat och blir den som får börja gömma sig nästa omgång.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Norsk halsduk</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>Två lag, en halsduk mittemellan. De två tävlanden snurrar på stället och springer (på signal) mot
+            halsduken.
+
+            Målet är att ta halsduken och hinna tillbaka utan att bli kullad.
+
+            Alternativ: Tävlande snurrar ett visst antal varv innan de får springa iväg (ingen gemensam signal).
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Trollkarl, jätte och dvärg</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>Det här är "lagversionen" av Sten Sax Påse.
+            Två lag står uppställda mitt emot varandra. Det måste vara tillräckligt långt ifrån lagen så att de inte hör
+            varandra när de viskar.
+
+            Lagen bestämmer sig för vilken figur de ska vara och ställer upp sig. Det får vara högst två meter mellan
+            lagen när de ställt sig på rad framför varandra. På 1-2-3 ska lagen visa upp sin figur och agera därefter.
+
+            Den "vinnande figuren" ska nu kulla motståndarna innan de hinner tillbaka till sitt "bo".
+
+            Trollkarl: En utsträckt arm.
+            Jätte: Två armar upp i luften.
+            Dvärg: Sätta sig på huk.
+
+            Jätte vinner över Dvärg (omsluter dvärgen med armarna).
+            Dvärg vinner över Trollkarl (magin från händerna går över och missar dvärgen).
+            Trollkarl vinner över Jätte (magi från händerna träffar jätten i magen)
+
+            När man kullar behöver man inte vara "in character" -- alla springer bäst de kan.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Stretch</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>Alla står i en ring, fot vid fot, vända in mot mitten.
+
+            En person börjar med att lägga ner "föremålet" (penna, burk, flaska el. dyl) åt den person som står till
+            vänster.
+
+            Den personen ska då flytta valfri fot till föremålet, plocka upp den och placera den åt nästa person i
+            ringen.
+
+            Man måste kunna lägga ner föremålet. man får inte nudda marken med knän eller rumpa. Den som orkar stå
+            längst vinner. Man förlorar om man ramlar eller nuddar marken med knä eller rumpa.
+
+            Alternativ: händerna får bara bara i marken medan man byter position.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Kasta stövel</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>Två lag, en stövel. En lagmedlem i taget ställer upp sig. Ingen får stå framför eller bakom.
+
+            Ansiktet framåt, åt det håll som stöveln ska kastas. Tån på stöveln ska också vara framåt.Sen böjer man sig
+            framåt, tar tag i stövelskaftet och svingar den mellan benen och över ryggen, förbi huvudet och så långt man
+            nu lyckas kasta stöveln. Nästa person tar vid där stöveln landar. Vinnare är det lag som kommit längst när
+            alla kastat.
+
+            Alternativ: Varje person ska kasta stöveln framåt, runt någon och tillbaka (dvs. en stafett). Det lag som är
+            snabbast vinner.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Mördare</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>Alla deltagare sitter i en ring.
+
+            Medan alla blundare går lekledaren runt och ger ut rollen som mördare och detektiv. En knack på ryggen resp.
+            två knackar. Sedan får alla sitta och titta på varandra i ögonen. Mördaren dödare gnem att blinka åt folk.
+
+            Blir du blinkad åt så dör du. Detektiven vinner genom att peka ut mördaren. Mördaren vinner om alla hinner
+            dö.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Lasse går i ringen</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>Man går parvis i en stor ring och sjunger "Lasse går i ringen" x 3 "så promenerar, promenerar vi".
+
+            Sedan går man bakå och tar sin prner i hand och säger "höger hand, högerhand sin make/maka" tar nästa i hand
+            "väsnter hand, vänster sin granne" sedan lägger man armen om nästa "armen om, armen om den tredje så
+            promenerar, promenerar vi".
+
+            Sedan fortsätter man som vanligt från början. Men. En som blir över går i
+            motsatt cirklen och ska sno en make/make när man byter. Man fortsätter tills man tröttnat.
+
+            Bra lek för att få ta lite på den man är kär i :-)
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Laurentia</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>Sjung: "Laurentia, Laurentia, kära Laurentia. När får jag träffa dig nästa gång Laurentia? På
+            måndag, kära Laurentia. På måndag får du träffa mig nästa gång, Laurentia." Upprepa versen men lägg till en
+            veckodag för varje gång.
+
+            Knäböj varje gång man säger Laurentia eller veckodag.
+
+            Alternativ: Byt "Laurentia" mot "Kurt" och knäböj mot jämfotahopp.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Njema, njema</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>Stå i en ring med armarna på varandras axlar. Höger ben framför grannens vänstra ben (och alltså
+            ditt vänstra ben bakom någons högerben). Sjung nu texten medan ni i takt med sången gungar från sida till
+            sida och glöm inte att böja på benen:
+
+            Njema, njema, njema paparuska.
+
+            Njema, njema, njema papara.
+
+            Sudeski, sudeski, njema paparuska.
+
+            Njema njema njema papara.
+
+            AaA, AaA, AaA (bocka samtiigt tre gånger).
+
+            Upprepa och öka tempot! Repetera in absurdum!
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Cluedocharaderviskningslek</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>2 grupper.
+            Första gruppen ska komma på en Cluedouppsättning med yrke, mordvapen och plats.
+
+            De tar sedan in första personen från andra gruppen och berättar dessa tre saker för hen. Hen ska sedan göra
+            charader av de tre sakerna
+            och spela upp för nästa person i grupp två som kommer in, som i sin tur ska göra samma sak för nästa person
+            som kommer in. Sista personen ska tolka charaderna.
+
+            Byt grupper och ta tid.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">God morgon, god middag och god kväll</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>En ring med alla deltagare, som somstår utanför ringen. han går motsols utanför ringen och dunkar
+            (lätt) någon i ryggen. denna ska börja springa åt motsatt håll. När de möts stannar de upp och säger de tre
+            G:na i leknamnet. Sedan gäller det att komma tillbaka till hålet i ringen.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Blow The Sausage</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>Lagen turas om att, med ryggen mot banan, blåsa en varmkorv ur en snorkel.
+
+            Längst "blåsning" vinner.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Mänsklig bowling</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>Material: 1-10 halvfulla vattenflaskor, skateboard, hjälm.
+
+            En scout lägger/sätter sig på skateboarden. Resten av patrullen ska knuffa scouten mot "käglorna" och få
+            omkull så många som möligt.
+
+            Ledaren bestämmer om den som är "klot" får använda sin armar för att slå ner flaskorna.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Köttbullekull</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>Gränsa av ett område som de måste hålla sig inom (gärna ett ganska litet område).
+            deltagarna sätter sig huk och håller om sina ben. De ska se hoppa fram. I övrigt som vanlig kull.
+
+            Alterantiv: två lag, "Mamma" och "Scan", ska knuffa omkull deltagarna i det andra laget.
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Bingo, Bongo och Booooo</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Lekar" />
+        <description>Gå runt i ring två och två (helst kille och tjej). Sjung nedanstående ramsor.
+
+            När ni har sjungit
+            klart stanna ni och tar er partner i hand. killarna skickar tjejen ått vänster (tjejen tar alltså ett steg
+            till höger). på första handslaget säger man b, nästa i, nästa n osv. tills man stavat "bingo". På varje "o"
+            ska man kramas istället för att ta i hand. Första ordet är BINGO, andra är BONGO och tredje är BOOOO.
+
+            "En randig katt gick ut en antt på månskenspromena" x 2 "B-I-N-G-O" x 3 "och Bingo var hans namn sörru'"
+
+            "En pricking hund gick ut en stund i våran Gröna Lund"...
+
+            "En rutig get gick ut och sket på grannens staket"...
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">När något är bra</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Rop" />
+        <description>
+            Bra bra bra
+            Vo vo vo
+            Bravo bravo bravissimo
+            Braaaaaavo!
+
+            K – I – V – A
+            Kiva o va bra!
+
+            Busbra!
+
+            Vo vo vo
+            Bra bra bra
+            Vobra vobra
+            O va bra!
+
+            B-R-A säger BRA
+            Säger V säger O
+            Säger Bravo!
+
+
+            Keeetchup!
+            (efter ropet; slå tre gånger med handflata på knuten hand)
+
+
+            Sirrevipp, Viddevipp
+            Kattegatt, Skratteratt
+            SKOJ!
+
+            Loj, Loj, Loj
+            Voj, Voj, Voj
+            JÄTTESKOJ
+
+            Tjimelacke, Tjimelacke
+            Tja, tja, tja
+            Bolmelacke, bomelacke
+            Ba, ba, ba
+            Tjimelacke, bomelacke
+            Tjim, bom , ba
+            Detta gjorde ni verkligen bra!
+            Tja!
+
+            Cykelstyre cykelstyre
+            Hoj hoj hoj
+            Detta va skoj!
+
+            Den va fin i kanten, på me vanten
+            Cykel scania vabis, faderullan lej
+            För din egen skull (pling)
+            Och den långa ludna svansen
+            (snus/snusförbud)
+
+            Åhhh….fanclub!
+
+            Skrattskratterattskratteriumskratt
+            HA!
+
+            Fiddelifi
+            Vilken fin melodi
+            Ni sjöng den så bra
+            Så bra den kan bli
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Busrop</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Rop" />
+        <description>
+            Det var bajs på kanten
+            Nej va äckligt!
+
+            Den var illa!
+            Hur illa?
+            Skitilla, skitilla
+            Ush, ush, ush
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Andra rop</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Rop" />
+        <description>
+            Oggy, oggy, oggy
+            Oj, oj, oj
+            Oggy, oggy, oggy
+            Oj, oj, oj
+            Oggy – Oj
+            Oggy – Oj
+            Oggy, oggy, oggy
+            Oj, oj, oj
+
+            Alt.
+
+            Yoggi – Fil
+            Cykelstyre – Aj / Hoj
+            Pissemyra – Ush
+            Bajamaja – Ush
+            Zigge Zagge – Ugh
+
+            Singalingalill sade
+            Fiskabalalajka, alla manna tjafs
+            Uti binga bånga bej
+            Tjohopp sade vu sade
+            vumpum skumpum
+            Tjoopp sade vu
+            sade tussan lullan lej
+            TJAFS!
+
+
+            Bastuba
+            astuba
+            stuba
+            tuba
+            uba
+            ba
+            a
+            ba
+            uba
+            tuba
+            stuba
+            astuba
+            Bastuba
+
+
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Hurtiga sånger</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Rop" />
+        <description>
+            Fram med lägerbålshumöret
+
+            Fram med lägerbålshumöret
+            Alla måste vara med
+            Dås i sinnet rost i röret
+            Måste genast sköljas ned
+            Ni där borta är ni klara
+            Jaja minsann fattas bara
+            Bra, då sätter vi igång
+            Med en glad och munter sång.
+
+            Omkring vår eld
+
+            Omkring vår eld vi nu samlats har
+            Liksom så ofta förr
+            Men innan någon till orda tar
+            Så sjunga vi uti kör
+            På läger, på läger, på läger sjunga/trivas vi
+            På läger, på läger, på läger vi vilja förbli
+            Utan paraply
+
+            Trampa på gasen
+
+            Trampa på gasen och lätta ankar
+            Sätt in under panna fyr (fem, sex)
+            Med svällande segel
+            Och fyllda tankar
+            Drar vi ut, drar vi ut,
+            drar vi ut på äventyr
+            Är ni med, vi är med,
+            Ja visst sjutton är vi det.
+            Vilken fart, det är klart
+            Jag ska doppa dig i spat
+            Men vad fals? Inget alls
+            Jag har bara skrovlig hals
+            Nageltrång och sådär
+            Undra på att men e kär
+            Spaken i baken
+            Och var så säker
+            Här e scouterna med kläm(kläm, kläm)
+            Det hör ju till saken att på vårt läger
+            Längtar aldrig någon hem
+            Förutom du
+            Knäpp igen tältet
+            Kryp in och lägg dig
+            Känn hur underbart det är
+            Att ligga och sussa på svällande bolster
+            Med en häst, med en ko
+            Med en gris som tittar in!
+
+            Temperaturen
+
+            Temperaturen är hög uti kroppen
+            Närmare fyrtio än 37,9
+            Så ska det vara när ångan är uppe
+            Å så är fallet uti detta nu
+            För framåt och bakåt
+            Och framåt och bakåt
+            Framåt och bakåt
+            Och framåt och bakåt
+            Framåt och bakåt
+            Och framåt och bakåt
+            Framåt och bakåt
+            Och framåt och bakåt
+            Temperaturen är hög…
+            För rulla di rulla, di rulla di rulla
+            rulla di rulla, di rulla di lej
+            För rulla di rulla, di rulla di rulla
+            rulla di rulla, di rulla di lej
+            tjohej
+            Temperaturen är hög …
+            För diagonalen, å diagonalen,
+            diagonalen och diagonalen
+            diagonalen, å diagonalen,
+            diagonalen och diagonalen
+            Temperaturen är hög …
+            För August och Lotta
+            Och August och lotta
+            August och Lotta
+            Och August och lotta
+            August och Lotta
+            Och August och lotta
+
+            Tag fram det bäst humör
+
+            Tag fram det bästa humör du har
+            Var morgon när solen går upp
+            Försök att hålla det ständigt kvar
+            när solen går runt i sitt lopp
+            för om du bara tänker så
+            det här var skojigt det måste gå
+            det finns ingenting som är svårt för mig
+            så fram med ett rungande hej. HEJ
+
+            Helhjärtat
+
+            Helhjärtat vill jag göra
+            Allt som jag nånsin gör
+            Helhjärtat vill jag leva
+            Helhjärtat tills jag dör
+
+            Med hela hjärtat hela tiden
+            överallt och jämt
+            med hela hjärtat hela tiden
+            alldeles bestämt
+
+            Helhjärtat vill jag äga
+            Allt som jag nånsin får
+            Helhjärtat vill jag mista
+            Sånt som inte består
+
+            Med hela…
+
+            Helhjärtat vill jag jobba
+            Helhjärtat vara lat
+            Helhjärtat vara hungrig
+            Helhjärtat äta mat
+
+            Med hela…
+
+            Helhjärtat vill jag glömma
+            Helhjärtat komma håg
+            Helhjärtat vill jag drömma
+            Helhjärtat åka tåg
+
+            Med hela…
+
+            Helhjärtat vill jag sjunga
+            Helhjärtat hålla tyst
+
+            I Medelhavet
+
+            I Medelhavet sardiner simmar
+            Apu apu, apu apu,
+            Men i mitt hjärta, där simmar du
+            Apu apu, apu apu,
+            In Middle Ocean, sardines are swimming
+            Apu apu, apu apu,
+            But in my heart are swimming you
+            Apu apu, apu apu,
+            In Mittle-Mehre sardinen schwimmen
+            Apu apu, apu apu,
+            Aber in mein herz, da schwimmst doch du
+            Apu apu, apu apu,
+            I medelhavski, sardinski simmski
+            Apusskidusski, apusskidu
+            Men i mitt hjärtski där simmski duski
+            Apusskidusski, apusskidu
+
+            Var rädd om din fyrfota vän
+
+            Va rädd om din fyrfota vän
+            För en anka kan vara dess mamma
+            Som simmar omkring i en damm
+            När som solen tittar fram
+            Och nu tror du att visan är slut
+            Och det är den
+            (Inte)
+
+            Kola med papper på
+
+            Kola med papper på det är så gott att få
+            Detta var första versen nu kommer andra versen
+            Kola med papper på det är så gott att få
+            Detta var andra versen nu kommer tredje versen
+
+            Munkar
+
+            Jag vill ha munkar munkar munkar med hål i
+            Stora feta munkar med hål i
+            När jag kommer hem till dig
+            Så vill jag inte ha nån leverpastej!
+            Jag vill ha munkar munkar munkar med sylt i …
+            Jag vill ha munkar munkar munkar med sot på…
+            Jag vill ha munkar munkar munkar med grus i …
+            Jag vill ha munkar munkar munkar med maskar…
+            Jag vill ha munkar munkar munkar med scouter…
+
+            Långt bort i skogen
+
+            Lång bort i skogen fanns ett litet berg
+            Aldrig har jag sett ett sådant litet berg
+            Berget ligger lång bort i skogen.
+
+            På det lilla berget fanns ett litet träd
+            Aldrig har jag sett ett sådant litet träd
+            Trädet på berget…
+            berget ligger lång bort i skogen
+
+            På det lilla trädet fanns en liten gren
+            Aldrig har jag sett en sådan liten gren
+            Grenen på trädet, trädet på berget…
+            berget ligger långt bort i skogen
+
+            På den lilla grenen fanns en liten kvist…
+            På den lilla kvisten fanns ett litet blad…
+            På det lilla bladet fanns en lite lus…
+            På den lilla lusen fanns ett litet ben…
+            På det lilla benet fanns en liten fot…
+            På den lilla foten fanns en liten tå…
+            På den lilla tån fanns en liten nagel…
+            På den lilla nageln fanns det lite smuts…
+            På den lilla smutsen fanns en liten bacill…
+            På den lilla bacillen fanns en liten svans…
+            På den lilla svansen fanns ett litet SLUT
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Rör på fläsket!</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Rop" />
+        <description>
+            Norrlänning
+
+            Sitt med nedböjt huvud och krama om dig själv.
+
+            Sätt dig snabbt upp rakt, klappa händerna jättesnabbt fyra gånger.
+
+            Återgå till ursprungspositionen.
+
+            (Man kan även göra en “dubbel norrlänning”).
+            Laurentia
+            Laurentia kära Laurentia, när får jag träffa dig nästa gång, Laurentia
+            På måndag kära Laurentia då får jag träffa dig nästa gång, Laurentia
+            Laurentia kära Laurentia, när får jag träffa dig nästa gång, Laurentia
+            På Måndag, på Tisdag kära Laurentia, då får jag träffa dig nästa gång Laurentia
+
+            Osv. till och med söndag! med ett knäböj för varje Laurentia.
+            Bananas
+
+            (visselpipa…och stå upp)
+
+            Bananas of the world, unite! (slå ihop händerna ovanför huvudet)
+
+            Peel banana. (låtsas skala dig själv)
+
+            Shake banana. (skaka på kroppen)
+
+            Go bananas. (hoppa runt som en galning)
+
+            Bananas of the world, unite! (slå ihop händerna ovanför huvudet)
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Scoutsången</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Rop" />
+        <description>
+
+
+            Vi äro svenska scouter vi,
+            Och löftet som blev givet.
+            En vårdag brusande och fri,
+            står på vår panna skrivet:
+            För Gud, för kung och fosterland,
+            Var än dig livet ställer,
+            Var redo när det gäller.
+            Med hjärta , håg och hand.
+
+            Var redo. Hör den stormens il,
+            Som genom världen skrider,
+            håll spänd din sträng,
+            håll blank din pil –
+            nu är det knoppningstider.
+            Nu knyta vi vårt syskonband,
+            i kärlek och i gamman,
+            nu smida vi det samman
+            kring hela Sveriges land.
+
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Stilla sånger 1</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Rop" />
+        <description>
+            Gå med mig
+
+            //:Gå med mig, gå med mig
+            Gå med mig, gå med://
+            //:Sår mot sår, hud mot hud
+            Gå med mig Gud://
+
+            Bli Stilla
+
+            Bli stilla låt tystnaden föra dig nära
+            Närvaron finns där. En kraft som vill bära.
+            Ja, öppna det rum som står låst djupt inom dig.
+            Barnet som bor där och stumt skriker: ”hör mig!”
+            Du är en bön. Gud är din bön
+            Låt oron få sjunka som stenar mot botten.
+            Hela ditt liv är ett samtal med honom.
+            Som bär universum och bor i ditt hjärta.
+            Han delar ditt liv både glädjen och smärtan.
+            Du är en bön. Gud är din bön.
+            Bli stilla, låt tystnaden föra dig nära.
+            Närvaron finns där. En kraft som vill bära.
+            Ja, våga den tillit som bor djupt inom dig.
+            Lyssna till rösten som kallar dig: ”följ mig!”
+            Du är en bön. Jag är din bön.
+
+            Du är helig
+
+            Du är helig, du är hel.
+            Du är alltid mycket mer.
+            Än du nånsin kan förstå, du är nära ändå.
+            Välsignad vare du, som kommer hit just nu.
+            Välsignade vår jord, blir till bröd på vårt bord.
+            Du är helig, du är helhet,
+            du är närhet, hela kosmos lovar dig!
+            Hosianna, hosianna, hosianna,
+            Hosianna, vår Gud.
+
+            Herre hör min bön
+
+            Herre hör min bön
+            Herre hör min bön
+            Svara mig när jag ropar
+
+            Vila i mig
+
+            Vila i mig, du skall se att allt ska bli
+            Stilla i mig. Genom mig kan du bli fri.
+            Jag finns här hos dig. Fast vågorna går höga,
+            Kan du vila, vila, vila i mig.
+            Lita på mig, om du bara tar min hand
+            Leder jag dig till en lugn och skydda hamn.
+            Jag finns här hos dig. Fast vågorna går höga
+            Kan du lita, lita, lita på mig.
+
+            Bara i dig
+
+            Bara i dig har min själ sin ro
+            Bara i dig min Gud
+            Bara i dig har min själ sin ro
+            Bara i dig min Gud
+            Från honom kommer mitt hopp
+            Bara han är min klippa
+            Min frälsning och min borg
+            Jag skall inte vackla
+
+            Du vänder ditt ansikte
+
+            Du vänder ditt ansikte till mig
+            Och ler mot ditt barn som en mor
+            Ditt ansikte lyser som solen
+            Det är detta som gör att jag tror –
+            Att du ler emot mig som en mor
+
+            Här nära
+
+            //:Här, nära, närmre än jag anar
+            Finns du som känt mig, innan jag fanns till://
+            Innan jag har sökt dig, innan jag har bett.
+            Har du i kärlek sett mig
+            Och tänkt det som är rätt
+            Du är väl förtrogen med tankarna jag bär
+            Du går alltid med mig, du är …
+
+            //:Här, nära, närmre än jag anar
+            Finns du som känt mig, innan jag fanns till://
+            Alla ord och tankar, allting som jag gör
+            Vill jag att du delar, vill jag att du hör.
+            Du behöver inte ritual och formulär
+            Du vill alltid lyssna du är …
+
+            //:Här, nära, närmre än jag anar
+            Finns du som känt mig, innan jag fanns till://
+
+            Du vet väl om att du är värdefull
+
+            Du vet väl om att du är värdefull
+            Att du är viktig här och nu
+            Att du är älskad för din egen skull
+            För ingen annan är som du
+            Det finns alltför många som vill tala om
+            Att du bör vara si och så
+            Gud fader själv han accepterar dig ändå
+            Och det kan du lita på
+            Du vet väl om att du är värdefull
+            Att du är viktig här och nu
+            Att du är älskad för din egen skull
+            För ingen annan är som du
+            Du passar in i själva skapelsen
+            Det finns en uppgift just för dig
+            Men du är fri att göra vad du vill med den
+            Säga ja eller nej
+            Du vet väl om att du är värdefull
+            Att du är viktig här och nu
+            Att du är älskad för din egen skull
+            För ingen annan är som du
+
+        </description>
+    </activity>
+    <activity>
+        <description type="activity-name">Still sånger 2</description>
+        <category
+            group="Lilla Scoutboken"
+            name="Rop" />
+        <description>
+            Trosbekännelsen
+
+            Jag tror på en Gud som är helig och varm
+            Som ger kampglöd och identitet
+            En helande Gud som gör trasig till hel
+            Som stärker till medvetenhet
+            Som stärker till medvetenhet
+            Som stärker till medvetenhet
+            Jag tror på en Gud som gråter med mig
+            När jag gråter så allting är gråt
+            En tröstande Gud som kan trösta likt den
+            Som väntar tills gråten gått åt
+            Som väntar tills gråten gått åt
+            Som väntar tills gråten gått åt
+            Jag tror på en Gud som bor inom mig
+            Och som bor i allt utanför
+            En skrattande Gud som kan skratta med mig
+            Som lever med mig när jag dör
+            Som lever med mig när jag dör
+            Som lever med mig när jag dör
+
+            Ropa till Gud
+
+            Min Jesus, min Herre
+            Gud det finns ingen som du
+            Min lovsång jag ger till Dig mer och mer
+            Förundrad av Din kärleks djup
+            Du tröstar, Du skyddar
+            Styrker den vacklandes steg
+            Formar min dag, mitt liv och mitt jag
+            För alltid vill jag tillbe Dig
+            Ropa till Gud över hela vår jord
+            Stiger en hyllning en hymn utan ord
+            Berg faller ner, havets vågor bryts
+            När dom hör Herrens namn
+            Din kärlek och glädje nu fyller min själ
+            Min sång går till Honom som gjort allting väl
+            Inget kan mätas med löftet jag har i dig
+
+            Guds kärlek är
+
+            Guds kärlek är som stranden och som gräset
+            Är vind och vidd och ett oändligt hem
+            Vi frihet fick att bo där gå och komma
+            Att säga ja till Gud och säga nej
+            Guds kärlek är som stranden och som gräset
+            Är vind och vidd och ett oändligt hem
+            Vi vill den frihet där vi är oss själva
+            Den frihet vi kan göra något av
+            Som ej är tomhet men en rymd för drömmar
+            Guds kärlek är som stranden och som gräset
+            Är vind och vidd och ett oändligt hem
+            Och ändå är det murar oss emellan
+            Och genom gallren ser vi på varann
+            Vårt fängelse är byggt av rädslans stenar
+            Vår fångdräkt är vårt eget knutna jag.
+            Guds kärlek är som stranden och som gräset
+            Är vind och vidd och ett oändligt hem
+            O, döm oss herre, frisäg oss i domen
+            I din förlåtelse vår frihet är
+            Den sträcker sig så långt din kärlek vandrar
+            Bland alla mänskor, folk och raser här
+            Guds kärlek är som stranden och som gräset
+            Är vind och vidd och ett oändligt hem
+
+            Trollmor (Nackas)
+
+            När trollmor har lagt de elva små trollen
+            Och bundit fast dom i svansen
+            Då sjunger hon sakta för elva små trollen
+            De vackraste ord hon känner
+            O aj aj aj aj buff
+            O aj aj aj aj buff
+            O aj aj aj aj buff buff
+            O aj aj aj aj…
+
+            Nu lägerelden brunnit ner
+
+            Nu lägerelden brunnit ner,
+            och dagen nått sitt slut
+            Men allt det vackra som vi känt
+            Kan aldrig plånas ut.
+            Vi tackar för den tid som gått
+            Och blickar mot en ny
+            Då våra löften segra skall
+            Och större tider gry.
+
+            Skymning rår
+
+            Skymning rår över skogar och vatten
+            Snart har dagen nåt sitt slut
+            Inom kort härskar mörkret och natten
+            Och vår lägereld dör ut
+            Låt oss värmas ännu av dess lågor
+            Låt vår sång så fram som havets vågor
+            Skymning rår över skogar och vatten
+            Snart har dagen nått sitt slut
+            Uti världen är sorgerna många
+            Mera glädje Gud oss giv
+            Mellan hjärtan är vägarna långa
+            Skänk gemenskap med vårt liv
+            Låt oss fatta fast varandras händer
+            Låt oss bygga broar mellan länder
+            Uti världen är sorgerna många
+            Mera glädje Gud oss giv
+            Herre visa den väg vi ska vandra
+            Ge oss kraft och villigt sinn
+            Lär oss leva för dig och för andra
+            Skriv din lag i hjärtat in
+            Lär oss kämpa ärligt för ditt rike
+            Och i varje mänska se vår like
+            Herre visa den väg vi ska vandra
+            Ge oss kraft och villigt sinn
+
+            Måne och Sol
+
+            Måne och sol, vatten och vind
+            Och blommor och blad
+            Skapade Gud
+            Ja han är här, ja han är här
+            Herren vår gud vill vi tacka
+            Herre vi tackar dig
+            Herre vi prisar dig
+            Herre, vi sjunger guds heliga namn
+
+            Varje liten morgon
+
+            Varje liten morgon ger du mod att vara vaken
+            Varje liten afton ger du ro att somna in
+            Hela långa dagen ger du kraft att klara av den
+            Därför att du älskar mig och kallar mig för din
+
+            Vem kan segla
+
+            Vem kan segla förutan vind
+            Vem kan ro utan åror
+            Vem kan skiljas från vännen sin
+            Utan att fälla tårar
+            Jag kan segla förutan vind
+            Jag kan ro utan åror
+            Men ej skiljas från vännen min
+            Utan att fälla tårar
+        </description>
+    </activity>
     <activity featured="true">
         <category
             group="scout-concept"
@@ -11,10 +1254,13 @@
         <participants
             min="1"
             max="15" />
-        <time min="30" max="60" />
+        <time
+            min="30"
+            max="60" />
         <description type="activity-name">Bra-bok</description>
         <media uri="app-drawable:img_0979" />
-        <description>Mia Törnblom som är känd coach har kommit på den här metoden. Hon menar att precis som att vi måste träna
+        <description>Mia Törnblom som är känd coach har kommit på den här metoden. Hon menar att precis som att vi måste
+            träna
             för att hålla uppe konditionen måste vi öva och öva för att hålla uppe självkänslan. Ett sätt att göra det
             på är att varje dag skriva Bra-bok.
 
@@ -51,7 +1297,8 @@
             I en scoutgrupp kan man jobba på lite olika sätt med bra-boken. Man kan ge alla varsin bok och uppmana dem
             att skriva hemma varje dag. Man kan också göra det en gång i veckan på mötet. Om man vill kan man be den som
             vill att berätta om något som varit bra, som de varit tacksamma för eller bett om hjälp om under veckan.
-            Tänk då på att Bra-boken är personlig och att ingen ska behöva berätta för andra vad de skrivit.</description>
+            Tänk då på att Bra-boken är personlig och att ingen ska behöva berätta för andra vad de skrivit.
+        </description>
         <description type="notes">
             Det funkar att göra det här i alla åldrar. Yngre barn kan rita en teckning eller skriva enstaka ord. Äldre
             lite mer komplicerade saker. Ju förr vi börjar öva desto bättre.
@@ -62,24 +1309,30 @@
 
             Du som ledare får gärna uppmuntra scouterna att skriva saker som i vanliga fall inte uppmuntras så mycket.
             Tex får den som springer snabbast eller skjuter flest mål i fotboll ofta höra det i andra sammanhang, men
-            får de uppskattning för att de är bra kompisar eller omtänksamma etc?</description>
+            får de uppskattning för att de är bra kompisar eller omtänksamma etc?
+        </description>
         <description type="safety">
-            Varning. Upprepad användning av Bra-bok kan leda till förändrad självkänsla…</description>
+            Varning. Upprepad användning av Bra-bok kan leda till förändrad självkänsla…
+        </description>
         <description type="references">
             På http://www.scout.se/shop kan man köpa Mia Törnbloms bok Du äger.
             Den vänder sig både till ungdomar och vuxna och ger en massa bra tips och tankar kring självkänsla.
 
-            På http://www.mtgruppen.com om Mia och de kurser hon och hennes kollegor genomför.</description>
+            På http://www.mtgruppen.com om Mia och de kurser hon och hennes kollegor genomför.
+        </description>
     </activity>
     <activity featured="true">
-        <time min="10" max="30" />
+        <time
+            min="10"
+            max="30" />
         <category
             group="scout-concept"
             name="Ceremonier" />
         <description>Invigningsceremoni</description>
         <description type="activity-name">Invigningsceremoni</description>
         <description>För att skapa större sammanhållning och delaktighet i gruppen inviger vi dem som är nya.
-            Invigningen är ett bevis på att man är med ”på riktigt” och är lika mycket värd som alla andra i gruppen</description>
+            Invigningen är ett bevis på att man är med ”på riktigt” och är lika mycket värd som alla andra i gruppen
+        </description>
         <description type="ages">10-12, 8-10.</description>
         <participants
             min="1"
@@ -104,7 +1357,8 @@
 
             En ledare läser någon kort dikt och som avslutning sjungs Scoutsången.
 
-            Man går sedan tyst tillbaks till förut bestämd plats.</description>
+            Man går sedan tyst tillbaks till förut bestämd plats.
+        </description>
         <description type="material">
             Lyktor och ljuskällor till ljusspår
 
@@ -114,7 +1368,8 @@
 
             Scoutlagen skrivet på ett skinn
 
-            Lyktor att belysa skinnet med</description>
+            Lyktor att belysa skinnet med
+        </description>
         <description type="notes">
             Att bli invigd till scout skall vara ett högtidstillfälle för scouten.
 
@@ -123,12 +1378,16 @@
             Man kan inte nog många gånger tala om för scouterna att det är viktigt att man är tyst när man går ett
             ljusspår.
 
-            Någon scout kanske inte ens vågar gå med en kamrat, då får någon av ledarna gå med den scouten.</description>
+            Någon scout kanske inte ens vågar gå med en kamrat, då får någon av ledarna gå med den scouten.
+        </description>
         <description type="safety">
-            Tänk på brandrisken då ni använder levande eld.</description>
+            Tänk på brandrisken då ni använder levande eld.
+        </description>
     </activity>
     <activity featured="true">
-        <time min="5" max="15" />
+        <time
+            min="5"
+            max="15" />
         <media uri="app-drawable:img_1447" />
         <category
             group="scout-concept"
@@ -136,7 +1395,8 @@
         <description>Mina saker</description>
         <description type="activity-name">Mina saker</description>
         <description>I den här övningen får scouterna berätta om sig själva och om vad som är viktigt för dem. Gruppen
-            lär känna varandra bättre. De får samtidigt tillfälle att reflektera över varför det är viktigt.</description>
+            lär känna varandra bättre. De får samtidigt tillfälle att reflektera över varför det är viktigt.
+        </description>
         <description type="ages">10-12, 12-15, 8-10.</description>
         <participants
             min="1"
@@ -153,28 +1413,35 @@
             och varför den är värdefull för dem.
 
             Prata om varför vi fäster oss vid saker. Har alla tex valt saker som är dyra – vad betyder det? Är det
-            tvärtom – betyder det att känslor är viktigare än pengar osv.</description>
+            tvärtom – betyder det att känslor är viktigare än pengar osv.
+        </description>
         <description type="material">
-            Saker som scouterna har med sig</description>
+            Saker som scouterna har med sig
+        </description>
         <description type="notes">
             Det är inget problem om något barn glömt att ta med sig något. De kan beskriva, rita eller ta med sig något
-            nästa vecka – ha och låt resten av gruppen ha full förståelse.</description>
+            nästa vecka – ha och låt resten av gruppen ha full förståelse.
+        </description>
         <description type="safety">
             Ledare i Belgien har prövat den här aktiviteten med yngre scouter därför att de märkte att vissa barn var
             misstänksamma mot andra barn med annan/utländsk bakgrund.
 
             Den här aktiviteten hjälpte flera barn med att bli intresserade av olikheter och likheter med andra
-            människor, oavsett bakgrund.</description>
+            människor, oavsett bakgrund.
+        </description>
     </activity>
     <activity>
-        <time min="5" max="15" />
+        <time
+            min="5"
+            max="15" />
         <category
             group="scout-concept"
             name="Ceremonier" />
         <description>Scoutinvigning</description>
         <description type="activity-name">Scoutinvigning</description>
         <description>Att bli invigd till scout i en ny grupp är en högtidsstund som stärker den enskilde individen och
-            betonar gemenskapen med alla tidigare scouter.</description>
+            betonar gemenskapen med alla tidigare scouter.
+        </description>
         <description type="ages">10-12, 12-15, 15-19, 8-10.</description>
         <participants
             min="1"
@@ -201,15 +1468,20 @@
             invigda scouterna väntar för att genomföra invigningsceremonin.
 
             Invigningen kan innebära att man delar ut avdelningsmärket och låter scouterna skriva sitt namn på
-            avdelningsflaggan.</description>
+            avdelningsflaggan.
+        </description>
         <description type="material">
-            Saker till ett ljusspår och vad de andra scouterna planerar.</description>
+            Saker till ett ljusspår och vad de andra scouterna planerar.
+        </description>
         <description type="notes">
             Om någon av de nya inte skulle vara närvarande så ha en kort invigningscermoni för dessa senare så att de
-            inte behöver vänta ett helt år till för att få vara med om det.</description>
+            inte behöver vänta ett helt år till för att få vara med om det.
+        </description>
     </activity>
     <activity>
-        <time min="10" max="30" />
+        <time
+            min="10"
+            max="30" />
         <category
             group="scout-concept"
             name="Ceremonier" />
@@ -254,10 +1526,12 @@
             • Skriva brev till riksdag och regering och protestera när de beslutar om något som är dumt för miljön.
             • Hjälpa någon som är mobbad.
 
-            Har du något mer förslag på något du gör eller skulle kunna göra för att rädda världen.</description>
+            Har du något mer förslag på något du gör eller skulle kunna göra för att rädda världen.
+        </description>
         <description type="material">
             Det blir roligare om man har tillgång till rekvisita men låt scouterna vara kreativa och hitta på själva hur
-            de vill illustrera sin roll.</description>
+            de vill illustrera sin roll.
+        </description>
         <category
             group="scout-method"
             name="Symboler och ceremonier" />
@@ -266,14 +1540,17 @@
             name="Patrullen" />
     </activity>
     <activity>
-        <time min="5" max="15" />
+        <time
+            min="5"
+            max="15" />
         <category
             group="scout-concept"
             name="Ceremonier" />
         <description>Vem-är-jag-stund</description>
         <description type="activity-name">Vem-är-jag-stund</description>
         <description>Under reflektionsstunden får scouterna möjlighet att fundera på hur det egentligen ser ut i världen
-            och hur deras liv skulle se ut om de inte hade fötts på BB?</description>
+            och hur deras liv skulle se ut om de inte hade fötts på BB?
+        </description>
         <description type="ages">10-12, 12-15.</description>
         <participants
             min="1"
@@ -289,17 +1566,21 @@
             Reflektera
 
             Hur hade det varit ifall scouterna hade fötts i ett skjul i stället? Hade de varit samma? Hade det gjort
-            någon skillnad? Och hade scouterna varit annorlunda om de fötts någon annanstans i världen, tror de?</description>
+            någon skillnad? Och hade scouterna varit annorlunda om de fötts någon annanstans i världen, tror de?
+        </description>
     </activity>
     <activity>
-        <time min="10" max="30" />
+        <time
+            min="10"
+            max="30" />
         <category
             group="scout-concept"
             name="Diskussion" />
         <description>20 liter vatten</description>
         <description type="activity-name">20 liter vatten</description>
         <description>Scouten får kunskap om hur viktigt vatten är för vår överlevnad och får öva sig i att kritiskt
-            granska sin omvärld.</description>
+            granska sin omvärld.
+        </description>
         <description type="ages">10-12, 12-15, 15-19, 19-25.</description>
         <participants
             min="8"
@@ -331,23 +1612,29 @@
             liter till städning, biltvätt och övrigt.
 
             Är ni flera personer kan ni göra aktiviteten som en tävling mellan patrullerna. Ni kan också fortsätta genom
-            att ge alla i uppdrag att försöka räkna ut hur mycket vatten som de gör av med tills kommande scoutmöte.</description>
+            att ge alla i uppdrag att försöka räkna ut hur mycket vatten som de gör av med tills kommande scoutmöte.
+        </description>
         <description type="material">
-            6 hinkar, 6 skyltar, vattendunk/hink, 20 liter vatten, kåsa eller annat mått</description>
+            6 hinkar, 6 skyltar, vattendunk/hink, 20 liter vatten, kåsa eller annat mått
+        </description>
         <description type="references">
             Studieförbundet NBV – Nykterhetsrörelsens Bildningsverksamhet har genomfört tagit fram övningar om världens
             vatten. Ta kontakt med ditt lokala NBV-kontor för tillgång till mer material, eller surfa in på
-            http://www.nbv.se</description>
+            http://www.nbv.se
+        </description>
     </activity>
     <activity>
-        <time min="15" max="60" />
+        <time
+            min="15"
+            max="60" />
         <category
             group="scout-concept"
             name="Diskussion" />
         <description>Alkoholreklam i 3:e världen och hemma</description>
         <description type="activity-name">Alkoholreklam i 3:e världen och hemma</description>
         <description>För att diskutera hur tobak, alkohol och andra droger marknadsförs. Hur kan man styra detta med
-            lagar och regler?</description>
+            lagar och regler?
+        </description>
         <description type="ages">10-12, 12-15, 8-10.</description>
         <participants
             min="8"
@@ -388,7 +1675,8 @@
             ställning till. Om de håller med ställer de sig upp och byter plats i cirkeln, om de inte håller med sitter
             de kvar. Efter varje fråga kan man diskutera lite kring hur deltagarna tänkte.
 
-            Exempel på påståenden:</description>
+            Exempel på påståenden:
+        </description>
         <description type="notes">
             Gå runt och peppa grupperna under arbetet. Om de kör fast kan ledaren komma med frågor i stil med:
 
@@ -396,9 +1684,11 @@
             erbjudanden att ge?Vad har ni sett för andra reklamer tidigare?Har ni någon slogan eller logotype?För att
             underlätta för deltagarna kan man gå igenom vad media är, vilka typer av media som finns och på vilka sätt
             man kan göra reklam. Detta kan man göra genom att brainstorma med den stora gruppen innan arbetet i
-            smågrupperna drar igång.</description>
+            smågrupperna drar igång.
+        </description>
         <description type="safety">
-            Beroende på valt material, annars inget märkvärdigt.</description>
+            Beroende på valt material, annars inget märkvärdigt.
+        </description>
     </activity>
     <activity featured="true">
         <category
@@ -409,7 +1699,7 @@
         <description>En metod för att samla in åsikter och idéer kring olika frågor.</description>
         <description type="ages">12-15.</description>
         <media uri="app-drawable:img_0625" />
-        <media uri="app-drawable:img_0690"/>
+        <media uri="app-drawable:img_0690" />
         <media uri="app-drawable:img_0781" />
         <participants
             min="1"
@@ -419,10 +1709,12 @@
             Bord i t.ex. ett café täcks med nya pappersdukar varje dag/kväll. Stort och tydligt mitt på dem står
             ”dagens/kvällens fråga” skrivet med tydlig tuschpenna. På borden ligger gott om pennor i olika varianter.
             Cafégästerna spånar och ritar/skriver/kladdar förhoppningsvis kring frågan på dukarna. Efter varje dag/kväll
-            sparas dukarna och sammanställs.</description>
+            sparas dukarna och sammanställs.
+        </description>
         <description type="material">
             Pappersdukar
-            Pennor</description>
+            Pennor
+        </description>
         <description type="notes">
             Cafépersonalen/ledare får gärna uppmuntra till spånandet.
 
@@ -430,7 +1722,8 @@
             vad som borde göras i scouterna m.m.
 
             I förväg kan frön till diskussionerna förkladdas så att det ser ut som att några redan börjat. Det är bra
-            både för att uppmuntra till hjärnstormen men oxå för att styra den lite.</description>
+            både för att uppmuntra till hjärnstormen men oxå för att styra den lite.
+        </description>
     </activity>
     <activity>
         <category
@@ -440,7 +1733,8 @@
         <description type="activity-name">Filmmaraton</description>
         <description>Diskussionen om vilken film som ska visas är en övning i demokrati, alla måste ju mer eller mindre
             kompromissa. Men också för att det är roligt. Dessutom kanske det lockar andra grupper än de vanliga till
-            scouterna.</description>
+            scouterna.
+        </description>
         <description type="ages">12-15.</description>
         <participants
             min="1"
@@ -451,17 +1745,21 @@
             Diskutera filmens budskap efteråt.
 
             För att göra det extra spännade kan ni försöka att skapa en utomhus bio, med filmduk, projektor och popcron
-            som ni gjort själva över öppen eld.</description>
+            som ni gjort själva över öppen eld.
+        </description>
         <description type="material">
-            Filmer, TV, Video/DVD, soffor och kuddar, popcorn, läsk…</description>
+            Filmer, TV, Video/DVD, soffor och kuddar, popcorn, läsk…
+        </description>
         <description type="notes">
             Välj en film som ni kan disskutera om efteråt. Det finns mängder av filmer med ett bra och tydligt budskap.
 
             Planera in filmkvällen i tid och uppmuntra scouterna att ta med kompisar som kanske vill börja på scouterna
             men ännu inte gjort det. I så fall poängtera att detta kanske inte är en aktivitet man alltid ägnar sig åt
-            som scout.</description>
+            som scout.
+        </description>
         <description type="safety">
-            Tänk på att anpassa filmen till barnens ålder, till er verksamhet och era värderingar.</description>
+            Tänk på att anpassa filmen till barnens ålder, till er verksamhet och era värderingar.
+        </description>
     </activity>
     <activity>
         <category
@@ -470,7 +1768,8 @@
         <description>Fjällsäkerhet inför en hajk</description>
         <description type="activity-name">Fjällsäkerhet inför en hajk</description>
         <description>Att åka till fjället är en härlig upplevelse året runt, men det finns en hel del man måste tänka på
-            och kunna för att turen ska bli säker. Här är några tips!</description>
+            och kunna för att turen ska bli säker. Här är några tips!
+        </description>
         <description type="ages">12-15, 15-19, 19-25, Ledare.</description>
         <participants
             min="1"
@@ -504,7 +1803,8 @@
 
             Att tänka på när man vadar
             jpg"
-            Vadning.JPG</description>
+            Vadning.JPG
+        </description>
         <category
             group="scout-method"
             name="Friluftsliv" />
@@ -516,7 +1816,8 @@
         <description>Klätterhajk</description>
         <description type="activity-name">Klätterhajk</description>
         <description>Klättring utomhus är en häftig upplevelse och kombineras lätt med en hajk med tältning och
-            friluftsliv.</description>
+            friluftsliv.
+        </description>
         <description type="ages">12-15, 15-19, 19-25.</description>
         <participants
             min="1"
@@ -534,10 +1835,12 @@
 
             Tips! Har ni ingen person på kåren som har klätterkunskap eller utrustning- kontakta t ex närmsta
             klätterhall, Googla eller kolla in Svenska Klätterförbundet. Det kostar lite men kan vara värt om ni vill
-            göra en annorlunda hajk.</description>
+            göra en annorlunda hajk.
+        </description>
         <description type="safety">
             För att genomföra en klätterhajk behövs naturligtvis en instruktör eller personer som har kunskap i
-            klättring och utrustning. Ett felbelastat ankare kan få ödesdigra konsekvenser.</description>
+            klättring och utrustning. Ett felbelastat ankare kan få ödesdigra konsekvenser.
+        </description>
     </activity>
     <activity>
         <category
@@ -546,7 +1849,8 @@
         <description>Mästerkockhajk</description>
         <description type="activity-name">Mästerkockhajk</description>
         <description>Det går att laga fantastiskt mycket bra mat över öppen eld och på stormkök. Testa er och scouternas
-            kreativitet under en Mästerkockhajk.</description>
+            kreativitet under en Mästerkockhajk.
+        </description>
         <description type="ages">12-15, 15-19, 19-25.</description>
         <participants
             min="1"
@@ -565,9 +1869,11 @@
             lyxigt.
 
             Priser på de olika momenten kan vara sporkar, knivar, små kryddburkar eller andra småsaker. I slutet av
-            hajken får alla någon av Scouternas kokböcker med hajkmat.</description>
+            hajken får alla någon av Scouternas kokböcker med hajkmat.
+        </description>
         <description type="references">
-            Sisjö scoutkår</description>
+            Sisjö scoutkår
+        </description>
     </activity>
     <activity>
         <category
@@ -576,7 +1882,8 @@
         <description>Packa rätt, packa fel</description>
         <description type="activity-name">Packa rätt, packa fel</description>
         <description>För att scouterna ska få lära sig vad man behöver ha med sig på hajk och läger och hur mn packar på
-            ett bra sät för att hålla sig varm och torr och hålla reda på sakerna.</description>
+            ett bra sät för att hålla sig varm och torr och hålla reda på sakerna.
+        </description>
         <description type="ages">8-10.</description>
         <participants
             min="1"
@@ -588,18 +1895,22 @@
             som packat fel och den tredje ledaren spelar en ledare under en hajk där man får se vad som kan hända om man
             inte tar med sig rätt saker. För att sketchen skall bli mer effektfull, se till att den felaktiga packningen
             är riktigt fel, packa t ex i papperskassar, utan varma kläder och regnkläder, men med massor av TV-spel och
-            filmer.</description>
+            filmer.
+        </description>
         <description type="material">
-            En packning som är rätt och en packning som är fel.</description>
+            En packning som är rätt och en packning som är fel.
+        </description>
         <description type="notes">
             Om ni har föräldramöte inför en hajk eller ett läger kan denna sketch vara utmärkt att spela även inför
             föräldrarna. Åtminstone för de yngre scouterna är det ju ofta föräldrarna som packar.
 
-            Packpåsar är också ett bra tips, något man kan sy själva under ett möte.</description>
+            Packpåsar är också ett bra tips, något man kan sy själva under ett möte.
+        </description>
         <description type="references">
             Att packa ryggsäck:
 
-            Packa ryggsäck</description>
+            Packa ryggsäck
+        </description>
     </activity>
     <activity>
         <category
@@ -608,7 +1919,8 @@
         <description>Sova ute</description>
         <description type="activity-name">Sova ute</description>
         <description>För att kunna njuta av och leva i och med naturen är det ofta en förutsättning att även kunna
-            tillbringa natten där. Här är några tips på var och hur man kan sova ute.</description>
+            tillbringa natten där. Här är några tips på var och hur man kan sova ute.
+        </description>
         <description type="ages">10-12, 12-15, 15-19, 8-10.</description>
         <participants
             min="1"
@@ -640,14 +1952,17 @@
 
             Har man inte liggunderlag kan man klara sig med hjälp av granris, torr fjolårsvass eller materialet från en
             övergiven myrstack. Är platsen öppen för vind från något håll lägger man upp ris för att få lä. Förstärk
-            också taket med ris, om så behövs, som skydd mot regn eller snö.</description>
+            också taket med ris, om så behövs, som skydd mot regn eller snö.
+        </description>
         <description type="notes">
             Prova olika sorters tält och vindskydd, låna av andra scoutkårer.
 
             Hör med andra kårer om de har tips på lägerplatser eller fasta vindskydd. Kårer som ligger i samma område
-            har ofta olika favoritlägerplatser.</description>
+            har ofta olika favoritlägerplatser.
+        </description>
         <description type="safety">
-            För vissa övernattningssätt, t ex snöbivack behövs instruktion av någon som kan, annars kan det bli farligt!</description>
+            För vissa övernattningssätt, t ex snöbivack behövs instruktion av någon som kan, annars kan det bli farligt!
+        </description>
     </activity>
     <activity>
         <category
@@ -657,7 +1972,8 @@
         <description type="activity-name">Eldpåse</description>
         <description>En eldpåse är en påse där man förvarar allt som behövs för att göra upp en eld. Ett första
             hjälpen-kit för att göra eld när det är blött och regnar. Här är några förslag på vad en eldpåse kan
-            innehålla.</description>
+            innehålla.
+        </description>
         <description type="ages">10-12, 12-15, 15-19.</description>
         <participants
             min="1"
@@ -681,10 +1997,12 @@
             Torktumlarludd som ni lägger i en tom toarulle, sedan lägger ni den i en plastpåse.
             Doppa huvudet på tändstickorna i stearin för att vattenskydda dem.
             Brasmuffins
-            Tampong (luddet brinner utmärkt och de ligger redan i vattentät plastförpackning).</description>
+            Tampong (luddet brinner utmärkt och de ligger redan i vattentät plastförpackning).
+        </description>
         <description type="references">
             Kolla även www.instructables.com och sök på Firestarters, där finns många olika varianter på lättgjorda
-            eldstartare.</description>
+            eldstartare.
+        </description>
     </activity>
     <activity>
         <category
@@ -695,7 +2013,8 @@
         <description>Församling, gudstjänst och nattvard har varit centrala delar i det kristna livet ända sedan den
             första pingsten. De hänger ihop. I livet, liksom i den berättelse som bildar ram i det här projektet. Använd
             gärna flera tillfällen till projektet, försök inte hinna med alla delarna på en gång! Varför inte låta en
-            hajk över en pingsthelg ta upp och binda samman de olika delarna?</description>
+            hajk över en pingsthelg ta upp och binda samman de olika delarna?
+        </description>
         <description type="ages">10-12, 12-15, 8-10.</description>
         <participants
             min="1"
@@ -703,14 +2022,18 @@
         <description>8-15</description>
         <description type="activity">
             Läs en berättelse och gör olika aktiviteter knutna till pingsten, kyrkan och gudstjänsten. Ladda ner bifogad
-            fil.</description>
+            fil.
+        </description>
         <description type="material">
-            Församlingens_hemlighet.pdf</description>
+            Församlingens_hemlighet.pdf
+        </description>
         <description type="notes">
-            Se bifogad fil för hela projektet.</description>
+            Se bifogad fil för hela projektet.
+        </description>
         <description type="references">
             Författare: Andreas Sköldmark, Jönköping. Hämtat från SMU Scouts program Konten, s 233-239. (redigerad av
-            equmenia 2010)</description>
+            equmenia 2010)
+        </description>
     </activity>
     <activity>
         <category
@@ -718,7 +2041,8 @@
             name="Hantverk, pyssel" />
         <description>Göra patrulltröjor/flaggor</description>
         <description type="activity-name">Göra patrulltröjor/flaggor</description>
-        <description>En övning i samarbete och som ger en grundkunskap i demokrati. Ökar sammanhållning i patrullen.</description>
+        <description>En övning i samarbete och som ger en grundkunskap i demokrati. Ökar sammanhållning i patrullen.
+        </description>
         <description type="ages">12-15.</description>
         <participants
             min="1"
@@ -735,18 +2059,23 @@
             papper som går att stryka fast.
 
             Om man vill lyxa till det kan man även bestämam ett ryck och sedan be ett tryckeri om hjälp med att trycka
-            identiska tröjor.</description>
+            identiska tröjor.
+        </description>
         <description type="material">
             Tröjor, tidningar, färg, penslar.
 
-            Eller annat material om ni väljer det.</description>
+            Eller annat material om ni väljer det.
+        </description>
         <description type="notes">
-            Det kan kladda väldigt mycket, se till att skydda borden innan ni börjar.</description>
+            Det kan kladda väldigt mycket, se till att skydda borden innan ni börjar.
+        </description>
         <description>
             Scouterna får välja och diskutera, reflektera gärna med dem om det är någon som blir väldigt missnöjd med
-            majoritetens beslut.</description>
+            majoritetens beslut.
+        </description>
         <description type="safety">
-            Färgen kan vara giftig, man bör ej äta den.</description>
+            Färgen kan vara giftig, man bör ej äta den.
+        </description>
     </activity>
     <activity>
         <category
@@ -756,15 +2085,18 @@
         <description type="activity-name">Lärjungarna</description>
         <description>Vi känner Jesu lärjungar som en gemensam grupp men de flesta av oss har en ganska vag bild av vilka
             de olika lärjungarna var som individer. De hade olika personligheter precis som en scoutpatrull. Vad var det
-            som fick dem att lämna allt och följa Jesus?</description>
+            som fick dem att lämna allt och följa Jesus?
+        </description>
         <description type="ages">10-12, 12-15, 8-10.</description>
         <participants
             min="1"
             max="8" />
         <description type="activity">
-            Projektet finns i den bifogade filen.</description>
+            Projektet finns i den bifogade filen.
+        </description>
         <description type="references">
-            Författare: Anna-Lena Hårsmar, Karlskoga. Från SMU Scout Konten s 211-212. (equmenia 2010)</description>
+            Författare: Anna-Lena Hårsmar, Karlskoga. Från SMU Scout Konten s 211-212. (equmenia 2010)
+        </description>
     </activity>
     <activity>
         <category
@@ -773,7 +2105,8 @@
         <description>Punktskrift</description>
         <description type="activity-name">Punktskrift</description>
         <description>För att prova att läsa på ett annat sätt – som alternativ till klassiska Chiffermöte|chiffer]], för
-            att öva sina [[Sinneslekar|sinnen eller för att prova på en aspekt av att vara blind.</description>
+            att öva sina [[Sinneslekar|sinnen eller för att prova på en aspekt av att vara blind.
+        </description>
         <description type="ages">10-12, 12-15, 15-19, 19-25, 8-10, Ledare.</description>
         <participants
             min="1"
@@ -801,7 +2134,8 @@
             ogenomskinlig påse där de skall sticka in händerna och känna på kartongbiten.
 
             Låt dem ha tabellen med punktskriftsalfabetet intill. Någon i patrullen kan t.ex. anteckna översättningen på
-            vanligt papper medan en person känner och tittar på alfabetet.</description>
+            vanligt papper medan en person känner och tittar på alfabetet.
+        </description>
         <description type="material">
             Under förberedelse:
             * Papper (eller smörpapper eller overheadfilm om du vill göra uppstickande piggar)
@@ -811,20 +2145,24 @@
 
             Under genomförande:
             * Ögonbindel/halsduk eller låda/påse att dölja meddelandet i.
-            * Punktskriftsalfabet.</description>
+            * Punktskriftsalfabet.
+        </description>
         <description type="notes">
             Det tar tid att förbereda. Prova om du själv eller någon annan kan läsa det du skrivit innan du delar ut
-            uppgiften på riktigt.</description>
+            uppgiften på riktigt.
+        </description>
         <category
             group="scout-method"
             name="Learning by doing" />
         <description>
             Learning by doing – både för den som skriver och den som läser.
-            Samarbete underlättar vid läsningen.</description>
+            Samarbete underlättar vid läsningen.
+        </description>
         <description type="safety">
             Stick dig inte i fingrarna när du gör hålen.
             Om ögonbindel används: den blinda personen skall sitta stilla och ingen annan får utnyttja situationen (inte
-            pilla på den som är blind).</description>
+            pilla på den som är blind).
+        </description>
         <description type="references">
             http://www.tpb.se/barnens_tpb/vad_finns_pa_tpb/punktskrift/alfabet/
 
@@ -832,9 +2170,11 @@
 
             Handalfabet
 
-            Morse-signalering</description>
+            Morse-signalering
+        </description>
         <description type="references">
-            ErikM</description>
+            ErikM
+        </description>
     </activity>
     <activity>
         <category
@@ -845,7 +2185,8 @@
         <description>I scouterna eldar vi ofta. Det kan vara en kväll vid scoutlokalen, ute på en hajk eller på ett
             läger. Vi eldar av olika anledningar; för att laga mat, för att värma oss, till lägerbålet eller bara för
             att det är mysigt. Att bygga en eldstad är det bästa att öva på när man behöver en eldstad, då känns och är
-            det på riktigt.</description>
+            det på riktigt.
+        </description>
         <description type="ages">10-12, 12-15, 15-19, 19-25, 8-10, Ledare.</description>
         <participants
             min="1"
@@ -879,17 +2220,20 @@
             Eldstaden byggs med fördel så att den sluttar lätt in mot mitten. Då är risken mindre för att glöd trillar
             utanför och ner på marken.
 
-            Trefot med gryta och eldstad färg</description>
+            Trefot med gryta och eldstad färg
+        </description>
         <description type="material">
             Sten
-            Arbetshandskar</description>
+            Arbetshandskar
+        </description>
         <description type="notes">
             Enligt allemansrätten är det tillåtet att elda om det inte är eldningsförbud. Det kan det vara inom vissa
             områden eller när det är torrt ute. Grundregeln i allemansrätten brukar sägas som ”Inte störa – inte
             förstöra”. När vi eldar måste vi skydda marken, rötter, träd och buskar från att bli sönderbrända eller ta
             eld och därför bör vi alltid bygga en eldstad, en eldstad som skyddar marken. Då skyddas marken men det blir
             även bättre eld tack vare att den syresätts mer och värmen från elden sprids bättre då den kommer upp en bit
-            från marken.</description>
+            från marken.
+        </description>
         <category
             group="scout-method"
             name="Learning by doing" />
@@ -899,9 +2243,11 @@
         <description type="safety">
             Att bära sten kan vara tungt. Ta inte större stenar än vad deltagarna orkar bära. Sten behövs av olika
             storlekar så anpassa storleken på sten som tas efter ålder och styrkan. en för tung sten kan risker att
-            tappas på en fot.</description>
+            tappas på en fot.
+        </description>
         <description type="references">
-            Josef Hegart, Utbildare Redo för naturen, Scouterna</description>
+            Josef Hegart, Utbildare Redo för naturen, Scouterna
+        </description>
     </activity>
     <activity>
         <category
@@ -922,17 +2268,20 @@
             lägerbålet eller invigningen.
 
             Om det är lugnt väder och varmt i vattnet kan några simma med flotten. Annars kan flotten dras efter en båt
-            eller kanoter.</description>
+            eller kanoter.
+        </description>
         <description type="material">
             Pinnar som flyter bra. Torr ved till elden. Yxa, såg och knivar. Linor för att kunna dra flotten. Surrgarn
-            av naturmaterial, plastgarn kan bilda giftiga ångor när det brinner. Eventuellt badkläder till simmarna.</description>
+            av naturmaterial, plastgarn kan bilda giftiga ångor när det brinner. Eventuellt badkläder till simmarna.
+        </description>
         <description type="notes">
             Starta elden bakom en udde eller mitt ute på vattnet så att det inte syns varifrån den kommit.
 
             Om det finns möjlighet, bygg flotten så att den kan lyftas upp till eldstaden med hjälp av ett par långa
             slanor.
 
-            Gör inte surrningar på flotten där elden kommer att vara.</description>
+            Gör inte surrningar på flotten där elden kommer att vara.
+        </description>
         <description type="safety">
             Gör linorna så långa att om något ramlar från flotten hamnar det inte på de som simmar.
 
@@ -941,7 +2290,8 @@
             Om det blåser upp eller på något annat sätt känns osäkert, avbryt hellre än att riskera en olycka.
 
             Håll helst elden inom en skymd vik eller liknande för att undvika onödiga sjölarm från grannar som ser elden
-            på vattnet, informera i förväg de som bor i närheten.</description>
+            på vattnet, informera i förväg de som bor i närheten.
+        </description>
     </activity>
     <activity>
         <category
@@ -955,11 +2305,14 @@
         <description type="activity">Fred_the_moose.pdf
 
             En person som kan sången leder från mitten av ringen. Alla deltagare svarar med samma sångtext och rörelse
-            som personen i mitten.</description>
+            som personen i mitten.
+        </description>
         <description type="material">
-            Sångtexten om gruppen (eller i alla fall sångledaren) inte redan kan den.</description>
+            Sångtexten om gruppen (eller i alla fall sångledaren) inte redan kan den.
+        </description>
         <description type="notes">
-            Jätte bra lägerbålssång</description>
+            Jätte bra lägerbålssång
+        </description>
     </activity>
     <activity>
         <category
@@ -968,7 +2321,8 @@
         <description>Invigning av Spårarscouter</description>
         <description type="activity-name">Invigning av Spårarscouter</description>
         <description>Att bli välkomnad in i scouternas gemenskap ska vara högtidligt, roligt och speciellt. Här är en
-            variant på den engelska invigningsceremonin.</description>
+            variant på den engelska invigningsceremonin.
+        </description>
         <description type="ages">10-12, 8-10.</description>
         <participants
             min="1"
@@ -1005,12 +2359,14 @@
             Avsluta med ett rungande valspråk och lösen, alla tillsammans. Låt alla ”gamla spårare” gratulera innan
             föräldrar och syskon får tillfälle att fotografera och kramas.
 
-            Bjud gärna på fika som avslutning av mötet.</description>
+            Bjud gärna på fika som avslutning av mötet.
+        </description>
         <description type="notes">
             Naturligtvis kan ceremonin användas i alla åldersgrupper.
 
             Gör invigningen till en inkluderande högtid, öppen för intresserade icke-scouter, och få ett
-            rekryteringstillfälle på köpet!</description>
+            rekryteringstillfälle på köpet!
+        </description>
         <category
             group="scout-method"
             name="Scoutlag och scoutlöfte" />
@@ -1018,7 +2374,8 @@
             Säkerhetsavstånd till ev. ljus och lyktor.
 
             Om en ensam spårare invigs är det bra att låta någon av dennas vänner på avdelningen hämta in denna i
-            ringen.</description>
+            ringen.
+        </description>
     </activity>
     <activity>
         <category
@@ -1027,7 +2384,8 @@
         <description>Kallhälls scoutkårs vinterläger</description>
         <description type="activity-name">Kallhälls scoutkårs vinterläger</description>
         <description>För att lära sig mer om friluftsliv vintertid, skidåkning och ledarskap. Ha kul! Umgås över
-            generationsgränser. Utmana och utveckla sig själv som individ, och gruppen som helhet.</description>
+            generationsgränser. Utmana och utveckla sig själv som individ, och gruppen som helhet.
+        </description>
         <description type="ages">10-12, 12-15, 15-19, 19-25, Ledare.</description>
         <description type="participant-count">16-100, 16-100.</description>
         <description type="activity">Vinterlägerpresentation.pdf Inbjudan-Vinterläger-2013.pdf
@@ -1038,20 +2396,23 @@
 
             Även möjlighet att pröva på övernattning i tält och eller snöbivack.
 
-            På plats genomförs det som ett ”smörgåsbord” där deltagarna kan välja olika aktiviteter dag för dag.</description>
+            På plats genomförs det som ett ”smörgåsbord” där deltagarna kan välja olika aktiviteter dag för dag.
+        </description>
         <description type="material">
             Utrustning för olika former av skidåkning och andra vinteraktiviteter, kläder för vinterbruk utomhus.
 
             Sedvanlig mat, sovutrustning m m.
 
-            Bilar för transporter. takbox(ar), släpvagn.</description>
+            Bilar för transporter. takbox(ar), släpvagn.
+        </description>
         <description type="notes">
             Bra mat även till lunch kan vara viktigt! Ha förslag på organiserade aktiviteter/lekar m m även för
             kvällstid.
 
             Förbered noga! Vi har kört flera förträffar för att informera, utbilda, svara på frågor etc.
 
-            Var beredd på att ändra i programmet – fjällväder kan vara nyckfullt!</description>
+            Var beredd på att ändra i programmet – fjällväder kan vara nyckfullt!
+        </description>
         <description type="safety">
             Noga genomtänkt. Alltid ledare med på varje gruppaktivitet.
             Första hjälpen-kit med.
@@ -1060,13 +2421,16 @@
             Köpande.
             Kontaktperson på hemmaplan, ständigt nåbar för såväl hemmavarande familjer som deltagarna.
             Hälsokort för samtliga deltagare.
-            Krav på medlemskap i Scouterna för försäkringsskydd.</description>
+            Krav på medlemskap i Scouterna för försäkringsskydd.
+        </description>
         <description type="references">
             Kan ordna referenser från deltagare/föräldrar/familjer på begäran.
 
-            Även från övriga i lägerkommittén.</description>
+            Även från övriga i lägerkommittén.
+        </description>
         <description type="references">
-            Kallhälls scoutkår</description>
+            Kallhälls scoutkår
+        </description>
     </activity>
     <activity>
         <category
@@ -1074,7 +2438,8 @@
             name="Lekar" />
         <description>1, 2, 3 rött ljus</description>
         <description type="activity-name">1, 2, 3 rött ljus</description>
-        <description>Låter scouterna öva på koncentration genom att röra sig för att sedan stå helt still..</description>
+        <description>Låter scouterna öva på koncentration genom att röra sig för att sedan stå helt still..
+        </description>
         <description type="ages">8-10.</description>
         <participants
             min="1"
@@ -1099,10 +2464,12 @@
             den som ”står” om igen och upprepar ”ett, två tre rött ljus”, och deltagarna rör sig framåt o.s.v. Målet är
             att man ska komma först fram till den personen som ”står” och klappa den i ryggen. När det är gjort så
             slutar den lekomgången och den personen som kom fram först får ta över som den som ”står” och leken börjar
-            om.</description>
+            om.
+        </description>
         <description type="safety">
             Säg åt deltagarna att de måste vara försiktiga när de kommer fram. detta för att inte den som står ska
-            puttas hårt och på så sätt skada sig,</description>
+            puttas hårt och på så sätt skada sig,
+        </description>
     </activity>
     <activity>
         <category
@@ -1113,7 +2480,8 @@
             name="Diskussion" />
         <description>Bli en patrull</description>
         <description type="activity-name">Bli en patrull</description>
-        <description>För att förbättra gruppdynamiken och låta scouterna lära känna varandra samt sin roll i gruppen</description>
+        <description>För att förbättra gruppdynamiken och låta scouterna lära känna varandra samt sin roll i gruppen
+        </description>
         <description type="ages">10-12, 12-15, 15-19, 19-25, 8-10.</description>
         <participants
             min="1"
@@ -1158,9 +2526,11 @@
             För att övningarna ska vara värdefulla är det viktigt att ledaren tar sig tid att reflektera med scouterna
             kring hur samarbetet fungerat. Be deltagarna själva berätta vad som gick bra och vad de skulle göra
             annorlunda om de fick göra om övningen. Fråga om det är något de lärt sig om sig själva, om varandra, samt
-            om gruppens samarbete som de kan ha nytta av vid andra tillfällen.</description>
+            om gruppens samarbete som de kan ha nytta av vid andra tillfällen.
+        </description>
         <description type="material">
-            Beroende på vilka av dessa eller andra aktiviteter ni väljer.</description>
+            Beroende på vilka av dessa eller andra aktiviteter ni väljer.
+        </description>
     </activity>
     <activity>
         <category
@@ -1184,21 +2554,26 @@
             eller att det lag som har fått flest poäng efter 10 minuter vinner.
 
             En variant på den här leken är istället en samarbetsövning och ingen tävling. Då är målet motsatsen – att
-            det ena laget ska försöka kasta bollen så att det andra laget lyckas fånga den.</description>
+            det ena laget ska försöka kasta bollen så att det andra laget lyckas fånga den.
+        </description>
         <description type="material">
             Ett ganska högt plank; mellan 2 och 3 meter.
-            En boll.</description>
+            En boll.
+        </description>
         <description type="notes">
             Om ni inte har eller vill använda ett vanligt plank, kan ni istället surra fast en stor spånskiva lodrätt
             emellan två träd. Väljer ni att göra det kan ni ju även välja att spela ute i skogen i dess terräng, då
-            bollen kan studsa oförutsägbart och öka svårighetsgraden.</description>
+            bollen kan studsa oförutsägbart och öka svårighetsgraden.
+        </description>
         <category
             group="scout-method"
             name="Patrullsystemet" />
         <description type="safety">
-            Välj inte en för hård boll, då det kan göra ont om man skulle få den i huvudet.</description>
+            Välj inte en för hård boll, då det kan göra ont om man skulle få den i huvudet.
+        </description>
         <description type="references">
-            MölnlyckeScout (Rasmus)</description>
+            MölnlyckeScout (Rasmus)
+        </description>
     </activity>
     <activity>
         <category
@@ -1206,7 +2581,8 @@
             name="Lekar" />
         <description>Brännboll</description>
         <description type="activity-name">Brännboll</description>
-        <description>En rolig lek/sport, där scoutena får känna på lagkänsla och även hantera vinst och förlust.</description>
+        <description>En rolig lek/sport, där scoutena får känna på lagkänsla och även hantera vinst och förlust.
+        </description>
         <description type="ages">10-12, 12-15, 15-19, 19-25, 8-10.</description>
         <participants
             min="8"
@@ -1235,7 +2611,8 @@
             Utelaget får poäng för: Om de fångar bollen utan att den nuddar mark,sk lyra.
             Om de bränner någon i innelaget.
 
-            När omgångarna är slut räknas poängen ihop och ett vinnande lag kan koras.</description>
+            När omgångarna är slut räknas poängen ihop och ett vinnande lag kan koras.
+        </description>
         <description type="material">
             Brännbollsracket (runt / platt)
 
@@ -1245,7 +2622,8 @@
 
             1 brännplatta
 
-            en markering för säkert avstånd till den som slår</description>
+            en markering för säkert avstånd till den som slår
+        </description>
         <description type="notes">
             Tips på poängräkning:
 
@@ -1257,9 +2635,11 @@
 
             2-hands lyra 3p
 
-            1-hands lyra 5p</description>
+            1-hands lyra 5p
+        </description>
         <description type="safety">
-            Ha stora avstånd mellan den som slår och alla andra.</description>
+            Ha stora avstånd mellan den som slår och alla andra.
+        </description>
     </activity>
     <activity>
         <category
@@ -1268,7 +2648,8 @@
         <description>Dansbingo</description>
         <description type="activity-name">Dansbingo</description>
         <description>Ett roligt sätt att få scouterna att röra på sig och känna gemenskap på dansgolvet. På detta sätt
-            är det även lättare att inkludera alla på discot så att ingen känner sig utanför.</description>
+            är det även lättare att inkludera alla på discot så att ingen känner sig utanför.
+        </description>
         <description type="ages">10-12.</description>
         <participants
             min="8"
@@ -1281,20 +2662,24 @@
             som scouterna har i en stor skål och ropa ut ett nummer i taget. Fyll själv på med sifforna på en större
             bingobricka som alla ser. (Förslagsvis från höger övre hörn ner till vänstra)
 
-            Först med antingen en rad eller en full bricka vinner.</description>
+            Först med antingen en rad eller en full bricka vinner.
+        </description>
         <description type="material">
             Bingobrickor, pennor, skål hatt eller likande att ha nummer lapparna i, musik.
 
-            Gärna också lite discoljus.</description>
+            Gärna också lite discoljus.
+        </description>
         <description type="notes">
             Spela inte hela låtar så hinner scouterna inte tröttna.
 
-            Aktiviteten lämpar sig kanske bäst som till exempel en festlig avslutning på terminen.</description>
+            Aktiviteten lämpar sig kanske bäst som till exempel en festlig avslutning på terminen.
+        </description>
         <description type="safety">
             Respektera dem som inte vill vara med och dansa och ha gärna en uppgift eller aktivitet för dessa scouter
             också.
 
-            Om alla måste dansa med alla blir inte någon ensam hela tiden.</description>
+            Om alla måste dansa med alla blir inte någon ensam hela tiden.
+        </description>
     </activity>
     <activity>
         <category
@@ -1302,7 +2687,8 @@
             name="Matlagning" />
         <description>Bygga pepparkaksfyrar och sjömärken</description>
         <description type="activity-name">Bygga pepparkaksfyrar och sjömärken</description>
-        <description>I juletider så kan ni spetsa till pepparkaksbaket med att låta alla bygga fyrar och sjömärken.</description>
+        <description>I juletider så kan ni spetsa till pepparkaksbaket med att låta alla bygga fyrar och sjömärken.
+        </description>
         <description type="ages">12-15, 15-19.</description>
         <participants
             min="1"
@@ -1310,16 +2696,19 @@
         <description>8-15</description>
         <description type="activity">
             Helt enkelt pepparkaksverkstad. Om ni vill kan de andra patrullerna gissa vilka fyrar eller sjömärken som de
-            andra har gjort.</description>
+            andra har gjort.
+        </description>
         <description type="material">
             Färdig pepparkaksdeg
             Färgad glasyr
             Kavlar
             Ev godis för dekoration
             Scoutstuga med ugn
-            Om ni inte ska äta fyrarna så är snabbtorkande lim bra, annars glasyr eller smält socker.</description>
+            Om ni inte ska äta fyrarna så är snabbtorkande lim bra, annars glasyr eller smält socker.
+        </description>
         <description type="references">
-            Solna sjö.</description>
+            Solna sjö.
+        </description>
     </activity>
     <activity>
         <category
@@ -1327,7 +2716,8 @@
             name="Matlagning" />
         <description>Chokladfondue på stormkök</description>
         <description type="activity-name">Chokladfondue på stormkök</description>
-        <description>Chokladfondue är annorlunda och väldigt uppskattat på hajk eller till terminsavslutningen.</description>
+        <description>Chokladfondue är annorlunda och väldigt uppskattat på hajk eller till terminsavslutningen.
+        </description>
         <description type="ages">10-12, 12-15, 15-19.</description>
         <participants
             min="1"
@@ -1336,11 +2726,14 @@
         <description type="activity">
             Smält choklad med grädde, hacka frukt, sätt dem på gaffel och doppa bitarna i den smälta chokladen.
 
-            Fika runt elden med frukten, choklad och kex.</description>
+            Fika runt elden med frukten, choklad och kex.
+        </description>
         <description type="material">
-            Stormkök, bränsle, tändstickor, choklad, grädde, frukter, kex, knivar, skärbräda, gafflar.</description>
+            Stormkök, bränsle, tändstickor, choklad, grädde, frukter, kex, knivar, skärbräda, gafflar.
+        </description>
         <description type="references">
-            Gunilla Tunje, Höganäs scoutkår</description>
+            Gunilla Tunje, Höganäs scoutkår
+        </description>
     </activity>
     <activity>
         <category
@@ -1349,7 +2742,8 @@
         <description>Efterrättstävling</description>
         <description type="activity-name">Efterrättstävling</description>
         <description>Scouterna får lära sig att komma överens och samarbeta i situationer där de både måste våga satsa
-            och tänka på hur de ska behålla sina resurser.</description>
+            och tänka på hur de ska behålla sina resurser.
+        </description>
         <description type="ages">12-15.</description>
         <participants
             min="1"
@@ -1364,13 +2758,16 @@
             råvaruhög på en närbelägen mataffär.
 
             Sedan är tävlingen igång, och när tiden är slut presenteras efterrätterna för juryn som gör sin bedömning
-            varpå alla får smaka av allas rätter.</description>
+            varpå alla får smaka av allas rätter.
+        </description>
         <description type="material">
             Bakingredienser
             Köksutrustning
-            Fantasi</description>
+            Fantasi
+        </description>
         <description type="notes">
-            Tänk på att efterrätten ska kunna ätas av alla, d.v.s. ta hänsyn till allergier mm.</description>
+            Tänk på att efterrätten ska kunna ätas av alla, d.v.s. ta hänsyn till allergier mm.
+        </description>
         <description type="safety">
             Normal försiktighet bör iaktas då det utförs i ett kök. Var noga med att testa brandvarnare innan tävlingen
             startar.
@@ -1378,7 +2775,8 @@
             Tänk på allergiker, t.ex. nötter som man kan vara väldigt känslig för.
 
             Om patrullerna måste ta sig över stora vägar för att komma till mataffären kan det momentet tas bort,
-            alternativt får en ledare följa patrullerna.</description>
+            alternativt får en ledare följa patrullerna.
+        </description>
     </activity>
     <activity>
         <category
@@ -1387,7 +2785,8 @@
         <description>Elda och baka bröd</description>
         <description type="activity-name">Elda och baka bröd</description>
         <description>Öva eldning. Scouterna får prova att det går att baka bröd på öppen eld, man kan slippa bära med
-            sig bröd när man hajkar.</description>
+            sig bröd när man hajkar.
+        </description>
         <description type="ages">10-12, 12-15, 15-19, 8-10.</description>
         <participants
             min="1"
@@ -1406,16 +2805,19 @@
             Eldningen kan t ex genomföras som eldtävling (sök här på aktivitetsbanken för tips), när tävlingen är över
             makas eldarna samman till en stor brasa som får ge glöd till brödbaket.
 
-            Lek eller håll ett kort lägerbål medan elden brinner ner till glöd.</description>
+            Lek eller håll ett kort lägerbål medan elden brinner ner till glöd.
+        </description>
         <description type="material">
             Ved mm till eldning
             Stekpannor
-            Olika bröddegar alternativt ingredienser och recept</description>
+            Olika bröddegar alternativt ingredienser och recept
+        </description>
         <description type="notes">
             Planera tidsåtgången så ni hinner klart under mötet, förbered eventuellt elden och degarna innan mötet. Var
             beredda på att ledarna kan bli stående med disken
 
-            Sök recept på internet.</description>
+            Sök recept på internet.
+        </description>
         <category
             group="scout-method"
             name="Friluftsliv" />
@@ -1424,11 +2826,14 @@
             name="Learning by doing" />
         <description type="safety">
             Vatten för släckning
-            Förbandslåda</description>
+            Förbandslåda
+        </description>
         <description type="references">
-            http://www.scouterna.se/aktiviteter-och-lager/aktivitetsbanken/aktivitet/baka-brod-over-oppen-eld/</description>
+            http://www.scouterna.se/aktiviteter-och-lager/aktivitetsbanken/aktivitet/baka-brod-over-oppen-eld/
+        </description>
         <description type="references">
-            Per Dalheim, Tuve och Långängens scoutkårer</description>
+            Per Dalheim, Tuve och Långängens scoutkårer
+        </description>
     </activity>
     <activity>
         <category
@@ -1437,7 +2842,8 @@
         <description>Fika rättvist!</description>
         <description type="activity-name">Fika rättvist!</description>
         <description>För att förbättra scouter och ledares kunskap om vilka val vi som konsumenter kan göra när vi köper
-            varor i affären.</description>
+            varor i affären.
+        </description>
         <description type="ages">12-15, 15-19.</description>
         <participants
             min="1"
@@ -1454,9 +2860,11 @@
 
             Hajkbanan med choklad som ni värmer i ugn eller över öppen eld. 100% Rättvisemärkt!
             Chokladbollar med Rättvisemärkt kakao och socker och ev. lite kaffe i smeten.
-            Glass med chokladsås och skivad banan.</description>
+            Glass med chokladsås och skivad banan.
+        </description>
         <description type="material">
-            Rättvisemärkt te, kaffe, saft, kakor, glass eller vad ni vill fika med.</description>
+            Rättvisemärkt te, kaffe, saft, kakor, glass eller vad ni vill fika med.
+        </description>
         <description type="notes">
             Om ni väljer att ta med scouterna när ni handlar kan ni undersöka livsmedelsbutikernas sortiment av
             Fairtrade- och rättvisemärkta varor. Om ni inte hittar några, upplys gärna butiken om vilka fler varor som
@@ -1464,14 +2872,17 @@
             produkter. Hur många märkningar kan ni hitta i en butik och vad innebär de egentligen?
 
             Du kan också läsa mer om att fika rättvist i Utmanarboken, s 14, ”Se upp för fikadöden”. Boken kan du köpa i
-            scOUT-shopen på www.scout.se/shop</description>
+            scOUT-shopen på www.scout.se/shop
+        </description>
         <description>
             Reflektera och diskutera hur människor i andra länder lever. Vilken skillnad gör det för dem att vi köper
-            rättvisemärkt till vårt fika?</description>
+            rättvisemärkt till vårt fika?
+        </description>
         <description type="references">
             Fairtrade är en oberoende produktmärkning. Genom att välja Fairtrade-märkta produkter skapar vi
             förutsättningar för odlare och anställda i utvecklingsländer att förbättra sina arbets- och levnadsvillkor.
-            Läs mer på www.fairtrade.se.</description>
+            Läs mer på www.fairtrade.se.
+        </description>
     </activity>
     <activity>
         <category
@@ -1479,7 +2890,8 @@
             name="Friluftsliv land" />
         <description>Bada isvak</description>
         <description type="activity-name">Bada isvak</description>
-        <description>Ett riktigt minnesvärt scoutmöte och en nyttig erfarenhet är att testa att bada isvak.</description>
+        <description>Ett riktigt minnesvärt scoutmöte och en nyttig erfarenhet är att testa att bada isvak.
+        </description>
         <description type="ages">12-15, 15-19, 19-25.</description>
         <participants
             min="1"
@@ -1505,11 +2917,14 @@
             Man kan även ha en lång planka som ni kan lägga tvärs över vaken som man kan hålla i om man inte orkar dra
             sig upp.
 
-            Flicka tar sig ur isvak med isdubbar.</description>
+            Flicka tar sig ur isvak med isdubbar.
+        </description>
         <description type="notes">
-            Detta kan genomföras på en sjö men även en utomhusbassäng med is på fungerar bra.</description>
+            Detta kan genomföras på en sjö men även en utomhusbassäng med is på fungerar bra.
+        </description>
         <description type="references">
-            Skövde scoutkår</description>
+            Skövde scoutkår
+        </description>
     </activity>
     <activity>
         <category
@@ -1518,28 +2933,34 @@
         <description>Bygg din egen ugn</description>
         <description type="activity-name">Bygg din egen ugn</description>
         <description>Scouterna i ett spännade projket får öva sig i samarbete. De får också se resultatet av sitt arbete
-            när de har en fungerande ugn att laga mat i.</description>
+            när de har en fungerande ugn att laga mat i.
+        </description>
         <description type="ages">12-15, 15-19.</description>
         <participants
             min="1"
             max="8" />
         <description type="activity">
             Att bygga en ugn tar en del tid och är därför kanske lämpligaste att göra på ett läger eller hajk , vid ett
-            fast vindskydd, en scoutstuga eller en fast lägerplats så att ugnen kan användas flera gånger.</description>
+            fast vindskydd, en scoutstuga eller en fast lägerplats så att ugnen kan användas flera gånger.
+        </description>
         <description type="material">
-            Beroende på vilken ugn ni väljer att göra.</description>
+            Beroende på vilken ugn ni väljer att göra.
+        </description>
         <description type="notes">
             Byggandet tar ett bra tag, det gör också bakningen.
 
             Ska ni gräva in er ugn är en slutning bra. Välj ett ställe med fast och våt jord.
 
-            Pizza lämpar sig bra att baka.</description>
+            Pizza lämpar sig bra att baka.
+        </description>
         <description type="safety">
-            En ugn är oftast ett ”permanent” ingrepp i naturen, be om markägarens tillstånd.</description>
+            En ugn är oftast ett ”permanent” ingrepp i naturen, be om markägarens tillstånd.
+        </description>
         <description type="references">
             Eld
 
-            Primitiv matlagning</description>
+            Primitiv matlagning
+        </description>
     </activity>
     <activity>
         <category
@@ -1549,7 +2970,8 @@
         <description type="activity-name">Cykelföljajohn</description>
         <description>En aktivitet där scouterna får öva upp sin koncentration, sin balans och sin kroppskännedom samt
             sitt ledarskap. Fungerar bra som utgångspunkt för diskussioner om cykling, trafik, trafikregler, olika
-            transportsätt och klimatförändring samt kondition och ett hälsosamt levnadssätt.</description>
+            transportsätt och klimatförändring samt kondition och ett hälsosamt levnadssätt.
+        </description>
         <description type="ages">10-12.</description>
         <participants
             min="1"
@@ -1562,18 +2984,22 @@
             man ska svänga och att visa stopptecken.
             När ledaren ser att alla scouter har kontroll på sina cyklar kan scouterna turas om att vara den som cyklar
             först.
-            För mer information och en beskrivande film se www.cykelleg.dk/cykellege/kongensefterfolger.html</description>
+            För mer information och en beskrivande film se www.cykelleg.dk/cykellege/kongensefterfolger.html
+        </description>
         <description type="material">
             Cyklar och hjälmar.
             Tänk på att alla scouter inte har en cykel, försök låna ihop så ni har några extra.
 
-            Alla sorters cyklar fungerar även trehjulingar och kickbikes.</description>
+            Alla sorters cyklar fungerar även trehjulingar och kickbikes.
+        </description>
         <description type="safety">
-            Alla cyklar måste ha fungerande broms. Alla scouter måste ha hjälm på huvudet.</description>
+            Alla cyklar måste ha fungerande broms. Alla scouter måste ha hjälm på huvudet.
+        </description>
         <description type="references">
             Kristianstads kommun inom projektet Öresund som cykelregion.
             Tack till
-            Cyklist Forbundet</description>
+            Cyklist Forbundet
+        </description>
     </activity>
     <activity>
         <category
@@ -1600,13 +3026,16 @@
             Alternativ: Gör aktiviteten till en geocache! Använd existerande geocacher i området och låt de försöka
             hitta så många som möjligt.
 
-            Läs mer om hur geocaching fungerar på www.geocaching.se</description>
+            Läs mer om hur geocaching fungerar på www.geocaching.se
+        </description>
         <description type="material">
             Påminn alla att ta med cykel och hjälm veckan innan.
             Förberedda koordinater och frågor.
-            GPS.</description>
+            GPS.
+        </description>
         <description type="references">
-            Olle Björck, Centrumkyrkans scouter i Vindeln</description>
+            Olle Björck, Centrumkyrkans scouter i Vindeln
+        </description>
     </activity>
     <activity>
         <category
@@ -1625,7 +3054,8 @@
             behåller garnändan hos sej. Så fortsätter man frågandet så långt det går. Till slut har man ett helt nät.
             Man kan ha med i reglerna att man bara får svara en gång för att få ett mera spritt nät.
 
-            Frågorna kan även gälla andra element i naturen.</description>
+            Frågorna kan även gälla andra element i naturen.
+        </description>
     </activity>
     <activity>
         <category
@@ -1634,7 +3064,8 @@
         <description>Nattsnorkling</description>
         <description type="activity-name">Nattsnorkling</description>
         <description>Snorkling är verkligen ett sätt att få känsla för naturen och kan förstås göras på dagtid eller
-            nattetid. Toppen som nattaktivitet för äldre scouter på läger.</description>
+            nattetid. Toppen som nattaktivitet för äldre scouter på läger.
+        </description>
         <description type="ages">12-15, 15-19, 19-25.</description>
         <participants
             min="1"
@@ -1644,15 +3075,19 @@
             Knyt fast lysstavar och sänken på en lina eller tunnare rep. Ha ca 1-3 meter mellan varje lysstav som knyts
             fast med lämplig knop.
 
-            Lägg repet i en bana eller cirkel. En bra längd på ljusspåret är 30-40 meter, men kan förstås anpassas.</description>
+            Lägg repet i en bana eller cirkel. En bra längd på ljusspåret är 30-40 meter, men kan förstås anpassas.
+        </description>
         <description type="material">
             Rep, sammanlagt ca 50 meter men det går ju bra att knyta ihop flera.
             Lysstavar
-            Snorkel och cyklop.</description>
+            Snorkel och cyklop.
+        </description>
         <description type="notes">
-            Det tar inte så lång tid att genomföra per person, men det behövs någon timme att förbereda.</description>
+            Det tar inte så lång tid att genomföra per person, men det behövs någon timme att förbereda.
+        </description>
         <description type="references">
-            Lägr1, Lysestrand, 2013</description>
+            Lägr1, Lysestrand, 2013
+        </description>
     </activity>
     <activity>
         <category
@@ -1667,11 +3102,14 @@
             max="8" />
         <description>16-100, 8-15</description>
         <description type="activity">
-            Blås upp en massa ballonger och häll ut på en fjärd. Låt båtarna samla ihop så många de kan.</description>
+            Blås upp en massa ballonger och häll ut på en fjärd. Låt båtarna samla ihop så många de kan.
+        </description>
         <description type="material">
-            Ballonger</description>
+            Ballonger
+        </description>
         <description type="references">
-            SjöLU, Sjöscoutledarutbildningen</description>
+            SjöLU, Sjöscoutledarutbildningen
+        </description>
     </activity>
     <activity>
         <category
@@ -1690,7 +3128,8 @@
 
             Lägg gärna till uppgifter som reva segel, byt skeppare, prova att segla utan roder, dejsa osv.
 
-            Naturligtvis gäller väjningsregler när ni seglar.</description>
+            Naturligtvis gäller väjningsregler när ni seglar.
+        </description>
     </activity>
     <activity>
         <category
@@ -1699,7 +3138,8 @@
         <description>Isvett med övningar inne och ute</description>
         <description type="activity-name">Isvett med övningar inne och ute</description>
         <description>Våra isar ger möjlighet till härliga naturupplevelser och bra motion. Det finns aktiviteter som
-            passar alla åldrar och som inte är farliga – förutsatt att man lär sig de enkla isvettsreglerna.</description>
+            passar alla åldrar och som inte är farliga – förutsatt att man lär sig de enkla isvettsreglerna.
+        </description>
         <description type="ages">10-12, 12-15, 15-19, 19-25, 8-10, Ledare.</description>
         <participants
             min="1"
@@ -1753,7 +3193,8 @@
             Gör kraftiga växelvisa hugg med dubbarna och gör simtag med benen
             Fortsätt att hasa och krypa till säker is
             Gå inomhus eller i lä och byt kläder, stå på isolerade underlag
-            Trä plastpåsar utanpå de torra strumporna innan du tar på de våta pjäxorna igen</description>
+            Trä plastpåsar utanpå de torra strumporna innan du tar på de våta pjäxorna igen
+        </description>
         <description type="material">
             Papper
             Färgpennor
@@ -1762,12 +3203,14 @@
             Livlina
             Planka
             Slana
-            Extra klädesplagg</description>
+            Extra klädesplagg
+        </description>
         <description type="notes">
             Träna att ta er upp med isdubbar på ett konstgjort isflak i simhallen. (Det brukar finnas ett sådant, fråga
             personalen i simhallen om de kan hjälpa er eller om ni kan få låna flaket när ni är och badar!)
 
-            Isdubbar och hjälm är bra för säkerheten på isen!</description>
+            Isdubbar och hjälm är bra för säkerheten på isen!
+        </description>
         <category
             group="scout-method"
             name="Friluftsliv" />
@@ -1781,9 +3224,11 @@
             och genom att tyngden har fördelats över större yta. Går man då igenom isen kan det bli omöjligt att orka
             bryta sig tillbaka till bärig is.
 
-            Ha respekt för isen – lär dig hur du räddar dig själv och andra.</description>
+            Ha respekt för isen – lär dig hur du räddar dig själv och andra.
+        </description>
         <description type="references">
-            ”Scoutuppslagsboken”</description>
+            ”Scoutuppslagsboken”
+        </description>
     </activity>
     <activity>
         <category
@@ -1792,7 +3237,8 @@
         <description>Kapsejsning</description>
         <description type="activity-name">Kapsejsning</description>
         <description>Känn hur det är att kapsejsa och hur det är att ta sig i båten igen. Det är alltid att nyttigt att
-            ha testat något under kontrollerade former för att vara förberedd om det någon gång händer.</description>
+            ha testat något under kontrollerade former för att vara förberedd om det någon gång händer.
+        </description>
         <description type="ages">10-12, 12-15.</description>
         <participants
             min="1"
@@ -1801,19 +3247,24 @@
             Scouterna får själva välta en jolle. Sedan ska de försöka vända tillbaka den. De kan t ex stå på
             centerbordet. Avsluta med ösa ur båten.
 
-            Gör det gärna en varm kväll.</description>
+            Gör det gärna en varm kväll.
+        </description>
         <description type="material">
-            Be alla ta med torra kläder och handduk till mötet. Ta gärna med lite extra att låna ut till de som glömt.</description>
+            Be alla ta med torra kläder och handduk till mötet. Ta gärna med lite extra att låna ut till de som glömt.
+        </description>
         <description type="notes">
             Töm fickor på mobiler och plånböcker innan ni lämnar land.
 
             För att göra det enklare så kan ni knyta fast centerbordet innan.
 
-            Följebåten kan även hjälpa till att kapsejsa jollen.</description>
+            Följebåten kan även hjälpa till att kapsejsa jollen.
+        </description>
         <description type="safety">
-            Följebåt.</description>
+            Följebåt.
+        </description>
         <description type="references">
-            Eric Kristiansen, Torslanda sjöscoutkår</description>
+            Eric Kristiansen, Torslanda sjöscoutkår
+        </description>
     </activity>
     <activity>
         <category
@@ -1866,10 +3317,12 @@
             4. Eget förslag
 
             ”’Att samtala om”’
-            Vem är mest skyldig till att det blev som det blev mellan bröderna? Rangordna Isak, Rebecka, Esau och Jakob.</description>
+            Vem är mest skyldig till att det blev som det blev mellan bröderna? Rangordna Isak, Rebecka, Esau och Jakob.
+        </description>
         <description type="material">
             Det blir roligare om man har tillgång till rekvisita men låt scouterna vara kreativa och hitta på själva hur
-            de vill illustrera sin roll.</description>
+            de vill illustrera sin roll.
+        </description>
         <category
             group="scout-method"
             name="Symboler och Ceremonier" />
@@ -1877,7 +3330,8 @@
             group="scout-method"
             name="Patrullen" />
         <description type="references">
-            Maria Andersson SMU Scout</description>
+            Maria Andersson SMU Scout
+        </description>
     </activity>
     <activity>
         <category
@@ -1904,13 +3358,17 @@
             Vad tror ni det stod på de andras lappar? Hur kändes det att agera så? Hur kändes det att alla agerade lite
             märkligt? Påminde det om någon situation från livet? Varför tror ni att vi gjorde denna övningen? En hade
             lapp som det stod ”var dig själv” på, hur upplevdes det? Var det svårt att gå in i rollen? Var går gränsen
-            mellan kulturella företeelser och personliga egenskaper? Hur mycket måste/bör vi acceptera?</description>
+            mellan kulturella företeelser och personliga egenskaper? Hur mycket måste/bör vi acceptera?
+        </description>
         <description type="material">
-            Olika påhittade kulturinstruktioner (Se bifogad fil för exempel)</description>
+            Olika påhittade kulturinstruktioner (Se bifogad fil för exempel)
+        </description>
         <description type="notes">
-            Om du har en liten grupp välj gärna ut kulturer som kommer att få svårt att komunicera med varandra.</description>
+            Om du har en liten grupp välj gärna ut kulturer som kommer att få svårt att komunicera med varandra.
+        </description>
         <description type="references">
-            Kulturer.pdf</description>
+            Kulturer.pdf
+        </description>
     </activity>
     <activity>
         <category
@@ -1919,7 +3377,8 @@
         <description>Kreativt skapande – Poesiverkstad</description>
         <description type="activity-name">Kreativt skapande – Poesiverkstad</description>
         <description>Här får scouterna möjlighet att utrycka sin inre kreativitet och kommer i kontakt med en
-            uttrycksform som har legat i träda men som nu är på väg tillbaks.</description>
+            uttrycksform som har legat i träda men som nu är på väg tillbaks.
+        </description>
         <description type="ages">10-12, 12-15.</description>
         <participants
             min="1"
@@ -1932,16 +3391,19 @@
 
             Sedan kan ni läsa upp dikterna för varandra, men bara de som vill.
 
-            Dikterna kan också sättas upp på väggen med ert tema som rubrik som de även kan få illustrera till.</description>
+            Dikterna kan också sättas upp på väggen med ert tema som rubrik som de även kan få illustrera till.
+        </description>
         <description type="material">
-            Papper, pennor, ev färgpennor/kritor, ev musik och uppselare för detta.</description>
+            Papper, pennor, ev färgpennor/kritor, ev musik och uppselare för detta.
+        </description>
         <description type="notes">
             Möta lokala poeter/diktare. Skriva egen poesi/dikt. Kylskåpspoesi.
 
             Ta med dina innersta tankar.
 
             Ta hjälp av olika dikt/poesiböcker för att lära ut olika tekniker. Böckerna kan även fungera som inspiration
-            till scouterna.</description>
+            till scouterna.
+        </description>
     </activity>
     <activity>
         <category
@@ -1951,7 +3413,8 @@
         <description type="activity-name">Radioteater</description>
         <description>Att göra radioteater med röster och ljudeffekter är en kreativ övning där bara fantasin sätter
             gränserna. När man gör nya saker tillsammans ökar också samhörigheten med sina kompisar. Perfekt övning att
-            inleda ett tema med, det kan ta upp tunga ämnen med en väldig lekfullhet.</description>
+            inleda ett tema med, det kan ta upp tunga ämnen med en väldig lekfullhet.
+        </description>
         <description type="ages">10-12, 12-15, 15-19, 19-25, 8-10, Ledare.</description>
         <participants
             min="1"
@@ -1963,18 +3426,22 @@
             bestämma att vissa saker måste ingå. Därefter är det upp till grupperna om de skriver manus eller spelar in
             direkt, beroende på hur mycket tid som finns. Ljudeffekter kan göras med musikinstrument eller vanliga
             vardagsföremål. När inspelningarna är färdiga spelar man upp gruppernas radioteatrar för varandra, eller för
-            utomstående till exempel på avslutningen.</description>
+            utomstående till exempel på avslutningen.
+        </description>
         <description type="material">
             Inspelningsutrustning (en dator med mikrofon kan också fungera)
 
-            Saker till ljudeffekter</description>
+            Saker till ljudeffekter
+        </description>
         <description type="notes">
             Ju enklare teknik, desto mindre tid ägnas åt perfektionism. En vanlig kassetradio med en enkel mikrofon
             fungerar utmärkt.
 
-            För mindre barn kan man låta själva berättelsen vara färdig och bara jobba med ljudeffekterna.</description>
+            För mindre barn kan man låta själva berättelsen vara färdig och bara jobba med ljudeffekterna.
+        </description>
         <description type="safety">
-            Se till att scouterna är rädda om inspelningsutrustningen, eller använd gammal utrustning.</description>
+            Se till att scouterna är rädda om inspelningsutrustningen, eller använd gammal utrustning.
+        </description>
     </activity>
     <activity>
         <category
@@ -1983,7 +3450,8 @@
         <description>Scoutdisko</description>
         <description type="activity-name">Scoutdisko</description>
         <description>Ett sätt för de äldre och yngre scouterna att träffas och ha kul tillsammans. De äldre lär sig att
-            organisera och ta hand om de yngre. De kan samtidigt samla in pengar till något ändamål.</description>
+            organisera och ta hand om de yngre. De kan samtidigt samla in pengar till något ändamål.
+        </description>
         <description type="ages">12-15, 15-19.</description>
         <participants
             min="8"
@@ -1997,7 +3465,8 @@
             inbjudan. Detta kan gärna scouterna komma fram till själva.
 
             De bör också i förhand reda ut vilka scouter som kommer kunna vara där och hjälpa till, även före och efter
-            arrangemanget för att göra iordning lokalen.</description>
+            arrangemanget för att göra iordning lokalen.
+        </description>
         <description type="material">
             Ljudanläggning, musik, ljussättning (ej levande ljus).
 
@@ -2005,7 +3474,8 @@
 
             Saker att sälja i kiosken, växelpengar, kassalåda.
 
-            Inbjudningar.</description>
+            Inbjudningar.
+        </description>
         <description type="notes">
             Se till att det finns eller kan ordnas ett intresse för arrangemanget, det är inte roligt för scouterna att
             lägga ner arbete om det inte kommer någon.
@@ -2018,17 +3488,20 @@
 
             Tipsa scouterna om att om de är med och dansar så vågar de små också göra det.
 
-            Tänk på att det tar tid att förbereda och städa lokalen innan och efter discot.</description>
+            Tänk på att det tar tid att förbereda och städa lokalen innan och efter discot.
+        </description>
         <description>
             Detta bygger på samarbete och scouten får på ett roligt sätt lära sig att organisera. Glöm inte att följa
-            upp efteråt för att se hur de tycker att det har gått.</description>
+            upp efteråt för att se hur de tycker att det har gått.
+        </description>
         <description type="safety">
             Brandmyndighetens föreskrifter om maximalt antal personer i lokalen måste följas. Nödutgångar får inte
             blockeras av möbler eller dylikt.
 
             Använd inte tända ljus eller annat brandfarligt inomhus.
 
-            Kolla av så att de lekar som arrangerats är säkra.</description>
+            Kolla av så att de lekar som arrangerats är säkra.
+        </description>
     </activity>
     <activity>
         <category
@@ -2038,19 +3511,23 @@
         <description type="activity-name">Bibelhappening om skapelsen</description>
         <description>Tanken med den här ”happeningen” är att ge kunskap om Bibelns skapelseberättelse och samtidigt göra
             roliga saker tillsammans. Praktiskt går det till så att en ledare läser bibelavsnittet för en dags skapelse
-            med patrullen och sen gör man en aktivitet med anknytning till den dagens skapelse.</description>
+            med patrullen och sen gör man en aktivitet med anknytning till den dagens skapelse.
+        </description>
         <description type="ages">10-12, 12-15, 8-10.</description>
         <participants
             min="1"
             max="8" />
         <description>8-15</description>
         <description type="activity">
-            Olika aktiviteter knutna till skapelsen.</description>
+            Olika aktiviteter knutna till skapelsen.
+        </description>
         <description type="notes">
-            Se bifogad fil för hela projektet.</description>
+            Se bifogad fil för hela projektet.
+        </description>
         <description type="references">
             Efter en idé av Claes Lager, Varberg. Hämtad från SMU Scouts program Konten s 247-250. (redigerad av
-            equmenia 2010)</description>
+            equmenia 2010)
+        </description>
     </activity>
     <activity>
         <category
@@ -2060,7 +3537,8 @@
         <description type="activity-name">Bromsspår</description>
         <description>En cykelaktivitet där scouterna får öva sin koncentration, sin balans och sin kroppskännedom.
             Fungerar bra som utgångspunkt för diskussioner om cykling, trafik, trafikregler, olika transportsätt och
-            klimatförändring samt kondition och ett hälsosamt levnadssätt.</description>
+            klimatförändring samt kondition och ett hälsosamt levnadssätt.
+        </description>
         <description type="ages">10-12, 12-15, 8-10.</description>
         <participants
             min="1"
@@ -2073,18 +3551,22 @@
             Bromsspåren beundras och mäts (tex i antal steg).
             Gör om cyklingen och bromsningen en gång till så att scouterna kan jämföra med sig själva. Scouterna tävlar
             inte med varandra utan med sig själva.
-            För mer information och en film se http://www.cykelleg.dk/cykellege/bremsespor.html</description>
+            För mer information och en film se http://www.cykelleg.dk/cykellege/bremsespor.html
+        </description>
         <description type="material">
             Cyklar med fotbroms, hjälmar.
             Tänk på att alla scouter inte har en cykel, försök låna ihop så ni har några extra. Alla sorters cyklar
-            fungerar så länge de har fotbroms.</description>
+            fungerar så länge de har fotbroms.
+        </description>
         <description type="safety">
             Alla cyklar måste ha fungerande broms. Alla scouter måste använda hjälm. Sjukvårdsutrustning ska finnas
-            lättillgängligt.</description>
+            lättillgängligt.
+        </description>
         <description type="references">
             Kristianstads kommun inom projektet Öresund som cykelregion.
             Tack till
-            Cyklist Forbundet</description>
+            Cyklist Forbundet
+        </description>
     </activity>
     <activity>
         <category
@@ -2093,7 +3575,8 @@
         <description>Elda kläder</description>
         <description type="activity-name">Elda kläder</description>
         <description>För scouterna ska få ökad kunskap om hur hur de hanterar brand i kläder, olika material brinner
-            olika. Likaså effekten av om man står eller ligger ner.</description>
+            olika. Likaså effekten av om man står eller ligger ner.
+        </description>
         <description type="ages">10-12.</description>
         <participants
             min="1"
@@ -2123,7 +3606,8 @@
 
             Vad händer med din hud/kropp om du hade bomull/ylle/syntet på dig?
 
-            Vad är det bästa att göra om det börjar brinna i dina kläder?</description>
+            Vad är det bästa att göra om det börjar brinna i dina kläder?
+        </description>
         <description type="material">
             Kartong att klippa ut 2×3 st gubbar om ca 25-30 cm höga.
             Tygbitar att klippa ut och sy på kläder av till gubbarna, tänk på materialet och vad scouters kläder är
@@ -2131,16 +3615,19 @@
             100% bomull (ej stretch eller syntetblandat), t ex jeans, bomulls-skjorta, T-shirt, Sweatshirt…
             100% ylle (ej syntetblandat), t ex yllesockor, ylletröja, yllevantar…
             100% syntet, t ex fleece, vattenavvisande material, syntettröja….
-            Nål och tråd att sy på kläderna.</description>
+            Nål och tråd att sy på kläderna.
+        </description>
         <description>
-            Ger scouterna ökad förståelse och kunskap i släckning av brand i kläder.</description>
+            Ger scouterna ökad förståelse och kunskap i släckning av brand i kläder.
+        </description>
         <description type="safety">
             Detta ska ske utomhus, då syntetkläderna kan bilda obehaglig rök. Även om det är små tygbitar kan det vara
             tillräckligt för att irritera luftrören, om man får röken i sig. Se till att scouterna inte hänger över
             gubbarna utan står på ca 1 m avstånd. De ser vad som händer ändå. Det är en ledare som tänder på kläderna
             och en som håller ögonen på scouterna.
 
-            En hink vatten ska vara i närheten, färdig om något går snett.</description>
+            En hink vatten ska vara i närheten, färdig om något går snett.
+        </description>
     </activity>
     <activity>
         <category
@@ -2149,7 +3636,8 @@
         <description>Falska rykten i skogen</description>
         <description type="activity-name">Falska rykten i skogen</description>
         <description>Scouterna får på ett roligt och aktivt sätt lära sig mer om allemansrätten och vad man får göra i
-            naturen.</description>
+            naturen.
+        </description>
         <description type="ages">8-10.</description>
         <participants
             min="8"
@@ -2168,18 +3656,21 @@
             omröstning. Varje påstående läses upp och patrullerna får avlägga sina röster. När omröstningen är klar
             kommer Grindal, som vet mycket om naturen och vad man får göra där, och berättar för scouterna vad som
             verkligen gäller. Han tackar dem så mycket för hjälpen och säger att de alltid är välkomna till hans skog
-            eftersom de är så duktiga och vet vad man får och inte får göra.</description>
+            eftersom de är så duktiga och vet vad man får och inte får göra.
+        </description>
         <description type="material">
             Utklädningskläder för att klä ut er till Grindal
 
-            Plakat med falska och sanna påståenden om vad du får göra i naturen</description>
+            Plakat med falska och sanna påståenden om vad du får göra i naturen
+        </description>
         <description type="notes">
             Information om allemansrätten på Håll Sverige Rents hemsida
 
             Allemansrätten kan bytas ut mot något annat ämne.
 
             Ett tips för att göra röstningen lite roligare är att låta ett naturföremål tex. sten symbolisera falskt och
-            tex. ett löv symbolisera sant. Föremålen läggs bredvid varje plakat.</description>
+            tex. ett löv symbolisera sant. Föremålen läggs bredvid varje plakat.
+        </description>
     </activity>
     <activity>
         <category
@@ -2188,7 +3679,8 @@
         <description>Fånga såpbubblorna</description>
         <description type="activity-name">Fånga såpbubblorna</description>
         <description>En lek på cykel där scouterna får öva upp att hålla reda på sin omgivning samtidigt som de
-            cyklar.</description>
+            cyklar.
+        </description>
         <description type="ages">10-12, 12-15.</description>
         <participants
             min="1"
@@ -2199,7 +3691,8 @@
 
             Scouterna försöker fånga så många såpbubblor som möjligt medan de cyklar.
 
-            För ytterligare information se www.cykelleg.dk/cykellege/daebebobler.html</description>
+            För ytterligare information se www.cykelleg.dk/cykellege/daebebobler.html
+        </description>
         <description type="material">
             Såpbubblor, cyklar och hjälmar.
 
@@ -2210,7 +3703,8 @@
 
             Ibland är det svårt att blåsa tillräckligt många såpbubblor då kan det vara bra att använda en
             såpbubbelsmaskin eller liknande.
-            Det är bra att vara på en asfalterad yta eller en grusplan så det går lätt att cykla omkring.</description>
+            Det är bra att vara på en asfalterad yta eller en grusplan så det går lätt att cykla omkring.
+        </description>
         <description type="safety">
             Alla cyklar måste ha fungerande broms.
 
@@ -2218,11 +3712,13 @@
 
             Sjukvårdsutrusning ska finnas lättillgänglig.
 
-            Tänk på att be scouterna ta det försiktigt när de cyklar så de inte krockar med varandra.</description>
+            Tänk på att be scouterna ta det försiktigt när de cyklar så de inte krockar med varandra.
+        </description>
         <description type="references">
             Kristianstads kommun inom projektet Öresund som cykelregion.
             Tack till
-            Cyklist Forbundet</description>
+            Cyklist Forbundet
+        </description>
     </activity>
     <activity>
         <category
@@ -2232,20 +3728,25 @@
         <description type="activity-name">Bön</description>
         <description>Att be till Gud är en självklarhet för kristna människor. Att lära scouter be är en viktig del av
             arbetet i SMU-scout. Inte minst med tanke på att många SMU-scouter idag kommer från hem där det inte är
-            naturligt att be till Gud.</description>
+            naturligt att be till Gud.
+        </description>
         <description type="ages">10-12, 12-15, 8-10.</description>
         <participants
             min="1"
             max="8" />
         <description type="activity">
-            Olika aktiviteter knutna till bön.</description>
+            Olika aktiviteter knutna till bön.
+        </description>
         <description type="material">
-            Bön.pdf</description>
+            Bön.pdf
+        </description>
         <description type="notes">
-            Se bifogad fil för hela projektet.</description>
+            Se bifogad fil för hela projektet.
+        </description>
         <description type="references">
             Författare: Britta Fredman, Karlskoga. Hämtad från SMU Scouts program Konten s 245-246. (redigerad av
-            equmenia 2010)</description>
+            equmenia 2010)
+        </description>
     </activity>
     <activity>
         <category
@@ -2254,7 +3755,8 @@
         <description>Det annorlunda folket</description>
         <description type="activity-name">Det annorlunda folket</description>
         <description>För att scouterna ska få en liten inblick i hur den svenska kulturen kan se ut när man tittar på
-            den utifrån.</description>
+            den utifrån.
+        </description>
         <description type="ages">10-12, 8-10.</description>
         <participants
             min="1"
@@ -2333,13 +3835,17 @@
 
             ”- Vad tyckte ni var felaktigt och varför tror ni att han hade uppfattat det så?”
 
-            ”- Tror ni att ni kan missförstå andra människors kultur på liknande sätt?”</description>
+            ”- Tror ni att ni kan missförstå andra människors kultur på liknande sätt?”
+        </description>
         <description type="material">
-            Ingetmaterial behövs utöver sagan.</description>
+            Ingetmaterial behövs utöver sagan.
+        </description>
         <description>
-            Ge alla möjlighet att ge sin åsikt till berättelsen.</description>
+            Ge alla möjlighet att ge sin åsikt till berättelsen.
+        </description>
         <description type="references">
-            Denna aktivitet fanns med på lägret Jiingijamborii 2007.</description>
+            Denna aktivitet fanns med på lägret Jiingijamborii 2007.
+        </description>
     </activity>
     <activity>
         <category
@@ -2349,7 +3855,8 @@
         <description type="activity-name">Framtidslåda</description>
         <description>Den här övningen handlar om att utforska sina drömmar och om vad som är viktigt i ens liv. Om ni
             väljer att spara era framtidslådor ett tag får scouterna chansen att reflektera över hur man själv utvecklas
-            som individ.</description>
+            som individ.
+        </description>
         <description type="ages">12-15.</description>
         <participants
             min="1"
@@ -2400,7 +3907,8 @@
             6. Försegla er egen låda och spara den i scoutlokalen. Bestäm ett datum en tid framåt när ni tror att ni
             hunnit glömma vad ni la i lådan. Arrangera en liten fest för patrullen eller laget den dagen och öppna lådan
             tillsammans. Diskutera om era liv och drömmar har förändrats eller fortfarande stämmer överens med lådans
-            innehåll.</description>
+            innehåll.
+        </description>
         <description type="material">
             Papper och penna
 
@@ -2410,7 +3918,8 @@
 
             Kamera/digitalkamera/mobiltelefonkamera
 
-            Allt man kan behöva för att fylla sin låda – vad som finns till hands</description>
+            Allt man kan behöva för att fylla sin låda – vad som finns till hands
+        </description>
     </activity>
     <activity>
         <category
@@ -2427,7 +3936,8 @@
         <description>Musik betyder mycket för många ungdomar, dock kan samma musik betyda olika saker för olika
             människor. Musiken kan även vara ett sätt att lära sig om olika kulturer, och på så sätt få en större
             förståelse för samhället vi lever i. Musik och sånger kan vara en bra utgångspunkt i diskussionen om den
-            eviga frågan om livet, universum eller kopplat till ett särskilt tema.</description>
+            eviga frågan om livet, universum eller kopplat till ett särskilt tema.
+        </description>
         <description type="ages">12-15.</description>
         <participants
             min="1"
@@ -2437,14 +3947,17 @@
             vad ni tänker/tycker. KOm i håg att påminna om att ingen åsikt är rätt eller fel.
 
             Lyssna en gång till, eller läs texten till sången för att ae vad låten faktiskt handlar om. Då kan
-            diskussionen få en ny dimension.</description>
+            diskussionen få en ny dimension.
+        </description>
         <description type="material">
-            musik, texter, ljudanläggning</description>
+            musik, texter, ljudanläggning
+        </description>
         <description type="notes">
             OBS!
 
             Se till att ljudanläggningen fungerar bra, testa innan!
 
-            Ta med musik med nått speciellt tema, tex från en världsdel, tidsperiod…</description>
+            Ta med musik med nått speciellt tema, tex från en världsdel, tidsperiod…
+        </description>
     </activity>
 </activities>
