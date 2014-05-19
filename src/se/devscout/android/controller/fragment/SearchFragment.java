@@ -1,5 +1,6 @@
 package se.devscout.android.controller.fragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +15,8 @@ import se.devscout.server.api.ActivityFilterFactory;
 import se.devscout.server.api.ActivityFilterFactoryException;
 
 public class SearchFragment extends ActivityBankFragment {
+
+    private TimeRange[] mTimeRanges;
 
     private static class TimeRange extends IntegerRangePojo {
         private String label;
@@ -30,28 +33,58 @@ public class SearchFragment extends ActivityBankFragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();    //To change body of overridden methods use File | Settings | File Templates.
+        View view = getView();
+        SharedPreferences.Editor editor = getPreferences().edit();
+
+        editor.putInt("searchTimeSpinner", ((Spinner) view.findViewById(R.id.searchTimeSpinner)).getSelectedItemPosition());
+        editor.putString("searchText", ((TextView) view.findViewById(R.id.searchText)).getText().toString());
+        editor.putBoolean("searchAgeAdventurer", ((CheckBox) view.findViewById(R.id.searchAgeAdventurer)).isChecked());
+        editor.putBoolean("searchAgeChallenger", ((CheckBox) view.findViewById(R.id.searchAgeChallenger)).isChecked());
+        editor.putBoolean("searchAgeDiscoverer", ((CheckBox) view.findViewById(R.id.searchAgeDiscoverer)).isChecked());
+        editor.putBoolean("searchAgeRover", ((CheckBox) view.findViewById(R.id.searchAgeRover)).isChecked());
+        editor.putBoolean("searchAgeTracker", ((CheckBox) view.findViewById(R.id.searchAgeTracker)).isChecked());
+        editor.putBoolean("featuredOnlyCheckbox", ((CheckBox) view.findViewById(R.id.searchFeaturedOnly)).isChecked());
+        editor.putBoolean("searchFavouritesOnlyCheckbox", ((CheckBox) view.findViewById(R.id.searchFavouritesOnly)).isChecked());
+
+        editor.commit();
+    }
+
+    public void loadSavedValues(View view) {
+        ((Spinner) view.findViewById(R.id.searchTimeSpinner)).setSelection(Math.min(getPreferences().getInt("searchTimeSpinner", 0), mTimeRanges.length - 1));
+        ((TextView) view.findViewById(R.id.searchText)).setText(getPreferences().getString("searchText", ""));
+        ((CheckBox) view.findViewById(R.id.searchAgeAdventurer)).setChecked(getPreferences().getBoolean("searchAgeAdventurer", false));
+        ((CheckBox) view.findViewById(R.id.searchAgeChallenger)).setChecked(getPreferences().getBoolean("searchAgeChallenger", false));
+        ((CheckBox) view.findViewById(R.id.searchAgeDiscoverer)).setChecked(getPreferences().getBoolean("searchAgeDiscoverer", false));
+        ((CheckBox) view.findViewById(R.id.searchAgeRover)).setChecked(getPreferences().getBoolean("searchAgeRover", false));
+        ((CheckBox) view.findViewById(R.id.searchAgeTracker)).setChecked(getPreferences().getBoolean("searchAgeTracker", false));
+        ((CheckBox) view.findViewById(R.id.searchFeaturedOnly)).setChecked(getPreferences().getBoolean("featuredOnlyCheckbox", false));
+        ((CheckBox) view.findViewById(R.id.searchFavouritesOnly)).setChecked(getPreferences().getBoolean("searchFavouritesOnlyCheckbox", false));
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View searchView = inflater.inflate(R.layout.search_activity, container, false);
 
-        final Spinner spinner = (Spinner) searchView.findViewById(R.id.searchTimeSpinner);
-        ArrayAdapter<TimeRange> adapter = new ArrayAdapter<TimeRange>(getActivity(), android.R.layout.simple_spinner_item,
-                new TimeRange[]{
-                        new TimeRange(0, Integer.MAX_VALUE, getString(R.string.searchTimeOptionAny)),
-                        new TimeRange(0, 5, getString(R.string.searchTimeOption5min)),
-                        new TimeRange(0, 15, getString(R.string.searchTimeOption15min)),
-                        new TimeRange(10, 35, getString(R.string.searchTimeOption15to30min)),
-                        new TimeRange(25, 65, getString(R.string.searchTimeOption30to60min)),
-                        new TimeRange(50, 140, getString(R.string.searchTimeOption1to2hours)),
-                        new TimeRange(120, Integer.MAX_VALUE, getString(R.string.searchTimeOptionMoreThan2hours))});
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setSelection(0);
+        mTimeRanges = new TimeRange[]{
+                new TimeRange(0, Integer.MAX_VALUE, getString(R.string.searchTimeOptionAny)),
+                new TimeRange(0, 5, getString(R.string.searchTimeOption5min)),
+                new TimeRange(0, 15, getString(R.string.searchTimeOption15min)),
+                new TimeRange(10, 35, getString(R.string.searchTimeOption15to30min)),
+                new TimeRange(25, 65, getString(R.string.searchTimeOption30to60min)),
+                new TimeRange(50, 140, getString(R.string.searchTimeOption1to2hours)),
+                new TimeRange(120, Integer.MAX_VALUE, getString(R.string.searchTimeOptionMoreThan2hours))};
+
+        final Spinner spinner = initTimeDropDown(searchView);
 
         initAdditionalCheckboxLabel(searchView, R.id.searchAgeAdventurerLogo, R.id.searchAgeAdventurer);
         initAdditionalCheckboxLabel(searchView, R.id.searchAgeChallengerLogo, R.id.searchAgeChallenger);
         initAdditionalCheckboxLabel(searchView, R.id.searchAgeDiscovererLogo, R.id.searchAgeDiscoverer);
         initAdditionalCheckboxLabel(searchView, R.id.searchAgeRoverLogo, R.id.searchAgeRover);
         initAdditionalCheckboxLabel(searchView, R.id.searchAgeTrackerLogo, R.id.searchAgeTracker);
+
+        loadSavedValues(searchView);
 
         Button button = (Button) searchView.findViewById(R.id.searchButton);
         button.setOnClickListener(new View.OnClickListener() {
@@ -133,6 +166,17 @@ public class SearchFragment extends ActivityBankFragment {
         return searchView;
     }
 
+    private Spinner initTimeDropDown(View searchView) {
+        final Spinner spinner = (Spinner) searchView.findViewById(R.id.searchTimeSpinner);
+        ArrayAdapter<TimeRange> adapter = new ArrayAdapter<TimeRange>(
+                getActivity(),
+                android.R.layout.simple_spinner_item,
+                mTimeRanges);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        return spinner;
+    }
+
     private void initAdditionalCheckboxLabel(final View searchView, int labelId, final int checkBoxId) {
         View view = searchView.findViewById(labelId);
         view.setClickable(true);
@@ -143,6 +187,7 @@ public class SearchFragment extends ActivityBankFragment {
                 checkBox.toggle();
             }
         });
+//        view.setSelected(getPreferences().getBoolean("" + checkBoxId, false));
     }
 
     public static SearchFragment create() {

@@ -2,6 +2,7 @@ package se.devscout.android.controller.fragment;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -41,7 +42,18 @@ public abstract class TabsFragment extends ActivityBankFragment implements Actio
             actionBar.addTab(tab);
         }
 
+        mViewPager.setCurrentItem(Math.min(getPreferences().getInt(getClass().getSimpleName() + "-selectedViewPageIndex", 0), pageAdapter.getCount() - 1));
+
         return mViewPager;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        SharedPreferences.Editor editor = getPreferences().edit();
+        int currentItem = ((ViewPager) getView().findViewById(R.id.viewPager)).getCurrentItem();
+        editor.putInt(getClass().getSimpleName() + "-selectedViewPageIndex", currentItem);
+        editor.commit();
     }
 
     @Override
