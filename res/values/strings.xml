@@ -100,4 +100,7 @@
     <string name="searchTimeOption30to60min">Omkring 30-60 min</string>
     <string name="searchTimeOption1to2hours">1-2 timmar</string>
     <string name="searchTimeOptionMoreThan2hours">Över 2 timmar</string>
+    <string name="drawer_open">Öppna</string>
+    <string name="drawer_close">Stäng</string>
+    <string name="drawer_start_header">Start</string>
 </resources>
