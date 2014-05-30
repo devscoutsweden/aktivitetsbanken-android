@@ -1,23 +1,29 @@
 package se.devscout.android.model.repo.sql;
 
 import android.content.Context;
+import android.util.Log;
 import se.devscout.android.model.ObjectIdentifierPojo;
 import se.devscout.android.model.repo.LocalActivity;
 import se.devscout.android.model.repo.LocalCategory;
 import se.devscout.android.model.repo.LocalReference;
+import se.devscout.android.model.repo.LocalSearchHistory;
 import se.devscout.android.util.SimpleFilter;
 import se.devscout.server.api.ActivityBank;
+import se.devscout.server.api.ActivityBankListener;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.ActivityFilterFactory;
 import se.devscout.server.api.model.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public class SQLiteActivityRepo implements ActivityBank {
     private static SQLiteActivityRepo ourInstance;
     private final DatabaseHelper mDatabaseHelper;
     private UserKey mAnonymousUserKey;
+    private List<ActivityBankListener> mListeners = new ArrayList<ActivityBankListener>();
 
     public static SQLiteActivityRepo getInstance(Context ctx) {
         if (ourInstance == null) {
@@ -104,6 +110,7 @@ public class SQLiteActivityRepo implements ActivityBank {
     @Override
     public void setFavourite(ActivityKey activityKey, UserKey userKey) {
         mDatabaseHelper.setFavourite(activityKey, mAnonymousUserKey);
+        fireFavouriteChange(activityKey, userKey);
     }
 
     @Override
@@ -114,6 +121,50 @@ public class SQLiteActivityRepo implements ActivityBank {
     @Override
     public boolean isFavourite(ActivityKey activityKey, UserKey userKey) {
         return mDatabaseHelper.isFavourite(activityKey, mAnonymousUserKey);
+    }
+
+    @Override
+    public List<? extends SearchHistory> readSearchHistory(int limit) {
+        List<LocalSearchHistory> items = mDatabaseHelper.readSearchHistory(mAnonymousUserKey, true, limit, true);
+        return new ArrayList<SearchHistory>(new LinkedHashSet<LocalSearchHistory>(items));
+    }
+
+    @Override
+    public SearchHistory createSearchHistory(HistoryProperties<SearchHistoryData> properties) {
+        try {
+            mDatabaseHelper.createSearchHistoryItem(properties);
+            fireSearchHistoryItemAdded(null);
+        } catch (IOException e) {
+            Log.e(SQLiteActivityRepo.class.getName(), "Could not create search history entry", e);
+        }
+        return null;
+    }
+
+    @Override
+    public void deleteSearchHistory(int itemsToKeep) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void addListener(ActivityBankListener listener) {
+        mListeners.add(listener);
+    }
+
+    @Override
+    public void removeListener(ActivityBankListener listener) {
+        mListeners.remove(listener);
+    }
+
+    private void fireSearchHistoryItemAdded(SearchHistory searchHistoryItem) {
+        for (ActivityBankListener listener : mListeners) {
+            listener.onSearchHistoryItemAdded(searchHistoryItem);
+        }
+    }
+
+    private void fireFavouriteChange(ActivityKey activityKey, UserKey userKey) {
+        for (ActivityBankListener listener : mListeners) {
+            listener.onFavouriteChange(activityKey, userKey);
+        }
     }
 
     public void resetDatabase(boolean addTestData) {

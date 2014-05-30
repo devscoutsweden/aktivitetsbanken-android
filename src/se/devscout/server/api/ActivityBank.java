@@ -35,4 +35,14 @@ public interface ActivityBank {
     void unsetFavourite(ActivityKey activityKey, UserKey userKey);
 
     boolean isFavourite(ActivityKey activityKey, UserKey userKey);
+
+    List<? extends SearchHistory> readSearchHistory(int limit);
+
+    SearchHistory createSearchHistory(HistoryProperties<SearchHistoryData> properties);
+
+    void deleteSearchHistory(int itemsToKeep);
+
+    void addListener(ActivityBankListener listener);
+
+    void removeListener(ActivityBankListener listener);
 }

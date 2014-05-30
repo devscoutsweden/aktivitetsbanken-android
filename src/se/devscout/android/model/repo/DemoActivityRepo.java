@@ -4,6 +4,7 @@ import android.content.Context;
 import se.devscout.android.util.PrimitiveActivityFilterFactory;
 import se.devscout.android.util.SimpleFilter;
 import se.devscout.server.api.ActivityBank;
+import se.devscout.server.api.ActivityBankListener;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.ActivityFilterFactory;
 import se.devscout.server.api.model.*;
@@ -111,6 +112,31 @@ public class DemoActivityRepo implements ActivityBank {
 
     @Override
     public boolean isFavourite(ActivityKey activityKey, UserKey userKey) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public List<? extends SearchHistory> readSearchHistory(int limit) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public SearchHistory createSearchHistory(HistoryProperties<SearchHistoryData> properties) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void deleteSearchHistory(int itemsToKeep) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void addListener(ActivityBankListener listener) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void removeListener(ActivityBankListener listener) {
         throw new UnsupportedOperationException();
     }
 }
