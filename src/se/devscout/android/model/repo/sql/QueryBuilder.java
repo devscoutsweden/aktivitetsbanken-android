@@ -2,6 +2,7 @@ package se.devscout.android.model.repo.sql;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
+import se.devscout.server.api.model.Range;
 import se.devscout.server.api.model.UserKey;
 
 import java.util.ArrayList;
@@ -76,6 +77,20 @@ public class QueryBuilder {
 
     public QueryBuilder addWhereText(String text) {
         return addWhere("ad." + Database.activity_data.name + " LIKE ?", "%" + text + "%");
+    }
+
+    public QueryBuilder addWhereAge(Range<Integer> range) {
+/*
+        boolean isCandidateBeforeRange = mMin >= candidate.getMax();
+        boolean isCandidateAfterRange = mMax <= candidate.getMin();
+        boolean match = !(isCandidateBeforeRange || isCandidateAfterRange);
+ */
+        addWhere("not(" +
+                String.valueOf(range.getMin()) + ">= ad." + Database.activity_data.age_max +
+                " or " +
+                String.valueOf(range.getMax()) + "<= ad." + Database.activity_data.age_min +
+                ")");
+        return this;
     }
 
     private QueryBuilder addWhere(String expr, String... params) {

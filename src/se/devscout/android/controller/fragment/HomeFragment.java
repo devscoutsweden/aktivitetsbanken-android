@@ -15,7 +15,7 @@ public class HomeFragment extends ActivityBankFragment {
         FragmentManager fm = getChildFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.homeList);
         if (fragment == null) {
-            fragment = FeaturedActivitiesListFragment.create(ActivitiesListFragment.Sorter.NAME);
+            fragment = FeaturedActivitiesListFragment.create(ActivitiesListFragment.Sorter.NAME, getActivityBank());
             fm.beginTransaction().add(R.id.homeList, fragment).commit();
         }
         return view;
