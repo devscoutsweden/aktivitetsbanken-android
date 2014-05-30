@@ -101,7 +101,10 @@ public abstract class NonBlockingSearchResultFragment<T extends ObjectIdentifier
             AsyncTask<Void, Void, List<T>> task = new AsyncTask<Void, Void, List<T>>() {
                 @Override
                 protected List<T> doInBackground(Void... voids) {
-                    return NonBlockingSearchResultFragment.this.doSearch();
+                    Log.d(ActivitiesListFragment.class.getName(), "Start of doInBackground as part of " + NonBlockingSearchResultFragment.this.getClass().getName());
+                    List<T> list = NonBlockingSearchResultFragment.this.doSearch();
+                    Log.d(ActivitiesListFragment.class.getName(), "End of doInBackground as part of " + NonBlockingSearchResultFragment.this.getClass().getName());
+                    return list;
                 }
 
                 @Override
