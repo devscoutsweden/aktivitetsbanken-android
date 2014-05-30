@@ -1,22 +1,22 @@
 package se.devscout.android.util;
 
 import se.devscout.android.model.CategoryPropertiesPojo;
-import se.devscout.android.model.IntegerRangePojo;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.ActivityFilterFactory;
 import se.devscout.server.api.ActivityFilterFactoryException;
 import se.devscout.server.api.activityfilter.IsUserFavouriteFilter;
+import se.devscout.server.api.model.Range;
 import se.devscout.server.api.model.UserKey;
 
 public class PrimitiveActivityFilterFactory implements ActivityFilterFactory {
     @Override
-    public SimpleAgeRangeFilter createAgeRangeFilter(int min, int max) {
-        return new SimpleAgeRangeFilter(new IntegerRangePojo(min, max));
+    public SimpleAgeRangeFilter createAgeRangeFilter(Range<Integer> range) {
+        return new SimpleAgeRangeFilter(range);
     }
 
     @Override
-    public SimpleTimeRangeFilter createTimeRangeFilter(int min, int max) {
-        return new SimpleTimeRangeFilter(new IntegerRangePojo(min, max));
+    public SimpleTimeRangeFilter createTimeRangeFilter(Range<Integer> range) {
+        return new SimpleTimeRangeFilter(range);
     }
 
     @Override

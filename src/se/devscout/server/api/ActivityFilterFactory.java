@@ -2,12 +2,13 @@ package se.devscout.server.api;
 
 import se.devscout.android.util.SimpleAgeRangeFilter;
 import se.devscout.server.api.activityfilter.*;
+import se.devscout.server.api.model.Range;
 import se.devscout.server.api.model.UserKey;
 
 public interface ActivityFilterFactory {
-    SimpleAgeRangeFilter createAgeRangeFilter(int min, int max);
+    SimpleAgeRangeFilter createAgeRangeFilter(Range<Integer> range);
 
-    TimeRangeFilter createTimeRangeFilter(int min, int max);
+    TimeRangeFilter createTimeRangeFilter(Range<Integer> range);
 
     AndFilter createAndFilter(ActivityFilter... filters);
 

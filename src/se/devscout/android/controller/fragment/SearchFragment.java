@@ -108,7 +108,7 @@ public class SearchFragment extends ActivityBankFragment {
 
                     startActivity(SearchResultActivity.createIntent(getActivity(), filter, getString(R.string.searchResultTitle)));
                 } catch (ActivityFilterFactoryException e) {
-                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.e(SearchFragment.class.getName(), "Could not create activity filter.", e);
                 }
             }
@@ -116,7 +116,7 @@ public class SearchFragment extends ActivityBankFragment {
             private void initTimeRange(se.devscout.server.api.activityfilter.AndFilter filter, ActivityFilterFactory mFilterFactory) {
                 TimeRange selectedTimeRange = (TimeRange) spinner.getSelectedItem();
                 if (selectedTimeRange != null) {
-                    se.devscout.server.api.activityfilter.TimeRangeFilter filter1 = mFilterFactory.createTimeRangeFilter(selectedTimeRange.getMin(), selectedTimeRange.getMax());
+                    se.devscout.server.api.activityfilter.TimeRangeFilter filter1 = mFilterFactory.createTimeRangeFilter(selectedTimeRange);
                     filter.getFilters().add(filter1);
                 }
             }
@@ -159,7 +159,7 @@ public class SearchFragment extends ActivityBankFragment {
             private void addAgeFilter(se.devscout.server.api.activityfilter.OrFilter ageFilter, int toggleButtonResId, AgeGroup ageGroup, ActivityFilterFactory mFilterFactory) {
                 CheckBox checkBox = (CheckBox) searchView.findViewById(toggleButtonResId);
                 if (checkBox.isChecked()) {
-                    ageFilter.getFilters().add(mFilterFactory.createAgeRangeFilter(ageGroup.getScoutAgeRange().getMin(), ageGroup.getScoutAgeRange().getMax()));
+                    ageFilter.getFilters().add(mFilterFactory.createAgeRangeFilter(ageGroup.getScoutAgeRange()));
                 }
             }
         });

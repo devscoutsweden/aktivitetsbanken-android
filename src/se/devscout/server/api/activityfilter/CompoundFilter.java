@@ -4,6 +4,6 @@ import se.devscout.server.api.ActivityFilter;
 
 import java.util.ArrayList;
 
-interface CompoundFilter extends ActivityFilter {
+public interface CompoundFilter extends ActivityFilter {
     ArrayList<ActivityFilter> getFilters();
 }
