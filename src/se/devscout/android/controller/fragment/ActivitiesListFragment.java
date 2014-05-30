@@ -12,6 +12,8 @@ import android.widget.TextView;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.ActivitiesActivity;
 import se.devscout.android.model.ObjectIdentifierPojo;
+import se.devscout.android.model.SearchHistoryPropertiesPojo;
+import se.devscout.android.model.repo.SearchHistoryDataPojo;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.ActivityUtil;
 import se.devscout.android.view.AgeGroupView;
@@ -106,7 +108,10 @@ public class ActivitiesListFragment extends NonBlockingSearchResultFragment<Acti
 
     @Override
     protected List<Activity> doSearch() {
-        return (List<Activity>) ActivityBankFactory.getInstance(getActivity()).find(mFilter);
+        List<Activity> activities = (List<Activity>) ActivityBankFactory.getInstance(getActivity()).find(mFilter);
+        final SearchHistoryDataPojo searchHistoryDataPojo = new SearchHistoryDataPojo(mFilter);
+        getActivityBank().createSearchHistory(new SearchHistoryPropertiesPojo(null, searchHistoryDataPojo));
+        return activities;
     }
 
     public void onSearchDone(List<Activity> result) {

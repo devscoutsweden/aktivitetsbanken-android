@@ -5,11 +5,10 @@ CREATE TABLE IF NOT EXISTS "user" ( "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREM
      "password_algorithm" TEXT,
      "display_name" TEXT);
 
-CREATE UNIQUE INDEX "email_UNIQUE" ON "user" ("email" ASC);
-
 CREATE TABLE IF NOT EXISTS "activity" ( "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
      "owner_id" INTEGER NOT NULL,
      "status" TEXT NOT NULL,
+     "likes" INTEGER,
      CONSTRAINT "fk_activity_user1" FOREIGN KEY ("owner_id") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE RESTRICT);
 
 CREATE INDEX "fk_activity_user1_idx" ON "activity" ("owner_id" ASC);
@@ -163,4 +162,12 @@ CREATE TABLE IF NOT EXISTS "activity_data_category" ( "activity_data_id" INTEGER
 CREATE INDEX "fk_activity_data_has_category_category1_idx" ON "activity_data_category" ("category_id" ASC);
 
 CREATE INDEX "fk_activity_data_has_category_activity_data1_idx" ON "activity_data_category" ("activity_data_id" ASC);
+
+CREATE TABLE IF NOT EXISTS "history" ( "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+     "user_id" INTEGER NOT NULL,
+     "type" TEXT NOT NULL,
+     "data" NONE,
+     CONSTRAINT "fk_history_user1" FOREIGN KEY ("user_id") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE RESTRICT);
+
+CREATE INDEX "fk_history_user1_idx" ON "history" ("user_id" ASC);
 

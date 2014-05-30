@@ -130,4 +130,12 @@ public class Database {
         final static String activity_data_id = "activity_data_id";
         final static String category_id = "category_id";
     }
+
+    public static class history {
+        final static String T = "history";
+        final static String id = "id";
+        final static String user_id = "user_id";
+        final static String type = "type";
+        final static String data = "data";
+    }
 }

@@ -17,7 +17,7 @@ import java.util.List;
 
 abstract class QuickSearchListFragment<T extends ObjectIdentifier> extends NonBlockingSearchResultFragment<T> {
 
-    private List<T> mItems;
+    protected List<T> mItems;
 
     protected QuickSearchListFragment(List<T> items) {
         mItems = items;

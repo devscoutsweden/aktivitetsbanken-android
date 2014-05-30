@@ -14,8 +14,10 @@ import se.devscout.server.api.activityfilter.AndFilter;
 import se.devscout.server.api.activityfilter.OrFilter;
 import se.devscout.server.api.model.*;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectOutputStream;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -33,6 +35,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     };
     private static final int USER_ID_ANONYMOUS = Integer.MAX_VALUE;
     private SQLiteDatabase db;
+    private Set<Long> mBannedSearchHistoryIds = new HashSet<Long>();
 
     public SQLiteDatabase getDb() {
         if (db == null) {
@@ -127,7 +130,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private void logInfo(String msg) {
         Log.i(DatabaseHelper.class.getName(), msg);
-        showToast(msg);
+//        showToast(msg);
     }
 
     private void logDebug(String msg) {
@@ -136,7 +139,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private void logError(Throwable e, String msg) {
         Log.e(DatabaseHelper.class.getName(), msg, e);
-        showToast(msg);
+//        showToast(msg);
     }
 
     private void showToast(String msg) {
@@ -430,6 +433,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
         } else if (filter instanceof SQLActivityFilter) {
             ((SQLActivityFilter) filter).applyFilter(queryBuilder);
+        } else {
+//            IllegalArgumentException exception = new IllegalArgumentException("applyFilter does not support " + filter.getClass().getName());
+//            logError(exception, "Unsupported filter");
+//            throw exception;
+            logInfo("applyFilter cannot use " + filter.getClass().getName());
         }
     }
 
@@ -582,5 +590,59 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 " AND "
                 + Database.favourite_activity.activity_id + " = " + activity.getId(),
                 null);
+    }
+
+    public ArrayList<LocalSearchHistory> readSearchHistory(UserKey user, boolean descendingOrder, int limit, boolean onlyUnique) {
+        Collection<LocalSearchHistory> items = onlyUnique ? new LinkedHashSet<LocalSearchHistory>() : new ArrayList<LocalSearchHistory>();
+        try {
+            SearchHistoryCursor cursor = new SearchHistoryCursor(getDb().query(Database.history.T,
+                    new String[]{
+                            Database.history.id,
+                            Database.history.user_id,
+                            Database.history.type,
+                            Database.history.data
+                    },
+                    Database.history.user_id + " = " + user.getId() + " and " + Database.history.type + " = ?",
+                    new String[]{String.valueOf(HistoryType.SEARCH.getDatabaseValue())},
+                    null,
+                    null,
+                    Database.history.id + (descendingOrder ? " DESC" : "")));
+            while (cursor.moveToNext() && (limit == 0 || items.size() < limit)) {
+                long id = cursor.getId();
+                if (!mBannedSearchHistoryIds.contains(id)) {
+                    try {
+                        LocalSearchHistory item = cursor.getHistoryItem();
+                        items.add(item);
+                    } catch (Throwable e) {
+                        logError(e, "Could not read search history");
+                        mBannedSearchHistoryIds.add(id);
+                    }
+                } else {
+                    logDebug("Ignoring banned search history item " + id);
+                }
+            }
+        } catch (Exception e) {
+            logError(e, "Could not read search history");
+        }
+        return items instanceof ArrayList ? (ArrayList<LocalSearchHistory>) items : new ArrayList(items);
+    }
+
+    public void createSearchHistoryItem(HistoryProperties<SearchHistoryData> properties) throws IOException {
+
+        ContentValues values = new ContentValues();
+        values.put(Database.history.data, serializeObject(properties.getData()));
+        values.put(Database.history.user_id, getAnonymousUserId());
+        values.put(Database.history.type, String.valueOf(HistoryType.SEARCH.getDatabaseValue()));
+
+        getDb().insert(Database.history.T, null, values);
+    }
+
+    private byte[] serializeObject(Object data) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream stream = new ObjectOutputStream(baos);
+        stream.writeObject(data);
+        stream.close();
+        baos.close();
+        return baos.toByteArray();
     }
 }
