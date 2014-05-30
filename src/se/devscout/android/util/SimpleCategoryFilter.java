@@ -1,5 +1,6 @@
 package se.devscout.android.util;
 
+import se.devscout.server.api.ActivityFilterVisitor;
 import se.devscout.server.api.model.ActivityProperties;
 import se.devscout.server.api.model.ActivityRevision;
 import se.devscout.server.api.model.Category;
@@ -50,5 +51,10 @@ public class SimpleCategoryFilter extends SimpleFilter implements se.devscout.se
                 :
                 name.equals(candidate.getName());
         return isNameCorrect && isGroupCorrect;
+    }
+
+    @Override
+    public String toString(ActivityFilterVisitor visitor) {
+        return visitor.visit(this);
     }
 }

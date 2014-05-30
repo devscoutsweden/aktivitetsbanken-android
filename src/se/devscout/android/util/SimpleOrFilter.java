@@ -1,6 +1,7 @@
 package se.devscout.android.util;
 
 import se.devscout.server.api.ActivityFilter;
+import se.devscout.server.api.ActivityFilterVisitor;
 import se.devscout.server.api.model.ActivityProperties;
 
 public class SimpleOrFilter extends SimpleCompoundFilter implements se.devscout.server.api.activityfilter.OrFilter {
@@ -16,5 +17,10 @@ public class SimpleOrFilter extends SimpleCompoundFilter implements se.devscout.
             }
         }
         return false;
+    }
+
+    @Override
+    public String toString(ActivityFilterVisitor visitor) {
+        return visitor.visit(this);
     }
 }

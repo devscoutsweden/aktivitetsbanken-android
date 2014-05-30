@@ -16,8 +16,10 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.drawer.*;
+import se.devscout.android.controller.fragment.AbstractActivityBankListener;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.server.api.ActivityBank;
+import se.devscout.server.api.model.SearchHistory;
 
 abstract class SingleFragmentActivity<T extends Fragment> extends FragmentActivity implements AdapterView.OnItemClickListener {
 
@@ -27,6 +29,8 @@ abstract class SingleFragmentActivity<T extends Fragment> extends FragmentActivi
     private ActionBarDrawerToggle mDrawerToggle;
     protected T mFragment;
     private DrawerListAdapter mDrawerListAdapter;
+    private AbstractActivityBankListener mActivityBankListener;
+    //    private boolean mIsSearchHistoryUpdated = false;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +39,7 @@ abstract class SingleFragmentActivity<T extends Fragment> extends FragmentActivi
         mDrawerList = (ListView) findViewById(R.id.start_drawer_list);
         mContentFrame = (FrameLayout) findViewById(R.id.start_content_frame);
 
-        mDrawerListAdapter = new DrawerListAdapter(this);
+        mDrawerListAdapter = new DrawerListAdapter(this, getSupportFragmentManager(), R.id.start_content_frame);
         mDrawerListAdapter.add(
                 new HeaderDrawerItem(getString(R.string.drawer_start_header)),
                 new StartDrawerItem(getString(R.string.startTabHome), R.drawable.ic_action_favorite),
@@ -44,6 +48,20 @@ abstract class SingleFragmentActivity<T extends Fragment> extends FragmentActivi
                 new AgeGroupsDrawerItem(getString(R.string.startTabAgeGroups), R.drawable.ic_action_cc_bcc),
                 new CategoriesDrawerItem(getString(R.string.startTabConcepts), R.drawable.ic_action_labels)
         );
+
+        mDrawerListAdapter.addSearchHistory(getString(R.string.drawer_search_history_header), getActivityBank());
+        mActivityBankListener = new AbstractActivityBankListener() {
+            @Override
+            public void onSearchHistoryItemAdded(SearchHistory searchHistory) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mDrawerListAdapter.loadSearchHistoryItems(getActivityBank());
+                    }
+                });
+            }
+        };
+        getActivityBank().addListener(mActivityBankListener);
 
         mDrawerList.setAdapter(mDrawerListAdapter);
         mDrawerList.setOnItemClickListener(this);
@@ -60,8 +78,22 @@ abstract class SingleFragmentActivity<T extends Fragment> extends FragmentActivi
             }
 
             @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);    //To change body of overridden methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                super.onDrawerStateChanged(newState);    //To change body of overridden methods use File | Settings | File Templates.
+            }
+
+            @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
+//                if (mIsSearchHistoryUpdated) {
+//                    mDrawerListAdapter.loadSearchHistoryItems(getActivityBank());
+//                    mIsSearchHistoryUpdated = false;
+//                }
                 mOldTitle = getActionBar().getTitle();
                 getActionBar().setTitle(R.string.app_name);
                 invalidateOptionsMenu();
@@ -86,6 +118,19 @@ abstract class SingleFragmentActivity<T extends Fragment> extends FragmentActivi
                 mFragment.setInitialSavedState(state);
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mActivityBankListener != null) {
+            getActivityBank().removeListener(mActivityBankListener);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     protected ActivityBank getActivityBank() {

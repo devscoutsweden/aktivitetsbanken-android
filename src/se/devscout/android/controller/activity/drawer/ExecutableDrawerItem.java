@@ -17,7 +17,11 @@ public abstract class ExecutableDrawerItem extends DefaultDrawerItem implements 
     }
 
     public void run(Activity ctx) {
-        Intent intent = FragmentCreatorActivity.createIntent(ctx, this, getTitle());
+        Intent intent = FragmentCreatorActivity.createIntent(ctx, this, getActivityTitle());
         ctx.startActivity(intent);
+    }
+
+    protected String getActivityTitle() {
+        return getTitle();
     }
 }
