@@ -12,9 +12,8 @@ import se.devscout.android.R;
 
 public class ViewPagerIndicator extends View {
     private final int mColor;
-    private int mMin = 0;
-    private int mMax = 0;
-    private int mCurrent = 0;
+    private int mCount = 0;
+    private int mSelectedIndex = 0;
 
     private Paint mPaintFilled;
     private Paint mPaintOutline;
@@ -39,9 +38,8 @@ public class ViewPagerIndicator extends View {
         super(context, attrs);
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.ViewPagerIndicator, 0, 0);
         try {
-            setMin(a.getInt(R.styleable.ViewPagerIndicator_min, 0));
-            setMax(a.getInt(R.styleable.ViewPagerIndicator_max, 0));
-            setCurrent(a.getInt(R.styleable.ViewPagerIndicator_current, 0));
+            setCount(a.getInt(R.styleable.ViewPagerIndicator_count, 0));
+            setSelectedIndex(a.getInt(R.styleable.ViewPagerIndicator_selectedIndex, 0));
             setPaddingDots(a.getDimension(R.styleable.ViewPagerIndicator_paddingDots, 0));
             mColor = a.getColor(R.styleable.ViewPagerIndicator_color, android.R.color.darker_gray);
             mPaintFilled = createPaint(mColor, Paint.Style.FILL);
@@ -58,8 +56,8 @@ public class ViewPagerIndicator extends View {
     }
 
     private void initDotData() {
-        int count = mMax - mMin + 1;
-        int countToTheLeft = mCurrent - mMin;
+        int count = mCount + 1;
+        int countToTheLeft = mSelectedIndex;
         mDotDatas = new DotData[count];
         mDotDatas[countToTheLeft] = new DotData(1.0f);
         for (int i = countToTheLeft - 1; i >= 0; i--) {
@@ -86,7 +84,7 @@ public class ViewPagerIndicator extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        int count = mMax - mMin + 1;
+        int count = mCount + 1;
         int highestCountPossibleToDraw = (int) (mRegionWidth / (mMaxDiameter + mPaddingDots));
 
         if (count > highestCountPossibleToDraw) {
@@ -100,8 +98,8 @@ public class ViewPagerIndicator extends View {
         } else {
             float x = (mDrawingArea.width() - (count * mMaxDiameter) - ((count - 1) * mPaddingDots)) / 2;
             float y = mDrawingArea.top;
-            for (int i = mMin; i <= mMax; i++) {
-                drawDot(canvas, y, x, i == mCurrent ? mPaintFilled : mPaintOutline);
+            for (int i = 0; i <= mCount; i++) {
+                drawDot(canvas, y, x, i == mSelectedIndex ? mPaintFilled : mPaintOutline);
                 x += mMaxDiameter + mPaddingDots;
             }
         }
@@ -121,45 +119,32 @@ public class ViewPagerIndicator extends View {
                 paint);
     }
 
-    public int getMax() {
-        return mMax;
+    public int getCount() {
+        return mCount;
     }
 
-    public void setMax(int max) {
-        if (max < mMin) {
-            Log.i(ViewPagerIndicator.class.getName(), "Cannot set maximum value to " + max + " since minimum is " + mMin + ". Will set maximum to " + mMin + ".");
-            max = mMin;
+    public void setCount(int count) {
+        if (count < 0) {
+            Log.i(ViewPagerIndicator.class.getName(), "Cannot set maximum value to " + count + " since minimum is 0. Will set maximum to 0.");
+            count = 0;
         }
-        mMax = max;
+        mCount = count;
         onPropertyChanged();
     }
 
-    public int getCurrent() {
-        return mCurrent;
+    public int getSelectedIndex() {
+        return mSelectedIndex;
     }
 
-    public void setCurrent(int current) {
-        if (current > mMax) {
-            Log.i(ViewPagerIndicator.class.getName(), "Cannot set current value to " + current + " since maximum is " + mMax + ". Will set current to " + mMax + ".");
-            current = mMax;
-        } else if (current < mMin) {
-            Log.i(ViewPagerIndicator.class.getName(), "Cannot set current value to " + current + " since minimum is " + mMin + ". Will set current to " + mMin + ".");
-            current = mMin;
+    public void setSelectedIndex(int selectedIndex) {
+        if (selectedIndex > mCount) {
+            Log.i(ViewPagerIndicator.class.getName(), "Cannot set current value to " + selectedIndex + " since maximum is " + mCount + ". Will set current to " + mCount + ".");
+            selectedIndex = mCount;
+        } else if (selectedIndex < 0) {
+            Log.i(ViewPagerIndicator.class.getName(), "Cannot set current value to " + selectedIndex + " since minimum is 0. Will set current to 0.");
+            selectedIndex = 0;
         }
-        mCurrent = current;
-        onPropertyChanged();
-    }
-
-    public int getMin() {
-        return mMin;
-    }
-
-    public void setMin(int min) {
-        if (min > mMax) {
-            Log.i(ViewPagerIndicator.class.getName(), "Cannot set minimum value to " + min + " since maximum is " + mMax + ". Will set minimum to " + mMax + ".");
-            min = mMax;
-        }
-        mMin = min;
+        mSelectedIndex = selectedIndex;
         onPropertyChanged();
     }
 

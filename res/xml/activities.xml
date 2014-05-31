@@ -1253,10 +1253,10 @@
         <description type="ages">8-100</description>
         <participants
             min="1"
-            max="15" />
+            count="15" />
         <time
             min="30"
-            max="60" />
+            count="60" />
         <description type="activity-name">Bra-bok</description>
         <media uri="app-drawable:img_0979" />
         <description>Mia Törnblom som är känd coach har kommit på den här metoden. Hon menar att precis som att vi måste
@@ -1324,7 +1324,7 @@
     <activity featured="true">
         <time
             min="10"
-            max="30" />
+            count="30" />
         <category
             group="scout-concept"
             name="Ceremonier" />
@@ -1336,7 +1336,7 @@
         <description type="ages">10-12, 8-10.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description>16-100, 8-15</description>
         <media uri="app-drawable:img_0781" />
         <description type="activity">
@@ -1387,7 +1387,7 @@
     <activity featured="true">
         <time
             min="5"
-            max="15" />
+            count="15" />
         <media uri="app-drawable:img_1447" />
         <category
             group="scout-concept"
@@ -1400,7 +1400,7 @@
         <description type="ages">10-12, 12-15, 8-10.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description>8-15</description>
         <description type="activity">
             Under scoutmötet före säger ledaren till scouterna att de ska ta med sig ett föremål till nästa gång. Saken
@@ -1433,7 +1433,7 @@
     <activity>
         <time
             min="5"
-            max="15" />
+            count="15" />
         <category
             group="scout-concept"
             name="Ceremonier" />
@@ -1445,7 +1445,7 @@
         <description type="ages">10-12, 12-15, 15-19, 8-10.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description>8-15</description>
         <description type="activity">
             När man haft några scoutmöten på hösten och de nya scouterna i gruppen börjar känna sig hemma är det dags
@@ -1481,7 +1481,7 @@
     <activity>
         <time
             min="10"
-            max="30" />
+            count="30" />
         <category
             group="scout-concept"
             name="Ceremonier" />
@@ -1491,7 +1491,7 @@
         <description type="ages">10-12, 12-15, 8-10.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description type="activity">
             Spontandrama
             Noa Sem Ham Jafet Elefanthona Elefanthanne
@@ -1542,7 +1542,7 @@
     <activity>
         <time
             min="5"
-            max="15" />
+            count="15" />
         <category
             group="scout-concept"
             name="Ceremonier" />
@@ -1554,7 +1554,7 @@
         <description type="ages">10-12, 12-15.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description>16-100, 16-100, 8-15</description>
         <description type="activity">
             Kör en reflektionsstund i slutet av ett möte. Varva ner, tänd ljus och låt scouterna fundera över sig själva
@@ -1572,7 +1572,7 @@
     <activity>
         <time
             min="10"
-            max="30" />
+            count="30" />
         <category
             group="scout-concept"
             name="Diskussion" />
@@ -1584,7 +1584,7 @@
         <description type="ages">10-12, 12-15, 15-19, 19-25.</description>
         <participants
             min="8"
-            max="15" />
+            count="15" />
         <description type="activity">
             Brist på vatten, eller tillgång till rent vatten är en av de stora utmaningarna för att lösa för att utrota
             hunger, sjukdomar och fattigdom. 20 liter vatten är vad som krävs för att en person ska klara det mest
@@ -1626,7 +1626,7 @@
     <activity>
         <time
             min="15"
-            max="60" />
+            count="60" />
         <category
             group="scout-concept"
             name="Diskussion" />
@@ -1638,7 +1638,7 @@
         <description type="ages">10-12, 12-15, 8-10.</description>
         <participants
             min="8"
-            max="15" />
+            count="15" />
         <description type="activity">
             Förklara för deltagarna att de jobbar på stans bästa reklambyrå och att de idag kommer få besök av en viktig
             kund, Sedel von Slant.
@@ -1703,7 +1703,7 @@
         <media uri="app-drawable:img_0781" />
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description>16-100, 8-15</description>
         <description type="activity">
             Bord i t.ex. ett café täcks med nya pappersdukar varje dag/kväll. Stort och tydligt mitt på dem står
@@ -1738,7 +1738,7 @@
         <description type="ages">12-15.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description type="activity">
             Samla alla framför TV’n, sätt på filmen och titta.
 
@@ -1773,7 +1773,7 @@
         <description type="ages">12-15, 15-19, 19-25, Ledare.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description>16-100, 8-15</description>
         <description type="activity">
             Gå aldrig ensam, ens om det gäller en dagstur.
@@ -1821,7 +1821,7 @@
         <description type="ages">12-15, 15-19, 19-25.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description>8-15</description>
         <description type="activity">
             Läs på om klätterområden i närheten och välj ut ett som ni tror passar nivån på era scouter.
@@ -1854,7 +1854,7 @@
         <description type="ages">12-15, 15-19, 19-25.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description>8-15</description>
         <description type="activity">
             Låt patrullerna dels planera en tre rätters måltid i förväg, som de även ska handla ingredienser till. Denna
@@ -1887,7 +1887,7 @@
         <description type="ages">8-10.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description>8-15</description>
         <description type="activity">
             En sketch spelas för scouterna om vilken utrustning man skall ha med sig på hajk/läger samt hur man skall
@@ -1924,7 +1924,7 @@
         <description type="ages">10-12, 12-15, 15-19, 8-10.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description type="activity">
             Genom att delta i övernattningar, hajker, läger och långfärder får scouterna bra övning i friluftsliv. Det
             är ett bra sätt för ledare att bli tryggare också, det kanske är första gången för er med.
@@ -1977,7 +1977,7 @@
         <description type="ages">10-12, 12-15, 15-19.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description>8-15</description>
         <description type="activity">
             Börja med att göra sy egna eldpåsar i vattentåligt material, det kan vara vaxbehandlat läder eller en gammal
@@ -2018,7 +2018,7 @@
         <description type="ages">10-12, 12-15, 8-10.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description>8-15</description>
         <description type="activity">
             Läs en berättelse och gör olika aktiviteter knutna till pingsten, kyrkan och gudstjänsten. Ladda ner bifogad
@@ -2046,7 +2046,7 @@
         <description type="ages">12-15.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description type="activity">
             Börja med att besätmma vilken sorts tröja ni ska ha. Kankse behöver ni göra någonform av insamlingsprojket
             för att få pengar till att köpa in tröjorna.
@@ -2090,7 +2090,7 @@
         <description type="ages">10-12, 12-15, 8-10.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description type="activity">
             Projektet finns i den bifogade filen.
         </description>
@@ -2110,7 +2110,7 @@
         <description type="ages">10-12, 12-15, 15-19, 19-25, 8-10, Ledare.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description type="activity">
             1. Skriv ut en tabell över hur alfabetet ser ut i punktskrift (länkar finns under rubriken Referenser).
 
@@ -2190,7 +2190,7 @@
         <description type="ages">10-12, 12-15, 15-19, 19-25, 8-10, Ledare.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description type="activity">
             Eld tändning illustration
 
@@ -2259,7 +2259,7 @@
         <description type="ages">12-15, 15-19, 19-25, Ledare.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description>16-100, 8-15</description>
         <description type="activity">
             Surra en flotte och bygg en stabil eld på denna.
@@ -2326,7 +2326,7 @@
         <description type="ages">10-12, 8-10.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description>16-100, 8-15</description>
         <description type="activity">
             När scouten/scouterna varit med på några möten, ta dem åt sidan och fråga vad de tycker hittills och om de
@@ -2443,7 +2443,7 @@
         <description type="ages">8-10.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description>8-15</description>
         <description type="activity">
             Leken är roligast om det är många scouter och ledare som deltar.
@@ -2485,7 +2485,7 @@
         <description type="ages">10-12, 12-15, 15-19, 19-25, 8-10.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description type="activity">
             ”’Backloppet”’
 
@@ -2542,7 +2542,7 @@
         <description type="ages">10-12, 12-15, 15-19.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description type="activity">
             Fördela patrullen så jämt det går. Den ena hälften ställer sig på ena sidan planket, och den andra hälften
             på den andra sidan. Ena ”laget” börjar med bollen. De ska nu försöka kasta bollen över till andra sidan
@@ -2586,7 +2586,7 @@
         <description type="ages">10-12, 12-15, 15-19, 19-25, 8-10.</description>
         <participants
             min="8"
-            max="15" />
+            count="15" />
         <description type="activity">
             Deltagarna delas in i två lag, inne laget och ute laget.
 
@@ -2653,7 +2653,7 @@
         <description type="ages">10-12.</description>
         <participants
             min="8"
-            max="15" />
+            count="15" />
         <description type="activity">
             Dela ut tomma bingobrickor till alla scouter. Ge dem också varsitt nummer. Spela sen en låt eller en bit av
             en låt och få dem att dansa med varandra två och två. Efter låten skriver varje scout in det nummer som
@@ -2692,7 +2692,7 @@
         <description type="ages">12-15, 15-19.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description>8-15</description>
         <description type="activity">
             Helt enkelt pepparkaksverkstad. Om ni vill kan de andra patrullerna gissa vilka fyrar eller sjömärken som de
@@ -2721,7 +2721,7 @@
         <description type="ages">10-12, 12-15, 15-19.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description>8-15</description>
         <description type="activity">
             Smält choklad med grädde, hacka frukt, sätt dem på gaffel och doppa bitarna i den smälta chokladen.
@@ -2747,7 +2747,7 @@
         <description type="ages">12-15.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description type="activity">
             Steg 1: Scouterna tävlar i patruller som får tävla i några olika grenar. Några alternativ är en musiktävling
             (spela låtar och scouterna ska skriva/gissa artist+låt), kasta stövel, slå knopar osv. Vinnaren i varje gren
@@ -2790,7 +2790,7 @@
         <description type="ages">10-12, 12-15, 15-19, 8-10.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description>8-15</description>
         <description type="activity">
             Låt scouterna prova att grädda olika typer av bröd (t ex vanlig pinnbrödsdeg, deg med torrjäst, olika
@@ -2847,7 +2847,7 @@
         <description type="ages">12-15, 15-19.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description type="activity">
             I butiken väljer ni de Fairtrademärkta varor ni vill fika med. Tänk på att alla ni ska fika med kanske inte
             dricker kaffe eller te utan kanske föredrar safter, juicer och smoothies. Dessa finns också som Fairtrade-
@@ -2895,7 +2895,7 @@
         <description type="ages">12-15, 15-19, 19-25.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description>16-100, 8-15</description>
         <description type="activity">
             Flicka tar sig ur isvak med isdubbar.
@@ -2938,7 +2938,7 @@
         <description type="ages">12-15, 15-19.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description type="activity">
             Att bygga en ugn tar en del tid och är därför kanske lämpligaste att göra på ett läger eller hajk , vid ett
             fast vindskydd, en scoutstuga eller en fast lägerplats så att ugnen kan användas flera gånger.
@@ -2975,7 +2975,7 @@
         <description type="ages">10-12.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description type="activity">
             En ledare tar täten och scouterna följer efter på sina cyklar. Ledaren cyklar mellan träd, över gupp och
             under grenar, ringer på klockan, flaxar med benen och släpper styret med en hand i taget. Scouterna följer
@@ -3011,7 +3011,7 @@
         <description type="ages">12-15, 15-19.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description>8-15</description>
         <description type="activity">
             Ge patrullen olika koordinater att hitta längs en cykelrunda.
@@ -3069,7 +3069,7 @@
         <description type="ages">12-15, 15-19, 19-25.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description>8-15</description>
         <description type="activity">
             Knyt fast lysstavar och sänken på en lina eller tunnare rep. Ha ca 1-3 meter mellan varje lysstav som knyts
@@ -3099,7 +3099,7 @@
         <description type="ages">10-12, 12-15, 15-19.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description>16-100, 8-15</description>
         <description type="activity">
             Blås upp en massa ballonger och häll ut på en fjärd. Låt båtarna samla ihop så många de kan.
@@ -3121,7 +3121,7 @@
         <description type="ages">10-12, 12-15, 15-19.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description>8-15</description>
         <description type="activity">
             Ge besättningen en flaskpost som beskriver var nästa flaska finns som beskriver nästa flaska och så vidare.
@@ -3143,7 +3143,7 @@
         <description type="ages">10-12, 12-15, 15-19, 19-25, 8-10, Ledare.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description>8-15</description>
         <description type="activity">
             När vi är på en frusen sjö och olyckan är framme är det givetvis bråttom. Den nödställda måste upp fort och
@@ -3242,7 +3242,7 @@
         <description type="ages">10-12, 12-15.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description type="activity">
             Scouterna får själva välta en jolle. Sedan ska de försöka vända tillbaka den. De kan t ex stå på
             centerbordet. Avsluta med ösa ur båten.
@@ -3276,7 +3276,7 @@
         <description type="ages">10-12, 12-15, 8-10.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description type="activity">
             Esau och Jakob II
 
@@ -3343,7 +3343,7 @@
         <description type="ages">12-15.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description>8-15</description>
         <description type="activity">
             Rollspel
@@ -3382,7 +3382,7 @@
         <description type="ages">10-12, 12-15.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description type="activity">
             Samla alla scouter och förklara att nu ska de jobba individuellt med att uttrycka sig i ord.
 
@@ -3418,7 +3418,7 @@
         <description type="ages">10-12, 12-15, 15-19, 19-25, 8-10, Ledare.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description>8-15</description>
         <description type="activity">
             Instruera patrullerna i hur inspelningsutrustningen fungerar. Dela därefter ut uppgiften. Antingen får
@@ -3455,7 +3455,7 @@
         <description type="ages">12-15, 15-19.</description>
         <participants
             min="8"
-            max="15" />
+            count="15" />
         <description type="activity">
             Låt scouterna ta ett stort eget ansvar för planering och organisering. Om de är många kan de dela upp sig i
             grupper som har ansvar för olika områden. Som ledare kan det räcka med att finnas till hands för att svara
@@ -3516,7 +3516,7 @@
         <description type="ages">10-12, 12-15, 8-10.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description>8-15</description>
         <description type="activity">
             Olika aktiviteter knutna till skapelsen.
@@ -3542,7 +3542,7 @@
         <description type="ages">10-12, 12-15, 8-10.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description>8-15</description>
         <description type="activity">
             Aktiviteten genomförs på en grusplan eller en grusstig, gärna i en backe med lagom lutning.
@@ -3580,7 +3580,7 @@
         <description type="ages">10-12.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description type="activity">
             Ledarinstruktion: Först tillverkas 2 x 3 ”gubbar” i kartong, ca 25-30 cm höga.Tre stycken får även ett
             fotstöd för att stå stadigt. Därefter får alla ledare leta efter lämpliga tygbitar (ev behöver man köpa
@@ -3641,7 +3641,7 @@
         <description type="ages">8-10.</description>
         <participants
             min="8"
-            max="15" />
+            count="15" />
         <description type="activity">
             Börja med att berätta för scouterna att Grindal (en av karaktärerna i Den stora spårarboken. Köps i
             Scoutshopen) är bekymrad eftersom han vet att det hörs väldigt många rykten som vad som är tillåtet och
@@ -3684,7 +3684,7 @@
         <description type="ages">10-12, 12-15.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description>8-15</description>
         <description type="activity">
             En person blåser såpbubblor så de finns över hela området där scouterna cyklar omkring.
@@ -3733,7 +3733,7 @@
         <description type="ages">10-12, 12-15, 8-10.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description type="activity">
             Olika aktiviteter knutna till bön.
         </description>
@@ -3760,7 +3760,7 @@
         <description type="ages">10-12, 8-10.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description>16-100, 8-15</description>
         <description type="activity">
             Läs sagan ”Det annorlunda folket”. Diskutera därefter tillsammans med scouterna.
@@ -3860,7 +3860,7 @@
         <description type="ages">12-15.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description type="activity">
             Vad är viktigast för dig? Ni får nu chansen att fylla en låda med det som är viktigast i era liv just nu!
             Och dessutom kommer ni att få veta vad som är viktigt för någon annan.
@@ -3941,7 +3941,7 @@
         <description type="ages">12-15.</description>
         <participants
             min="1"
-            max="8" />
+            count="8" />
         <description type="activity">
             Alla tar med musik som betyder något speciellt för dem. Börja med att lyssna på musiken och prata och jämför
             vad ni tänker/tycker. KOm i håg att påminna om att ingen åsikt är rätt eller fel.

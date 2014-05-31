@@ -43,8 +43,7 @@ public class ActivitiesViewPagerFragment extends ActivityBankFragment implements
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
         mViewPagerIndicator = (ViewPagerIndicator) view.findViewById(R.id.viewPagerIndicator);
         mViewPagerIndicator.setVisibility(getActivities().size() > 1 ? View.VISIBLE : View.GONE);
-        mViewPagerIndicator.setMin(0);
-        mViewPagerIndicator.setMax(getActivities().size() - 1);
+        mViewPagerIndicator.setCount(getActivities().size() - 1);
         mViewPager.setOnPageChangeListener(this);
         FragmentStatePagerAdapter pageAdapter = new FragmentStatePagerAdapter(getChildFragmentManager()) {
             @Override
@@ -166,7 +165,7 @@ public class ActivitiesViewPagerFragment extends ActivityBankFragment implements
     public void onPageSelected(int i) {
         updateActivityTitle(i);
         mSelectedIndex = i;
-        mViewPagerIndicator.setCurrent(mSelectedIndex);
+        mViewPagerIndicator.setSelectedIndex(mSelectedIndex);
         getActivity().invalidateOptionsMenu();
     }
 
