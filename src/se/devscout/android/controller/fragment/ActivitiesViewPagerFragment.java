@@ -10,6 +10,7 @@ import se.devscout.android.R;
 import se.devscout.android.model.ObjectIdentifierPojo;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.ActivityUtil;
+import se.devscout.android.view.ViewPagerIndicator;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.model.Activity;
 import se.devscout.server.api.model.ActivityKey;
@@ -23,6 +24,7 @@ public class ActivitiesViewPagerFragment extends ActivityBankFragment implements
     protected int mSelectedIndex;
 
     private ViewPager mViewPager;
+    private ViewPagerIndicator mViewPagerIndicator;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -37,7 +39,12 @@ public class ActivitiesViewPagerFragment extends ActivityBankFragment implements
 
         setHasOptionsMenu(true);
 
-        mViewPager = (ViewPager) inflater.inflate(R.layout.view_pager, container, false);
+        View view = inflater.inflate(R.layout.view_pager, container, false);
+        mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
+        mViewPagerIndicator = (ViewPagerIndicator) view.findViewById(R.id.viewPagerIndicator);
+        mViewPagerIndicator.setVisibility(getActivities().size() > 1 ? View.VISIBLE : View.GONE);
+        mViewPagerIndicator.setMin(0);
+        mViewPagerIndicator.setMax(getActivities().size() - 1);
         mViewPager.setOnPageChangeListener(this);
         FragmentStatePagerAdapter pageAdapter = new FragmentStatePagerAdapter(getChildFragmentManager()) {
             @Override
@@ -82,7 +89,7 @@ public class ActivitiesViewPagerFragment extends ActivityBankFragment implements
         mViewPager.setCurrentItem(mSelectedIndex);
         updateActivityTitle(mSelectedIndex);
 
-        return mViewPager;
+        return view;
     }
 
     @Override
@@ -122,6 +129,7 @@ public class ActivitiesViewPagerFragment extends ActivityBankFragment implements
         ArrayList<Activity> activities = new ArrayList<Activity>();
         for (ObjectIdentifierPojo activity : mActivities) {
             //TODO: Save complete Activity objects in mActivities instead of only the keys? Performance gain or performance loss?
+            //TODO: Do not "preload" entire list. Only read on demand with getActivity(int) instead of getActivities().get(int)
             activities.add(getActivityBank().readFull(activity));
         }
         return activities;
@@ -158,6 +166,7 @@ public class ActivitiesViewPagerFragment extends ActivityBankFragment implements
     public void onPageSelected(int i) {
         updateActivityTitle(i);
         mSelectedIndex = i;
+        mViewPagerIndicator.setCurrent(mSelectedIndex);
         getActivity().invalidateOptionsMenu();
     }
 

@@ -1,8 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/viewPager"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:devscout="http://schemas.android.com/apk/res/se.devscout.android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-</android.support.v4.view.ViewPager>
+    <se.devscout.android.view.ViewPagerIndicator
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/microTextSize"
+        android:id="@+id/viewPagerIndicator"
+        android:layout_weight="0"
+        android:layout_margin="@dimen/defaultMargin"
+        devscout:color="@color/basicDark"
+        devscout:paddingDots="@dimen/defaultMargin"
+        android:focusableInTouchMode="true" />
+
+    <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+    </android.support.v4.view.ViewPager>
+
+</LinearLayout>

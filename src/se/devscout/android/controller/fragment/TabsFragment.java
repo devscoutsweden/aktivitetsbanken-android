@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import se.devscout.android.R;
 import se.devscout.android.view.StaticFragmentsPagerAdapter;
+import se.devscout.android.view.ViewPagerIndicator;
 
 public abstract class TabsFragment extends ActivityBankFragment implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
 
@@ -21,7 +22,10 @@ public abstract class TabsFragment extends ActivityBankFragment implements Actio
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mViewPager = (ViewPager) inflater.inflate(R.layout.view_pager, container, false);
+        View view = inflater.inflate(R.layout.view_pager, container, false);
+        mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
+        ViewPagerIndicator viewPagerIndicator = (ViewPagerIndicator) view.findViewById(R.id.viewPagerIndicator);
+        viewPagerIndicator.setVisibility(View.GONE);
         mViewPager.setOnPageChangeListener(this);
         boolean landscape = getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         StaticFragmentsPagerAdapter pageAdapter = createPagerAdapter(getChildFragmentManager(), landscape);
@@ -44,7 +48,7 @@ public abstract class TabsFragment extends ActivityBankFragment implements Actio
 
         mViewPager.setCurrentItem(Math.min(getPreferences().getInt(getClass().getSimpleName() + "-selectedViewPageIndex", 0), pageAdapter.getCount() - 1));
 
-        return mViewPager;
+        return view;
     }
 
     @Override
