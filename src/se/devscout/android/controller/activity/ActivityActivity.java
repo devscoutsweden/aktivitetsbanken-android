@@ -38,7 +38,6 @@ public class ActivityActivity extends SingleFragmentActivity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         ObjectIdentifierPojo key = (ObjectIdentifierPojo) getIntent().getSerializableExtra(INTENT_EXTRA_ACTIVITY_KEY);
         if (key != null) {
-            // TODO Use some kind of factory for accessing/creating the ActivityBank instead of forcing SQLiteActivityRepo?
             Activity activity = getActivityBank().readFull(key);
             setTitle(activity.getRevisions().get(activity.getRevisions().size() - 1).getName());
         }

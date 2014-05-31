@@ -23,7 +23,6 @@ class FeaturedActivitiesArrayAdapter extends ArrayAdapter<Activity> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // TODO Use some kind of factory for accessing/creating the ActivityBank instead of forcing SQLiteActivityRepo?
         List<? extends ActivityRevision> revisions = ActivityBankFactory.getInstance(getContext()).read(mResult.get(position)).getRevisions();
         View view = ActivityCoverFragment.initListItemView(
                 LayoutInflater.from(getContext()),

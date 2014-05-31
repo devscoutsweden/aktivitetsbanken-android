@@ -97,7 +97,6 @@ public abstract class NonBlockingSearchResultFragment<T extends ObjectIdentifier
             // Start search in separate thread
             Log.d(ActivitiesListFragment.class.getName(), "Result has not been returned/cached. Starting search task in new thread.");
 
-            // TODO Use some kind of factory for accessing/creating the ActivityBank instead of forcing SQLiteActivityRepo?
             AsyncTask<Void, Void, List<T>> task = new AsyncTask<Void, Void, List<T>>() {
                 @Override
                 protected List<T> doInBackground(Void... voids) {

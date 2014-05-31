@@ -47,7 +47,6 @@ public class ActivityTabsFragment extends TabsFragment {
     protected StaticFragmentsPagerAdapter createPagerAdapter(FragmentManager fragmentManager, boolean landscape) {
         StaticFragmentsPagerAdapter pagerAdapter = new StaticFragmentsPagerAdapter(fragmentManager);
 
-        // TODO Use some kind of factory for accessing/creating the ActivityBank instead of forcing SQLiteActivityRepo?
         Activity activity = getActivityBank().readFull(key);
         ActivityRevision revision = activity.getRevisions().get(activity.getRevisions().size() - 1);
 

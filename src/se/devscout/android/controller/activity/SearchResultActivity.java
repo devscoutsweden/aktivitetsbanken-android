@@ -58,7 +58,6 @@ public class SearchResultActivity extends SingleFragmentActivity<ActivitiesListF
         if (keys != null) {
             List<ActivityKey> activities = new ArrayList<ActivityKey>();
             for (ActivityKey key : keys) {
-                // TODO Use some kind of factory for accessing/creating the ActivityBank instead of forcing SQLiteActivityRepo?
                 activities.add(getActivityBank().readFull(key));
             }
             return ActivitiesListFragment.create(activities, ActivitiesListFragment.Sorter.NAME);
