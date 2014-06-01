@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.*;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 import se.devscout.android.R;
@@ -378,6 +379,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         QueryBuilder queryBuilder = new QueryBuilder();
         applyFilter(queryBuilder, filter);
         ArrayList<LocalActivity> activities = new ArrayList<LocalActivity>();
+        Map<Long, LocalActivityRevision> map = new HashMap<Long, LocalActivityRevision>();
         ActivityDataCursor cursor = queryBuilder.query(getDb());
         long lastActivityId = 0;
         while (cursor.moveToNext()) {
@@ -403,20 +405,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
             if (!revisionExistsInActivity) {
                 LocalActivityRevision revision = cursor.getActivityData(currentActivityToAdd);
+                map.put(revision.getId(), revision);
 
                 revision.setAuthor(readUser(cursor.getAuthorId()));
-
-                initActivityDataCategories(revision);
-
-                initActivityDataMedia(revision);
-
-                initActivityDataReferences(revision);
 
                 currentActivityToAdd.addRevisions(revision);
             }
             lastActivityId = activityId;
         }
         cursor.close();
+
+        initActivitiesCategories(map);
+
+        initActivitiesMedia(map);
+
+        initActivitiesReferences(map);
+
         return activities;
     }
 
@@ -473,21 +477,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return categories;
     }
 
-    private void initActivityDataReferences(LocalActivityRevision revision) {
+    private void initActivitiesReferences(Map<Long, LocalActivityRevision> revisions) {
         ReferenceCursor refCursor = new ReferenceCursor(getDb().rawQuery("" +
                 "select " +
+                "   adr.activity_data_id activity_data_id," +
                 "   r.* " +
                 "from " +
                 "   " + Database.reference.T + " r inner join " + Database.activity_data_reference.T + " adr on r.id = adr.reference_id " +
                 "where " +
-                "   adr.activity_data_id = " + revision.getId(), null));
+                "   adr.activity_data_id in (" + TextUtils.join(", ", revisions.keySet()) + ")", null));
         while (refCursor.moveToNext()) {
             try {
                 long refId = refCursor.getId();
                 if (!mCacheReference.containsKey(refId)) {
                     mCacheReference.put(refId, refCursor.getReference());
                 }
-                revision.getReferences().add(mCacheReference.get(refId));
+                long activityDataId = refCursor.getLong(refCursor.getColumnIndex("activity_data_id"));
+                revisions.get(activityDataId).getReferences().add(mCacheReference.get(refId));
             } catch (URISyntaxException e) {
                 logError(e, "Invalid URI");
             }
@@ -495,21 +501,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         refCursor.close();
     }
 
-    private void initActivityDataMedia(LocalActivityRevision revision) {
+    private void initActivitiesMedia(Map<Long, LocalActivityRevision> revisions) {
         MediaCursor mediaCursor = new MediaCursor(getDb().rawQuery("" +
                 "select " +
+                "   adm.activity_data_id activity_data_id," +
                 "   m.* " +
                 "from " +
                 "   " + Database.media.T + " m inner join " + Database.activity_data_media.T + " adm on m.id = adm.media_id " +
                 "where " +
-                "   adm.activity_data_id = " + revision.getId(), null));
+                "   adm.activity_data_id in (" + TextUtils.join(", ", revisions.keySet()) + ")", null));
         while (mediaCursor.moveToNext()) {
             try {
                 long mediaId = mediaCursor.getId();
                 if (!mCacheMedia.containsKey(mediaId)) {
                     mCacheMedia.put(mediaId, mediaCursor.getMedia());
                 }
-                revision.getMediaItems().add(mCacheMedia.get(mediaId));
+                long activityDataId = mediaCursor.getLong(mediaCursor.getColumnIndex("activity_data_id"));
+                revisions.get(activityDataId).getMediaItems().add(mCacheMedia.get(mediaId));
             } catch (URISyntaxException e) {
                 logError(e, "Invalid URI");
             }
@@ -517,20 +525,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         mediaCursor.close();
     }
 
-    private void initActivityDataCategories(LocalActivityRevision revision) {
+    private void initActivitiesCategories(Map<Long, LocalActivityRevision> revisions) {
         CategoryCursor catCursor = new CategoryCursor(getDb().rawQuery("" +
                 "select " +
+                "   adc.activity_data_id activity_data_id," +
                 "   c.* " +
                 "from " +
                 "   " + Database.category.T + " c inner join " + Database.activity_data_category.T + " adc on c.id = adc.category_id " +
                 "where " +
-                "   adc.activity_data_id = " + revision.getId(), null));
+                "   adc.activity_data_id in (" + TextUtils.join(", ", revisions.keySet()) + ")", null));
         while (catCursor.moveToNext()) {
             long categoryId = catCursor.getId();
             if (!mCacheCategory.containsKey(categoryId)) {
                 mCacheCategory.put(categoryId, catCursor.getCategory());
             }
-            revision.getCategories().add(mCacheCategory.get(categoryId));
+            long activityDataId = catCursor.getLong(catCursor.getColumnIndex("activity_data_id"));
+            revisions.get(activityDataId).getCategories().add(mCacheCategory.get(categoryId));
         }
         catCursor.close();
     }
