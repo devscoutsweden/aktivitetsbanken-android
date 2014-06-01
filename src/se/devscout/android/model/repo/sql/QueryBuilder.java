@@ -2,6 +2,7 @@ package se.devscout.android.model.repo.sql;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
+import se.devscout.server.api.model.ActivityKey;
 import se.devscout.server.api.model.Range;
 import se.devscout.server.api.model.UserKey;
 
@@ -69,6 +70,10 @@ public class QueryBuilder {
         mFrom.append("" +
                 "   inner join " + Database.favourite_activity.T + " fa on fa." + Database.favourite_activity.activity_id + " = a." + Database.activity.id + " and fa." + Database.favourite_activity.user_id + " = " + userKey.getId());
         return this;
+    }
+
+    public QueryBuilder addWhereActivity(ActivityKey activityKey) {
+        return addWhere("a." + Database.activity.id + " = " + activityKey.getId());
     }
 
     public QueryBuilder addWhereIsFeatured() {

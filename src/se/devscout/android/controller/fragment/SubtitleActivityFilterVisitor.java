@@ -75,4 +75,9 @@ public class SubtitleActivityFilterVisitor implements ActivityFilterVisitor {
     public String visit(TextFilter filter) {
         return filter.getCondition();
     }
+
+    @Override
+    public String visit(ActivityKeyFilter filter) {
+        return "ACT-" + filter.getActivityKey().getId();
+    }
 }

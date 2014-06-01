@@ -47,7 +47,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public Activity readActivity(ActivityKey key) {
         if (!mCacheActivity.containsKey(key.getId())) {
-            readActivities(null);
+            readActivities(new SQLKeyFilter(key));
         }
         return mCacheActivity.get(key.getId());
     }

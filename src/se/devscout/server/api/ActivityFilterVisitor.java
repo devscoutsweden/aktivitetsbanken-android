@@ -18,4 +18,6 @@ public interface ActivityFilterVisitor {
     String visit(IsFeaturedFilter filter);
 
     String visit(TextFilter filter);
+
+    String visit(ActivityKeyFilter filter);
 }

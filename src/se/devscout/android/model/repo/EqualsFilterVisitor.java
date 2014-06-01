@@ -57,4 +57,9 @@ class EqualsFilterVisitor implements ActivityFilterVisitor {
     public String visit(TextFilter filter) {
         return "text" + filter.getCondition();
     }
+
+    @Override
+    public String visit(ActivityKeyFilter filter) {
+        return "activity" + filter.getActivityKey().getId();
+    }
 }
