@@ -115,7 +115,8 @@ public class SearchFragment extends ActivityBankFragment {
 
             private void initTimeRange(se.devscout.server.api.activityfilter.AndFilter filter, ActivityFilterFactory mFilterFactory) {
                 TimeRange selectedTimeRange = (TimeRange) spinner.getSelectedItem();
-                if (selectedTimeRange != null) {
+                if (selectedTimeRange != null && selectedTimeRange.getMin() >= 0 && selectedTimeRange.getMax() < Integer.MAX_VALUE) {
+                    // A time range is selected and it is not the "any-option".
                     se.devscout.server.api.activityfilter.TimeRangeFilter filter1 = mFilterFactory.createTimeRangeFilter(selectedTimeRange);
                     filter.getFilters().add(filter1);
                 }
