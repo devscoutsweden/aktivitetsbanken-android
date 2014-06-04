@@ -43,7 +43,7 @@ public class ActivitiesViewPagerFragment extends ActivityBankFragment implements
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
         mViewPagerIndicator = (ViewPagerIndicator) view.findViewById(R.id.viewPagerIndicator);
         mViewPagerIndicator.setVisibility(mActivities.size() > 1 ? View.VISIBLE : View.GONE);
-        mViewPagerIndicator.setCount(mActivities.size() - 1);
+        mViewPagerIndicator.setCount(mActivities.size());
         mViewPager.setOnPageChangeListener(this);
         FragmentStatePagerAdapter pageAdapter = new FragmentStatePagerAdapter(getChildFragmentManager()) {
             @Override

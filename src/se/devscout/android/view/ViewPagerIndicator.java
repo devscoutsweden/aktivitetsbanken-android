@@ -11,6 +11,10 @@ import android.view.View;
 import se.devscout.android.R;
 
 public class ViewPagerIndicator extends View {
+    private static final float CRAMPED_DOTS_PADDING_FACTOR = 0.8f;
+    private static final float CRAMPED_DOTS_SCALE_FACTOR = 0.95f;
+    private static final int CRAMPED_DOTS_MIN_SIZE = 2;
+    private static final float CRAMPED_DOTS_INITIAL_SCALE_FACTOR = 1.0f;
     private final int mColor;
     private int mCount = 0;
     private int mSelectedIndex = 0;
@@ -56,27 +60,31 @@ public class ViewPagerIndicator extends View {
     }
 
     private void initDotData() {
-        int count = mCount + 1;
-        int countToTheLeft = mSelectedIndex;
-        mDotDatas = new DotData[count];
-        mDotDatas[countToTheLeft] = new DotData(1.0f);
-        for (int i = countToTheLeft - 1; i >= 0; i--) {
-            mDotDatas[i] = new DotData(mDotDatas[i + 1].radiusRatio * 0.95f);
-        }
-        for (int i = countToTheLeft + 1; i < count; i++) {
-            mDotDatas[i] = new DotData(mDotDatas[i - 1].radiusRatio * 0.95f);
-        }
+        if (mCount > mSelectedIndex && mSelectedIndex >= 0) {
+            int count = mCount;
+            int countToTheLeft = mSelectedIndex;
+            mDotDatas = new DotData[count];
+            mDotDatas[countToTheLeft] = new DotData(CRAMPED_DOTS_INITIAL_SCALE_FACTOR);
+            for (int i = countToTheLeft - 1; i >= 0; i--) {
+                mDotDatas[i] = new DotData(mDotDatas[i + 1].radiusRatio * CRAMPED_DOTS_SCALE_FACTOR);
+            }
+            for (int i = countToTheLeft + 1; i < count; i++) {
+                mDotDatas[i] = new DotData(mDotDatas[i - 1].radiusRatio * CRAMPED_DOTS_SCALE_FACTOR);
+            }
 
-        double sumRadius = 0;
-        for (int i = 0; i < mDotDatas.length; i++) {
-            sumRadius += mDotDatas[i].radiusRatio;
-        }
+            double sumRadius = 0;
+            for (int i = 0; i < mDotDatas.length; i++) {
+                sumRadius += mDotDatas[i].radiusRatio;
+            }
 
-        for (int i = 0; i < mDotDatas.length; i++) {
-            double dotWidth = mRegionWidth * (mDotDatas[i].radiusRatio / sumRadius);
-            float dotHeight = mRegionHeight * mDotDatas[i].radiusRatio;
-            mDotDatas[i].diameter = (float) Math.min(dotWidth, dotHeight);
-            mDotDatas[i].width = dotWidth;
+            for (int i = 0; i < mDotDatas.length; i++) {
+                double dotWidth = mRegionWidth * (mDotDatas[i].radiusRatio / sumRadius);
+                float dotHeight = mRegionHeight * mDotDatas[i].radiusRatio;
+                mDotDatas[i].diameter = (float) Math.max(Math.min(dotWidth, dotHeight) * CRAMPED_DOTS_PADDING_FACTOR, CRAMPED_DOTS_MIN_SIZE);
+                mDotDatas[i].width = dotWidth;
+            }
+        } else {
+            mDotDatas = null;
         }
     }
 
@@ -84,21 +92,25 @@ public class ViewPagerIndicator extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        int count = mCount + 1;
+        int count = mCount;
         int highestCountPossibleToDraw = (int) (mRegionWidth / (mMaxDiameter + mPaddingDots));
 
         if (count > highestCountPossibleToDraw) {
             float y = mDrawingArea.centerY();
             float x = mDrawingArea.left;
 
-            for (int i = 0; i < mDotDatas.length; i++) {
-                drawDot(canvas, y - (mDotDatas[i].diameter * 0.5f), x + (mDotDatas[i].diameter * 0.5f), mDotDatas[i].radiusRatio == 1.0 ? mPaintFilled : mPaintOutline, mDotDatas[i].diameter);
-                x += mDotDatas[i].width;
+            if (mDotDatas != null) {
+                for (int i = 0; i < mDotDatas.length; i++) {
+                    if (mDotDatas[i].width > CRAMPED_DOTS_MIN_SIZE) {
+                        drawDot(canvas, y - (mDotDatas[i].diameter * 0.5f), x + (mDotDatas[i].diameter * 0.5f), mDotDatas[i].radiusRatio == 1.0 ? mPaintFilled : mPaintOutline, mDotDatas[i].diameter);
+                    }
+                    x += mDotDatas[i].width;
+                }
             }
         } else {
             float x = (mDrawingArea.width() - (count * mMaxDiameter) - ((count - 1) * mPaddingDots)) / 2;
             float y = mDrawingArea.top;
-            for (int i = 0; i <= mCount; i++) {
+            for (int i = 0; i < mCount; i++) {
                 drawDot(canvas, y, x, i == mSelectedIndex ? mPaintFilled : mPaintOutline);
                 x += mMaxDiameter + mPaddingDots;
             }

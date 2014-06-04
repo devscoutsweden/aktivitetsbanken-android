@@ -8,12 +8,14 @@
 
     <se.devscout.android.view.ViewPagerIndicator
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/microTextSize"
+        android:layout_height="@dimen/iconButtonMargin"
         android:id="@+id/viewPagerIndicator"
         android:layout_weight="0"
-        android:layout_margin="@dimen/defaultMargin"
+        android:layout_margin="@dimen/iconButtonMargin"
         devscout:color="@color/basicDark"
-        devscout:paddingDots="@dimen/defaultMargin"
+        devscout:paddingDots="@dimen/microTextSize"
+        devscout:count="10"
+        devscout:selectedIndex="1"
         android:focusableInTouchMode="true" />
 
     <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
