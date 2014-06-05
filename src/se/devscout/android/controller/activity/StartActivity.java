@@ -17,7 +17,8 @@ public class StartActivity extends SingleFragmentActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);    //To change body of overridden methods use File | Settings | File Templates.
+        super.onCreate(savedInstanceState);
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
     }
 
     @Override

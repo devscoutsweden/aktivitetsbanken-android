@@ -26,7 +26,7 @@ abstract class SingleFragmentActivity<T extends Fragment> extends FragmentActivi
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private FrameLayout mContentFrame;
-    private ActionBarDrawerToggle mDrawerToggle;
+    protected ActionBarDrawerToggle mDrawerToggle;
     protected T mFragment;
     private DrawerListAdapter mDrawerListAdapter;
     private AbstractActivityBankListener mActivityBankListener;
@@ -100,6 +100,7 @@ abstract class SingleFragmentActivity<T extends Fragment> extends FragmentActivi
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerToggle.setDrawerIndicatorEnabled(false);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
@@ -178,9 +179,10 @@ abstract class SingleFragmentActivity<T extends Fragment> extends FragmentActivi
     protected boolean onPrepareOptionsPanel(View view, Menu menu) {
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
         if (drawerOpen) {
-            // Hide all actions in action bar
+            // Hide (remove) all actions in action bar. Items will be recreated when menu is invalidated the next time.
+            menu.clear();
         }
-        return super.onPrepareOptionsPanel(view, menu);    //To change body of overridden methods use File | Settings | File Templates.
+        return super.onPrepareOptionsPanel(view, menu);
     }
 
     @Override
