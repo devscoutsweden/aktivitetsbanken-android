@@ -73,7 +73,7 @@ abstract class SingleFragmentActivity<T extends Fragment> extends FragmentActivi
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                getActionBar().setTitle(mOldTitle);
+                setTitle(mOldTitle);
                 invalidateOptionsMenu();
             }
 
@@ -95,7 +95,7 @@ abstract class SingleFragmentActivity<T extends Fragment> extends FragmentActivi
 //                    mIsSearchHistoryUpdated = false;
 //                }
                 mOldTitle = getActionBar().getTitle();
-                getActionBar().setTitle(R.string.app_name);
+                setTitle(R.string.app_name);
                 invalidateOptionsMenu();
             }
         };
