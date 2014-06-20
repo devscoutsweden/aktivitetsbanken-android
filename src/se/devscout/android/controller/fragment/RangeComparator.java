@@ -1,5 +1,6 @@
 package se.devscout.android.controller.fragment;
 
+import se.devscout.android.view.ActivitiesListItem;
 import se.devscout.server.api.model.Range;
 
 import java.util.Comparator;

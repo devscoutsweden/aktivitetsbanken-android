@@ -61,9 +61,6 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
 
         initEmptyViewText(R.id.searchResultEmptyHeader, mEmptyHeaderTextId);
         initEmptyViewText(R.id.searchResultEmptyMessage, mEmptyMessageTextId);
-
-//        mList.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, isListContentHeight ? getResources().getDimensionPixelSize(android.R.dimen.thumbnail_height) * 2 /*ViewGroup.LayoutParams.WRAP_CONTENT*/ : LayoutParams.MATCH_PARENT));
-//        setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, isListContentHeight ? ViewGroup.LayoutParams.WRAP_CONTENT : LayoutParams.MATCH_PARENT));
     }
 
     private void initScrollingList(Context context) {
@@ -79,7 +76,6 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
         LayoutInflater.from(context).inflate(R.layout.search_result_widget, this, true);
 
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.searchResultList);
-//        linearLayout.setOnClickListener(this);
         mList = linearLayout;
     }
 
@@ -88,17 +84,7 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
         super.onAttachedToWindow();    //To change body of overridden methods use File | Settings | File Templates.
     }
 
-//    protected abstract List<T> doSearch();
-
     protected abstract ArrayAdapter<T> createAdapter(List<T> result);
-
-//    protected abstract T getResultObjectFromId(ObjectIdentifierPojo identifier);
-
-/*
-    public ArrayAdapter<T> getListAdapter() {
-        return (ArrayAdapter<T>) mList.getAdapter();
-    }
-*/
 
     protected void sort(Comparator<T> sorter) {
         if (mList instanceof ListView) {
@@ -138,68 +124,11 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
         emptyMessageTextView.setVisibility(View.GONE);
     }
 
-/*
-    protected void invalidateResult() {
-        mObjectIdentifiers = null;
-    }
-*/
-
-/*
-    public void refreshResultList(boolean force) {
-        if (force) {
-            invalidateResult();
-        }
-        mList.setVisibility(View.INVISIBLE);
-        mEmptyView.setVisibility(View.INVISIBLE);
-        mList.setOnItemClickListener(this);
-
-        if (mObjectIdentifiers != null) {
-            // Result exits
-            Log.d(ActivitiesListFragment.class.getName(), "Result exists. Display it.");
-            setResult(getSearchResult());
-        } else {
-            // Start search in separate thread
-            Log.d(ActivitiesListFragment.class.getName(), "Result has not been returned/cached. Starting search task in new thread.");
-
-            AsyncTask<Void, Void, List<T>> task = new AsyncTask<Void, Void, List<T>>() {
-                @Override
-                protected List<T> doInBackground(Void... voids) {
-                    Log.d(ActivitiesListFragment.class.getName(), "Start of doInBackground as part of " + NonBlockingSearchView.this.getClass().getName());
-                    List<T> list = NonBlockingSearchView.this.doSearch();
-                    Log.d(ActivitiesListFragment.class.getName(), "End of doInBackground as part of " + NonBlockingSearchView.this.getClass().getName());
-                    return list;
-                }
-
-                @Override
-                protected void onPostExecute(List<T> result) {
-                    Log.d(ActivitiesListFragment.class.getName(), "Search task has completed. " + result.size() + " were returned.");
-                    setResult(result);
-                }
-            };
-            task.execute();
-        }
-    }
-*/
-
-/*
-    protected List<T> getSearchResult() {
-        ArrayList<T> list = new ArrayList<T>();
-        for (ObjectIdentifierPojo id : mObjectIdentifiers) {
-            //TODO: Save complete Activity objects in mObjectIdentifiers instead of only the keys? Performance gain or performance loss?
-            list.add(getResultObjectFromId(id));
-        }
-        return list;
-    }
-*/
-
     protected void onSearchDone(List<T> result) {
     }
 
     public void setResult(List<T> result) {
-//        if (getActivity() != null) {
         ArrayAdapter<T> adapter = createAdapter(result);
-
-
 
         if (mList instanceof ListView) {
             mList.setVisibility(View.VISIBLE);
@@ -220,22 +149,6 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
             }
         }
 
-
-
-
-/*
-        boolean isListContentHeight = mList.getLayoutParams().height != LayoutParams.MATCH_PARENT;
-        if (isListContentHeight) {
-            int height = 0;
-            for (int i = 0; i < mList.getChildCount(); i++) {
-                height = mList.getChildAt(i).getMeasuredHeight();
-            }
-            height += (mList.getChildCount() - 1) * mList.getDividerHeight();
-            mList.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height */
-/*getResources().getDimensionPixelSize(android.R.dimen.thumbnail_height) * result.size()*//*
-));
-        }
-*/
         mResult = new ArrayList<T>(result);
 
         mProgressView.setVisibility(View.GONE);
@@ -243,22 +156,6 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
 
         onSearchDone(result);
     }
-
-/*
-    private void initObjectIdentifiers(List<T> result) {
-        ArrayList<ObjectIdentifierPojo> list = new ArrayList<ObjectIdentifierPojo>();
-        for (T key : result) {
-            list.add(new ObjectIdentifierPojo(key.getId()));
-        }
-        setObjectIdentifiers(list);
-    }
-*/
-
-/*
-    public void setObjectIdentifiers(ArrayList<ObjectIdentifierPojo> objectIdentifiers) {
-        mObjectIdentifiers = objectIdentifiers;
-    }
-*/
 
     @Override
     public Parcelable onSaveInstanceState() {
@@ -278,8 +175,6 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
             setResult(mResult);
         }
         super.onRestoreInstanceState(state);
-
-//        refreshResultList(false);
     }
 
     public abstract SearchTask createSearchTask();

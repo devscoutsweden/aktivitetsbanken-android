@@ -19,16 +19,11 @@ public class FavouriteActivitiesListFragment extends ActivitiesListFragment impl
      * No-args constructor necessary when support library restored fragment.
      */
     public FavouriteActivitiesListFragment() {
-//        this(ActivitiesListFragment.Sorter.NAME);
     }
-
-//    public FavouriteActivitiesListFragment(ActivitiesListFragment.Sorter sortOrder) {
-//        super(R.string.favouritesEmptyHeader, R.string.favouritesEmptyMessage, null, sortOrder);
-//    }
 
     @Override
     protected ActivitiesListView createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return new FavouriteActivitiesListView(getActivity(), ActivitiesListFragment.Sorter.NAME, false);
+        return new FavouriteActivitiesListView(getActivity(), ActivitiesListView.Sorter.NAME, false);
     }
 
     @Override

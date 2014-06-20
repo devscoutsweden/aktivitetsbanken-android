@@ -11,8 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.ActivitiesActivity;
-import se.devscout.android.controller.fragment.ActivitiesListFragment;
-import se.devscout.android.controller.fragment.ActivitiesListItem;
+import se.devscout.android.controller.fragment.RangeComparator;
 import se.devscout.android.model.ObjectIdentifierPojo;
 import se.devscout.android.model.SearchHistoryPropertiesPojo;
 import se.devscout.android.model.repo.SearchHistoryDataPojo;
@@ -24,25 +23,26 @@ import se.devscout.server.api.model.Range;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ActivitiesListView extends NonBlockingSearchView<ActivitiesListItem> {
-    private ActivitiesListFragment.Sorter mSortOrder;
+    private Sorter mSortOrder;
     private ActivityFilter mFilter;
 
-    public ActivitiesListView(Context context, AttributeSet attrs, int defStyle, int emptyMessageTextId, int emptyHeaderTextId, ActivityFilter filter, ActivitiesListFragment.Sorter sortOrder, boolean isListContentHeight) {
+    public ActivitiesListView(Context context, AttributeSet attrs, int defStyle, int emptyMessageTextId, int emptyHeaderTextId, ActivityFilter filter, Sorter sortOrder, boolean isListContentHeight) {
         super(context, attrs, defStyle, emptyMessageTextId, emptyHeaderTextId, isListContentHeight);
         mFilter = filter;
         mSortOrder = sortOrder;
     }
 
-    public ActivitiesListView(Context context, AttributeSet attrs, int emptyMessageTextId, int emptyHeaderTextId, ActivityFilter filter, ActivitiesListFragment.Sorter sortOrder, boolean isListContentHeight) {
+    public ActivitiesListView(Context context, AttributeSet attrs, int emptyMessageTextId, int emptyHeaderTextId, ActivityFilter filter, Sorter sortOrder, boolean isListContentHeight) {
         super(context, attrs, emptyMessageTextId, emptyHeaderTextId, isListContentHeight);
         mFilter = filter;
         mSortOrder = sortOrder;
     }
 
-    public ActivitiesListView(Context context, int emptyMessageTextId, int emptyHeaderTextId, ActivityFilter filter, ActivitiesListFragment.Sorter sortOrder, boolean isListContentHeight) {
+    public ActivitiesListView(Context context, int emptyMessageTextId, int emptyHeaderTextId, ActivityFilter filter, Sorter sortOrder, boolean isListContentHeight) {
         super(context, emptyMessageTextId, emptyHeaderTextId, isListContentHeight);
         mFilter = filter;
         mSortOrder = sortOrder;
@@ -56,46 +56,6 @@ public class ActivitiesListView extends NonBlockingSearchView<ActivitiesListItem
         }
         getContext().startActivity(ActivitiesActivity.createIntent(getContext(), keys, position));
     }
-
-/*
-    public static enum Sorter implements Comparator<Activity> {
-        NAME(new Comparator<Activity>() {
-            @Override
-            public int compare(Activity localActivity, Activity localActivity2) {
-                return ActivityUtil.getLatestActivityRevision(localActivity).getName().compareTo(ActivityUtil.getLatestActivityRevision(localActivity2).getName());
-            }
-        }),
-        PARTICIPANT_COUNT(new RangeComparator() {
-            @Override
-            protected Range<Integer> getRange(Activity activity) {
-                return activity.getParticipants();
-            }
-        }),
-        AGES(new RangeComparator() {
-            @Override
-            protected Range<Integer> getRange(Activity activity) {
-                return activity.getAges();
-            }
-        }),
-        TIME(new RangeComparator() {
-            @Override
-            protected Range<Integer> getRange(Activity activity) {
-                return activity.getTimeActivity();
-            }
-        });
-
-        private final Comparator<Activity> mComparator;
-
-        Sorter(Comparator<Activity> comparator) {
-            mComparator = comparator;
-        }
-
-        @Override
-        public int compare(Activity activity, Activity activity2) {
-            return mComparator.compare(activity, activity2);
-        }
-    }
-*/
 
     @Override
     public Parcelable onSaveInstanceState() {
@@ -111,7 +71,7 @@ public class ActivitiesListView extends NonBlockingSearchView<ActivitiesListItem
         if (state instanceof Bundle) {
             Bundle bundle = (Bundle) state;
             mFilter = (ActivityFilter) bundle.getSerializable("mFilter");
-            mSortOrder = (ActivitiesListFragment.Sorter) bundle.getSerializable("mSortOrder");
+            mSortOrder = (Sorter) bundle.getSerializable("mSortOrder");
             state = bundle.getParcelable("instanceState");
         }
         super.onRestoreInstanceState(state);
@@ -122,60 +82,63 @@ public class ActivitiesListView extends NonBlockingSearchView<ActivitiesListItem
         return new ActivitiesSearchTask();
     }
 
-/*
-    @Override
-    protected List<ActivitiesListItem> doSearch() {
-        ActivityBank activityBank = ActivityBankFactory.getInstance(getContext());
-        List<Activity> activities = (List<Activity>) activityBank.find(mFilter);
-        final SearchHistoryDataPojo searchHistoryDataPojo = new SearchHistoryDataPojo(mFilter);
-        activityBank.createSearchHistory(new SearchHistoryPropertiesPojo(null, searchHistoryDataPojo));
-        List<ActivitiesListItem> items = new ArrayList<ActivitiesListItem>();
-        for (Activity activity : activities) {
-            items.add(new ActivitiesListItem(activity));
-        }
-        return items;
-    }
-*/
-
-/*
-    public void onSearchDone(List<ActivitiesListItem> result) {
-        Log.d(ActivitiesListView.class.getName(), "Search task has completed. " + result.size() + " were returned.");
-
-        if (getContext() != null) {
-            setSortOrder(mSortOrder);
-        }
-    }
-*/
-
     @Override
     public void setResult(List<ActivitiesListItem> result) {
         if (mSortOrder != null) {
             Collections.sort(result, mSortOrder);
         }
-        super.setResult(result);    //To change body of overridden methods use File | Settings | File Templates.
+        super.setResult(result);
     }
 
-    public void setSortOrder(ActivitiesListFragment.Sorter sortOrder) {
+    public void setSortOrder(Sorter sortOrder) {
         mSortOrder = sortOrder;
         if (mSortOrder != null) {
             sort(mSortOrder);
         }
     }
 
-    public ActivitiesListFragment.Sorter getSortOrder() {
-        return mSortOrder;
-    }
-
     protected ArrayAdapter<ActivitiesListItem> createAdapter(List<ActivitiesListItem> result) {
         return new ActivitiesListAdapter(getContext(), result, LayoutInflater.from(getContext()));
     }
 
-/*
-    @Override
-    protected Activity getResultObjectFromId(ObjectIdentifierPojo identifier) {
-        return ActivityBankFactory.getInstance(getContext()).readFull(identifier);
+    public static enum Sorter implements Comparator<ActivitiesListItem> {
+        NAME(new Comparator<ActivitiesListItem>() {
+            @Override
+            public int compare(ActivitiesListItem localActivity, ActivitiesListItem localActivity2) {
+                return localActivity.getName().compareTo(localActivity2.getName());
+            }
+        }),
+        PARTICIPANT_COUNT(new RangeComparator() {
+            @Override
+            protected Range<Integer> getRange(ActivitiesListItem activity) {
+                return activity.getParticipants();
+            }
+        }),
+        AGES(new RangeComparator() {
+            @Override
+            protected Range<Integer> getRange(ActivitiesListItem activity) {
+                return activity.getAges();
+            }
+        }),
+        TIME(new RangeComparator() {
+            @Override
+            protected Range<Integer> getRange(ActivitiesListItem activity) {
+                return activity.getTimeActivity();
+            }
+        });
+
+        private final Comparator<ActivitiesListItem> mComparator;
+
+        Sorter(Comparator<ActivitiesListItem> comparator) {
+            mComparator = comparator;
+        }
+        @Override
+        public int compare(ActivitiesListItem activity, ActivitiesListItem activity2) {
+            return mComparator.compare(activity, activity2);
+        }
+
     }
-*/
+
 
     private static class ActivitiesListAdapter extends ArrayAdapter<ActivitiesListItem> {
         private LayoutInflater layoutInflater;

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import se.devscout.android.view.SearchHistoryListItem;
 import se.devscout.android.view.SearchHistoryListView;
 import se.devscout.server.api.ActivityBankListener;
 import se.devscout.server.api.model.ActivityKey;
@@ -21,23 +22,6 @@ public class SearchHistoryListFragment extends QuickSearchListFragment<SearchHis
         super((List<SearchHistoryListItem>)null);
     }
 
-/*
-    @Override
-    protected List<E> doSearch() {
-        ActivityBank activityBank = ActivityBankFactory.getInstance(getActivity());
-        mItems = ((List<E>) activityBank.readSearchHistory(0));
-        return mItems;
-    }
-
-    @Override
-    protected E getResultObjectFromId(ObjectIdentifierPojo identifier) {
-        if (mItems == null) {
-            doSearch();
-        }
-        return super.getResultObjectFromId(identifier);    //To change body of overridden methods use File | Settings | File Templates.
-    }
-*/
-
     @Override
     protected SearchHistoryListView createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return new SearchHistoryListView(getActivity(), 0, 0, false);
@@ -49,38 +33,6 @@ public class SearchHistoryListFragment extends QuickSearchListFragment<SearchHis
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
-
-/*
-    @Override
-    protected void refreshResultList(boolean force) {
-        super.refreshResultList(true);
-    }
-
-    @Override
-    protected int getImageResId(E item) {
-        return R.drawable.ic_action_search;
-    }
-
-    @Override
-    protected String getTitle(E option) {
-        return option.getData().getFilter().toString(new TitleActivityFilterVisitor(getActivity()));
-    }
-
-    @Override
-    protected String getSubtitle(E option) {
-        return option.getData().getFilter().toString(new SubtitleActivityFilterVisitor(getActivity()));
-    }
-
-    @Override
-    protected ActivityFilter createFilter(E option) {
-        return option.getData().getFilter();
-    }
-
-    @Override
-    protected String getSearchResultTitle(E option) {
-        return option.getData().getFilter().toString(new TitleActivityFilterVisitor(getActivity()));
-    }
-*/
 
     public static SearchHistoryListFragment create() {
         return new SearchHistoryListFragment();

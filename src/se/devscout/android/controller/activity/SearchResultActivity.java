@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.ActivitiesListFragment;
 import se.devscout.android.model.ObjectIdentifierPojo;
+import se.devscout.android.view.ActivitiesListView;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.model.ActivityKey;
 
@@ -22,20 +23,20 @@ public class SearchResultActivity extends SingleFragmentActivity<ActivitiesListF
     private static final String INTENT_EXTRA_FILTER = "filter";
     private static final String TITLE_RES_ID = "title";
 
-    private Map<Integer, ActivitiesListFragment.Sorter> mListSorters = new LinkedHashMap<Integer, ActivitiesListFragment.Sorter>();
+    private Map<Integer, ActivitiesListView.Sorter> mListSorters = new LinkedHashMap<Integer, ActivitiesListView.Sorter>();
 
     public SearchResultActivity() {
-        mListSorters.put(R.id.activitiesListMenuSortByName, ActivitiesListFragment.Sorter.NAME);
-        mListSorters.put(R.id.activitiesListMenuSortByParticipants, ActivitiesListFragment.Sorter.PARTICIPANT_COUNT);
-        mListSorters.put(R.id.activitiesListMenuSortByTime, ActivitiesListFragment.Sorter.TIME);
-        mListSorters.put(R.id.activitiesListMenuSortByAges, ActivitiesListFragment.Sorter.AGES);
+        mListSorters.put(R.id.activitiesListMenuSortByName, ActivitiesListView.Sorter.NAME);
+        mListSorters.put(R.id.activitiesListMenuSortByParticipants, ActivitiesListView.Sorter.PARTICIPANT_COUNT);
+        mListSorters.put(R.id.activitiesListMenuSortByTime, ActivitiesListView.Sorter.TIME);
+        mListSorters.put(R.id.activitiesListMenuSortByAges, ActivitiesListView.Sorter.AGES);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         boolean result = super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.activities_list, menu);
-        for (Map.Entry<Integer, ActivitiesListFragment.Sorter> entry : mListSorters.entrySet()) {
+        for (Map.Entry<Integer, ActivitiesListView.Sorter> entry : mListSorters.entrySet()) {
             if (entry.getValue() == mFragment.getSortOrder()) {
                 menu.findItem(entry.getKey()).setChecked(true);
                 break;
@@ -60,11 +61,11 @@ public class SearchResultActivity extends SingleFragmentActivity<ActivitiesListF
             for (ActivityKey key : keys) {
                 activities.add(getActivityBank().readFull(key));
             }
-            return ActivitiesListFragment.create(activities, ActivitiesListFragment.Sorter.NAME);
+            return ActivitiesListFragment.create(activities, ActivitiesListView.Sorter.NAME);
         } else {
             ActivityFilter filter = (ActivityFilter) getIntent().getSerializableExtra(INTENT_EXTRA_FILTER);
             if (filter != null) {
-                return ActivitiesListFragment.create(filter, ActivitiesListFragment.Sorter.NAME);
+                return ActivitiesListFragment.create(filter, ActivitiesListView.Sorter.NAME);
             }
             throw new IllegalArgumentException("Neither activities nor filter specified when starting activity.");
         }

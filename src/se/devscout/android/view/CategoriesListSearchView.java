@@ -34,19 +34,6 @@ public class CategoriesListSearchView extends QuickSearchListView<CategoryListIt
     public SearchTask createSearchTask() {
         return new MySearchTask();
     }
-/*
-    @Override
-    protected List<Category> doSearch() {
-        return (List<Category>) ActivityBankFactory.getInstance(getContext()).readCategories();
-    }
-*/
-
-/*
-    @Override
-    protected Category getResultObjectFromId(ObjectIdentifierPojo identifier) {
-        return ActivityBankFactory.getInstance(getContext()).readCategoryFull(identifier);
-    }
-*/
 
     @Override
     protected int getImageResId(CategoryListItem item) {

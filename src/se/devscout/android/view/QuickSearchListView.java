@@ -33,12 +33,6 @@ public abstract class QuickSearchListView<T extends Serializable> extends NonBlo
 
     protected List<T> mItems;
 
-/*
-    protected QuickSearchListView(T[] items) {
-        this(Arrays.asList(items));
-    }
-*/
-
     @Override
     public SearchTask createSearchTask() {
         return new MySearchTask();
@@ -67,17 +61,6 @@ public abstract class QuickSearchListView<T extends Serializable> extends NonBlo
             }
         };
     }
-
-/*
-    protected T getResultObjectFromId(ObjectIdentifierPojo identifier) {
-        for (T item : mItems) {
-            if (identifier.getId() == item.getId()) {
-                return item;
-            }
-        }
-        return null;
-    }
-*/
 
     @Override
     public void onItemClick(View view, final int position) {

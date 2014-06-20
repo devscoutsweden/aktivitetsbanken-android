@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
+import se.devscout.android.view.ActivitiesListItem;
 
 import java.util.List;
 

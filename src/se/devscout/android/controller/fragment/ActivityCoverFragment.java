@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import se.devscout.android.R;
 import se.devscout.android.util.ResourceUtil;
+import se.devscout.android.view.ActivitiesListItem;
 
 import java.net.URI;
 

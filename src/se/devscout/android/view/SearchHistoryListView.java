@@ -3,7 +3,6 @@ package se.devscout.android.view;
 import android.content.Context;
 import android.util.AttributeSet;
 import se.devscout.android.R;
-import se.devscout.android.controller.fragment.SearchHistoryListItem;
 import se.devscout.android.controller.fragment.SubtitleActivityFilterVisitor;
 import se.devscout.android.controller.fragment.TitleActivityFilterVisitor;
 import se.devscout.android.util.ActivityBankFactory;
@@ -38,32 +37,6 @@ public class SearchHistoryListView extends QuickSearchListView<SearchHistoryList
     public SearchTask createSearchTask() {
         return new SearchHistorySearchTask();
     }
-
-/*
-    @Override
-    protected List<SearchHistoryListItem> doSearch() {
-        ActivityBank activityBank = ActivityBankFactory.getInstance(getContext());
-        mItems = ((List<E>) activityBank.readSearchHistory(0));
-        return mItems;
-    }
-*/
-
-/*
-    @Override
-    protected E getResultObjectFromId(ObjectIdentifierPojo identifier) {
-        if (mItems == null) {
-            doSearch();
-        }
-        return super.getResultObjectFromId(identifier);    //To change body of overridden methods use File | Settings | File Templates.
-    }
-*/
-
-/*
-    @Override
-    public void refreshResultList(boolean force) {
-        super.refreshResultList(true);
-    }
-*/
 
     @Override
     protected int getImageResId(SearchHistoryListItem item) {

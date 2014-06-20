@@ -1,4 +1,4 @@
-package se.devscout.android.controller.fragment;
+package se.devscout.android.view;
 
 import se.devscout.android.util.ActivityUtil;
 import se.devscout.server.api.model.Activity;
