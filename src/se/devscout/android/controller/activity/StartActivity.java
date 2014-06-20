@@ -6,13 +6,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import se.devscout.android.R;
-import se.devscout.android.controller.fragment.StartTabsFragment;
+import se.devscout.android.controller.fragment.StartWidgetFragment;
 import se.devscout.android.model.repo.sql.SQLiteActivityRepo;
 
 public class StartActivity extends SingleFragmentActivity {
     @Override
     protected Fragment createFragment() {
-        return new StartTabsFragment();
+        return StartWidgetFragment.create(
+        );
     }
 
     @Override
@@ -28,7 +29,7 @@ public class StartActivity extends SingleFragmentActivity {
             SQLiteActivityRepo.getInstance(this).resetDatabase(true);
             Log.i(StartActivity.class.getName(), "Database has been reset.");
         }
-        return super.onMenuItemSelected(featureId, item);    //To change body of overridden methods use File | Settings | File Templates.
+        return super.onMenuItemSelected(featureId, item);
     }
 
     @Override
@@ -37,4 +38,5 @@ public class StartActivity extends SingleFragmentActivity {
         getMenuInflater().inflate(R.menu.start_options, menu);
         return b;
     }
+
 }

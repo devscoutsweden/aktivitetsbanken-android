@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/card_background"
+    android:id="@+id/start_widget">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout1"
+        android:longClickable="false"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView"
+            android:src="@drawable/ic_action_overflow"
+            style="@style/ImageOverlay_ImageButton"
+            android:focusable="false" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/uiBlockSize"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:id="@+id/linearLayout"
+        android:layout_toLeftOf="@+id/linearLayout1"
+        android:padding="@dimen/iconButtonMargin">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="New Text"
+            android:id="@+id/textView"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/largeTextSize" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentRight="true"
+        android:id="@+id/start_widget_container"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/linearLayout"
+        android:orientation="vertical"></LinearLayout>
+
+</RelativeLayout>
