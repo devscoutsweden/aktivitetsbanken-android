@@ -110,12 +110,13 @@ public class SQLiteActivityRepo implements ActivityBank {
     @Override
     public void setFavourite(ActivityKey activityKey, UserKey userKey) {
         mDatabaseHelper.setFavourite(activityKey, mAnonymousUserKey);
-        fireFavouriteChange(activityKey, userKey);
+        fireFavouriteChange(activityKey, userKey, true);
     }
 
     @Override
     public void unsetFavourite(ActivityKey activityKey, UserKey userKey) {
         mDatabaseHelper.unsetFavourite(activityKey, mAnonymousUserKey);
+        fireFavouriteChange(activityKey, userKey, false);
     }
 
     @Override
@@ -161,9 +162,9 @@ public class SQLiteActivityRepo implements ActivityBank {
         }
     }
 
-    private void fireFavouriteChange(ActivityKey activityKey, UserKey userKey) {
+    private void fireFavouriteChange(ActivityKey activityKey, UserKey userKey, boolean isFavouriteNow) {
         for (ActivityBankListener listener : mListeners) {
-            listener.onFavouriteChange(activityKey, userKey);
+            listener.onFavouriteChange(activityKey, userKey, isFavouriteNow);
         }
     }
 
