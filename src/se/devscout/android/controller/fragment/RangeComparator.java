@@ -1,19 +1,18 @@
 package se.devscout.android.controller.fragment;
 
-import se.devscout.server.api.model.Activity;
 import se.devscout.server.api.model.Range;
 
 import java.util.Comparator;
 
-public abstract class RangeComparator implements Comparator<Activity> {
+public abstract class RangeComparator implements Comparator<ActivitiesListItem> {
     @Override
-    public int compare(Activity localActivity, Activity localActivity2) {
+    public int compare(ActivitiesListItem localActivity, ActivitiesListItem localActivity2) {
         Range<Integer> participants = getRange(localActivity);
         Range<Integer> participants2 = getRange(localActivity2);
         return compareRange(participants, participants2);
     }
 
-    protected abstract Range<Integer> getRange(Activity activity);
+    protected abstract Range<Integer> getRange(ActivitiesListItem activity);
 
     private int compareRange(Range<Integer> range, Range<Integer> range2) {
         if (range != null && range2 != null) {

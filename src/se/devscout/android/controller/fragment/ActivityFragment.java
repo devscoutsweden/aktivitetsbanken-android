@@ -1,5 +1,6 @@
 package se.devscout.android.controller.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -40,21 +41,23 @@ public class ActivityFragment extends ActivityBankFragment {
              */
             mActivityKey = (ObjectIdentifierPojo) savedInstanceState.getSerializable("mActivityKey");
         }
+        return createView(inflater, container, getActivityBank().read(mActivityKey), getActivity());
+    }
+
+    public static View createView(LayoutInflater inflater, ViewGroup container, ActivityProperties activityProperties, Context context) {
         View view = inflater.inflate(R.layout.activity, container, false);
         SimpleDocumentLayout linearLayout = (SimpleDocumentLayout) view.findViewById(R.id.activityDocument);
 
-        ActivityProperties properties = getActivityBank().read(mActivityKey);
-
-        ActivityRevision revision = ActivityUtil.getLatestActivityRevision(properties);
+        ActivityRevision revision = ActivityUtil.getLatestActivityRevision(activityProperties);
 
         String ages = revision.getAges().toString();
         String participantCount = revision.getParticipants().toString();
         if (ages.length() > 0 && participantCount.length() > 0) {
-            ((TextView) view.findViewById(R.id.activityFactAgeAndParticipants)).setText(getString(R.string.activityFactAgeAndParticipants, ages, participantCount));
+            ((TextView) view.findViewById(R.id.activityFactAgeAndParticipants)).setText(context.getString(R.string.activityFactAgeAndParticipants, ages, participantCount));
         } else if (participantCount.length() > 0) {
-            ((TextView) view.findViewById(R.id.activityFactAgeAndParticipants)).setText(getString(R.string.activityFactParticipants, participantCount));
+            ((TextView) view.findViewById(R.id.activityFactAgeAndParticipants)).setText(context.getString(R.string.activityFactParticipants, participantCount));
         } else if (ages.length() > 0) {
-            ((TextView) view.findViewById(R.id.activityFactAgeAndParticipants)).setText(getString(R.string.activityFactAge, ages));
+            ((TextView) view.findViewById(R.id.activityFactAgeAndParticipants)).setText(context.getString(R.string.activityFactAge, ages));
         }
         boolean isAgeAndParticipantsSet = ages.length() > 0 || participantCount.length() > 0;
         ((TextView)view.findViewById(R.id.activityFactAgeAndParticipants)).setVisibility(isAgeAndParticipantsSet ? View.VISIBLE : View.GONE);
@@ -63,7 +66,7 @@ public class ActivityFragment extends ActivityBankFragment {
         String time = revision.getTimeActivity().toString();
         boolean isTimeSet = time.length() > 0;
         if (isTimeSet) {
-            ((TextView) view.findViewById(R.id.activityFactTime)).setText(getString(R.string.activitiesListItemTime, time));
+            ((TextView) view.findViewById(R.id.activityFactTime)).setText(context.getString(R.string.activitiesListItemTime, time));
         }
         ((TextView)view.findViewById(R.id.activityFactTime)).setVisibility(isTimeSet ? View.VISIBLE : View.GONE);
 
@@ -74,7 +77,7 @@ public class ActivityFragment extends ActivityBankFragment {
         }
         ((TextView)view.findViewById(R.id.activityFactCategories)).setVisibility(isCategoriesSet ? View.VISIBLE : View.GONE);
 
-        ResourceUtil resourceUtil = new ResourceUtil(getActivity());
+        ResourceUtil resourceUtil = new ResourceUtil(context);
 
         if (revision.getCoverMedia() != null) {
             ImageView activityCoverImage = (ImageView) view.findViewById(R.id.activityCoverImage);

@@ -1,21 +1,12 @@
 package se.devscout.android.controller.fragment;
 
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
-import se.devscout.android.R;
-import se.devscout.android.controller.activity.SearchResultActivity;
-import se.devscout.android.model.ObjectIdentifierPojo;
-import se.devscout.server.api.ActivityFilter;
-import se.devscout.server.api.model.ObjectIdentifier;
+import se.devscout.android.view.NonBlockingSearchView;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
-abstract class QuickSearchListFragment<T extends ObjectIdentifier> extends NonBlockingSearchResultFragment<T> {
+abstract class QuickSearchListFragment<T extends Serializable, V extends NonBlockingSearchView<T>> extends NonBlockingSearchResultFragment<T, V> {
 
     protected List<T> mItems;
 
@@ -31,6 +22,7 @@ abstract class QuickSearchListFragment<T extends ObjectIdentifier> extends NonBl
         return mItems;
     }
 
+/*
     protected ArrayAdapter<T> createAdapter(final List<T> result) {
         return new ArrayAdapter<T>(getActivity(), android.R.layout.simple_list_item_1, result) {
             @Override
@@ -54,7 +46,9 @@ abstract class QuickSearchListFragment<T extends ObjectIdentifier> extends NonBl
             }
         };
     }
+*/
 
+/*
     protected T getResultObjectFromId(ObjectIdentifierPojo identifier) {
         for (T item : mItems) {
             if (identifier.getId() == item.getId()) {
@@ -63,21 +57,24 @@ abstract class QuickSearchListFragment<T extends ObjectIdentifier> extends NonBl
         }
         return null;
     }
+*/
 
+/*
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, final int position, long id) {
         T item = getListAdapter().getItem(position);
         startActivity(SearchResultActivity.createIntent(getActivity(), createFilter(item), getSearchResultTitle(item)));
     }
+*/
 
-    protected abstract int getImageResId(T item);
+//    protected abstract int getImageResId(T item);
 
-    protected abstract String getTitle(T option);
+//    protected abstract String getTitle(T option);
 
-    protected abstract String getSubtitle(T option);
+//    protected abstract String getSubtitle(T option);
 
-    protected abstract ActivityFilter createFilter(T option);
+//    protected abstract ActivityFilter createFilter(T option);
 
-    protected abstract String getSearchResultTitle(T option);
+//    protected abstract String getSearchResultTitle(T option);
 
 }

@@ -1,11 +1,7 @@
 package se.devscout.android.controller.fragment;
 
-import android.widget.ArrayAdapter;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.activityfilter.IsFeaturedFilter;
-import se.devscout.server.api.model.Activity;
-
-import java.util.List;
 
 public class FeaturedActivitiesListFragment extends ActivitiesListFragment {
 
@@ -20,10 +16,12 @@ public class FeaturedActivitiesListFragment extends ActivitiesListFragment {
         super(featuredFilter, sortOrder);
     }
 
+/*
     @Override
     protected ArrayAdapter<Activity> createAdapter(final List<Activity> result) {
         return new FeaturedActivitiesArrayAdapter(getActivity(), result);
     }
+*/
 
     public static FeaturedActivitiesListFragment create(Sorter defaultSortOrder, ActivityBank activityBank) {
         return new FeaturedActivitiesListFragment(defaultSortOrder, activityBank.getFilterFactory().createIsFeaturedFilter());

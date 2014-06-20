@@ -1,31 +1,42 @@
 package se.devscout.android.controller.fragment;
 
-import android.util.Log;
-import se.devscout.android.R;
-import se.devscout.android.model.ObjectIdentifierPojo;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import se.devscout.android.util.ActivityBankFactory;
-import se.devscout.android.util.SimpleCategoryFilter;
-import se.devscout.server.api.ActivityFilter;
+import se.devscout.android.view.CategoriesListSearchView;
 import se.devscout.server.api.model.Category;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class CategoriesListFragment extends QuickSearchListFragment<Category> {
+public class CategoriesListFragment extends QuickSearchListFragment<CategoryListItem, CategoriesListSearchView> {
 
     private static final Pattern NOT_A_Z = Pattern.compile("[^a-z_]");
 
     public CategoriesListFragment() {
         // Send empty list to superclass. This does not matter since doSearch() is overridden.
-        super(Collections.<Category>emptyList());
+        super(Collections.<CategoryListItem>emptyList());
     }
 
     @Override
-    protected List<Category> doSearch() {
-        return (List<Category>) ActivityBankFactory.getInstance(getActivity()).readCategories();
+    protected List<CategoryListItem> doSearch() {
+        List<? extends Category> categories = ActivityBankFactory.getInstance(getActivity()).readCategories();
+        List<CategoryListItem> result = new ArrayList<CategoryListItem>();
+        for (Category category : categories) {
+            result.add(new CategoryListItem(category));
+        }
+        return result;
     }
 
+    @Override
+    protected CategoriesListSearchView createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return new CategoriesListSearchView(getActivity(), 0, 0, false);
+    }
+
+/*
     @Override
     protected Category getResultObjectFromId(ObjectIdentifierPojo identifier) {
         return ActivityBankFactory.getInstance(getActivity()).readCategoryFull(identifier);
@@ -77,6 +88,7 @@ public class CategoriesListFragment extends QuickSearchListFragment<Category> {
     protected String getSearchResultTitle(Category option) {
         return getString(R.string.searchResultTitleCategoryTrack, option.getName());
     }
+*/
 
     public static CategoriesListFragment create() {
         CategoriesListFragment fragment = new CategoriesListFragment();

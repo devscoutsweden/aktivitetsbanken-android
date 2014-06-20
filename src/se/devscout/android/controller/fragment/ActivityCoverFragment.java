@@ -9,26 +9,24 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import se.devscout.android.R;
-import se.devscout.android.util.ActivityUtil;
 import se.devscout.android.util.ResourceUtil;
-import se.devscout.server.api.model.Activity;
-import se.devscout.server.api.model.ActivityRevision;
-import se.devscout.server.api.model.Media;
+
+import java.net.URI;
 
 public class ActivityCoverFragment extends ActivityBankFragment implements View.OnClickListener {
 
     public static interface OnClickListener {
 
-        void onImageClick(View view, Activity localActivity, Context ctx);
+        void onImageClick(View view, ActivitiesListItem localActivity, Context ctx);
     }
 
-    private Activity mActivity;
+    private ActivitiesListItem mActivity;
 
     private OnClickListener mOnClickListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = initListItemView(inflater, container, null, ActivityUtil.getLatestActivityRevision(mActivity));
+        View view = initListItemView(inflater, container, null, mActivity);
 
         if (mOnClickListener != null) {
             view.setOnClickListener(this);
@@ -37,16 +35,16 @@ public class ActivityCoverFragment extends ActivityBankFragment implements View.
         return view;
     }
 
-    public static View initListItemView(LayoutInflater inflater, final ViewGroup container, View view, ActivityRevision activityRevision) {
+    public static View initListItemView(LayoutInflater inflater, final ViewGroup container, View view, ActivitiesListItem activityRevision) {
         if (view == null) {
             view = inflater.inflate(R.layout.activity_cover, container, false);
         }
 
-        Media coverMedia = activityRevision.getCoverMedia();
+        URI coverMedia = activityRevision.getCoverMedia();
         if (coverMedia != null) {
             final ImageView imageView = (ImageView) view.findViewById(R.id.activityCoverImage);
-            imageView.setImageResource(new ResourceUtil(container.getContext()).toResourceId(coverMedia.getURI()));
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setImageResource(new ResourceUtil(container.getContext()).toResourceId(coverMedia));
+                    imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
 
         final ImageView favIcon = (ImageView) view.findViewById(R.id.activityCoverFavoriteIcon);
@@ -80,7 +78,7 @@ public class ActivityCoverFragment extends ActivityBankFragment implements View.
         }
     }
 
-    public static ActivityCoverFragment create(Activity properties, OnClickListener onClickListener) {
+    public static ActivityCoverFragment create(ActivitiesListItem properties, OnClickListener onClickListener) {
         ActivityCoverFragment fragment = new ActivityCoverFragment();
         fragment.mActivity = properties;
         fragment.mOnClickListener = onClickListener;
