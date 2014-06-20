@@ -4,7 +4,7 @@ import se.devscout.android.util.PrimitiveActivityFilterFactory;
 import se.devscout.android.util.SimpleAgeRangeFilter;
 import se.devscout.android.util.SimpleIsFeaturedFilter;
 import se.devscout.android.util.SimpleTextFilter;
-import se.devscout.server.api.ActivityFilterFactoryException;
+import se.devscout.server.api.RandomActivitiesFilter;
 import se.devscout.server.api.activityfilter.IsUserFavouriteFilter;
 import se.devscout.server.api.model.Range;
 import se.devscout.server.api.model.UserKey;
@@ -17,7 +17,7 @@ class SQLActivityFilterFactory extends PrimitiveActivityFilterFactory {
     }
 
     @Override
-    public IsUserFavouriteFilter createIsUserFavouriteFilter(UserKey userKey) throws ActivityFilterFactoryException {
+    public IsUserFavouriteFilter createIsUserFavouriteFilter(UserKey userKey) {
         return new SQLIsUserFavouriteFilter(mAnonymousUserKey);
     }
 
@@ -34,5 +34,10 @@ class SQLActivityFilterFactory extends PrimitiveActivityFilterFactory {
     @Override
     public SimpleAgeRangeFilter createAgeRangeFilter(Range<Integer> range) {
         return new SQLAgeRangeFilter(range);
+    }
+
+    @Override
+    public RandomActivitiesFilter createRandomActivitiesFilter(int numberOfActivities) {
+        return new SQLRandomActivitiesFilter(numberOfActivities);
     }
 }

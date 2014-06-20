@@ -116,6 +116,7 @@
     <string name="title_filter_visitor_featured">utvalda</string>
     <string name="title_filter_visitor_and">,\u0020</string>
     <string name="title_filter_visitor_or">,\u0020</string>
+    <string name="title_filter_visitor_random">%d slumpade</string>
     <string name="subtitle_filter_visitor_age_range">för %1$d-%2$d år</string>
     <string name="subtitle_filter_visitor_age_younger">för &lt;%1$d år</string>
     <string name="subtitle_filter_visitor_age_older">för &gt;%1$d år</string>
@@ -127,4 +128,6 @@
     <string name="subtitle_filter_visitor_featured">är utvalda</string>
     <string name="subtitle_filter_visitor_and">\u0020och\u0020</string>
     <string name="subtitle_filter_visitor_or">\u0020eller\u0020</string>
+    <string name="subtitle_filter_visitor_random">%d slumpade</string>
+    <string name="startTabSpontaneousActivity">Spontanaktivitet</string>
 </resources>

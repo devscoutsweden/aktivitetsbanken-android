@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/spontaneousContainer">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Slumpa aktivitet genom att välja åldersgrupp:"
+        android:id="@+id/textView" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/searchAgeTrackerLogo"
+            android:src="@drawable/logo_tracker_black"
+            style="@style/ImageButton" />
+
+        <ImageView
+            android:id="@+id/searchAgeDiscovererLogo"
+            android:src="@drawable/logo_discoverer_black"
+            style="@style/ImageButton" />
+
+        <ImageView
+            android:id="@+id/searchAgeAdventurerLogo"
+            android:src="@drawable/logo_adventurer_black"
+            style="@style/ImageButton" />
+
+        <ImageView
+            android:id="@+id/searchAgeChallengerLogo"
+            android:src="@drawable/logo_challenger_black"
+            style="@style/ImageButton" />
+
+        <ImageView
+            android:id="@+id/searchAgeRoverLogo"
+            android:src="@drawable/logo_rover_black"
+            style="@style/ImageButton" />
+
+    </LinearLayout>
+
+</LinearLayout>

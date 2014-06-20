@@ -3,7 +3,7 @@ package se.devscout.android.util;
 import se.devscout.android.model.CategoryPropertiesPojo;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.ActivityFilterFactory;
-import se.devscout.server.api.ActivityFilterFactoryException;
+import se.devscout.server.api.RandomActivitiesFilter;
 import se.devscout.server.api.activityfilter.IsUserFavouriteFilter;
 import se.devscout.server.api.model.Range;
 import se.devscout.server.api.model.UserKey;
@@ -60,8 +60,13 @@ public class PrimitiveActivityFilterFactory implements ActivityFilterFactory {
     }
 
     @Override
-    public IsUserFavouriteFilter createIsUserFavouriteFilter(UserKey userKey) throws ActivityFilterFactoryException {
-        throw new ActivityFilterFactoryException("Searching for favourites is not implemented.");
+    public IsUserFavouriteFilter createIsUserFavouriteFilter(UserKey userKey) {
+        throw new UnsupportedOperationException("Searching for favourites is not implemented.");
+    }
+
+    @Override
+    public RandomActivitiesFilter createRandomActivitiesFilter(int numberOfActivities) {
+        throw new UnsupportedOperationException("Returing random activities is not implemented.");
     }
 
 }

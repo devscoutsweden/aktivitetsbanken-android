@@ -7,13 +7,17 @@ import se.devscout.server.api.model.Range;
 import se.devscout.server.api.model.UserKey;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class QueryBuilder {
     private List<String> mWhere = new ArrayList<String>();
     private List<String> mWhereConditions = new ArrayList<String>();
     private List<String> mSelect = new ArrayList<String>();
+    private List<String> mOrderBy = new ArrayList<String>();
     private StringBuilder mFrom = new StringBuilder();
+    private int mLimitResultLength = 0;
 
     public QueryBuilder() {
         mSelect.add("a." + Database.activity.owner_id);
@@ -41,6 +45,7 @@ public class QueryBuilder {
         mFrom.append("   " + Database.activity.T + " a " +
                 "   inner join " + Database.activity_data.T + " admax on a." + Database.activity.id + " = admax." + Database.activity_data.activity_id + " " +
                 "   inner join " + Database.activity_data.T + " ad on a." + Database.activity.id + " = ad." + Database.activity_data.activity_id + " ");
+        mOrderBy = Arrays.asList("a." + Database.activity.id, "ad." + Database.activity_data.id);
     }
 
     public ActivityDataCursor query(SQLiteDatabase db) {
@@ -60,9 +65,10 @@ public class QueryBuilder {
                 "   ad." + Database.activity_data.id + " " +
                 " having " +
                 "   ad." + Database.activity_data.id + " = max(admax." + Database.activity_data.id + ") " +
-                " order by " +
-                "   a." + Database.activity.id + ", " +
-                "   ad." + Database.activity_data.id);
+                " order by " + TextUtils.join(", ", mOrderBy));
+        if (mLimitResultLength > 0) {
+            sb.append(" limit " + mLimitResultLength);
+        }
         return new ActivityDataCursor(db.rawQuery(sb.toString(), mWhereConditions.toArray(new String[mWhereConditions.size()])));
     }
 
@@ -104,5 +110,10 @@ public class QueryBuilder {
             mWhereConditions.add(param);
         }
         return this;
+    }
+
+    public void addRandomlySelectedRows(int numberOfActivities) {
+        mOrderBy = Collections.singletonList("RANDOM()");
+        mLimitResultLength = numberOfActivities;
     }
 }

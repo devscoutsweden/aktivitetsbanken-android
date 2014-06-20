@@ -9,6 +9,13 @@
         <item name="android:textColor">#f000</item>
     </style>
 
+    <style name="ImageButton">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:layout_width">@dimen/uiBlockSize</item>
+        <item name="android:layout_height">@dimen/uiBlockSize</item>
+        <item name="android:padding">@dimen/iconButtonMargin</item>
+    </style>
+
     <style name="ImageOverlay_ImageButton" parent="ImageOverlay">
         <item name="android:layout_width">@dimen/uiBlockSize</item>
         <item name="android:layout_height">@dimen/uiBlockSize</item>

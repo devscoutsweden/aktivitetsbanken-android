@@ -1,5 +1,6 @@
 package se.devscout.android.model.repo;
 
+import se.devscout.android.model.repo.sql.SQLRandomActivitiesFilter;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.ActivityFilterVisitor;
 import se.devscout.server.api.activityfilter.*;
@@ -61,5 +62,10 @@ class EqualsFilterVisitor implements ActivityFilterVisitor {
     @Override
     public String visit(ActivityKeyFilter filter) {
         return "activity" + filter.getActivityKey().getId();
+    }
+
+    @Override
+    public String visit(SQLRandomActivitiesFilter filter) {
+        return "random" + filter.getNumberOfActivities();
     }
 }

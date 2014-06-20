@@ -20,5 +20,7 @@ public interface ActivityFilterFactory {
 
     IsFeaturedFilter createIsFeaturedFilter();
 
-    IsUserFavouriteFilter createIsUserFavouriteFilter(UserKey userKey) throws ActivityFilterFactoryException;
+    IsUserFavouriteFilter createIsUserFavouriteFilter(UserKey userKey);
+
+    RandomActivitiesFilter createRandomActivitiesFilter(int numberOfActivities);
 }
