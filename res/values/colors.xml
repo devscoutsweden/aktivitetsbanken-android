@@ -11,5 +11,5 @@
     <color name="basicVeryLight">#ffffffff</color>
     <color name="basicLight">#ffe9e9e9</color>
     <color name="basicDark">#ff777777</color>
-    <color name="basicVeryDark">#ff555555</color>
+    <color name="basicVeryDark">#ff333333</color>
 </resources>

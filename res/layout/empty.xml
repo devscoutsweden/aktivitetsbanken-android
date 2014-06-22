@@ -4,6 +4,7 @@
     android:id="@+id/emptyContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/iconButtonMargin">
+    android:padding="@dimen/iconButtonMargin"
+    android:background="@drawable/card_background">
 
 </FrameLayout>

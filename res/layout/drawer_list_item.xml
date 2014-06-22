@@ -19,6 +19,7 @@
         android:layout_height="@dimen/iconButtonSize"
         android:id="@+id/drawer_list_item_icon"
         android:src="@drawable/ic_action_cc_bcc"
-        android:layout_margin="@dimen/iconButtonMargin" />
+        android:layout_margin="@dimen/iconButtonMargin"
+        android:tint="@color/accentBlue" />
 
 </FrameLayout>
