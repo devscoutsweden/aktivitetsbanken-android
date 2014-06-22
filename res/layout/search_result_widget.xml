@@ -7,11 +7,14 @@
         android:id="@+id/searchResultList"
         android:orientation="vertical"
         android:layout_width="match_parent"
+        android:background="?android:activatedBackgroundIndicator"
+        android:divider="?android:attr/listDivider"
+        android:showDividers="middle"
         android:layout_height="wrap_content"/>
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:clickable="true"
         android:id="@+id/searchResultProgress">
 
@@ -23,32 +26,36 @@
     </FrameLayout>
 
     <FrameLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/searchResultEmpty">
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:gravity="center">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="New Text"
                 android:id="@+id/searchResultEmptyHeader"
                 android:layout_gravity="center_horizontal"
-                android:textSize="@dimen/largeTextSize"
-                android:padding="@dimen/defaultMargin" />
+                android:textSize="@dimen/mediumTextSize"
+                android:padding="@dimen/defaultMargin"
+                android:gravity="center" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/searchResultDefaultEmptyMessage"
                 android:id="@+id/searchResultEmptyMessage"
                 android:layout_gravity="center_horizontal"
-                android:padding="@dimen/defaultMargin" />
+                android:padding="@dimen/defaultMargin"
+                android:gravity="center"
+                android:textSize="@dimen/smallTextSize" />
 
         </LinearLayout>
     </FrameLayout>
