@@ -46,7 +46,7 @@ abstract class SingleFragmentActivity<T extends Fragment> extends FragmentActivi
                 new FavouriteActivitiesDrawerItem(getString(R.string.startTabFavourites), R.drawable.ic_action_important),
                 new SearchDrawerItem(getString(R.string.startTabSearch), R.drawable.ic_action_search),
                 new AgeGroupsDrawerItem(getString(R.string.startTabAgeGroups), R.drawable.ic_action_cc_bcc),
-                new CategoriesDrawerItem(getString(R.string.startTabConcepts), R.drawable.ic_action_labels)
+                new CategoriesDrawerItem(getString(R.string.startTabCategories), R.drawable.ic_action_labels)
         );
 
         mDrawerListAdapter.addSearchHistory(getString(R.string.drawer_search_history_header), getActivityBank());

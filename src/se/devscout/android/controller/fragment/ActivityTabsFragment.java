@@ -44,8 +44,8 @@ public class ActivityTabsFragment extends TabsFragment {
     }
 
     @Override
-    protected StaticFragmentsPagerAdapter createPagerAdapter(FragmentManager fragmentManager, boolean landscape) {
-        StaticFragmentsPagerAdapter pagerAdapter = new StaticFragmentsPagerAdapter(fragmentManager);
+    protected StaticFragmentsPagerAdapter createPagerAdapter(FragmentManager fragmentManager) {
+        StaticFragmentsPagerAdapter pagerAdapter = new StaticFragmentsPagerAdapter(fragmentManager, getActivity());
 
         Activity activity = getActivityBank().readFull(key);
         ActivityRevision revision = activity.getRevisions().get(activity.getRevisions().size() - 1);
@@ -63,19 +63,19 @@ public class ActivityTabsFragment extends TabsFragment {
                 .addHeaderAndText(R.string.activity_safety, revision.getDescriptionSafety())
                 .addHeaderAndText(R.string.activity_notes, revision.getDescriptionNotes());
 
-        pagerAdapter.addTab(landscape ? R.string.activity_tab_description : 0, R.drawable.ic_action_about, mainTabFragment);
+        pagerAdapter.addTab(R.string.activity_tab_description, R.drawable.ic_action_about, mainTabFragment);
 
         if (revision.getDescriptionMaterial() != null && revision.getDescriptionMaterial().length() > 0) {
             SimpleDocumentFragment materialTabFragment = SimpleDocumentFragment.create()
                     .addBodyText(revision.getDescriptionMaterial());
-            pagerAdapter.addTab(landscape ? R.string.activity_tab_material : 0, R.drawable.ic_action_paste, materialTabFragment);
+            pagerAdapter.addTab(R.string.activity_tab_material, R.drawable.ic_action_paste, materialTabFragment);
         }
         if (!revision.getMediaItems().isEmpty()) {
             SimpleDocumentFragment mediaTabFragment = SimpleDocumentFragment.create();
             for (Media media : revision.getMediaItems()) {
                 mediaTabFragment.addImage(resourceUtil.toResourceId(media.getURI()), false);
             }
-            pagerAdapter.addTab(landscape ? R.string.activity_tab_photos : 0, R.drawable.ic_action_picture, mediaTabFragment);
+            pagerAdapter.addTab(R.string.activity_tab_photos, R.drawable.ic_action_picture, mediaTabFragment);
         }
         return pagerAdapter;
     }

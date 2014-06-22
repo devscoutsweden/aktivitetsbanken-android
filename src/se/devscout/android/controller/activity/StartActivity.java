@@ -6,14 +6,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import se.devscout.android.R;
-import se.devscout.android.controller.fragment.StartWidgetFragment;
+import se.devscout.android.controller.fragment.StartTabsFragment;
 import se.devscout.android.model.repo.sql.SQLiteActivityRepo;
 
 public class StartActivity extends SingleFragmentActivity {
     @Override
     protected Fragment createFragment() {
-        return StartWidgetFragment.create(
-        );
+        return new StartTabsFragment();
     }
 
     @Override

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/card_background">
 
     <ListView
         android:layout_width="match_parent"
@@ -28,26 +29,29 @@
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="New Text"
                 android:id="@+id/searchResultEmptyHeader"
                 android:layout_gravity="center_horizontal"
-                android:textSize="@dimen/largeTextSize"
-                android:padding="@dimen/defaultMargin" />
+                android:textSize="@dimen/mediumTextSize"
+                android:padding="@dimen/defaultMargin"
+                android:gravity="center" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/searchResultDefaultEmptyMessage"
                 android:id="@+id/searchResultEmptyMessage"
                 android:layout_gravity="center_horizontal"
-                android:padding="@dimen/defaultMargin" />
+                android:padding="@dimen/defaultMargin"
+                android:gravity="center"
+                android:textSize="@dimen/smallTextSize" />
 
         </LinearLayout>
     </FrameLayout>

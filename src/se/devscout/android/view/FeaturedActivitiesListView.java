@@ -4,6 +4,7 @@ import android.content.Context;
 import android.widget.ArrayAdapter;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.FeaturedActivitiesArrayAdapter;
+import se.devscout.android.util.ActivityBankFactory;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class FeaturedActivitiesListView extends ActivitiesListView {
     }
 
     public FeaturedActivitiesListView(Context context, Sorter sortOrder, boolean isListContentHeight) {
-        super(context, R.string.favouritesEmptyHeader, R.string.favouritesEmptyMessage, null, sortOrder, isListContentHeight);
+        super(context, R.string.featuredEmptyHeader, R.string.featuredEmptyMessage, ActivityBankFactory.getInstance(context).getFilterFactory().createIsFeaturedFilter(), sortOrder, isListContentHeight);
     }
 
     @Override

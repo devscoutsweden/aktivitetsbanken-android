@@ -1,6 +1,8 @@
 package se.devscout.android.view;
 
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -59,6 +61,9 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
         mProgressView = (FrameLayout) findViewById(R.id.searchResultProgress);
         mEmptyView = findViewById(R.id.searchResultEmpty);
 
+        mList.setVisibility(View.INVISIBLE);
+        mEmptyView.setVisibility(View.INVISIBLE);
+
         initEmptyViewText(R.id.searchResultEmptyHeader, mEmptyHeaderTextId);
         initEmptyViewText(R.id.searchResultEmptyMessage, mEmptyMessageTextId);
     }
@@ -89,7 +94,7 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
     protected void sort(Comparator<T> sorter) {
         if (mList instanceof ListView) {
             ListView listView = (ListView) mList;
-            ((ArrayAdapter<T>)listView.getAdapter()).sort(sorter);
+            ((ArrayAdapter<T>) listView.getAdapter()).sort(sorter);
         } else {
             Log.e(NonBlockingSearchView.class.getName(), "Cannot only sort ListView");
         }
@@ -121,7 +126,6 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
         if (textId > 0) {
             emptyMessageTextView.setText(textId);
         }
-        emptyMessageTextView.setVisibility(View.GONE);
     }
 
     protected void onSearchDone(List<T> result) {
@@ -130,21 +134,22 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
     public void setResult(List<T> result) {
         ArrayAdapter<T> adapter = createAdapter(result);
 
+        mList.setVisibility(adapter.isEmpty() ? View.GONE : View.VISIBLE);
+        mEmptyView.setVisibility(adapter.isEmpty() ? View.VISIBLE : View.GONE);
         if (mList instanceof ListView) {
-            mList.setVisibility(View.VISIBLE);
-            mEmptyView.setVisibility(View.VISIBLE);
-
             ListView listView = (ListView) mList;
             listView.setAdapter(adapter);
         } else {
-            mList.setVisibility(adapter.isEmpty() ? View.GONE : View.VISIBLE);
-            mEmptyView.setVisibility(adapter.isEmpty() ? View.VISIBLE : View.GONE);
 
             LinearLayout linearLayout = (LinearLayout) mList;
             linearLayout.removeAllViews();
             for (int i = 0; i < adapter.getCount(); i++) {
                 View view = adapter.getView(i, null, linearLayout);
                 view.setOnClickListener(this);
+                view.setFocusable(true);
+                view.setClickable(true);
+                Drawable backgroundDrawable = getSelectableItemBackgroundDrawable();
+                view.setBackgroundDrawable(backgroundDrawable);
                 linearLayout.addView(view);
             }
         }
@@ -155,6 +160,21 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
         Log.d(ActivitiesListFragment.class.getName(), "Progress view has been hidden and list view has been shown.");
 
         onSearchDone(result);
+    }
+
+    private Drawable getSelectableItemBackgroundDrawable() {
+        // Create an array of the attributes we want to resolve using values from a theme
+        int[] attrs = new int[]{android.R.attr.selectableItemBackground /* index 0 */};
+
+        // Obtain the styled attributes. 'themedContext' is a context with a theme, typically the current Activity (i.e. 'this')
+        TypedArray ta = getContext().obtainStyledAttributes(attrs);
+
+        // Now get the value of the 'listItemBackground' attribute that was set in the theme used in 'themedContext'. The parameter is the index of the attribute in the 'attrs' array. The returned Drawable is what you are after
+        Drawable drawableFromTheme = ta.getDrawable(0 /* index */);
+
+        // Finally free resources used by TypedArray
+        ta.recycle();
+        return drawableFromTheme;
     }
 
     @Override

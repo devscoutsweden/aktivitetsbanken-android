@@ -1,5 +1,6 @@
 package se.devscout.android.view;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -8,11 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StaticFragmentsPagerAdapter extends FragmentPagerAdapter {
+    private final Context mContext;
     private List<TabInfo> mTabInfoList = new ArrayList<TabInfo>();
     private List<Fragment> mFragments = new ArrayList<Fragment>();
 
-    public StaticFragmentsPagerAdapter(FragmentManager fm) {
+    public StaticFragmentsPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
+        mContext = context;
     }
 
     public void addTab(int tabNameResId, int iconResId, Fragment fragment) {
@@ -23,6 +26,11 @@ public class StaticFragmentsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         return mFragments.get(position);
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return mContext.getString(mTabInfoList.get(position).getNameResId());
     }
 
     @Override

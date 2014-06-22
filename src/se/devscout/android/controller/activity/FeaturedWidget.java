@@ -4,24 +4,30 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import se.devscout.android.R;
+import se.devscout.android.view.FeaturedActivitiesListView;
 
-public class WelcomeMessageWidget implements StartScreenWidget {
+public class FeaturedWidget implements StartScreenWidget {
+    private FeaturedActivitiesListView mView;
 
-    public WelcomeMessageWidget() {
+    public FeaturedWidget() {
     }
+
 
     @Override
     public int getTitleResId() {
-        return 0;
+        return R.string.startTabFeatured;
     }
 
     @Override
     public View[] getViews(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        TextView textView = new TextView(container.getContext());
-        textView.setText(R.string.startIntroText);
-        return new View[]{textView};
+
+        mView = new FeaturedActivitiesListView(container.getContext(), true);
+
+        // Start search in separate thread
+        mView.createSearchTask().execute();
+
+        return new View[]{mView};
     }
 
     @Override

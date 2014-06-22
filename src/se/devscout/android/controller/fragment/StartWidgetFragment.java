@@ -6,10 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import se.devscout.android.R;
-import se.devscout.android.controller.activity.FavouritesWidget;
-import se.devscout.android.controller.activity.SpontaneousActivityWidget;
-import se.devscout.android.controller.activity.StartScreenWidget;
-import se.devscout.android.controller.activity.WelcomeMessageWidget;
+import se.devscout.android.controller.activity.*;
 import se.devscout.android.view.StartWidgetView;
 
 import java.util.ArrayList;
@@ -35,7 +32,9 @@ public class StartWidgetFragment extends ActivityBankFragment {
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         final List<StartScreenWidget> mFragmentCreator = new ArrayList<StartScreenWidget>();
         mFragmentCreator.add(new WelcomeMessageWidget());
+        mFragmentCreator.add(new SearchWidget());
         mFragmentCreator.add(new SpontaneousActivityWidget());
+        mFragmentCreator.add(new FeaturedWidget());
         mFragmentCreator.add(new FavouritesWidget());
         final View view = inflater.inflate(R.layout.start, container, false);
         final LinearLayout ll = (LinearLayout) view.findViewById(R.id.start_widgets_container);

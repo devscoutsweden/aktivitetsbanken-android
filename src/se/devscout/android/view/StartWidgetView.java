@@ -35,8 +35,12 @@ public class StartWidgetView extends RelativeLayout {
     private void init(Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.start_widget_container, this, true);
-        final TextView title = (TextView) findViewById(R.id.textView);
-        title.setText(mTitleTextId);
+        if (mTitleTextId > 0) {
+            final TextView title = (TextView) findViewById(R.id.textView);
+            title.setText(mTitleTextId);
+        } else {
+            findViewById(R.id.linearLayout).setVisibility(GONE);
+        }
     }
 
     public void setContentView(View view) {

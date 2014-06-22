@@ -47,9 +47,10 @@
     <string name="activity_tab_photos">Bilder</string>
     <string name="activity_tab_description">Om</string>
     <string name="startTabHome">Hem</string>
-    <string name="startTabConcepts">Upplägg</string>
+    <string name="startTabCategories">Kategorier</string>
     <string name="startTabAgeGroups">Ålder</string>
     <string name="startTabTracks">Målspår</string>
+    <string name="startTabFeatured">Utvalda</string>
     <string name="searchResultTitle">Sökresultat</string>
     <string name="searchResultTitleCategoryTrack">Målspår %1$s</string>
     <string name="searchResultTitleCategoryConcept">Upplägg %1$s</string>
@@ -81,9 +82,9 @@
     <string name="startTabFavourites">Favoriter</string>
     <string name="searchResultDefaultEmptyMessage">Listan är tom.</string>
     <string name="favouritesEmptyHeader">Du har inga favoriter. Ännu.</string>
-    <string name="favouritesEmptyMessage">Tryck på stjärnan i övre högra hörnet om du vill att en aktivitet ska synas
-        här.
-    </string>
+    <string name="favouritesEmptyMessage">Tryck på \u2605 för att en aktivitet ska synas här.</string>
+    <string name="featuredEmptyHeader">Utvalda aktiviteter saknas.</string>
+    <string name="featuredEmptyMessage">Just har inga aktiviteter valts ut av någon redaktör.</string>
     <string name="searchResultEmptyTitle">Tyvärr, inga träffar.</string>
     <string name="searchResultEmptyMessage">Inga aktiviteter passade in på dina sökvillkor.</string>
     <string name="searchTextLabel">Text i namn eller beskrivning</string>

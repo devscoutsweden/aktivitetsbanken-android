@@ -12,14 +12,15 @@
         android:id="@+id/linearLayout1"
         android:longClickable="false"
         android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true">
+        android:layout_alignParentRight="true"
+        android:background="@color/basicVeryLight">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imageView"
             android:src="@drawable/ic_action_overflow"
-            style="@style/ImageOverlay_ImageButton"
+            style="@style/ImageButton"
             android:focusable="false" />
     </LinearLayout>
 
@@ -31,7 +32,8 @@
         android:layout_alignParentTop="true"
         android:id="@+id/linearLayout"
         android:layout_toLeftOf="@+id/linearLayout1"
-        android:padding="@dimen/iconButtonMargin">
+        android:padding="@dimen/iconButtonMargin"
+        android:background="@color/basicVeryLight">
 
         <TextView
             android:layout_width="wrap_content"
@@ -51,6 +53,8 @@
         android:id="@+id/start_widget_container"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/linearLayout"
-        android:orientation="vertical"></LinearLayout>
+        android:orientation="vertical"
+        android:background="@color/basicVeryLight"
+        android:padding="@dimen/iconButtonMargin"></LinearLayout>
 
 </RelativeLayout>
