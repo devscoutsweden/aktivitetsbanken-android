@@ -1,4 +1,4 @@
-package se.devscout.android.view;
+package se.devscout.android.controller.fragment;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;

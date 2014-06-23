@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.example.android.common.view.SlidingTabLayout;
 import se.devscout.android.R;
-import se.devscout.android.view.StaticFragmentsPagerAdapter;
 import se.devscout.android.view.ViewPagerIndicator;
 
 public abstract class TabsFragment extends ActivityBankFragment {

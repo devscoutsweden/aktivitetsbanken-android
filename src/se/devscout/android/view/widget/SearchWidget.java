@@ -1,4 +1,4 @@
-package se.devscout.android.controller.fragment;
+package se.devscout.android.view.widget;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,7 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.SearchResultActivity;
-import se.devscout.android.controller.activity.StartScreenWidget;
+import se.devscout.android.controller.fragment.SearchFragment;
 import se.devscout.android.util.ActivityBankFactory;
 
 public class SearchWidget implements StartScreenWidget {

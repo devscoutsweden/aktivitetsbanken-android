@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import se.devscout.android.R;
 import se.devscout.android.model.ObjectIdentifierPojo;
 import se.devscout.android.util.ResourceUtil;
-import se.devscout.android.view.StaticFragmentsPagerAdapter;
 import se.devscout.server.api.model.Activity;
 import se.devscout.server.api.model.ActivityRevision;
 import se.devscout.server.api.model.Media;

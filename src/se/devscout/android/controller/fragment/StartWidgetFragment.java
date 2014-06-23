@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import se.devscout.android.R;
-import se.devscout.android.controller.activity.*;
 import se.devscout.android.view.StartWidgetView;
+import se.devscout.android.view.widget.*;
 
 import java.util.ArrayList;
 import java.util.List;

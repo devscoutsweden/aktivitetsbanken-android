@@ -2,7 +2,6 @@ package se.devscout.android.controller.fragment;
 
 import android.support.v4.app.FragmentManager;
 import se.devscout.android.R;
-import se.devscout.android.view.StaticFragmentsPagerAdapter;
 
 public class StartTabsFragment extends TabsFragment {
     @Override

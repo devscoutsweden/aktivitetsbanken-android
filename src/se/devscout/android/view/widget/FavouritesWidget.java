@@ -1,4 +1,4 @@
-package se.devscout.android.controller.activity;
+package se.devscout.android.view.widget;
 
 import android.os.Bundle;
 import android.util.Log;

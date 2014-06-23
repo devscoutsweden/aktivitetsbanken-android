@@ -1,28 +1,28 @@
-package se.devscout.android.controller.activity;
+package se.devscout.android.view.widget;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import se.devscout.android.R;
-import se.devscout.android.view.CategoriesListSearchView;
+import se.devscout.android.view.FeaturedActivitiesListView;
 
-public class CategoriesWidget implements StartScreenWidget {
-    private CategoriesListSearchView mView;
+public class FeaturedWidget implements StartScreenWidget {
+    private FeaturedActivitiesListView mView;
 
-    public CategoriesWidget() {
+    public FeaturedWidget() {
     }
 
 
     @Override
     public int getTitleResId() {
-        return R.string.startTabCategories;
+        return R.string.startTabFeatured;
     }
 
     @Override
     public View[] getViews(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        mView = new CategoriesListSearchView(container.getContext(), R.string.searchResultEmptyMessage,R.string.searchResultEmptyTitle, true);
+        mView = new FeaturedActivitiesListView(container.getContext(), true);
 
         // Start search in separate thread
         mView.createSearchTask().execute();
