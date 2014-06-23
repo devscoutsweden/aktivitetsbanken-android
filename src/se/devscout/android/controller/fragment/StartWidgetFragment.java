@@ -34,6 +34,7 @@ public class StartWidgetFragment extends ActivityBankFragment {
         mFragmentCreator.add(new WelcomeMessageWidget());
         mFragmentCreator.add(new SearchWidget());
         mFragmentCreator.add(new SpontaneousActivityWidget());
+        mFragmentCreator.add(new CategoriesWidget());
         mFragmentCreator.add(new FeaturedWidget());
         mFragmentCreator.add(new FavouritesWidget());
         final View view = inflater.inflate(R.layout.start, container, false);
