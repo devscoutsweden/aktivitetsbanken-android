@@ -21,11 +21,11 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public abstract class NonBlockingSearchView<T extends Serializable> extends FrameLayout implements AdapterView.OnItemClickListener, View.OnClickListener {
+public abstract class NonBlockingSearchView<T extends Serializable> extends FrameLayout implements AdapterView.OnItemClickListener, View.OnClickListener/*, FragmentListener */{
     /**
      * Keeps track of which items were shown when the activity (fragment) was "unloaded".
      */
-    protected boolean mRefreshResultOnResume = false;
+//    private boolean mRefreshResultOnResume = false;
 
     private ArrayList<T> mResult;
     private ViewGroup mList;
@@ -33,6 +33,7 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
     private View mEmptyView;
     private int mEmptyHeaderTextId;
     private int mEmptyMessageTextId;
+    private boolean mSearchPending;
 
     public NonBlockingSearchView(Context context, int emptyMessageTextId, int emptyHeaderTextId, boolean isListContentHeight) {
         super(context);
@@ -50,6 +51,7 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
     }
 
     private void init(Context context, int emptyMessageTextId, int emptyHeaderTextId, boolean isListContentHeight) {
+//        setWillNotDraw(false);
         mEmptyMessageTextId = emptyMessageTextId;
         mEmptyHeaderTextId = emptyHeaderTextId;
 
@@ -61,11 +63,16 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
         mProgressView = (FrameLayout) findViewById(R.id.searchResultProgress);
         mEmptyView = findViewById(R.id.searchResultEmpty);
 
-        mList.setVisibility(View.INVISIBLE);
-        mEmptyView.setVisibility(View.INVISIBLE);
+        showLoadingSpinner();
 
         initEmptyViewText(R.id.searchResultEmptyHeader, mEmptyHeaderTextId);
         initEmptyViewText(R.id.searchResultEmptyMessage, mEmptyMessageTextId);
+    }
+
+    private void showLoadingSpinner() {
+        mList.setVisibility(View.INVISIBLE);
+        mEmptyView.setVisibility(View.INVISIBLE);
+        mProgressView.setVisibility(View.VISIBLE);
     }
 
     private void initScrollingList(Context context) {
@@ -82,11 +89,6 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
 
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.searchResultList);
         mList = linearLayout;
-    }
-
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();    //To change body of overridden methods use File | Settings | File Templates.
     }
 
     protected abstract ArrayAdapter<T> createAdapter(List<T> result);
@@ -132,6 +134,10 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
     }
 
     public void setResult(List<T> result) {
+        if (result == null) {
+            //TODO: Necessary? Remove?
+            result = new ArrayList<T>();
+        }
         ArrayAdapter<T> adapter = createAdapter(result);
 
         mList.setVisibility(adapter.isEmpty() ? View.GONE : View.VISIBLE);
@@ -140,7 +146,6 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
             ListView listView = (ListView) mList;
             listView.setAdapter(adapter);
         } else {
-
             LinearLayout linearLayout = (LinearLayout) mList;
             linearLayout.removeAllViews();
             for (int i = 0; i < adapter.getCount(); i++) {
@@ -160,6 +165,7 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
         Log.d(ActivitiesListFragment.class.getName(), "Progress view has been hidden and list view has been shown.");
 
         onSearchDone(result);
+        invalidate(); //TODO: Necessary? Remove?
     }
 
     private Drawable getSelectableItemBackgroundDrawable() {
@@ -182,6 +188,7 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
         Bundle bundle = new Bundle();
         bundle.putParcelable("instanceState", super.onSaveInstanceState());
         bundle.putSerializable("mResult", mResult);
+//        bundle.putBoolean("mRefreshResultOnResume", mRefreshResultOnResume);
         return bundle;
     }
 
@@ -190,6 +197,7 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
         if (state instanceof Bundle) {
             Bundle bundle = (Bundle) state;
             mResult = (ArrayList<T>) bundle.getSerializable("mResult");
+//            mRefreshResultOnResume = bundle.getBoolean("mRefreshResultOnResume");
             state = bundle.getParcelable("instanceState");
 
             setResult(mResult);
@@ -199,11 +207,58 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
 
     public abstract SearchTask createSearchTask();
 
-    public boolean isResultPresent() {
-        return !mRefreshResultOnResume && mResult != null;
+    public void runSearchTaskInNewThread() {
+        synchronized (this) {
+            if (!mSearchPending) {
+                mSearchPending = true;
+                createSearchTask().execute();
+            } else {
+                Log.i(getClass().getName(), "Will not start new thread for updating list since previous search thread has not completed.");
+            }
+        }
     }
 
+    public boolean isResultPresent() {
+        synchronized (this) {
+            return /*!mRefreshResultOnResume && */mResult != null;
+        }
+    }
+
+/*
+    protected void invalidateResult() {
+        synchronized (this) {
+            mRefreshResultOnResume = true;
+        }
+    }
+*/
+
+
+/*
+    @Override
+    protected void onDraw(Canvas canvas) {
+        if (!isResultPresent()) {
+            createSearchTask().execute();
+        }
+        super.onDraw(canvas);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+*/
+
+/*
+    @Override
+    public void onFragmentResume() {
+        if (!isResultPresent()) {
+            createSearchTask().execute();
+        }
+    }
+*/
+
     public abstract class SearchTask extends AsyncTask<Object, Object, List<T>> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showLoadingSpinner();
+        }
+
         @Override
         protected List<T> doInBackground(Object... voids) {
             Log.d(NonBlockingSearchView.class.getName(), "Start of doInBackground as part of " + NonBlockingSearchView.this.getClass().getName());
@@ -216,6 +271,9 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
         protected void onPostExecute(List<T> result) {
             Log.d(NonBlockingSearchView.class.getName(), "Search task has completed. " + result.size() + " were returned.");
             setResult(result);
+            synchronized (NonBlockingSearchView.this) {
+                mSearchPending = false;
+            }
         }
 
         protected abstract List<T> doSearch();
