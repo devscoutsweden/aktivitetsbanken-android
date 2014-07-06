@@ -30,9 +30,8 @@ public abstract class NonBlockingSearchResultFragment<T extends Serializable, V 
     @Override
     public void onViewStateRestored(Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);    //To change body of overridden methods use File | Settings | File Templates.
-        final V view = getListView();
-        if (!view.isResultPresent()) {
-            view.createSearchTask().execute();
+        if (!getListView().isResultPresent()) {
+            getListView().runSearchTaskInNewThread();
         }
     }
 

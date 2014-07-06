@@ -5,12 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import se.devscout.android.R;
+import se.devscout.android.controller.fragment.ActivityBankFragment;
 import se.devscout.android.view.CategoriesListSearchView;
 
-public class CategoriesWidget implements StartScreenWidget {
+public class CategoriesWidgetSpecification implements WidgetSpecification {
     private CategoriesListSearchView mView;
 
-    public CategoriesWidget() {
+    public CategoriesWidgetSpecification() {
     }
 
 
@@ -20,17 +21,13 @@ public class CategoriesWidget implements StartScreenWidget {
     }
 
     @Override
-    public View[] getViews(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View[] getViews(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState, ActivityBankFragment activityBankFragment) {
 
         mView = new CategoriesListSearchView(container.getContext(), R.string.searchResultEmptyMessage,R.string.searchResultEmptyTitle, true);
 
         // Start search in separate thread
-        mView.createSearchTask().execute();
+        mView.runSearchTaskInNewThread();
 
         return new View[]{mView};
-    }
-
-    @Override
-    public void onFragmentResume() {
     }
 }

@@ -50,7 +50,7 @@
         android:layout_gravity="center"
         android:layout_alignParentBottom="false"
         android:layout_alignParentRight="true"
-        android:id="@+id/start_widget_container"
+        android:id="@+id/widget_container"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/linearLayout"
         android:orientation="vertical"

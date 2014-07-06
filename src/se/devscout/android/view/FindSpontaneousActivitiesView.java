@@ -67,7 +67,7 @@ public class FindSpontaneousActivitiesView<T extends Serializable> extends Linea
                 container.addView(listView);
                 listView.setId(1010);
                 listView.setVisibility(VISIBLE);
-                listView.createSearchTask().execute();
+                listView.runSearchTaskInNewThread();
             }
         });
     }

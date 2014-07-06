@@ -5,12 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import se.devscout.android.R;
+import se.devscout.android.controller.fragment.ActivityBankFragment;
 import se.devscout.android.view.FeaturedActivitiesListView;
 
-public class FeaturedWidget implements StartScreenWidget {
+public class FeaturedWidgetSpecification implements WidgetSpecification {
     private FeaturedActivitiesListView mView;
 
-    public FeaturedWidget() {
+    public FeaturedWidgetSpecification() {
     }
 
 
@@ -20,17 +21,13 @@ public class FeaturedWidget implements StartScreenWidget {
     }
 
     @Override
-    public View[] getViews(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View[] getViews(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState, ActivityBankFragment activityBankFragment) {
 
         mView = new FeaturedActivitiesListView(container.getContext(), true);
 
         // Start search in separate thread
-        mView.createSearchTask().execute();
+        mView.runSearchTaskInNewThread();
 
         return new View[]{mView};
-    }
-
-    @Override
-    public void onFragmentResume() {
     }
 }
