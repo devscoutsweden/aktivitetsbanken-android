@@ -2,7 +2,6 @@ package se.devscout.android.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.CategoryListItem;
 import se.devscout.android.util.ActivityBankFactory;
@@ -51,7 +50,6 @@ public class CategoriesListSearchView extends QuickSearchListView<CategoryListIt
         } else {
             String packageName = getContext().getPackageName();
             int identifier = getResources().getIdentifier(resName, type, packageName);
-            Log.d(CategoriesListSearchView.class.getName(), "Id for " + type + " '" + resName + "': " + identifier);
             return identifier;
         }
     }
