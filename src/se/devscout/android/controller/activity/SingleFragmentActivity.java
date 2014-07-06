@@ -61,7 +61,7 @@ abstract class SingleFragmentActivity<T extends Fragment> extends FragmentActivi
                 });
             }
         };
-        getActivityBank().addListener(mActivityBankListener);
+//        getActivityBank().addListener(mActivityBankListener);
 
         mDrawerList.setAdapter(mDrawerListAdapter);
         mDrawerList.setOnItemClickListener(this);
@@ -130,6 +130,7 @@ abstract class SingleFragmentActivity<T extends Fragment> extends FragmentActivi
     }
 
     @Override
+    //TODO: Necessary? Remove?
     protected void onResume() {
         super.onResume();
     }

@@ -29,7 +29,7 @@ public class SearchHistoryListFragment extends QuickSearchListFragment<SearchHis
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        getActivityBank().addListener(this);
+//        getActivityBank().addListener(this);
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -43,7 +43,8 @@ public class SearchHistoryListFragment extends QuickSearchListFragment<SearchHis
         super.onResume();
         synchronized (this) {
             if (mRefreshResultOnResume) {
-                getListView().createSearchTask().execute();
+                //TODO: Necessary? Remove?
+                getListView().runSearchTaskInNewThread();
             }
         }
     }

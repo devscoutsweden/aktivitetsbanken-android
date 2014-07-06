@@ -7,18 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.ActivitiesListFragment;
-import se.devscout.android.util.ActivityBankFactory;
+import se.devscout.android.controller.fragment.ActivityBankFragment;
 import se.devscout.android.view.FavouriteActivitiesListView;
-import se.devscout.server.api.ActivityBankListener;
-import se.devscout.server.api.model.ActivityKey;
-import se.devscout.server.api.model.SearchHistory;
-import se.devscout.server.api.model.UserKey;
 
-public class FavouritesWidget implements StartScreenWidget, ActivityBankListener {
-    private boolean mRefreshResultOnResume = false;
+public class FavouritesWidgetSpecification implements WidgetSpecification/*, ActivityBankListener */{
+//    private boolean mRefreshResultOnResume = false;
     private FavouriteActivitiesListView mView;
 
-    public FavouritesWidget() {
+    public FavouritesWidgetSpecification() {
     }
 
 
@@ -28,28 +24,20 @@ public class FavouritesWidget implements StartScreenWidget, ActivityBankListener
     }
 
     @Override
-    public View[] getViews(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View[] getViews(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState, ActivityBankFragment activityBankFragment) {
 
-        mView = new FavouriteActivitiesListView(container.getContext(), true);
+        mView = new FavouriteActivitiesListView(activityBankFragment, true);
 
         // Start search in separate thread
         Log.d(ActivitiesListFragment.class.getName(), "Result has not been returned/cached. Starting search task in new thread.");
 
-        mView.createSearchTask().execute();
+        mView.runSearchTaskInNewThread();
 
-        ActivityBankFactory.getInstance(container.getContext()).addListener(this);
+//        ActivityBankFactory.getInstance(container.getContext()).addListener(this);
         return new View[]{mView};
     }
 
-    @Override
-    public void onFragmentResume() {
-        synchronized (this) {
-            if (mRefreshResultOnResume) {
-                mView.createSearchTask().execute();
-            }
-        }
-    }
-
+/*
     @Override
     public void onSearchHistoryItemAdded(SearchHistory searchHistory) {
     }
@@ -60,4 +48,5 @@ public class FavouritesWidget implements StartScreenWidget, ActivityBankListener
             mRefreshResultOnResume = true;
         }
     }
+*/
 }

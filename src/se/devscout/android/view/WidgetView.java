@@ -10,23 +10,24 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import se.devscout.android.R;
+import se.devscout.android.view.widget.FragmentListener;
 
-public class StartWidgetView extends RelativeLayout {
+public class WidgetView extends RelativeLayout implements FragmentListener {
     private int mTitleTextId;
 
-    public StartWidgetView(Context context, int titleTextId) {
+    public WidgetView(Context context, int titleTextId) {
         super(context);
         mTitleTextId = titleTextId;
         init(context);
     }
 
-    public StartWidgetView(Context context, AttributeSet attrs, int titleTextId) {
+    public WidgetView(Context context, AttributeSet attrs, int titleTextId) {
         super(context, attrs);
         mTitleTextId = titleTextId;
         init(context);
     }
 
-    public StartWidgetView(Context context, AttributeSet attrs, int defStyle, int titleTextId) {
+    public WidgetView(Context context, AttributeSet attrs, int defStyle, int titleTextId) {
         super(context, attrs, defStyle);
         mTitleTextId = titleTextId;
         init(context);
@@ -34,7 +35,7 @@ public class StartWidgetView extends RelativeLayout {
 
     private void init(Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        inflater.inflate(R.layout.start_widget_container, this, true);
+        inflater.inflate(R.layout.widget_container, this, true);
         if (mTitleTextId > 0) {
             final TextView title = (TextView) findViewById(R.id.textView);
             title.setText(mTitleTextId);
@@ -44,7 +45,7 @@ public class StartWidgetView extends RelativeLayout {
     }
 
     public void setContentView(View view) {
-        LinearLayout widgetContentList = (LinearLayout) findViewById(R.id.start_widget_container);
+        LinearLayout widgetContentList = (LinearLayout) findViewById(R.id.widget_container);
         widgetContentList.removeAllViews();
         widgetContentList.addView(view);
     }
@@ -68,16 +69,23 @@ public class StartWidgetView extends RelativeLayout {
         super.onRestoreInstanceState(state);
     }
 
-    public void onResume() {
-        LinearLayout widgetContentList = (LinearLayout) findViewById(R.id.start_widget_container);
+    @Override
+    public void onFragmentResume(boolean refreshResultOnResume) {
+        LinearLayout widgetContentList = (LinearLayout) findViewById(R.id.widget_container);
 
         //TODO: It is good to assume the first child is the one we want?
         View view = widgetContentList.getChildAt(0);
-        if (view instanceof NonBlockingSearchView) {
-            NonBlockingSearchView nonBlockingSearchView = (NonBlockingSearchView) view;
-            if (!nonBlockingSearchView.isResultPresent()) {
-                nonBlockingSearchView.createSearchTask().execute();
+        if (view instanceof FragmentListener) {
+            FragmentListener fragmentListener = (FragmentListener) view;
+            fragmentListener.onFragmentResume(refreshResultOnResume);
+        }
+
+        if (view instanceof ActivitiesListView) {
+            ActivitiesListView activitiesListView = (ActivitiesListView) view;
+            if (refreshResultOnResume || !activitiesListView.isResultPresent()) {
+                activitiesListView.runSearchTaskInNewThread();
             }
         }
+
     }
 }

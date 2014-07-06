@@ -23,23 +23,35 @@ public class FavouriteActivitiesListFragment extends ActivitiesListFragment impl
 
     @Override
     protected ActivitiesListView createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return new FavouriteActivitiesListView(getActivity(), ActivitiesListView.Sorter.NAME, false);
+        return new FavouriteActivitiesListView(this, ActivitiesListView.Sorter.NAME, false);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            mRefreshResultOnResume = savedInstanceState.getBoolean("mRefreshResultOnResume");
+        }
         getActivityBank().addListener(this);
-
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean("mRefreshResultOnResume", mRefreshResultOnResume);
+        super.onSaveInstanceState(outState);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void onDestroyView() {
+        getActivityBank().removeListener(this);
+        super.onDestroyView();
+    }
+    @Override
     public void onResume() {
         super.onResume();
-        synchronized (this) {
-            if (mRefreshResultOnResume) {
-                getListView().createSearchTask().execute();
-            }
+        if (mRefreshResultOnResume || !getListView().isResultPresent()) {
+            //TODO: Necessary? Remove?
+            getListView().runSearchTaskInNewThread();
         }
     }
 
@@ -50,6 +62,7 @@ public class FavouriteActivitiesListFragment extends ActivitiesListFragment impl
     @Override
     public void onFavouriteChange(ActivityKey activityKey, UserKey userKey, boolean isFavouriteNow) {
         synchronized (this) {
+//            getListView().createSearchTask().execute();
             mRefreshResultOnResume = true;
         }
     }

@@ -20,17 +20,17 @@ public class SearchHistoryListView extends QuickSearchListView<SearchHistoryList
 
     public SearchHistoryListView(Context context, AttributeSet attrs, int defStyle, int emptyMessageTextId, int emptyHeaderTextId, boolean isListContentHeight) {
         super(context, attrs, defStyle, emptyMessageTextId, emptyHeaderTextId, isListContentHeight, (List<SearchHistoryListItem>) null);
-        ActivityBankFactory.getInstance(context).addListener(this);
+//        ActivityBankFactory.getInstance(context).addListener(this);
     }
 
     public SearchHistoryListView(Context context, AttributeSet attrs, int emptyMessageTextId, int emptyHeaderTextId, boolean isListContentHeight) {
         super(context, attrs, emptyMessageTextId, emptyHeaderTextId, isListContentHeight, (List<SearchHistoryListItem>) null);
-        ActivityBankFactory.getInstance(context).addListener(this);
+//        ActivityBankFactory.getInstance(context).addListener(this);
     }
 
     public SearchHistoryListView(Context context, int emptyMessageTextId, int emptyHeaderTextId, boolean isListContentHeight) {
         super(context, emptyMessageTextId, emptyHeaderTextId, isListContentHeight, (List<SearchHistoryListItem>) null);
-        ActivityBankFactory.getInstance(context).addListener(this);
+//        ActivityBankFactory.getInstance(context).addListener(this);
     }
 
     @Override
@@ -59,15 +59,15 @@ public class SearchHistoryListView extends QuickSearchListView<SearchHistoryList
     }
 
     @Override
+    //TODO: Necessary? Remove?
     protected String getSearchResultTitle(SearchHistoryListItem option) {
         return option.getFilter().toString(new TitleActivityFilterVisitor(getContext()));
     }
 
     @Override
+    //TODO: Necessary? Remove?
     public void onSearchHistoryItemAdded(SearchHistory searchHistory) {
-        synchronized (this) {
-            mRefreshResultOnResume = true;
-        }
+//        invalidateResult();
     }
 
     @Override
