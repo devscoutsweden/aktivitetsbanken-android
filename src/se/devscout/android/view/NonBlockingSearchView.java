@@ -165,7 +165,7 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
         Log.d(ActivitiesListFragment.class.getName(), "Progress view has been hidden and list view has been shown.");
 
         onSearchDone(result);
-        invalidate(); //TODO: Necessary? Remove?
+//        invalidate(); //TODO: Necessary? Remove?
     }
 
     private Drawable getSelectableItemBackgroundDrawable() {

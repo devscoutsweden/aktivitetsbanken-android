@@ -129,12 +129,6 @@ abstract class SingleFragmentActivity<T extends Fragment> extends FragmentActivi
         }
     }
 
-    @Override
-    //TODO: Necessary? Remove?
-    protected void onResume() {
-        super.onResume();
-    }
-
     protected ActivityBank getActivityBank() {
         return ActivityBankFactory.getInstance(this);
     }

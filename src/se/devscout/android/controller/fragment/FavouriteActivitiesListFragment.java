@@ -62,7 +62,6 @@ public class FavouriteActivitiesListFragment extends ActivitiesListFragment impl
     @Override
     public void onFavouriteChange(ActivityKey activityKey, UserKey userKey, boolean isFavouriteNow) {
         synchronized (this) {
-//            getListView().createSearchTask().execute();
             mRefreshResultOnResume = true;
         }
     }
