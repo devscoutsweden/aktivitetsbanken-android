@@ -3,6 +3,7 @@ package se.devscout.android.view;
 import se.devscout.android.util.ActivityUtil;
 import se.devscout.server.api.model.Activity;
 import se.devscout.server.api.model.ActivityRevision;
+import se.devscout.server.api.model.Media;
 import se.devscout.server.api.model.Range;
 
 import java.io.Serializable;
@@ -25,6 +26,10 @@ public class ActivitiesListItem implements Serializable {
         mDescription = src.getDescription();
         mAges = src.getAges();
         mId = activity.getId();
+        for (Media media : src.getMediaItems()) {
+            mCoverMedia = media.getURI();
+            break;
+        }
     }
 
     public String getName() {
