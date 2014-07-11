@@ -5,11 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import se.devscout.android.controller.fragment.ActivityBankFragment;
-import se.devscout.android.view.AbstractActivitiesFinder;
+import se.devscout.android.view.AbstractActivitiesFinderComponentFactory;
 import se.devscout.android.view.FindSpontaneousActivitiesView;
 
-public class SpontaneousActivitiesFinder extends AbstractActivitiesFinder implements WidgetSpecification {
-    public SpontaneousActivitiesFinder(int nameResId, int iconResId) {
+public class SpontaneousActivitiesFinderComponentFactory extends AbstractActivitiesFinderComponentFactory implements WidgetSpecification {
+    public SpontaneousActivitiesFinderComponentFactory(int nameResId, int iconResId) {
         super(iconResId, nameResId);
     }
 

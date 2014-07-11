@@ -18,7 +18,7 @@ import se.devscout.android.R;
 import se.devscout.android.controller.activity.drawer.*;
 import se.devscout.android.controller.fragment.AbstractActivityBankListener;
 import se.devscout.android.util.ActivityBankFactory;
-import se.devscout.android.view.AbstractActivitiesFinder;
+import se.devscout.android.view.AbstractActivitiesFinderComponentFactory;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.model.SearchHistory;
 
@@ -42,7 +42,7 @@ abstract class SingleFragmentActivity<T extends Fragment> extends FragmentActivi
 
         mDrawerListAdapter = new DrawerListAdapter(this, getSupportFragmentManager(), R.id.start_content_frame);
         mDrawerListAdapter.add(new HeaderDrawerItem(getString(R.string.drawer_start_header)));
-        for (AbstractActivitiesFinder finder : AbstractActivitiesFinder.getActivitiesFinders()) {
+        for (AbstractActivitiesFinderComponentFactory finder : AbstractActivitiesFinderComponentFactory.getActivitiesFinders()) {
             if (finder.isStartTabCreator()) {
                 mDrawerListAdapter.add(createFragmentCreatorDrawerItem(finder));
             }
@@ -120,7 +120,7 @@ abstract class SingleFragmentActivity<T extends Fragment> extends FragmentActivi
         }
     }
 
-    private FragmentCreatorDrawerItem createFragmentCreatorDrawerItem(AbstractActivitiesFinder finder) {
+    private FragmentCreatorDrawerItem createFragmentCreatorDrawerItem(AbstractActivitiesFinderComponentFactory finder) {
         return new FragmentCreatorDrawerItem(getString(finder.getTitleResId()), finder.getIconResId(), finder.asFragmentCreator());
     }
 

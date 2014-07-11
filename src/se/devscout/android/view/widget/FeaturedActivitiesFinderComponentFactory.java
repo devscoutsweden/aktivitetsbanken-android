@@ -8,12 +8,12 @@ import android.view.ViewGroup;
 import se.devscout.android.controller.activity.FragmentCreator;
 import se.devscout.android.controller.fragment.ActivityBankFragment;
 import se.devscout.android.controller.fragment.FeaturedActivitiesListFragment;
-import se.devscout.android.view.AbstractActivitiesFinder;
+import se.devscout.android.view.AbstractActivitiesFinderComponentFactory;
 import se.devscout.android.view.FeaturedActivitiesListView;
 
-public class FeaturedActivitiesFinder extends AbstractActivitiesFinder implements WidgetSpecification, FragmentCreator {
+public class FeaturedActivitiesFinderComponentFactory extends AbstractActivitiesFinderComponentFactory implements WidgetSpecification, FragmentCreator {
 
-    public FeaturedActivitiesFinder(int nameResId, int iconResId) {
+    public FeaturedActivitiesFinderComponentFactory(int nameResId, int iconResId) {
         super(iconResId, nameResId);
     }
 

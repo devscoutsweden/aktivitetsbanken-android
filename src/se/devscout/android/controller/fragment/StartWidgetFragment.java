@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import se.devscout.android.R;
 import se.devscout.android.util.PreferencesUtil;
-import se.devscout.android.view.AbstractActivitiesFinder;
+import se.devscout.android.view.AbstractActivitiesFinderComponentFactory;
 import se.devscout.android.view.ActivitiesListView;
 import se.devscout.android.view.WidgetView;
 import se.devscout.android.view.widget.FragmentListener;
@@ -80,7 +80,7 @@ public class StartWidgetFragment extends ActivityBankFragment implements Activit
 
         int id = 12345;
         List<String> widgetIds = PreferencesUtil.getStringList(getPreferences(), "homeWidgets", null);
-        for (AbstractActivitiesFinder finder : AbstractActivitiesFinder.getActivitiesFinders()) {
+        for (AbstractActivitiesFinderComponentFactory finder : AbstractActivitiesFinderComponentFactory.getActivitiesFinders()) {
             if (finder.isWidgetCreator()) {
                 WidgetSpecification widgetSpec = finder.asWidgetSpecification();
                 if ((widgetIds != null && widgetIds.contains(finder.getId())) || widgetSpec.isDefaultWidget()) {

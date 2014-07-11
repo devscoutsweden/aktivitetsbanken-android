@@ -7,9 +7,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.ActivityBankFragment;
-import se.devscout.android.view.AbstractActivitiesFinder;
+import se.devscout.android.view.AbstractActivitiesFinderComponentFactory;
 
-public class WelcomeMessageWidgetSpecification extends AbstractActivitiesFinder implements WidgetSpecification {
+public class WelcomeMessageWidgetSpecification extends AbstractActivitiesFinderComponentFactory implements WidgetSpecification {
 
     public WelcomeMessageWidgetSpecification(int nameResId, int iconResId) {
         super(iconResId, nameResId);

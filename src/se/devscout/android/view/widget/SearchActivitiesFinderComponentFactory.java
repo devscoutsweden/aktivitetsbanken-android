@@ -14,10 +14,10 @@ import se.devscout.android.controller.activity.SearchResultActivity;
 import se.devscout.android.controller.fragment.ActivityBankFragment;
 import se.devscout.android.controller.fragment.SearchFragment;
 import se.devscout.android.util.ActivityBankFactory;
-import se.devscout.android.view.AbstractActivitiesFinder;
+import se.devscout.android.view.AbstractActivitiesFinderComponentFactory;
 
-public class SearchActivitiesFinder extends AbstractActivitiesFinder implements WidgetSpecification {
-    public SearchActivitiesFinder(int nameResId, int iconResId) {
+public class SearchActivitiesFinderComponentFactory extends AbstractActivitiesFinderComponentFactory implements WidgetSpecification {
+    public SearchActivitiesFinderComponentFactory(int nameResId, int iconResId) {
         super(iconResId, nameResId);
     }
 

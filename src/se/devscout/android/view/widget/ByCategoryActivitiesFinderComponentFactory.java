@@ -9,13 +9,13 @@ import se.devscout.android.R;
 import se.devscout.android.controller.activity.FragmentCreator;
 import se.devscout.android.controller.fragment.ActivityBankFragment;
 import se.devscout.android.controller.fragment.CategoriesListFragment;
-import se.devscout.android.view.AbstractActivitiesFinder;
+import se.devscout.android.view.AbstractActivitiesFinderComponentFactory;
 import se.devscout.android.view.CategoriesListSearchView;
 
-public class ByCategoryActivitiesFinder extends AbstractActivitiesFinder implements WidgetSpecification, FragmentCreator {
+public class ByCategoryActivitiesFinderComponentFactory extends AbstractActivitiesFinderComponentFactory implements WidgetSpecification, FragmentCreator {
     private CategoriesListSearchView mView;
 
-    public ByCategoryActivitiesFinder(int nameResId, int iconResId) {
+    public ByCategoryActivitiesFinderComponentFactory(int nameResId, int iconResId) {
         super(iconResId, nameResId);
     }
 

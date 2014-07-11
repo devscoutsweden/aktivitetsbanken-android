@@ -10,13 +10,13 @@ import se.devscout.android.controller.activity.FragmentCreator;
 import se.devscout.android.controller.fragment.ActivitiesListFragment;
 import se.devscout.android.controller.fragment.ActivityBankFragment;
 import se.devscout.android.controller.fragment.FavouriteActivitiesListFragment;
-import se.devscout.android.view.AbstractActivitiesFinder;
+import se.devscout.android.view.AbstractActivitiesFinderComponentFactory;
 import se.devscout.android.view.FavouriteActivitiesListView;
 
-public class FavouriteActivitiesFinder extends AbstractActivitiesFinder implements WidgetSpecification, FragmentCreator {
+public class FavouriteActivitiesFinderComponentFactory extends AbstractActivitiesFinderComponentFactory implements WidgetSpecification, FragmentCreator {
     //    private boolean mRefreshResultOnResume = false;
 
-    public FavouriteActivitiesFinder(int nameResId, int iconResId) {
+    public FavouriteActivitiesFinderComponentFactory(int nameResId, int iconResId) {
         super(iconResId, nameResId);
     }
 

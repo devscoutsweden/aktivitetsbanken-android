@@ -3,7 +3,7 @@ package se.devscout.android.controller.fragment;
 import android.support.v4.app.FragmentManager;
 import se.devscout.android.controller.activity.FragmentCreator;
 import se.devscout.android.util.PreferencesUtil;
-import se.devscout.android.view.AbstractActivitiesFinder;
+import se.devscout.android.view.AbstractActivitiesFinderComponentFactory;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public class StartTabsFragment extends TabsFragment {
 
 
         List<String> widgetIds = PreferencesUtil.getStringList(getPreferences(), "tabs", null);
-        for (AbstractActivitiesFinder finder : AbstractActivitiesFinder.getActivitiesFinders()) {
+        for (AbstractActivitiesFinderComponentFactory finder : AbstractActivitiesFinderComponentFactory.getActivitiesFinders()) {
             if (finder.isStartTabCreator()) {
                 FragmentCreator widgetSpec = finder.asFragmentCreator();
                 if ((widgetIds != null && widgetIds.contains(finder.getId())) || widgetSpec.isDefaultTab()) {
