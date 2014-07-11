@@ -11,7 +11,6 @@ import se.devscout.android.view.AbstractActivitiesFinderComponentFactory;
 import se.devscout.android.view.ActivitiesListView;
 import se.devscout.android.view.WidgetView;
 import se.devscout.android.view.widget.FragmentListener;
-import se.devscout.android.view.widget.WidgetSpecification;
 import se.devscout.server.api.ActivityBankListener;
 import se.devscout.server.api.model.ActivityKey;
 import se.devscout.server.api.model.SearchHistory;
@@ -82,11 +81,11 @@ public class StartWidgetFragment extends ActivityBankFragment implements Activit
         List<String> widgetIds = PreferencesUtil.getStringList(getPreferences(), "homeWidgets", null);
         for (AbstractActivitiesFinderComponentFactory finder : AbstractActivitiesFinderComponentFactory.getActivitiesFinders()) {
             if (finder.isWidgetCreator()) {
-                WidgetSpecification widgetSpec = finder.asWidgetSpecification();
-                if ((widgetIds != null && widgetIds.contains(finder.getId())) || widgetSpec.isDefaultWidget()) {
-                    WidgetView widget = new WidgetView(getActivity(), widgetSpec.isTitleImportant() ? widgetSpec.getTitleResId() : 0);
+//                WidgetSpecification widgetSpec = finder.asWidgetSpecification();
+                if ((widgetIds != null && widgetIds.contains(finder.getId())) || finder.isDefaultWidget()) {
+                    WidgetView widget = new WidgetView(getActivity(), finder.isWidgetTitleImportant() ? finder.getTitleResId() : 0);
                     widget.setId(id++);
-                    final View view1 = widgetSpec.createView(inflater, widget, savedInstanceState, this);
+                    final View view1 = finder.createView(inflater, widget, savedInstanceState, this);
                     view1.setId(id++);
                     widget.setContentView(view1);
 

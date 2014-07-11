@@ -1,8 +1,11 @@
 package se.devscout.android.view;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import se.devscout.android.R;
-import se.devscout.android.controller.activity.FragmentCreator;
 import se.devscout.android.controller.fragment.*;
 import se.devscout.android.view.widget.*;
 
@@ -15,36 +18,14 @@ public abstract class AbstractActivitiesFinderComponentFactory implements Serial
 
     private static final Collection<AbstractActivitiesFinderComponentFactory> ACTIVITIES_FINDERS = new ArrayList<AbstractActivitiesFinderComponentFactory>();
 
-    public static Collection<AbstractActivitiesFinderComponentFactory> getActivitiesFinders() {
-        return Collections.unmodifiableCollection(ACTIVITIES_FINDERS);
-    }
-
-    private static abstract class ActivitiesFinderComponentFactoryDefault extends AbstractActivitiesFinderComponentFactory implements FragmentCreator {
-        private boolean mDefaultTab;
-
-        private ActivitiesFinderComponentFactoryDefault(int nameResId, int iconResId, boolean defaultTab) {
-            super(iconResId, nameResId);
-            mDefaultTab = defaultTab;
-        }
-
-        @Override
-        public boolean isDefaultTab() {
-            return mDefaultTab;
-        }
-    }
-
-    public String getId() {
-        return this.getClass().getSimpleName() + "-" + mNameResId + "-" + mIconResId;
-    }
-
     static {
-        ACTIVITIES_FINDERS.add(new ActivitiesFinderComponentFactoryDefault(R.string.startTabHome, R.drawable.ic_action_storage, true) {
+        ACTIVITIES_FINDERS.add(new AbstractActivitiesFinderComponentFactory(R.string.startTabHome, R.drawable.ic_action_storage, true) {
             @Override
             public Fragment createFragment() {
                 return StartWidgetFragment.create();
             }
         });
-        ACTIVITIES_FINDERS.add(new ActivitiesFinderComponentFactoryDefault(R.string.startTabAgeGroups, R.drawable.ic_action_cc_bcc, false) {
+        ACTIVITIES_FINDERS.add(new AbstractActivitiesFinderComponentFactory(R.string.startTabAgeGroups, R.drawable.ic_action_cc_bcc, false) {
             @Override
             public Fragment createFragment() {
                 return AgeGroupListFragment.create();
@@ -56,19 +37,19 @@ public abstract class AbstractActivitiesFinderComponentFactory implements Serial
         ACTIVITIES_FINDERS.add(new FavouriteActivitiesFinderComponentFactory(R.string.startTabFavourites, R.drawable.ic_action_important));
         ACTIVITIES_FINDERS.add(new FeaturedActivitiesFinderComponentFactory(R.string.startTabFeatured, R.drawable.ic_action_good));
         ACTIVITIES_FINDERS.add(new ByCategoryActivitiesFinderComponentFactory(R.string.startTabCategories, R.drawable.ic_action_labels));
-        ACTIVITIES_FINDERS.add(new ActivitiesFinderComponentFactoryDefault(R.string.startTabSearch, R.drawable.ic_action_search, true) {
+        ACTIVITIES_FINDERS.add(new AbstractActivitiesFinderComponentFactory(R.string.startTabSearch, R.drawable.ic_action_search, true) {
             @Override
             public Fragment createFragment() {
                 return SearchFragment.create();
             }
         });
-        ACTIVITIES_FINDERS.add(new ActivitiesFinderComponentFactoryDefault(R.string.drawer_search_history_header, 0, false) {
+        ACTIVITIES_FINDERS.add(new AbstractActivitiesFinderComponentFactory(R.string.drawer_search_history_header, 0, false) {
             @Override
             public Fragment createFragment() {
                 return SearchHistoryListFragment.create();
             }
         });
-        ACTIVITIES_FINDERS.add(new ActivitiesFinderComponentFactoryDefault(R.string.startTabTracks, 0, false) {
+        ACTIVITIES_FINDERS.add(new AbstractActivitiesFinderComponentFactory(R.string.startTabTracks, 0, false) {
             @Override
             public Fragment createFragment() {
                 return CategoryTrackListFragment.create();
@@ -76,8 +57,87 @@ public abstract class AbstractActivitiesFinderComponentFactory implements Serial
         });
     }
 
+    public static Collection<AbstractActivitiesFinderComponentFactory> getActivitiesFinders() {
+        return Collections.unmodifiableCollection(ACTIVITIES_FINDERS);
+    }
+
+    public boolean isFragmentCreator() {
+        return mFragmentCreator;
+    }
+
+    public boolean isWidgetCreator() {
+        return mWidgetCreator;
+    }
+
+    public boolean isWidgetTitleImportant() {
+        return mWidgetTitleImportant;
+    }
+
+    public boolean isDefaultWidget() {
+        return mDefaultWidget;
+    }
+
+    public boolean isDefaultFragment() {
+        return mDefaultFragment;
+    }
+
+    public String getId() {
+        return this.getClass().getSimpleName() + "-" + mNameResId + "-" + mIconResId;
+    }
+
     private int mNameResId;
     private int mIconResId;
+    private boolean mFragmentCreator;
+    private boolean mWidgetCreator;
+    private boolean mWidgetTitleImportant;
+    private boolean mDefaultWidget;
+    private boolean mDefaultFragment;
+
+    /**
+     * Factory creating both widgets and tabs (fragments).
+     *
+     * @param iconResId
+     * @param nameResId
+     * @param defaultFragment
+     * @param defaultWidget
+     * @param widgetTitleImportant
+     */
+    protected AbstractActivitiesFinderComponentFactory(int iconResId, int nameResId, boolean defaultFragment, boolean defaultWidget, boolean widgetTitleImportant) {
+        this(nameResId, iconResId, true, defaultFragment, true, defaultWidget, widgetTitleImportant);
+    }
+
+    /**
+     * Widget-only factory.
+     *
+     * @param iconResId
+     * @param nameResId
+     * @param defaultWidget
+     * @param widgetTitleImportant
+     */
+    protected AbstractActivitiesFinderComponentFactory(int iconResId, int nameResId, boolean defaultWidget, boolean widgetTitleImportant) {
+        this(nameResId, iconResId, false, false, true, defaultWidget, widgetTitleImportant);
+    }
+
+    /**
+     * Tab-only factory.
+     *
+     * @param nameResId
+     * @param iconResId
+     * @param defaultFragment
+     */
+    protected AbstractActivitiesFinderComponentFactory(int nameResId, int iconResId, boolean defaultFragment) {
+        this(nameResId, iconResId, true, defaultFragment, false, false, false);
+    }
+
+    private AbstractActivitiesFinderComponentFactory(int nameResId, int iconResId, boolean fragmentCreator, boolean defaultFragment, boolean widgetCreator, boolean defaultWidget, boolean widgetTitleImportant) {
+        mDefaultFragment = defaultFragment;
+        mDefaultWidget = defaultWidget;
+        mFragmentCreator = fragmentCreator;
+        mIconResId = iconResId;
+        mNameResId = nameResId;
+        mWidgetCreator = widgetCreator;
+        mWidgetTitleImportant = widgetTitleImportant;
+    }
 
     protected AbstractActivitiesFinderComponentFactory(int iconResId, int nameResId) {
         mIconResId = iconResId;
@@ -92,25 +152,11 @@ public abstract class AbstractActivitiesFinderComponentFactory implements Serial
         return mNameResId;
     }
 
-    public boolean isStartTabCreator() {
-        return this instanceof FragmentCreator;
+    public View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState, ActivityBankFragment activityBankFragment) {
+        throw new UnsupportedOperationException("createView has not been implemented by " + getClass().getSimpleName() + ". Blame the developer.");
     }
 
-    public boolean isWidgetCreator() {
-        return this instanceof WidgetSpecification;
-    }
-
-    public FragmentCreator asFragmentCreator() {
-        if (isStartTabCreator()) {
-            return (FragmentCreator) this;
-        }
-        throw new ClassCastException(getClass().getName() + " is not a fragment creator.");
-    }
-
-    public WidgetSpecification asWidgetSpecification() {
-        if (isWidgetCreator()) {
-            return (WidgetSpecification) this;
-        }
-        throw new ClassCastException(getClass().getName() + " is not a widget specification.");
+    public Fragment createFragment() {
+        throw new UnsupportedOperationException("createFragment has not been implemented by " + getClass().getSimpleName() + ". Blame the developer.");
     }
 }

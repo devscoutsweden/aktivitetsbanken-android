@@ -25,8 +25,4 @@ public abstract class ExecutableDrawerItem extends DefaultDrawerItem implements 
         return getTitle();
     }
 
-    @Override
-    public boolean isDefaultTab() {
-        return false;
-    }
 }

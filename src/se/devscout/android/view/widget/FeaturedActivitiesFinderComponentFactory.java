@@ -5,21 +5,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import se.devscout.android.controller.activity.FragmentCreator;
 import se.devscout.android.controller.fragment.ActivityBankFragment;
 import se.devscout.android.controller.fragment.FeaturedActivitiesListFragment;
 import se.devscout.android.view.AbstractActivitiesFinderComponentFactory;
 import se.devscout.android.view.FeaturedActivitiesListView;
 
-public class FeaturedActivitiesFinderComponentFactory extends AbstractActivitiesFinderComponentFactory implements WidgetSpecification, FragmentCreator {
+public class FeaturedActivitiesFinderComponentFactory extends AbstractActivitiesFinderComponentFactory {
 
     public FeaturedActivitiesFinderComponentFactory(int nameResId, int iconResId) {
-        super(iconResId, nameResId);
-    }
-
-    @Override
-    public boolean isTitleImportant() {
-        return true;
+        super(iconResId, nameResId, false, true, true);
     }
 
     @Override
@@ -34,17 +28,7 @@ public class FeaturedActivitiesFinderComponentFactory extends AbstractActivities
     }
 
     @Override
-    public boolean isDefaultWidget() {
-        return true;
-    }
-
-    @Override
     public Fragment createFragment() {
         return FeaturedActivitiesListFragment.create();
-    }
-
-    @Override
-    public boolean isDefaultTab() {
-        return false;
     }
 }

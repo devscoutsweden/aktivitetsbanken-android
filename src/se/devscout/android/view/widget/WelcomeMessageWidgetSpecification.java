@@ -9,15 +9,10 @@ import se.devscout.android.R;
 import se.devscout.android.controller.fragment.ActivityBankFragment;
 import se.devscout.android.view.AbstractActivitiesFinderComponentFactory;
 
-public class WelcomeMessageWidgetSpecification extends AbstractActivitiesFinderComponentFactory implements WidgetSpecification {
+public class WelcomeMessageWidgetSpecification extends AbstractActivitiesFinderComponentFactory {
 
     public WelcomeMessageWidgetSpecification(int nameResId, int iconResId) {
-        super(iconResId, nameResId);
-    }
-
-    @Override
-    public boolean isTitleImportant() {
-        return false;
+        super(iconResId, nameResId, true, false);
     }
 
     @Override
@@ -25,10 +20,5 @@ public class WelcomeMessageWidgetSpecification extends AbstractActivitiesFinderC
         TextView textView = new TextView(container.getContext());
         textView.setText(R.string.startIntroText);
         return textView;
-    }
-
-    @Override
-    public boolean isDefaultWidget() {
-        return true;
     }
 }

@@ -6,28 +6,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import se.devscout.android.R;
-import se.devscout.android.controller.activity.FragmentCreator;
 import se.devscout.android.controller.fragment.ActivityBankFragment;
 import se.devscout.android.controller.fragment.CategoriesListFragment;
 import se.devscout.android.view.AbstractActivitiesFinderComponentFactory;
 import se.devscout.android.view.CategoriesListSearchView;
 
-public class ByCategoryActivitiesFinderComponentFactory extends AbstractActivitiesFinderComponentFactory implements WidgetSpecification, FragmentCreator {
-    private CategoriesListSearchView mView;
-
+public class ByCategoryActivitiesFinderComponentFactory extends AbstractActivitiesFinderComponentFactory {
     public ByCategoryActivitiesFinderComponentFactory(int nameResId, int iconResId) {
-        super(iconResId, nameResId);
-    }
-
-    @Override
-    public boolean isTitleImportant() {
-        return false;
+        super(iconResId, nameResId, true, false, false);
     }
 
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState, ActivityBankFragment activityBankFragment) {
 
-        mView = new CategoriesListSearchView(container.getContext(), R.string.searchResultEmptyMessage,R.string.searchResultEmptyTitle, true);
+        CategoriesListSearchView mView = new CategoriesListSearchView(container.getContext(), R.string.searchResultEmptyMessage,R.string.searchResultEmptyTitle, true);
 
         // Start search in separate thread
         mView.runSearchTaskInNewThread();
@@ -36,17 +28,7 @@ public class ByCategoryActivitiesFinderComponentFactory extends AbstractActiviti
     }
 
     @Override
-    public boolean isDefaultWidget() {
-        return false;
-    }
-
-    @Override
     public Fragment createFragment() {
         return CategoriesListFragment.create();
-    }
-
-    @Override
-    public boolean isDefaultTab() {
-        return true;
     }
 }

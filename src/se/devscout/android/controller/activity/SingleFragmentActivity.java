@@ -43,7 +43,7 @@ abstract class SingleFragmentActivity<T extends Fragment> extends FragmentActivi
         mDrawerListAdapter = new DrawerListAdapter(this, getSupportFragmentManager(), R.id.start_content_frame);
         mDrawerListAdapter.add(new HeaderDrawerItem(getString(R.string.drawer_start_header)));
         for (AbstractActivitiesFinderComponentFactory finder : AbstractActivitiesFinderComponentFactory.getActivitiesFinders()) {
-            if (finder.isStartTabCreator()) {
+            if (finder.isFragmentCreator()) {
                 mDrawerListAdapter.add(createFragmentCreatorDrawerItem(finder));
             }
         }
@@ -121,7 +121,10 @@ abstract class SingleFragmentActivity<T extends Fragment> extends FragmentActivi
     }
 
     private FragmentCreatorDrawerItem createFragmentCreatorDrawerItem(AbstractActivitiesFinderComponentFactory finder) {
-        return new FragmentCreatorDrawerItem(getString(finder.getTitleResId()), finder.getIconResId(), finder.asFragmentCreator());
+        int titleResId = finder.getTitleResId();
+        String title = titleResId > 0 ? getString(titleResId) : "";
+        int iconResId = finder.getIconResId();
+        return new FragmentCreatorDrawerItem(title, iconResId, finder);
     }
 
     @Override

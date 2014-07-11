@@ -1,13 +1,13 @@
 package se.devscout.android.controller.activity.drawer;
 
 import android.support.v4.app.Fragment;
-import se.devscout.android.controller.activity.FragmentCreator;
+import se.devscout.android.view.AbstractActivitiesFinderComponentFactory;
 
 public class FragmentCreatorDrawerItem extends ExecutableDrawerItem {
-    private final FragmentCreator mCreator;
+    private final AbstractActivitiesFinderComponentFactory mCreator;
 
-    public FragmentCreatorDrawerItem(String titleResId, int iconResIdesId, FragmentCreator creator) {
-        super(titleResId, iconResIdesId);
+    public FragmentCreatorDrawerItem(String title, int iconResIdesId, AbstractActivitiesFinderComponentFactory creator) {
+        super(title, iconResIdesId);
         mCreator = creator;
     }
 
