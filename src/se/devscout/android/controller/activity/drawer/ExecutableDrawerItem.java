@@ -24,4 +24,9 @@ public abstract class ExecutableDrawerItem extends DefaultDrawerItem implements 
     protected String getActivityTitle() {
         return getTitle();
     }
+
+    @Override
+    public boolean isDefaultTab() {
+        return false;
+    }
 }

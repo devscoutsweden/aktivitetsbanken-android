@@ -6,4 +6,5 @@ import java.io.Serializable;
 
 public interface FragmentCreator extends Serializable {
     Fragment createFragment();
+    boolean isDefaultTab();
 }

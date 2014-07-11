@@ -4,14 +4,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import se.devscout.android.R;
 import se.devscout.android.controller.fragment.ActivityBankFragment;
 import se.devscout.android.view.AbstractActivitiesFinder;
+import se.devscout.android.view.FindSpontaneousActivitiesView;
 
-public class WelcomeMessageWidgetSpecification extends AbstractActivitiesFinder implements WidgetSpecification {
-
-    public WelcomeMessageWidgetSpecification(int nameResId, int iconResId) {
+public class SpontaneousActivitiesFinder extends AbstractActivitiesFinder implements WidgetSpecification {
+    public SpontaneousActivitiesFinder(int nameResId, int iconResId) {
         super(iconResId, nameResId);
     }
 
@@ -22,9 +20,7 @@ public class WelcomeMessageWidgetSpecification extends AbstractActivitiesFinder 
 
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState, ActivityBankFragment activityBankFragment) {
-        TextView textView = new TextView(container.getContext());
-        textView.setText(R.string.startIntroText);
-        return textView;
+        return new FindSpontaneousActivitiesView(container.getContext(), true);
     }
 
     @Override

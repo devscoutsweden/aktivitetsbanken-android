@@ -3,7 +3,7 @@ package se.devscout.android.view;
 import android.widget.ArrayAdapter;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.ActivityBankFragment;
-import se.devscout.android.controller.fragment.FeaturedActivitiesArrayAdapter;
+import se.devscout.android.controller.fragment.ActivityCoverArrayAdapter;
 import se.devscout.android.util.ActivityBankFactory;
 
 import java.util.List;
@@ -30,6 +30,7 @@ public class FavouriteActivitiesListView extends ActivitiesListView {
 
     @Override
     protected ArrayAdapter<ActivitiesListItem> createAdapter(final List<ActivitiesListItem> result) {
-        return new FeaturedActivitiesArrayAdapter(getContext(), result);
+        return new ActivityCoverArrayAdapter(getContext(), result);
     }
+
 }

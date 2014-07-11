@@ -6,15 +6,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import se.devscout.android.R;
+import se.devscout.android.util.PreferencesUtil;
+import se.devscout.android.view.AbstractActivitiesFinder;
 import se.devscout.android.view.ActivitiesListView;
 import se.devscout.android.view.WidgetView;
-import se.devscout.android.view.widget.*;
+import se.devscout.android.view.widget.FragmentListener;
+import se.devscout.android.view.widget.WidgetSpecification;
 import se.devscout.server.api.ActivityBankListener;
 import se.devscout.server.api.model.ActivityKey;
 import se.devscout.server.api.model.SearchHistory;
 import se.devscout.server.api.model.UserKey;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class StartWidgetFragment extends ActivityBankFragment implements ActivityBankListener {
@@ -43,6 +45,7 @@ public class StartWidgetFragment extends ActivityBankFragment implements Activit
             mRefreshResultOnResume = true;
         }
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -72,29 +75,25 @@ public class StartWidgetFragment extends ActivityBankFragment implements Activit
         }
         getActivityBank().addListener(this);
 
-        final List<WidgetSpecification> mFragmentCreator = new ArrayList<WidgetSpecification>();
-        mFragmentCreator.add(new WelcomeMessageWidgetSpecification());
-        mFragmentCreator.add(new SearchWidgetSpecification());
-        mFragmentCreator.add(new SpontaneousActivityWidgetSpecification());
-        mFragmentCreator.add(new CategoriesWidgetSpecification());
-        mFragmentCreator.add(new FeaturedWidgetSpecification());
-        mFragmentCreator.add(new FavouritesWidgetSpecification());
         final View view = inflater.inflate(R.layout.start, container, false);
         final LinearLayout ll = (LinearLayout) view.findViewById(R.id.start_widgets_container);
 
         int id = 12345;
-        for (WidgetSpecification widgetSpec : mFragmentCreator) {
-            WidgetView widget = new WidgetView(getActivity(), widgetSpec.getTitleResId());
-            widget.setId(id++);
-            final View[] views = widgetSpec.getViews(inflater, widget, savedInstanceState, this);
-            for (View view1 : views) {
-                view1.setId(id++);
-                widget.setContentView(view1);
+        List<String> widgetIds = PreferencesUtil.getStringList(getPreferences(), "homeWidgets", null);
+        for (AbstractActivitiesFinder finder : AbstractActivitiesFinder.getActivitiesFinders()) {
+            if (finder.isWidgetCreator()) {
+                WidgetSpecification widgetSpec = finder.asWidgetSpecification();
+                if ((widgetIds != null && widgetIds.contains(finder.getId())) || widgetSpec.isDefaultWidget()) {
+                    WidgetView widget = new WidgetView(getActivity(), widgetSpec.isTitleImportant() ? widgetSpec.getTitleResId() : 0);
+                    widget.setId(id++);
+                    final View view1 = widgetSpec.createView(inflater, widget, savedInstanceState, this);
+                    view1.setId(id++);
+                    widget.setContentView(view1);
+
+                    ll.addView(widget);
+                }
             }
-
-            ll.addView(widget);
         }
-
         return view;
     }
 

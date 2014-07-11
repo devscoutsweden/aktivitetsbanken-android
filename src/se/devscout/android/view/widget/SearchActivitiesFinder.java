@@ -14,18 +14,26 @@ import se.devscout.android.controller.activity.SearchResultActivity;
 import se.devscout.android.controller.fragment.ActivityBankFragment;
 import se.devscout.android.controller.fragment.SearchFragment;
 import se.devscout.android.util.ActivityBankFactory;
+import se.devscout.android.view.AbstractActivitiesFinder;
 
-public class SearchWidgetSpecification implements WidgetSpecification {
-    @Override
-    public int getTitleResId() {
-        return 0;
+public class SearchActivitiesFinder extends AbstractActivitiesFinder implements WidgetSpecification {
+    public SearchActivitiesFinder(int nameResId, int iconResId) {
+        super(iconResId, nameResId);
     }
 
     @Override
-    public View[] getViews(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState, ActivityBankFragment activityBankFragment) {
-        return new View[] {
-                new SearchView(container.getContext())
-        };
+    public boolean isTitleImportant() {
+        return false;
+    }
+
+    @Override
+    public View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState, ActivityBankFragment activityBankFragment) {
+        return new SearchView(container.getContext());
+    }
+
+    @Override
+    public boolean isDefaultWidget() {
+        return true;
     }
 
     private static class SearchView extends FrameLayout {

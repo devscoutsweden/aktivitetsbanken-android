@@ -7,8 +7,9 @@ import android.view.ViewGroup;
 import se.devscout.android.controller.fragment.ActivityBankFragment;
 
 import java.io.Serializable;
-
 public interface WidgetSpecification extends Serializable {
     int getTitleResId();
-    View[] getViews(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState, ActivityBankFragment activityBankFragment);
+    boolean isTitleImportant();
+    View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState, ActivityBankFragment activityBankFragment);
+    boolean isDefaultWidget();
 }

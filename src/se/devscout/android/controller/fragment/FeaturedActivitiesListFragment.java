@@ -1,7 +1,10 @@
 package se.devscout.android.controller.fragment;
 
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import se.devscout.android.view.ActivitiesListView;
-import se.devscout.server.api.ActivityBank;
+import se.devscout.android.view.FeaturedActivitiesListView;
 import se.devscout.server.api.activityfilter.IsFeaturedFilter;
 
 public class FeaturedActivitiesListFragment extends ActivitiesListFragment {
@@ -17,8 +20,13 @@ public class FeaturedActivitiesListFragment extends ActivitiesListFragment {
         super(featuredFilter, sortOrder);
     }
 
-    public static FeaturedActivitiesListFragment create(ActivitiesListView.Sorter defaultSortOrder, ActivityBank activityBank) {
-        return new FeaturedActivitiesListFragment(defaultSortOrder, activityBank.getFilterFactory().createIsFeaturedFilter());
+    @Override
+    protected ActivitiesListView createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return new FeaturedActivitiesListView(this, getSortOrder(), false);
+    }
+
+    public static FeaturedActivitiesListFragment create() {
+        return new FeaturedActivitiesListFragment();
     }
 
 }

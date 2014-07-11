@@ -11,10 +11,10 @@ import se.devscout.android.view.ActivitiesListItem;
 
 import java.util.List;
 
-public class FeaturedActivitiesArrayAdapter extends ArrayAdapter<ActivitiesListItem> {
+public class ActivityCoverArrayAdapter extends ArrayAdapter<ActivitiesListItem> {
 //    private final List<Activity> mResult;
 
-    public FeaturedActivitiesArrayAdapter(Context context, List<ActivitiesListItem> result) {
+    public ActivityCoverArrayAdapter(Context context, List<ActivitiesListItem> result) {
         super(context, R.layout.simple_list_item_1, result);
 //        mResult = result;
     }

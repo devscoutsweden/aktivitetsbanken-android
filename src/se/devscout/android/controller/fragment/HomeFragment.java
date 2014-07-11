@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import se.devscout.android.R;
-import se.devscout.android.view.ActivitiesListView;
 
 public class HomeFragment extends ActivityBankFragment {
     @Override
@@ -16,7 +15,7 @@ public class HomeFragment extends ActivityBankFragment {
         FragmentManager fm = getChildFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.homeList);
         if (fragment == null) {
-            fragment = FeaturedActivitiesListFragment.create(ActivitiesListView.Sorter.NAME, getActivityBank());
+            fragment = FeaturedActivitiesListFragment.create();
             fm.beginTransaction().add(R.id.homeList, fragment).commit();
         }
         return view;

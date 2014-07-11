@@ -30,7 +30,8 @@ public class StaticFragmentsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return mContext.getString(mTabInfoList.get(position).getNameResId());
+        int resId = mTabInfoList.get(position).getNameResId();
+        return resId > 0 ? mContext.getString(resId) : "?";
     }
 
     @Override

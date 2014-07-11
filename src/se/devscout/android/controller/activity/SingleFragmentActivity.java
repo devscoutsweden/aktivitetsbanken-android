@@ -18,6 +18,7 @@ import se.devscout.android.R;
 import se.devscout.android.controller.activity.drawer.*;
 import se.devscout.android.controller.fragment.AbstractActivityBankListener;
 import se.devscout.android.util.ActivityBankFactory;
+import se.devscout.android.view.AbstractActivitiesFinder;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.model.SearchHistory;
 
@@ -40,14 +41,12 @@ abstract class SingleFragmentActivity<T extends Fragment> extends FragmentActivi
         mContentFrame = (FrameLayout) findViewById(R.id.start_content_frame);
 
         mDrawerListAdapter = new DrawerListAdapter(this, getSupportFragmentManager(), R.id.start_content_frame);
-        mDrawerListAdapter.add(
-                new HeaderDrawerItem(getString(R.string.drawer_start_header)),
-                new StartDrawerItem(getString(R.string.startTabHome), R.drawable.ic_action_favorite),
-                new FavouriteActivitiesDrawerItem(getString(R.string.startTabFavourites), R.drawable.ic_action_important),
-                new SearchDrawerItem(getString(R.string.startTabSearch), R.drawable.ic_action_search),
-                new AgeGroupsDrawerItem(getString(R.string.startTabAgeGroups), R.drawable.ic_action_cc_bcc),
-                new CategoriesDrawerItem(getString(R.string.startTabCategories), R.drawable.ic_action_labels)
-        );
+        mDrawerListAdapter.add(new HeaderDrawerItem(getString(R.string.drawer_start_header)));
+        for (AbstractActivitiesFinder finder : AbstractActivitiesFinder.getActivitiesFinders()) {
+            if (finder.isStartTabCreator()) {
+                mDrawerListAdapter.add(createFragmentCreatorDrawerItem(finder));
+            }
+        }
 
         mDrawerListAdapter.addSearchHistory(getString(R.string.drawer_search_history_header), getActivityBank());
         mActivityBankListener = new AbstractActivityBankListener() {
@@ -119,6 +118,10 @@ abstract class SingleFragmentActivity<T extends Fragment> extends FragmentActivi
                 mFragment.setInitialSavedState(state);
             }
         }
+    }
+
+    private FragmentCreatorDrawerItem createFragmentCreatorDrawerItem(AbstractActivitiesFinder finder) {
+        return new FragmentCreatorDrawerItem(getString(finder.getTitleResId()), finder.getIconResId(), finder.asFragmentCreator());
     }
 
     @Override
