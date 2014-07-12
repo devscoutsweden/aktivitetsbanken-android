@@ -16,11 +16,7 @@ public class PreferencesUtil {
             }
             return new ArrayList<String>(map.values());
         } else {
-            if (defaultOrder != null) {
-                return new ArrayList<String>(defaultOrder);
-            } else {
-                return Collections.emptyList();
-            }
+            return defaultOrder;
         }
     }
 
