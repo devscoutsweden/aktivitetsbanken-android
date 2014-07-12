@@ -17,6 +17,6 @@ public class ActivityBankFragment extends Fragment {
     }
 
     protected SharedPreferences getPreferences() {
-        return getActivity().getPreferences(Context.MODE_PRIVATE);
+        return getActivity().getSharedPreferences(getClass().getName(), Context.MODE_PRIVATE);
     }
 }
