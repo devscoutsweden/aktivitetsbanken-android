@@ -15,7 +15,7 @@ public class StartTabsFragment extends TabsFragment {
         List<String> widgetIds = PreferencesUtil.getStringList(getPreferences(), "tabs", null);
         for (AbstractActivitiesFinderComponentFactory finder : AbstractActivitiesFinderComponentFactory.getActivitiesFinders()) {
             if (finder.isFragmentCreator()) {
-                if ((widgetIds != null && widgetIds.contains(finder.getId())) || finder.isDefaultFragment()) {
+                if ((widgetIds != null && widgetIds.contains(finder.getId())) || (widgetIds == null && finder.isDefaultFragment())) {
                     pagerAdapter.addTab(finder.getTitleResId(), finder.getIconResId(), finder.createFragment());
                 }
             }
