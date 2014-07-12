@@ -131,4 +131,7 @@
     <string name="subtitle_filter_visitor_or">\u0020eller\u0020</string>
     <string name="subtitle_filter_visitor_random">%d slumpade</string>
     <string name="startTabSpontaneousActivity">Spontanaktivitet</string>
+    <string name="welcomeWidgetTitle">Välkomstmeddelande</string>
+    <string name="startSelectWidgets">Välj kort...</string>
+    <string name="button_positive">Okej</string>
 </resources>

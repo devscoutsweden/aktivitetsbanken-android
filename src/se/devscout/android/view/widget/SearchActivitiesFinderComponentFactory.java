@@ -2,7 +2,6 @@ package se.devscout.android.view.widget;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,7 @@ public class SearchActivitiesFinderComponentFactory extends AbstractActivitiesFi
     }
 
     @Override
-    public View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState, ActivityBankFragment activityBankFragment) {
+    public View createView(LayoutInflater inflater, ViewGroup container, ActivityBankFragment activityBankFragment) {
         return new SearchView(container.getContext());
     }
 

@@ -1,6 +1,5 @@
 package se.devscout.android.view.widget;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,7 +17,7 @@ public class FavouriteActivitiesFinderComponentFactory extends AbstractActivitie
     }
 
     @Override
-    public View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState, ActivityBankFragment activityBankFragment) {
+    public View createView(LayoutInflater inflater, ViewGroup container, ActivityBankFragment activityBankFragment) {
 
         FavouriteActivitiesListView mView = new FavouriteActivitiesListView(activityBankFragment, true);
 

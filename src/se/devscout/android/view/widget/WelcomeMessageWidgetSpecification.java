@@ -1,6 +1,5 @@
 package se.devscout.android.view.widget;
 
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,7 @@ public class WelcomeMessageWidgetSpecification extends AbstractActivitiesFinderC
     }
 
     @Override
-    public View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState, ActivityBankFragment activityBankFragment) {
+    public View createView(LayoutInflater inflater, ViewGroup container, ActivityBankFragment activityBankFragment) {
         TextView textView = new TextView(container.getContext());
         textView.setText(R.string.startIntroText);
         return textView;

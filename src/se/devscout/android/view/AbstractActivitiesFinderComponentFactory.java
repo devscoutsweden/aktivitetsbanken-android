@@ -1,6 +1,5 @@
 package se.devscout.android.view;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +30,7 @@ public abstract class AbstractActivitiesFinderComponentFactory implements Serial
                 return AgeGroupListFragment.create();
             }
         });
-        ACTIVITIES_FINDERS.add(new WelcomeMessageWidgetSpecification(0, R.drawable.ic_drawer));
+        ACTIVITIES_FINDERS.add(new WelcomeMessageWidgetSpecification(R.string.welcomeWidgetTitle, R.drawable.ic_drawer));
         ACTIVITIES_FINDERS.add(new SearchActivitiesFinderComponentFactory(R.string.startTabSearch, R.drawable.ic_drawer));
         ACTIVITIES_FINDERS.add(new SpontaneousActivitiesFinderComponentFactory(R.string.startTabSpontaneousActivity, R.drawable.ic_drawer));
         ACTIVITIES_FINDERS.add(new FavouriteActivitiesFinderComponentFactory(R.string.startTabFavourites, R.drawable.ic_action_important));
@@ -152,7 +151,7 @@ public abstract class AbstractActivitiesFinderComponentFactory implements Serial
         return mNameResId;
     }
 
-    public View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState, ActivityBankFragment activityBankFragment) {
+    public View createView(LayoutInflater inflater, ViewGroup container, ActivityBankFragment activityBankFragment) {
         throw new UnsupportedOperationException("createView has not been implemented by " + getClass().getSimpleName() + ". Blame the developer.");
     }
 
