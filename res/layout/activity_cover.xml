@@ -1,50 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/activityCoverImage"
-        android:layout_gravity="center"
-        android:src="@android:drawable/ic_menu_gallery"
-        android:scaleType="center"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="0dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="0dp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView
-        android:text="ABCåäögj"
-        android:id="@+id/activityCoverLabel"
-        android:layout_gravity="center_horizontal|bottom"
-        android:layout_alignLeft="@+id/activityCoverImage"
-        android:layout_alignBottom="@+id/activityCoverImage"
-        android:layout_toLeftOf="@+id/activityCoverFavoriteIcon"
-        style="@style/ImageOverlay_SingleTextLine"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minHeight="@dimen/uiBlockSize" />
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/activityCoverImage"
+            android:layout_gravity="center"
+            android:src="@android:drawable/ic_menu_gallery"
+            android:scaleType="center"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="0dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="0dp"
+            android:background="@color/basicVeryLight" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/activityCoverShareIcon"
-        android:layout_gravity="right|bottom"
-        android:src="@drawable/ic_action_share"
-        android:layout_alignRight="@+id/activityCoverImage"
-        android:layout_alignBottom="@+id/activityCoverImage"
-        style="@style/ImageOverlay_ImageButton" />
+        <TextView
+            android:text="ABCåäögj"
+            android:id="@+id/activityCoverLabel"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_alignLeft="@+id/activityCoverImage"
+            android:layout_alignBottom="@+id/activityCoverImage"
+            android:layout_toLeftOf="@+id/activityCoverFavoriteIcon"
+            style="@style/ImageOverlay_SingleTextLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/uiBlockSize" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/activityCoverFavoriteIcon"
-        android:layout_gravity="right|center_vertical"
-        android:src="@drawable/ic_action_favorite"
-        android:layout_toLeftOf="@+id/activityCoverShareIcon"
-        android:layout_alignTop="@+id/activityCoverShareIcon"
-        style="@style/ImageOverlay_ImageButton" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/activityCoverShareIcon"
+            android:layout_gravity="right|bottom"
+            android:src="@drawable/ic_action_share"
+            android:layout_alignRight="@+id/activityCoverImage"
+            android:layout_alignBottom="@+id/activityCoverImage"
+            style="@style/ImageOverlay_ImageButton" />
 
-</RelativeLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/activityCoverFavoriteIcon"
+            android:layout_gravity="right|center_vertical"
+            android:src="@drawable/ic_action_favorite"
+            android:layout_toLeftOf="@+id/activityCoverShareIcon"
+            android:layout_alignTop="@+id/activityCoverShareIcon"
+            style="@style/ImageOverlay_ImageButton" />
+
+    </RelativeLayout>
+</FrameLayout>
