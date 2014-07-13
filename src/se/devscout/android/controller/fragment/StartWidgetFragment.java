@@ -1,6 +1,6 @@
 package se.devscout.android.controller.fragment;
 
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import se.devscout.android.R;
+import se.devscout.android.util.DialogUtil;
 import se.devscout.android.util.PreferencesUtil;
 import se.devscout.android.view.AbstractActivitiesFinderComponentFactory;
 import se.devscout.android.view.ActivitiesListView;
@@ -91,49 +92,32 @@ public class StartWidgetFragment extends ActivityBankFragment implements Activit
         return view;
     }
 
-    private AlertDialog createWidgetSelectionDialog(final View view, final LayoutInflater inflater) {
+    private Dialog createWidgetSelectionDialog(final View view, final LayoutInflater inflater) {
         final Map<String, AbstractActivitiesFinderComponentFactory> allWidgets = getAllWidgets(false);
         Map<String, AbstractActivitiesFinderComponentFactory> selectedWidgets = getAllWidgets(true);
 
-        final List<AbstractActivitiesFinderComponentFactory> currentlySelectedItems = new ArrayList<AbstractActivitiesFinderComponentFactory>();
-        final String[] options = new String[allWidgets.size()];
-        boolean[] initiallySelectedOptions = new boolean[allWidgets.size()];
-        int i = 0;
+        LinkedHashMap<String, Boolean> options = new LinkedHashMap<String, Boolean>();
+
         for (Map.Entry<String, AbstractActivitiesFinderComponentFactory> entry : allWidgets.entrySet()) {
             String title = entry.getKey();
-            AbstractActivitiesFinderComponentFactory factory = entry.getValue();
             boolean selected = selectedWidgets.keySet().contains(title);
-            options[i] = title;
-            initiallySelectedOptions[i] = selected;
-            if (selected) {
-                currentlySelectedItems.add(factory);
-            }
-            i++;
+            options.put(title, selected);
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
-        return builder.setMultiChoiceItems(options, initiallySelectedOptions, new DialogInterface.OnMultiChoiceClickListener() {
+
+        return DialogUtil.createMultiChoiceDialog(options, getActivity(), new DialogUtil.OnMultiChoiceDialogDone() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int index, boolean checked) {
-                if (checked) {
-                    currentlySelectedItems.add(allWidgets.get(options[index]));
-                } else {
-                    currentlySelectedItems.remove(allWidgets.get(options[index]));
-                }
-            }
-        }).setPositiveButton(R.string.button_positive, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                ArrayList<String> values = getSelectedIds();
+            public void onPositiveButtonClick(DialogInterface dialogInterface, List<String> selectedOptions) {
+                ArrayList<String> values = getSelectedIds(selectedOptions);
 
                 saveSelection(values);
 
                 loadSelectedWidgets(inflater, view);
             }
 
-            private ArrayList<String> getSelectedIds() {
+            private ArrayList<String> getSelectedIds(List<String> selectedOptions) {
                 ArrayList<String> values = new ArrayList<String>();
-                for (AbstractActivitiesFinderComponentFactory factory : currentlySelectedItems) {
-                    values.add(factory.getId());
+                for (String factory : selectedOptions) {
+                    values.add(allWidgets.get(factory).getId());
                 }
                 return values;
             }
@@ -143,7 +127,7 @@ public class StartWidgetFragment extends ActivityBankFragment implements Activit
                 PreferencesUtil.putStringList(PREFS_KEY_WIDGET_IDS, values, editor);
                 editor.commit();
             }
-        }).setCancelable(true).create();
+        });
     }
 
     private void loadSelectedWidgets(final LayoutInflater inflater, final View view) {
@@ -168,7 +152,7 @@ public class StartWidgetFragment extends ActivityBankFragment implements Activit
         selectWidgetsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View buttonView) {
-                AlertDialog dialog = createWidgetSelectionDialog(view, inflater);
+                Dialog dialog = createWidgetSelectionDialog(view, inflater);
                 dialog.show();
             }
         });

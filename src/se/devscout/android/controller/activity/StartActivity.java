@@ -23,10 +23,12 @@ public class StartActivity extends SingleFragmentActivity {
 
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
-        if (item.getItemId() == R.id.menuStartResetDatabase) {
-            Log.i(StartActivity.class.getName(), "Resetting database.");
-            SQLiteActivityRepo.getInstance(this).resetDatabase(true);
-            Log.i(StartActivity.class.getName(), "Database has been reset.");
+        switch (item.getItemId()) {
+            case R.id.menuStartResetDatabase:
+                Log.i(StartActivity.class.getName(), "Resetting database.");
+                SQLiteActivityRepo.getInstance(this).resetDatabase(true);
+                Log.i(StartActivity.class.getName(), "Database has been reset.");
+                break;
         }
         return super.onMenuItemSelected(featureId, item);
     }

@@ -141,4 +141,5 @@
     <string name="noSpontaneousActivitiesFoundMessage">Inga snabba aktiviteter hittades för denna åldersgrupp</string>
     <string name="noActivitiesInCategoryTitle">Tom kategori</string>
     <string name="noActivitiesInCategoryMessage">Inga aktiviteter har placerats i den här kategorin.</string>
+    <string name="startMenuTabs">Flikar</string>
 </resources>

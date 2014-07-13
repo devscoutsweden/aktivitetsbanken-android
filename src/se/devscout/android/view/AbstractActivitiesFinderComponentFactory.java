@@ -42,13 +42,13 @@ public abstract class AbstractActivitiesFinderComponentFactory implements Serial
                 return SearchFragment.create();
             }
         });
-        ACTIVITIES_FINDERS.add(new AbstractActivitiesFinderComponentFactory(R.string.drawer_search_history_header, 0, false) {
+        ACTIVITIES_FINDERS.add(new AbstractActivitiesFinderComponentFactory(R.string.drawer_search_history_header, R.drawable.ic_action_time, false) {
             @Override
             public Fragment createFragment() {
                 return SearchHistoryListFragment.create();
             }
         });
-        ACTIVITIES_FINDERS.add(new AbstractActivitiesFinderComponentFactory(R.string.startTabTracks, 0, false) {
+        ACTIVITIES_FINDERS.add(new AbstractActivitiesFinderComponentFactory(R.string.startTabTracks, R.drawable.ic_action_labels, false) {
             @Override
             public Fragment createFragment() {
                 return CategoryTrackListFragment.create();
