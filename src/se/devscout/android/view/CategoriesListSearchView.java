@@ -1,7 +1,6 @@
 package se.devscout.android.view;
 
 import android.content.Context;
-import android.util.AttributeSet;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.CategoryListItem;
 import se.devscout.android.util.ActivityBankFactory;
@@ -16,14 +15,6 @@ import java.util.regex.Pattern;
 
 public class CategoriesListSearchView extends QuickSearchListView<CategoryListItem> {
     private static final Pattern NOT_A_Z = Pattern.compile("[^a-z_]");
-
-    public CategoriesListSearchView(Context context, AttributeSet attrs, int defStyle, int emptyMessageTextId, int emptyHeaderTextId, boolean isListContentHeight) {
-        super(context, attrs, defStyle, emptyMessageTextId, emptyHeaderTextId, isListContentHeight, Collections.<CategoryListItem>emptyList());
-    }
-
-    public CategoriesListSearchView(Context context, AttributeSet attrs, int emptyMessageTextId, int emptyHeaderTextId, boolean isListContentHeight) {
-        super(context, attrs, emptyMessageTextId, emptyHeaderTextId, isListContentHeight, Collections.<CategoryListItem>emptyList());
-    }
 
     public CategoriesListSearchView(Context context, int emptyMessageTextId, int emptyHeaderTextId, boolean isListContentHeight) {
         super(context, emptyMessageTextId, emptyHeaderTextId, isListContentHeight, Collections.<CategoryListItem>emptyList());

@@ -1,7 +1,6 @@
 package se.devscout.android.view;
 
 import android.content.Context;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,15 +15,6 @@ import java.io.Serializable;
 import java.util.List;
 
 public abstract class QuickSearchListView<T extends Serializable> extends NonBlockingSearchView<T> {
-    public QuickSearchListView(Context context, AttributeSet attrs, int defStyle, int emptyMessageTextId, int emptyHeaderTextId, boolean isListContentHeight, List<T> items) {
-        super(context, attrs, defStyle, emptyMessageTextId, emptyHeaderTextId, isListContentHeight);
-        mItems = items;
-    }
-
-    public QuickSearchListView(Context context, AttributeSet attrs, int emptyMessageTextId, int emptyHeaderTextId, boolean isListContentHeight, List<T> items) {
-        super(context, attrs, emptyMessageTextId, emptyHeaderTextId, isListContentHeight);
-        mItems = items;
-    }
 
     public QuickSearchListView(Context context, int emptyMessageTextId, int emptyHeaderTextId, boolean isListContentHeight, List<T> items) {
         super(context, emptyMessageTextId, emptyHeaderTextId, isListContentHeight);

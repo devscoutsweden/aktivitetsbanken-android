@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,16 +36,6 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
 
     public NonBlockingSearchView(Context context, int emptyMessageTextId, int emptyHeaderTextId, boolean isListContentHeight) {
         super(context);
-        init(context, emptyMessageTextId, emptyHeaderTextId, isListContentHeight);
-    }
-
-    public NonBlockingSearchView(Context context, AttributeSet attrs, int emptyMessageTextId, int emptyHeaderTextId, boolean isListContentHeight) {
-        super(context, attrs);
-        init(context, emptyMessageTextId, emptyHeaderTextId, isListContentHeight);
-    }
-
-    public NonBlockingSearchView(Context context, AttributeSet attrs, int defStyle, int emptyMessageTextId, int emptyHeaderTextId, boolean isListContentHeight) {
-        super(context, attrs, defStyle);
         init(context, emptyMessageTextId, emptyHeaderTextId, isListContentHeight);
     }
 

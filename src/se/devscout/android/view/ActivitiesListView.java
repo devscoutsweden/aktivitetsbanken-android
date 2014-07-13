@@ -3,7 +3,6 @@ package se.devscout.android.view;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,18 +28,6 @@ import java.util.List;
 public class ActivitiesListView extends NonBlockingSearchView<ActivitiesListItem> {
     private Sorter mSortOrder;
     private ActivityFilter mFilter;
-
-    public ActivitiesListView(Context context, AttributeSet attrs, int defStyle, int emptyMessageTextId, int emptyHeaderTextId, ActivityFilter filter, Sorter sortOrder, boolean isListContentHeight) {
-        super(context, attrs, defStyle, emptyMessageTextId, emptyHeaderTextId, isListContentHeight);
-        mFilter = filter;
-        mSortOrder = sortOrder;
-    }
-
-    public ActivitiesListView(Context context, AttributeSet attrs, int emptyMessageTextId, int emptyHeaderTextId, ActivityFilter filter, Sorter sortOrder, boolean isListContentHeight) {
-        super(context, attrs, emptyMessageTextId, emptyHeaderTextId, isListContentHeight);
-        mFilter = filter;
-        mSortOrder = sortOrder;
-    }
 
     public ActivitiesListView(Context context, int emptyMessageTextId, int emptyHeaderTextId, ActivityFilter filter, Sorter sortOrder, boolean isListContentHeight) {
         super(context, emptyMessageTextId, emptyHeaderTextId, isListContentHeight);

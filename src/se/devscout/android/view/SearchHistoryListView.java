@@ -1,7 +1,6 @@
 package se.devscout.android.view;
 
 import android.content.Context;
-import android.util.AttributeSet;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.SubtitleActivityFilterVisitor;
 import se.devscout.android.controller.fragment.TitleActivityFilterVisitor;
@@ -14,14 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchHistoryListView extends QuickSearchListView<SearchHistoryListItem> {
-
-    public SearchHistoryListView(Context context, AttributeSet attrs, int defStyle, int emptyMessageTextId, int emptyHeaderTextId, boolean isListContentHeight) {
-        super(context, attrs, defStyle, emptyMessageTextId, emptyHeaderTextId, isListContentHeight, (List<SearchHistoryListItem>) null);
-    }
-
-    public SearchHistoryListView(Context context, AttributeSet attrs, int emptyMessageTextId, int emptyHeaderTextId, boolean isListContentHeight) {
-        super(context, attrs, emptyMessageTextId, emptyHeaderTextId, isListContentHeight, (List<SearchHistoryListItem>) null);
-    }
 
     public SearchHistoryListView(Context context, int emptyMessageTextId, int emptyHeaderTextId, boolean isListContentHeight) {
         super(context, emptyMessageTextId, emptyHeaderTextId, isListContentHeight, (List<SearchHistoryListItem>) null);
