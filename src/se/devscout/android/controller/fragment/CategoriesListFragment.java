@@ -3,6 +3,7 @@ package se.devscout.android.controller.fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import se.devscout.android.R;
 import se.devscout.android.view.CategoriesListSearchView;
 
 import java.util.Collections;
@@ -19,7 +20,7 @@ public class CategoriesListFragment extends QuickSearchListFragment<CategoryList
 
     @Override
     protected CategoriesListSearchView createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return new CategoriesListSearchView(getActivity(), 0, 0, false);
+        return new CategoriesListSearchView(getActivity(), R.string.searchResultEmptyMessage, R.string.searchResultEmptyTitle, false);
     }
 
     public static CategoriesListFragment create() {

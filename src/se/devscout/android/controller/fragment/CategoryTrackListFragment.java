@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import se.devscout.android.CategoryTrack;
+import se.devscout.android.R;
 import se.devscout.android.view.CategoryTrackListView;
 
 public class CategoryTrackListFragment extends QuickSearchListFragment<CategoryTrack, CategoryTrackListView> {
@@ -19,6 +20,6 @@ public class CategoryTrackListFragment extends QuickSearchListFragment<CategoryT
 
     @Override
     protected CategoryTrackListView createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return new CategoryTrackListView(getActivity(), 0, 0, false);
+        return new CategoryTrackListView(getActivity(), R.string.searchResultEmptyMessage, R.string.searchResultEmptyTitle, false);
     }
 }

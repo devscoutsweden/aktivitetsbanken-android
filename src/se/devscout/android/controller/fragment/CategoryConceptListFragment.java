@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import se.devscout.android.CategoryConcept;
+import se.devscout.android.R;
 import se.devscout.android.view.CategoryConceptListView;
 
 public class CategoryConceptListFragment extends QuickSearchListFragment<CategoryConcept, CategoryConceptListView> {
@@ -19,6 +20,6 @@ public class CategoryConceptListFragment extends QuickSearchListFragment<Categor
 
     @Override
     protected CategoryConceptListView createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return new CategoryConceptListView(getActivity(), 0, 0, false);
+        return new CategoryConceptListView(getActivity(), R.string.searchResultEmptyMessage, R.string.searchResultEmptyTitle, false);
     }
 }

@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import se.devscout.android.R;
 import se.devscout.android.model.ObjectIdentifierPojo;
 import se.devscout.android.view.ActivitiesListItem;
 import se.devscout.android.view.ActivitiesListView;
@@ -41,7 +42,7 @@ public class ActivitiesListFragment extends NonBlockingSearchResultFragment<Acti
 
     @Override
     protected ActivitiesListView createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return new ActivitiesListView(getActivity(), 0, 0, mFilter, mSortOrder, false);
+        return new ActivitiesListView(getActivity(), R.string.searchResultEmptyMessage, R.string.searchResultEmptyTitle, mFilter, mSortOrder, false);
     }
 
     public void setSortOrder(ActivitiesListView.Sorter sortOrder) {

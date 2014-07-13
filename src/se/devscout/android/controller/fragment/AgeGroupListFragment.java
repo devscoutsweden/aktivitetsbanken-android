@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import se.devscout.android.AgeGroup;
+import se.devscout.android.R;
 import se.devscout.android.view.AgeGroupListView;
 
 public class AgeGroupListFragment extends QuickSearchListFragment<AgeGroup, AgeGroupListView> {
@@ -19,6 +20,6 @@ public class AgeGroupListFragment extends QuickSearchListFragment<AgeGroup, AgeG
 
     @Override
     protected AgeGroupListView createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return new AgeGroupListView(getActivity(), 0, 0, false);
+        return new AgeGroupListView(getActivity(), R.string.searchResultEmptyMessage, R.string.searchResultEmptyTitle, false);
     }
 }

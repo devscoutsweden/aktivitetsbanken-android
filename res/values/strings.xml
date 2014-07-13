@@ -81,6 +81,7 @@
     <string name="scoutmethod">Scoutmetod</string>
     <string name="startTabFavourites">Favoriter</string>
     <string name="searchResultDefaultEmptyMessage">Listan är tom.</string>
+    <string name="searchResultDefaultEmptyHeader">New Text</string>
     <string name="favouritesEmptyHeader">Du har inga favoriter. Ännu.</string>
     <string name="favouritesEmptyMessage">Tryck på \u2605 för att en aktivitet ska synas här.</string>
     <string name="featuredEmptyHeader">Utvalda aktiviteter saknas.</string>
@@ -134,4 +135,10 @@
     <string name="welcomeWidgetTitle">Välkomstmeddelande</string>
     <string name="startSelectWidgets">Välj kort...</string>
     <string name="button_positive">Okej</string>
+    <string name="searchHistoryEmptyMessage">Du har ännu inte gjort några sökningar.</string>
+    <string name="searchHistoryEmptyTitle">Din sökhistorik är tom</string>
+    <string name="noSpontaneousActivitiesFoundTitle">Oj, inga hittades</string>
+    <string name="noSpontaneousActivitiesFoundMessage">Inga snabba aktiviteter hittades för denna åldersgrupp</string>
+    <string name="noActivitiesInCategoryTitle">Tom kategori</string>
+    <string name="noActivitiesInCategoryMessage">Inga aktiviteter har placerats i den här kategorin.</string>
 </resources>

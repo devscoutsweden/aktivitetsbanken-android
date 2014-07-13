@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import se.devscout.android.R;
 import se.devscout.android.view.SearchHistoryListItem;
 import se.devscout.android.view.SearchHistoryListView;
 import se.devscout.server.api.ActivityBankListener;
@@ -24,7 +25,7 @@ public class SearchHistoryListFragment extends QuickSearchListFragment<SearchHis
 
     @Override
     protected SearchHistoryListView createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return new SearchHistoryListView(getActivity(), 0, 0, false);
+        return new SearchHistoryListView(getActivity(), R.string.searchHistoryEmptyMessage, R.string.searchHistoryEmptyTitle, false);
     }
 
     @Override

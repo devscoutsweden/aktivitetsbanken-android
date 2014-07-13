@@ -18,7 +18,7 @@ public class ByCategoryActivitiesFinderComponentFactory extends AbstractActiviti
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container, ActivityBankFragment activityBankFragment) {
 
-        CategoriesListSearchView mView = new CategoriesListSearchView(container.getContext(), R.string.searchResultEmptyMessage,R.string.searchResultEmptyTitle, true);
+        CategoriesListSearchView mView = new CategoriesListSearchView(container.getContext(), R.string.noActivitiesInCategoryMessage,R.string.noActivitiesInCategoryTitle, true);
 
         // Start search in separate thread
         mView.runSearchTaskInNewThread();
