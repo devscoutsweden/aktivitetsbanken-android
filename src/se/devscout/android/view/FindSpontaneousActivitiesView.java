@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import se.devscout.android.AgeGroup;
 import se.devscout.android.R;
+import se.devscout.android.model.IntegerRangePojo;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.server.api.ActivityFilterFactory;
 import se.devscout.server.api.activityfilter.AndFilter;
@@ -52,6 +53,7 @@ public class FindSpontaneousActivitiesView<T extends Serializable> extends Linea
                 ActivityFilterFactory filterFactory = ActivityBankFactory.getInstance(getContext()).getFilterFactory();
                 AndFilter filter = filterFactory.createAndFilter(
                         filterFactory.createAgeRangeFilter(ageGroup.getScoutAgeRange()),
+                        filterFactory.createTimeRangeFilter(new IntegerRangePojo(0, 15)),
                         filterFactory.createRandomActivitiesFilter(5)
                 );
                 View oldListView = container.findViewById(1010);
@@ -63,7 +65,7 @@ public class FindSpontaneousActivitiesView<T extends Serializable> extends Linea
 //                button1.setText("Hej");
 //                container.addView(button1, new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-                ActivitiesListView listView = new ActivitiesListView(getContext(), R.string.searchResultEmptyMessage, R.string.searchResultEmptyTitle, filter, ActivitiesListView.Sorter.NAME, true);
+                ActivitiesListView listView = new ActivitiesListView(getContext(), R.string.noSpontaneousActivitiesFoundMessage, R.string.noSpontaneousActivitiesFoundTitle, filter, ActivitiesListView.Sorter.NAME, true);
                 container.addView(listView);
                 listView.setId(1010);
                 listView.setVisibility(VISIBLE);

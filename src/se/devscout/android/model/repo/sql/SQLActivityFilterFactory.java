@@ -1,9 +1,6 @@
 package se.devscout.android.model.repo.sql;
 
-import se.devscout.android.util.PrimitiveActivityFilterFactory;
-import se.devscout.android.util.SimpleAgeRangeFilter;
-import se.devscout.android.util.SimpleIsFeaturedFilter;
-import se.devscout.android.util.SimpleTextFilter;
+import se.devscout.android.util.*;
 import se.devscout.server.api.RandomActivitiesFilter;
 import se.devscout.server.api.activityfilter.IsUserFavouriteFilter;
 import se.devscout.server.api.model.Range;
@@ -34,6 +31,11 @@ class SQLActivityFilterFactory extends PrimitiveActivityFilterFactory {
     @Override
     public SimpleAgeRangeFilter createAgeRangeFilter(Range<Integer> range) {
         return new SQLAgeRangeFilter(range);
+    }
+
+    @Override
+    public SimpleTimeRangeFilter createTimeRangeFilter(Range<Integer> range) {
+        return new SQLTimeRangeFilter(range);
     }
 
     @Override

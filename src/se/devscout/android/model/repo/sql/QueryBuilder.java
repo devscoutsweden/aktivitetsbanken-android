@@ -2,6 +2,7 @@ package se.devscout.android.model.repo.sql;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
+import se.devscout.android.model.IntegerRangePojo;
 import se.devscout.server.api.model.ActivityKey;
 import se.devscout.server.api.model.Range;
 import se.devscout.server.api.model.UserKey;
@@ -91,17 +92,21 @@ public class QueryBuilder {
     }
 
     public QueryBuilder addWhereAge(Range<Integer> range) {
-/*
-        boolean isCandidateBeforeRange = mMin >= candidate.getMax();
-        boolean isCandidateAfterRange = mMax <= candidate.getMin();
-        boolean match = !(isCandidateBeforeRange || isCandidateAfterRange);
- */
-        addWhere("not(" +
-                String.valueOf(range.getMin()) + ">= ad." + Database.activity_data.age_max +
-                " or " +
-                String.valueOf(range.getMax()) + "<= ad." + Database.activity_data.age_min +
-                ")");
+        addWhereRange(range, Database.activity_data.age_min, Database.activity_data.age_max);
         return this;
+    }
+
+    public QueryBuilder addWhereTime(IntegerRangePojo range) {
+        addWhereRange(range, Database.activity_data.time_min, Database.activity_data.time_max);
+        return this;
+    }
+
+    private void addWhereRange(Range<Integer> range, String minField, String maxField) {
+        addWhere("not(" +
+                String.valueOf(range.getMin()) + ">= ad." + maxField +
+                " or " +
+                String.valueOf(range.getMax()) + "<= ad." + minField +
+                ")");
     }
 
     private QueryBuilder addWhere(String expr, String... params) {
