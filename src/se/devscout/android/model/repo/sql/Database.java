@@ -46,6 +46,7 @@ public class Database {
         final static String owner_id = "owner_id";
         final static String status = "status";
         final static String likes = "likes";
+        final static String source_uri = "source_uri";
     }
 
     public static class activity_data {

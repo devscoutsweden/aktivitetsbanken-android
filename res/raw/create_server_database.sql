@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS "activity" ( "id" INTEGER NOT NULL PRIMARY KEY AUTOIN
      "owner_id" INTEGER NOT NULL,
      "status" TEXT NOT NULL,
      "likes" INTEGER,
+     "source_uri" TEXT,
      CONSTRAINT "fk_activity_user1" FOREIGN KEY ("owner_id") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE RESTRICT);
 
 CREATE INDEX "fk_activity_user1_idx" ON "activity" ("owner_id" ASC);
