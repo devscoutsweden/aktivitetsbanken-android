@@ -3,27 +3,25 @@ package se.devscout.android.model;
 import se.devscout.server.api.model.HashAlgorithm;
 import se.devscout.server.api.model.UserProperties;
 
-public class UserPropertiesPojo implements UserProperties {
+public class UserPropertiesPojo extends ServerObjectPropertiesPojo implements UserProperties {
     protected String mName;
     private String mDisplayName;
     private String mEmailAddress;
     private boolean mEmailAddressVerified;
     private HashAlgorithm mPasswordHashAlgorithm;
     private String mPasswordHashAlgorithmParameter;
-    private boolean mIsLocalUser;
 
     public UserPropertiesPojo() {
     }
 
-    public UserPropertiesPojo(String displayName, boolean isLocalUser, String emailAddress) {
+    public UserPropertiesPojo(String displayName, String emailAddress, int serverId, boolean publishable) {
+        super(publishable, serverId);
         mDisplayName = displayName;
-        mIsLocalUser = isLocalUser;
         mEmailAddress = emailAddress;
     }
 
-    public UserPropertiesPojo(String displayName, boolean isLocalUser) {
+    public UserPropertiesPojo(String displayName) {
         mDisplayName = displayName;
-        mIsLocalUser = isLocalUser;
     }
 
     @Override
@@ -83,13 +81,5 @@ public class UserPropertiesPojo implements UserProperties {
 
     public void setPasswordHashAlgorithmParameter(String passwordHashAlgorithmParameter) {
         mPasswordHashAlgorithmParameter = passwordHashAlgorithmParameter;
-    }
-
-    public boolean isIsLocalUser() {
-        return mIsLocalUser;
-    }
-
-    public void setIsLocalUser(boolean isLocalUser) {
-        mIsLocalUser = isLocalUser;
     }
 }

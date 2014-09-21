@@ -10,8 +10,8 @@ public class LocalMedia extends MediaPropertiesPojo implements Media, Serializab
     public static long debugCounter;
     private Long mId;
 
-    public LocalMedia(URI uri, String mimeType, Long id) {
-        super(uri, mimeType);
+    public LocalMedia(URI uri, String mimeType, Long id, int serverId, boolean publishable) {
+        super(uri, mimeType, serverId,publishable);
         mId = id;
     }
 

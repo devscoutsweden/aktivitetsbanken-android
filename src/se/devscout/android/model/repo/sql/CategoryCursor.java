@@ -12,6 +12,7 @@ public class CategoryCursor extends BaseCursorWrapper {
         return new LocalCategory(
                 getString(getColumnIndex(Database.category.group_name)),
                 getString(getColumnIndex(Database.category.name)),
-                getId());
+                getId(),
+                getInt(getColumnIndex(Database.category.server_id)));
     }
 }

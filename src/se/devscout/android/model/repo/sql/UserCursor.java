@@ -11,8 +11,9 @@ public class UserCursor extends BaseCursorWrapper {
     public LocalUser getUser() {
         return new LocalUser(
                 getString(getColumnIndex(Database.user.display_name)),
-                getInt(getColumnIndex(Database.user.is_local_only)) == 1,
                 getString(getColumnIndex(Database.user.email)),
-                getId());
+                getId(),
+                getInt(getColumnIndex(Database.user.server_id))
+        );
     }
 }

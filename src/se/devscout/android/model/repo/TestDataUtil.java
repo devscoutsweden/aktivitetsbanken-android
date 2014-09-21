@@ -20,9 +20,9 @@ public class TestDataUtil {
         List<LocalActivity> mActivities = new ArrayList<LocalActivity>();
         XmlResourceParser parser = ctx.getResources().getXml(R.xml.activities);
         int eventType = 0;
-        LocalActivity localActivity = null;
-        LocalActivityRevision revision = null;
-        LocalActivityRevision firstRevision = null;
+        LocalActivity revision = null;
+//        LocalActivityRevision revision = null;
+//        LocalActivityRevision firstRevision = null;
         try {
             while ((eventType = parser.next()) != XmlPullParser.END_DOCUMENT) {
                 switch (eventType) {
@@ -36,47 +36,51 @@ public class TestDataUtil {
                             }
                             boolean featured = parser.getAttributeBooleanValue(null, "featured", false);
                             String name = parser.getAttributeValue(null, "name");
-                            localActivity = new LocalActivity(
+                            revision = new LocalActivity(
                                     null,
-                                    LocalActivity.debugCounter++);
-                            mActivities.add(localActivity);
-                            firstRevision = new LocalActivityRevision("." + name, featured, localActivity, LocalActivityRevision.debugCounter++);
-                            localActivity.getRevisions().add(firstRevision);
-                            revision = new LocalActivityRevision(name, featured, localActivity, LocalActivityRevision.debugCounter++);
-                            localActivity.getRevisions().add(revision);
+                                    LocalActivity.debugCounter++,
+                                    0,
+                                    false);
+                            mActivities.add(revision);
+                            revision.setName(name);
+                            revision.setFeatured(featured);
+//                            firstRevision = new LocalActivityRevision("." + name, featured, revision, LocalActivityRevision.debugCounter++);
+//                            revision.getRevisions().add(firstRevision);
+//                            revision = new LocalActivityRevision(name, featured, revision, LocalActivityRevision.debugCounter++);
+//                            revision.getRevisions().add(revision);
                         } else if ("introduction".equals(parser.getName())) {
                             revision.setIntroduction(parser.nextText());
                         } else if ("description".equals(parser.getName())) {
                             String type = parser.getAttributeValue(null, "type");
                             String descr = parser.nextText().trim();
                             if ("activity".equals(type)) {
-                                firstRevision.setDescription("_" + descr);
+//                                firstRevision.setDescription("_" + descr);
                                 revision.setDescription(descr);
                             } else if ("safety".equals(type)) {
                                 revision.setSafety(descr);
                             } else if ("references".equals(type)) {
-//                                localActivity.setDescription(descr);
+//                                revision.setDescription(descr);
                             } else if ("material".equals(type)) {
                                 revision.setMaterial(descr);
                             } else if ("activity-name".equals(type)) {
-                                firstRevision.setName("." + descr);
+//                                firstRevision.setName("." + descr);
                                 revision.setName(descr);
                             } else if ("ages".equals(type)) {
                                 revision.setAges(toRange(descr));
                             } else if ("participant-count".equals(type)) {
                                 revision.setParticipants(toRange(descr));
                             } else if ("scout-method".equals(type)) {
-                                revision.addCategory("scout-method", descr);
+//                                revision.addCategory("scout-method", descr);
                             } else {
                                 revision.addDescriptionNote(descr);
                             }
                         } else if ("category".equals(parser.getName())) {
-                            revision.addCategory(
-                                    parser.getAttributeValue(null, "group"),
-                                    parser.getAttributeValue(null, "name"));
+//                            revision.addCategory(
+//                                    parser.getAttributeValue(null, "group"),
+//                                    parser.getAttributeValue(null, "name"));
                         } else if ("media".equals(parser.getName())) {
                             URI uri = URI.create(parser.getAttributeValue(null, "uri"));
-                            revision.addMediaItem(uri, null);
+//                            revision.addMediaItem(uri, null);
                         } else if ("participants".equals(parser.getName())) {
                             revision.setParticipants(new IntegerRangePojo(
                                     parser.getAttributeIntValue(null, "min", 1),

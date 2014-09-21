@@ -15,6 +15,8 @@ public class MediaCursor extends BaseCursorWrapper {
             return new LocalMedia(
                     new URI(getString(getColumnIndex(Database.media.uri))),
                     getString(getColumnIndex(Database.media.mime_type)),
-                    getId());
+                    getId(),
+                    getInt(getColumnIndex(Database.media.server_id)),
+                    getInt(getColumnIndex(Database.media.is_publishable)) != 0);
     }
 }

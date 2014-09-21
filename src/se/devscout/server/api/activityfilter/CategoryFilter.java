@@ -6,4 +6,6 @@ public interface CategoryFilter extends ActivityFilter {
     String getGroup();
 
     String getName();
+
+    int getServerId();
 }

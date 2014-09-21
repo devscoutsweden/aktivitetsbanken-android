@@ -27,6 +27,11 @@ public enum ScoutCategoryTrack implements CategoryProperties {
     }
 
     @Override
+    public int getServerId() {
+        return -1;
+    }
+
+    @Override
     public String getName() {
         return name;
     }

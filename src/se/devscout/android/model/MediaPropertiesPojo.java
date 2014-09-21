@@ -1,25 +1,40 @@
 package se.devscout.android.model;
 
 import se.devscout.server.api.model.MediaProperties;
-import se.devscout.server.api.model.Status;
 
 import java.net.URI;
 
-public class MediaPropertiesPojo implements MediaProperties {
+public class MediaPropertiesPojo extends ServerObjectPropertiesPojo implements MediaProperties {
     private URI mUri;
-    private String mMimeType;
+    private String mMimeType = "image/jpeg";
+    private boolean publishable;
+    private int serverId;
 
     public MediaPropertiesPojo() {
     }
 
-    public MediaPropertiesPojo(URI uri, String mimeType) {
+    public MediaPropertiesPojo(URI uri, String mimeType, int serverId, boolean publishable) {
+        super(publishable, serverId);
         mUri = uri;
         mMimeType = mimeType;
     }
 
     @Override
-    public Status getStatus() {
-        throw new UnsupportedOperationException();
+    public int getServerId() {
+        return serverId;
+    }
+
+    public void setServerId(int serverId) {
+        this.serverId = serverId;
+    }
+
+    @Override
+    public boolean isPublishable() {
+        return publishable;
+    }
+
+    public void setPublishable(boolean publishable) {
+        this.publishable = publishable;
     }
 
     @Override

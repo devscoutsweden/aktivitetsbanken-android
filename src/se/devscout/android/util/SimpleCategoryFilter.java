@@ -1,8 +1,9 @@
 package se.devscout.android.util;
 
+import android.net.Uri;
 import se.devscout.server.api.ActivityFilterVisitor;
+import se.devscout.server.api.URIBuilderActivityFilterVisitor;
 import se.devscout.server.api.model.ActivityProperties;
-import se.devscout.server.api.model.ActivityRevision;
 import se.devscout.server.api.model.Category;
 import se.devscout.server.api.model.CategoryProperties;
 
@@ -12,10 +13,12 @@ import se.devscout.server.api.model.CategoryProperties;
 public class SimpleCategoryFilter extends SimpleFilter implements se.devscout.server.api.activityfilter.CategoryFilter {
     private final String name;
     private final String group;
+    private int serverId;
 
     public SimpleCategoryFilter(CategoryProperties properties) {
         name = properties.getName();
         group = properties.getGroup();
+        serverId = properties.getServerId();
     }
 
     @Override
@@ -30,8 +33,8 @@ public class SimpleCategoryFilter extends SimpleFilter implements se.devscout.se
 
     @Override
     public boolean matches(ActivityProperties properties) {
-        ActivityRevision revision = ActivityUtil.getLatestActivityRevision(properties);
-        for (Category category : revision.getCategories()) {
+//        ActivityRevision revision = ActivityUtil.getLatestActivityRevision(properties);
+        for (Category category : properties.getCategories()) {
             if (matches(category)) {
                 return true;
             }
@@ -56,5 +59,15 @@ public class SimpleCategoryFilter extends SimpleFilter implements se.devscout.se
     @Override
     public String toString(ActivityFilterVisitor visitor) {
         return visitor.visit(this);
+    }
+
+    @Override
+    public Uri toAPIRequest(URIBuilderActivityFilterVisitor visitor) {
+        return visitor.visit(this);
+    }
+
+    @Override
+    public int getServerId() {
+        return serverId;
     }
 }

@@ -20,10 +20,10 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 public class SQLiteActivityRepo implements ActivityBank {
-    private static SQLiteActivityRepo ourInstance;
-    private final DatabaseHelper mDatabaseHelper;
+    protected final DatabaseHelper mDatabaseHelper;
     private UserKey mAnonymousUserKey;
     private List<ActivityBankListener> mListeners = new ArrayList<ActivityBankListener>();
+    private static SQLiteActivityRepo ourInstance;
 
     public static SQLiteActivityRepo getInstance(Context ctx) {
         if (ourInstance == null) {

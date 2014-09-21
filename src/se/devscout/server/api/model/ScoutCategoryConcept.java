@@ -25,6 +25,11 @@ public enum ScoutCategoryConcept implements CategoryProperties {
     }
 
     @Override
+    public int getServerId() {
+        return -1;
+    }
+
+    @Override
     public String getName() {
         return name;
     }

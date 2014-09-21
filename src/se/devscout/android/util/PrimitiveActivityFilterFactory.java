@@ -45,8 +45,8 @@ public class PrimitiveActivityFilterFactory implements ActivityFilterFactory {
     }
 
     @Override
-    public SimpleCategoryFilter createCategoryFilter(String group, String name) {
-        return new SimpleCategoryFilter(new CategoryPropertiesPojo(group, name));
+    public SimpleCategoryFilter createCategoryFilter(String group, String name, int serverId) {
+        return new SimpleCategoryFilter(new CategoryPropertiesPojo(group, name, serverId, false));
     }
 
     @Override

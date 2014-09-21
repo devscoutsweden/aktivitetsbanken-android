@@ -1,6 +1,8 @@
 package se.devscout.android.util;
 
+import android.net.Uri;
 import se.devscout.server.api.ActivityFilterVisitor;
+import se.devscout.server.api.URIBuilderActivityFilterVisitor;
 import se.devscout.server.api.model.ActivityProperties;
 import se.devscout.server.api.model.Range;
 
@@ -15,11 +17,16 @@ public class SimpleAgeRangeFilter extends SimpleRangeFilter implements se.devsco
 
     @Override
     public boolean matches(ActivityProperties properties) {
-        return isPartlyWithin(ActivityUtil.getLatestActivityRevision(properties).getAges());
+        return isPartlyWithin(properties.getAges());
     }
 
     @Override
     public String toString(ActivityFilterVisitor visitor) {
+        return visitor.visit(this);
+    }
+
+    @Override
+    public Uri toAPIRequest(URIBuilderActivityFilterVisitor visitor) {
         return visitor.visit(this);
     }
 }
