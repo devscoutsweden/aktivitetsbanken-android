@@ -22,7 +22,6 @@ import java.io.ObjectOutputStream;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -34,9 +33,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return new SQLiteCursor(sqLiteCursorDriver, s, sqLiteQuery);
         }
     };
-    private static final int USER_ID_ANONYMOUS = Integer.MAX_VALUE;
+    private static final int USER_ID_ANONYMOUS = -1;//Integer.MAX_VALUE;
     private SQLiteDatabase db;
     private Set<Long> mBannedSearchHistoryIds = new HashSet<Long>();
+    private ActivityIdCache mActivityIdCache = new ActivityIdCache();
+
 
     public SQLiteDatabase getDb() {
         if (db == null) {
@@ -86,7 +87,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.beginTransaction();
         try {
             executeSQLScript(db, R.raw.create_server_database);
-            executeSQLScript(db, R.raw.convert_server_database);
+//            executeSQLScript(db, R.raw.convert_server_database);
 
             createAnonymousUser(db);
 
@@ -107,7 +108,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(Database.user.id, USER_ID_ANONYMOUS);
         values.put(Database.user.display_name, "Anonymous");
-        values.put(Database.user.is_local_only, true);
         db.insert(Database.user.T, null, values);
     }
 
@@ -170,6 +170,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(Database.category.name, properties.getName());
         values.put(Database.category.status, " ");
         values.put(Database.category.owner_id, -1);
+        values.put(Database.category.server_id, properties.getServerId());
         return getDb().insertOrThrow(Database.category.T, null, values);
     }
 
@@ -198,10 +199,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         getDb().beginTransaction();
         try {
             long userId = createUser();
-
-            List<LocalActivity> testActivities = TestDataUtil.readXMLTestData(mContext);
-            for (Activity testActivity : testActivities) {
-                long activityId = createActivity(testActivity, userId);
+            if (addTestData) {
+                List<LocalActivity> testActivities = TestDataUtil.readXMLTestData(mContext);
+                for (Activity testActivity : testActivities) {
+                    long activityId = createActivity(testActivity);
+                }
             }
             getDb().setTransactionSuccessful();
         } catch (SQLException e) {
@@ -218,35 +220,117 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return getDb().insertOrThrow(Database.user.T, null, userValues);
     }
 
-    private long createActivity(ActivityProperties properties, long owner) {
-        ContentValues values = new ContentValues();
-        values.put(Database.activity.owner_id, owner);
-        values.put(Database.activity.status, STATUS_NEW);
-        long activityId = getDb().insertOrThrow(Database.activity.T, null, values);
-        for (ActivityRevision revision : properties.getRevisions()) {
-            long activityDataId = addActivityData(owner, activityId, revision);
+    public long createActivity(ActivityProperties properties) {
+        ContentValues values = createContentValues(properties);
 
-            for (Category category : revision.getCategories()) {
-                addActivityDataCategory(activityDataId, category.getGroup(), category.getName(), owner);
-            }
-            boolean first = true;
-            for (Media media : revision.getMediaItems()) {
-                addActivityDataMedia(activityDataId, first, media);
-                first = false;
-            }
-            for (ReferenceProperties reference : revision.getReferences()) {
-                addActivityDataReference(activityDataId, reference);
-            }
+//        values.put(Database.activity.owner_id, owner);
+        /*
+     "is_publishable" INTEGER NOT NULL,
+     "owner_id" INTEGER NOT NULL,
+     "name" TEXT NOT NULL,
+     "datetime_created" NUMERIC NOT NULL,
+     "descr_activity" NUMERIC NOT NULL,
+         */
+        long activityId = getDb().insertOrThrow(Database.activity.T, null, values);
+        mActivityIdCache.invalidate();
+
+/*
+        for (Category category : properties.getCategories()) {
+            addActivityDataCategory(activityId, category.getGroup(), category.getName(), properties.getOwner().getId());
         }
+*/
+        // Associated categories
+
+//        getDb().delete(Database.activity_data_category.T, Database.activity_data_category.activity_data_id + "=" + key.getId(), null);
+
+        for (Category category : properties.getCategories()) {
+
+            long categoryId = getOrCreateCategory(category);
+
+            ContentValues associationEntry = new ContentValues();
+            associationEntry.put(Database.activity_data_category.category_id, categoryId);
+            associationEntry.put(Database.activity_data_category.activity_data_id, activityId);
+            getDb().insert(Database.activity_data_category.T, null, associationEntry);
+        }
+
+
+
+/*
+        boolean first = true;
+        for (Media media : properties.getMediaItems()) {
+            addActivityDataMedia(activityId, first, media);
+            first = false;
+        }
+        for (ReferenceProperties reference : properties.getReferences()) {
+            addActivityDataReference(activityId, reference);
+        }
+*/
         return activityId;
     }
 
-    private long addActivityData(long owner, long activityId, ActivityRevision revision) {
+    public boolean updateActivity(ActivityKey key, ActivityProperties properties) {
+        ContentValues values = createContentValues(properties);
 
-//        logDebug("addActivityData " + activityId + " " + revision.getName());
+        if (getDb().update(Database.activity.T, values, Database.activity.id + "=" + key.getId(), null) != 1) {
+            logInfo("Could not update activity " + key.getId());
+            return false;
+        }
+        mActivityIdCache.invalidate();
 
-        String description = revision.getDescription();
-        String descriptionNotes = revision.getDescriptionNotes();
+
+        // Associated categories
+
+        getDb().delete(Database.activity_data_category.T, Database.activity_data_category.activity_data_id + "=" + key.getId(), null);
+
+        for (Category category : properties.getCategories()) {
+
+            long categoryId = getOrCreateCategory(category);
+
+            ContentValues associationEntry = new ContentValues();
+            associationEntry.put(Database.activity_data_category.category_id, categoryId);
+            associationEntry.put(Database.activity_data_category.activity_data_id, key.getId());
+            getDb().insert(Database.activity_data_category.T, null, associationEntry);
+        }
+
+        // Associated media
+
+/*
+        boolean first = true;
+        for (Media media : properties.getMediaItems()) {
+            addActivityDataMedia(activityId, first, media);
+            first = false;
+        }
+*/
+
+        // Associated references
+
+/*
+        for (ReferenceProperties reference : properties.getReferences()) {
+            addActivityDataReference(activityId, reference);
+        }
+*/
+        return true;
+    }
+
+    private long getOrCreateCategory(Category category) {
+        List<LocalCategory> localCategories = readCategories();
+        for (LocalCategory localCategory : localCategories) {
+            if (localCategory.getServerId() == category.getServerId()) {
+                // Bingo! Category already exists in local database.
+                return localCategory.getId();
+            }
+        }
+        return createCategory(category);
+    }
+
+    private ContentValues createContentValues(ActivityProperties properties) {
+        ContentValues values = new ContentValues();
+        values.put(Database.activity.is_publishable, 0);
+//        for (ActivityRevision revision : properties.getRevisions()) {
+//            long activityDataId = addActivityData(owner, activityId, properties);
+
+        String description = properties.getDescription();
+        String descriptionNotes = properties.getDescriptionNotes();
 
         if (description == null || description.length() == 0) {
             if (descriptionNotes != null && descriptionNotes.length() > 0) {
@@ -259,44 +343,40 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
         }
 
-        ContentValues actRevValues = new ContentValues();
-        actRevValues.put(Database.activity_data.activity_id, activityId);
-        actRevValues.put(Database.activity_data.status, STATUS_NEW);
-        actRevValues.put(Database.activity_data.name, revision.getName());
-        final SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        actRevValues.put(Database.activity_data.datetime_published, parser.format(new Date()));
-        actRevValues.put(Database.activity_data.datetime_created, parser.format(new Date()));
-        actRevValues.put(Database.activity_data.descr_material, revision.getDescriptionMaterial());
-        actRevValues.put(Database.activity_data.descr_introduction, revision.getDescriptionIntroduction());
-        actRevValues.put(Database.activity_data.descr_prepare, revision.getDescriptionPreparation());
-        actRevValues.put(Database.activity_data.descr_activity, description);
-        actRevValues.put(Database.activity_data.descr_safety, revision.getDescriptionSafety());
-        actRevValues.put(Database.activity_data.descr_notes, descriptionNotes);
-        Range<Integer> ages = revision.getAges();
+//        ContentValues values = new ContentValues();
+//        values.put(Database.activity_data.activity_id, activityId);
+//        values.put(Database.activity_data.status, STATUS_NEW);
+        values.put(Database.activity.server_id, properties.getServerId());
+        values.put(Database.activity.server_revision_id, properties.getServerRevisionId());
+        values.put(Database.activity.name, properties.getName());
+//        final SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        values.put(Database.activity.datetime_published, properties.getDatePublished().getTime());
+        values.put(Database.activity.datetime_created, properties.getDateCreated().getTime());
+        values.put(Database.activity.descr_material, properties.getDescriptionMaterial());
+        values.put(Database.activity.descr_introduction, properties.getDescriptionIntroduction());
+        values.put(Database.activity.descr_prepare, properties.getDescriptionPreparation());
+        values.put(Database.activity.descr_activity, description);
+        values.put(Database.activity.descr_safety, properties.getDescriptionSafety());
+        values.put(Database.activity.descr_notes, descriptionNotes);
+        Range<Integer> ages = properties.getAges();
         if (ages != null) {
-            actRevValues.put(Database.activity_data.age_min, ages.getMin());
-            actRevValues.put(Database.activity_data.age_max, ages.getMax());
+            values.put(Database.activity.age_min, ages.getMin());
+            values.put(Database.activity.age_max, ages.getMax());
         }
-        Range<Integer> participants = revision.getParticipants();
+        Range<Integer> participants = properties.getParticipants();
         if (participants != null) {
-            actRevValues.put(Database.activity_data.participants_min, participants.getMin());
-            actRevValues.put(Database.activity_data.participants_max, participants.getMax());
+            values.put(Database.activity.participants_min, participants.getMin());
+            values.put(Database.activity.participants_max, participants.getMax());
         }
-        Range<Integer> time = revision.getTimeActivity();
+        Range<Integer> time = properties.getTimeActivity();
         if (time != null) {
-            actRevValues.put(Database.activity_data.time_min, time.getMin());
-            actRevValues.put(Database.activity_data.time_max, time.getMax());
+            values.put(Database.activity.time_min, time.getMin());
+            values.put(Database.activity.time_max, time.getMax());
         }
-        actRevValues.put(Database.activity_data.featured, revision.isFeatured() ? 1 : 0);
-        actRevValues.put(Database.activity_data.author_id, owner);
-        actRevValues.put(Database.activity_data.source_uri, revision.getSourceURI() != null ? revision.getSourceURI().toString() : null);
-
-        try {
-            return getDb().insertOrThrow(Database.activity_data.T, null, actRevValues);
-        } catch (SQLException e) {
-            logError(e, "Could not add this activity data: " + actRevValues);
-            throw e;
-        }
+        values.put(Database.activity.featured, properties.isFeatured() ? 1 : 0);
+        values.put(Database.activity.owner_id, properties.getOwner() != null ? properties.getOwner().getId() : USER_ID_ANONYMOUS);
+//        values.put(Database.activity_data.source_uri, properties.getSourceURI() != null ? properties.getSourceURI().toString() : null);
+        return values;
     }
 
     private void addActivityDataMedia(long activityDataId, boolean isFeatured, Media media) {
@@ -306,9 +386,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             mediaId = cursor.getLong(0);
         } else {
             ContentValues refValues = new ContentValues();
-            refValues.put(Database.media.status, STATUS_NEW);
+//            refValues.put(Database.media.status, STATUS_NEW);
             refValues.put(Database.media.uri, media.getURI().toString());
-            refValues.put(Database.media.mime_type, "image/jpeg");
+            refValues.put(Database.media.is_publishable, media.isPublishable() ? 1 : 0);
+            refValues.put(Database.media.server_id, media.getServerId());
+            refValues.put(Database.media.mime_type, media.getMimeType());
             mediaId = getDb().insertOrThrow(Database.media.T, null, refValues);
         }
         if (mediaId >= 0) {
@@ -379,39 +461,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         QueryBuilder queryBuilder = new QueryBuilder();
         applyFilter(queryBuilder, filter);
         ArrayList<LocalActivity> activities = new ArrayList<LocalActivity>();
-        Map<Long, LocalActivityRevision> map = new HashMap<Long, LocalActivityRevision>();
+        Map<Long, LocalActivity> map = new HashMap<Long, LocalActivity>();
         ActivityDataCursor cursor = queryBuilder.query(getDb());
-        long lastActivityId = 0;
         while (cursor.moveToNext()) {
-            long activityId = cursor.getActivityId();
-            LocalActivity currentActivityToAdd = null;
-            if (lastActivityId != activityId) {
-                // Not same activity as last processed row
-                if (!mCacheActivity.containsKey(activityId)) {
-                    currentActivityToAdd = new LocalActivity(readUser(cursor.getLong(cursor.getColumnIndex("owner_id"))), activityId);
-                    mCacheActivity.put(activityId, currentActivityToAdd);
-                }
-                activities.add(mCacheActivity.get(activityId));
-            }
-            //TODO Should the cache be cleared? Are the revisions lists getting longer and longer for each search?
-            currentActivityToAdd = mCacheActivity.get(activityId);
-
-            boolean revisionExistsInActivity = false;
-            for (LocalActivityRevision revision : currentActivityToAdd.getRevisions()) {
-                if (revision.getId() == cursor.getId()) {
-                    revisionExistsInActivity = true;
-                    break;
-                }
-            }
-            if (!revisionExistsInActivity) {
-                LocalActivityRevision revision = cursor.getActivityData(currentActivityToAdd);
+            long activityId = cursor.getId();
+            if (!mCacheActivity.containsKey(activityId)) {
+                LocalActivity revision = cursor.getActivityData(readUser(cursor.getLong(cursor.getColumnIndex("owner_id"))));
                 map.put(revision.getId(), revision);
-
-                revision.setAuthor(readUser(cursor.getAuthorId()));
-
-                currentActivityToAdd.addRevisions(revision);
+                mCacheActivity.put(activityId, revision);
             }
-            lastActivityId = activityId;
+            activities.add(mCacheActivity.get(activityId));
         }
         cursor.close();
 
@@ -449,7 +508,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<LocalCategory> categories = new ArrayList<LocalCategory>();
         CategoryCursor catCursor = new CategoryCursor(getDb().query(
                 Database.category.T,
-                new String[]{Database.category.id, Database.category.group_name, Database.category.name},
+                new String[]{Database.category.id, Database.category.server_id, Database.category.group_name, Database.category.name},
                 null,
                 null,
                 null,
@@ -477,22 +536,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return categories;
     }
 
-    private void initActivitiesReferences(Map<Long, LocalActivityRevision> revisions) {
+    private void initActivitiesReferences(Map<Long, LocalActivity> revisions) {
         ReferenceCursor refCursor = new ReferenceCursor(getDb().rawQuery("" +
                 "select " +
-                "   adr.activity_data_id activity_data_id," +
+                "   adr.activity_id activity_id," +
                 "   r.* " +
                 "from " +
                 "   " + Database.reference.T + " r inner join " + Database.activity_data_reference.T + " adr on r.id = adr.reference_id " +
                 "where " +
-                "   adr.activity_data_id in (" + TextUtils.join(", ", revisions.keySet()) + ")", null));
+                "   adr.activity_id in (" + TextUtils.join(", ", revisions.keySet()) + ")", null));
         while (refCursor.moveToNext()) {
             try {
                 long refId = refCursor.getId();
                 if (!mCacheReference.containsKey(refId)) {
                     mCacheReference.put(refId, refCursor.getReference());
                 }
-                long activityDataId = refCursor.getLong(refCursor.getColumnIndex("activity_data_id"));
+                long activityDataId = refCursor.getLong(refCursor.getColumnIndex("activity_id"));
                 revisions.get(activityDataId).getReferences().add(mCacheReference.get(refId));
             } catch (URISyntaxException e) {
                 logError(e, "Invalid URI");
@@ -501,22 +560,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         refCursor.close();
     }
 
-    private void initActivitiesMedia(Map<Long, LocalActivityRevision> revisions) {
+    private void initActivitiesMedia(Map<Long, LocalActivity> revisions) {
         MediaCursor mediaCursor = new MediaCursor(getDb().rawQuery("" +
                 "select " +
-                "   adm.activity_data_id activity_data_id," +
+                "   adm.activity_id activity_id," +
                 "   m.* " +
                 "from " +
                 "   " + Database.media.T + " m inner join " + Database.activity_data_media.T + " adm on m.id = adm.media_id " +
                 "where " +
-                "   adm.activity_data_id in (" + TextUtils.join(", ", revisions.keySet()) + ")", null));
+                "   adm.activity_id in (" + TextUtils.join(", ", revisions.keySet()) + ")", null));
         while (mediaCursor.moveToNext()) {
             try {
                 long mediaId = mediaCursor.getId();
                 if (!mCacheMedia.containsKey(mediaId)) {
                     mCacheMedia.put(mediaId, mediaCursor.getMedia());
                 }
-                long activityDataId = mediaCursor.getLong(mediaCursor.getColumnIndex("activity_data_id"));
+                long activityDataId = mediaCursor.getLong(mediaCursor.getColumnIndex("activity_id"));
                 revisions.get(activityDataId).getMediaItems().add(mCacheMedia.get(mediaId));
             } catch (URISyntaxException e) {
                 logError(e, "Invalid URI");
@@ -525,21 +584,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         mediaCursor.close();
     }
 
-    private void initActivitiesCategories(Map<Long, LocalActivityRevision> revisions) {
+    private void initActivitiesCategories(Map<Long, LocalActivity> revisions) {
         CategoryCursor catCursor = new CategoryCursor(getDb().rawQuery("" +
                 "select " +
-                "   adc.activity_data_id activity_data_id," +
+                "   adc.activity_id activity_id," +
                 "   c.* " +
                 "from " +
                 "   " + Database.category.T + " c inner join " + Database.activity_data_category.T + " adc on c.id = adc.category_id " +
                 "where " +
-                "   adc.activity_data_id in (" + TextUtils.join(", ", revisions.keySet()) + ")", null));
+                "   adc.activity_id in (" + TextUtils.join(", ", revisions.keySet()) + ")", null));
         while (catCursor.moveToNext()) {
             long categoryId = catCursor.getId();
             if (!mCacheCategory.containsKey(categoryId)) {
                 mCacheCategory.put(categoryId, catCursor.getCategory());
             }
-            long activityDataId = catCursor.getLong(catCursor.getColumnIndex("activity_data_id"));
+            long activityDataId = catCursor.getLong(catCursor.getColumnIndex("activity_id"));
             revisions.get(activityDataId).getCategories().add(mCacheCategory.get(categoryId));
         }
         catCursor.close();
@@ -631,10 +690,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     logDebug("Ignoring banned search history item " + id);
                 }
             }
+            deleteBannedSearchHistoryItems();
         } catch (Exception e) {
             logError(e, "Could not read search history");
         }
         return items instanceof ArrayList ? (ArrayList<LocalSearchHistory>) items : new ArrayList(items);
+    }
+
+    private void deleteBannedSearchHistoryItems() {
+        if (!mBannedSearchHistoryIds.isEmpty()) {
+            getDb().beginTransaction();
+            Iterator<Long> iterator = mBannedSearchHistoryIds.iterator();
+            while (iterator.hasNext()) {
+                Long next = iterator.next();
+                if (getDb().delete(Database.history.T, Database.history.id + " = " + next.toString(), null) == 1) {
+                    iterator.remove();
+                    logDebug("Deleted banned search history id " + next.toString());
+                }
+            }
+            getDb().setTransactionSuccessful();
+            getDb().endTransaction();
+        }
     }
 
     public void createSearchHistoryItem(HistoryProperties<SearchHistoryData> properties) throws IOException {
@@ -654,5 +730,82 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         stream.close();
         baos.close();
         return baos.toByteArray();
+    }
+
+    public ActivityIdCache getActivityIdCache() {
+        return mActivityIdCache;
+    }
+
+    public class ActivityIdCache {
+        private List<IdCacheEntry> mEntries = null;
+
+        private void invalidate() {
+            mEntries = null;
+        }
+
+        private void update() {
+            if (mEntries == null) {
+                mEntries = new ArrayList<IdCacheEntry>();
+                Cursor localIdsQuery = getDb().query(Database.activity.T, new String[]{Database.activity.id, Database.activity.server_id, Database.activity.server_revision_id}, null, null, null, null, null);
+                while (localIdsQuery.moveToNext()) {
+                    IdCacheEntry entry = new IdCacheEntry(localIdsQuery.getInt(localIdsQuery.getColumnIndex(Database.activity.id)), localIdsQuery.getInt(localIdsQuery.getColumnIndex(Database.activity.server_id)), localIdsQuery.getInt(localIdsQuery.getColumnIndex(Database.activity.server_revision_id)));
+                    mEntries.add(entry);
+                }
+            }
+        }
+
+        boolean containsId(long id) {
+            update();
+            for (IdCacheEntry entry : mEntries) {
+                if (entry.mId == id) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public IdCacheEntry getEntryByServerId(int id) {
+            update();
+            for (IdCacheEntry entry : mEntries) {
+                if (entry.mServerId == id) {
+                    return entry;
+                }
+            }
+            return null;
+        }
+
+        boolean isCachedServerRevisionLessThan(int serverId, int serverRevisionId) {
+            update();
+            for (IdCacheEntry entry : mEntries) {
+                if (entry.mServerId == serverId && entry.mServerRevisionId < serverRevisionId) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    public class IdCacheEntry {
+        private long mId;
+        private int mServerId;
+        private int mServerRevisionId;
+
+        public IdCacheEntry(long id, int serverId, int serverRevisionId) {
+            mId = id;
+            mServerId = serverId;
+            mServerRevisionId = serverRevisionId;
+        }
+
+        public long getId() {
+            return mId;
+        }
+
+        public int getServerId() {
+            return mServerId;
+        }
+
+        public int getServerRevisionId() {
+            return mServerRevisionId;
+        }
     }
 }
