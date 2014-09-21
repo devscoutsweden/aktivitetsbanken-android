@@ -1,5 +1,7 @@
 package se.devscout.android.controller.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -26,7 +28,21 @@ public class StartActivity extends SingleFragmentActivity {
         switch (item.getItemId()) {
             case R.id.menuStartResetDatabase:
                 Log.i(StartActivity.class.getName(), "Resetting database.");
-                SQLiteActivityRepo.getInstance(this).resetDatabase(true);
+                AlertDialog.Builder builder = new AlertDialog.Builder(StartActivity.this);
+                AlertDialog dialog = builder.setMessage("Create test data?").setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        SQLiteActivityRepo.getInstance(StartActivity.this).resetDatabase(true);
+                    }
+                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        SQLiteActivityRepo.getInstance(StartActivity.this).resetDatabase(false);
+                    }
+                }).create();
+                dialog.show();
                 Log.i(StartActivity.class.getName(), "Database has been reset.");
                 break;
         }
