@@ -10,12 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import se.devscout.android.R;
 import se.devscout.android.model.ObjectIdentifierPojo;
-import se.devscout.android.util.ActivityUtil;
 import se.devscout.android.util.ResourceUtil;
 import se.devscout.android.view.SimpleDocumentLayout;
 import se.devscout.server.api.model.ActivityKey;
 import se.devscout.server.api.model.ActivityProperties;
-import se.devscout.server.api.model.ActivityRevision;
 import se.devscout.server.api.model.Media;
 
 import java.util.regex.Pattern;
@@ -48,10 +46,10 @@ public class ActivityFragment extends ActivityBankFragment {
         View view = inflater.inflate(R.layout.activity, container, false);
         SimpleDocumentLayout linearLayout = (SimpleDocumentLayout) view.findViewById(R.id.activityDocument);
 
-        ActivityRevision revision = ActivityUtil.getLatestActivityRevision(activityProperties);
+//        ActivityRevision revision = ActivityUtil.getLatestActivityRevision(activityProperties);
 
-        String ages = revision.getAges().toString();
-        String participantCount = revision.getParticipants().toString();
+        String ages = activityProperties.getAges().toString();
+        String participantCount = activityProperties.getParticipants().toString();
         if (ages.length() > 0 && participantCount.length() > 0) {
             ((TextView) view.findViewById(R.id.activityFactAgeAndParticipants)).setText(context.getString(R.string.activityFactAgeAndParticipants, ages, participantCount));
         } else if (participantCount.length() > 0) {
@@ -63,14 +61,14 @@ public class ActivityFragment extends ActivityBankFragment {
         ((TextView)view.findViewById(R.id.activityFactAgeAndParticipants)).setVisibility(isAgeAndParticipantsSet ? View.VISIBLE : View.GONE);
 
 
-        String time = revision.getTimeActivity().toString();
+        String time = activityProperties.getTimeActivity().toString();
         boolean isTimeSet = time.length() > 0;
         if (isTimeSet) {
             ((TextView) view.findViewById(R.id.activityFactTime)).setText(context.getString(R.string.activitiesListItemTime, time));
         }
         ((TextView)view.findViewById(R.id.activityFactTime)).setVisibility(isTimeSet ? View.VISIBLE : View.GONE);
 
-        String categories = TextUtils.join(", ", revision.getCategories());
+        String categories = TextUtils.join(", ", activityProperties.getCategories());
         boolean isCategoriesSet = categories.length() > 0;
         if (isCategoriesSet) {
             ((TextView)view.findViewById(R.id.activityFactCategories)).setText(categories);
@@ -79,13 +77,13 @@ public class ActivityFragment extends ActivityBankFragment {
 
         ResourceUtil resourceUtil = new ResourceUtil(context);
 
-        if (revision.getCoverMedia() != null) {
+        if (activityProperties.getCoverMedia() != null) {
             ImageView activityCoverImage = (ImageView) view.findViewById(R.id.activityCoverImage);
-            activityCoverImage.setImageResource(resourceUtil.toResourceId(revision.getCoverMedia().getURI()));
+            activityCoverImage.setImageResource(resourceUtil.toResourceId(activityProperties.getCoverMedia().getURI()));
 
             TextView activityCoverMore = (TextView) view.findViewById(R.id.activityCoverMore);
-            if (revision.getMediaItems().size() > 1) {
-                activityCoverMore.setText("" + (revision.getMediaItems().size() - 1) + "+");
+            if (activityProperties.getMediaItems().size() > 1) {
+                activityCoverMore.setText("" + (activityProperties.getMediaItems().size() - 1) + "+");
                 activityCoverMore.setVisibility(View.VISIBLE);
             } else {
                 activityCoverMore.setVisibility(View.GONE);
@@ -96,16 +94,16 @@ public class ActivityFragment extends ActivityBankFragment {
             view.findViewById(R.id.activityCover).setVisibility(View.GONE);
         }
         linearLayout
-                .addHeaderAndText(R.string.activity_introduction, revision.getDescriptionIntroduction())
-                .addHeaderAndText(R.string.activity_tab_material, revision.getDescriptionMaterial())
-                .addHeaderAndText(R.string.activity_preparations, revision.getDescriptionPreparation())
-                .addHeaderAndText(R.string.activity_how_to_do, revision.getDescription())
-                .addHeaderAndText(R.string.activity_safety, revision.getDescriptionSafety())
-                .addHeaderAndText(R.string.activity_notes, revision.getDescriptionNotes());
+                .addHeaderAndText(R.string.activity_introduction, activityProperties.getDescriptionIntroduction())
+                .addHeaderAndText(R.string.activity_tab_material, activityProperties.getDescriptionMaterial())
+                .addHeaderAndText(R.string.activity_preparations, activityProperties.getDescriptionPreparation())
+                .addHeaderAndText(R.string.activity_how_to_do, activityProperties.getDescription())
+                .addHeaderAndText(R.string.activity_safety, activityProperties.getDescriptionSafety())
+                .addHeaderAndText(R.string.activity_notes, activityProperties.getDescriptionNotes());
 
-        if (!revision.getMediaItems().isEmpty()) {
+        if (!activityProperties.getMediaItems().isEmpty()) {
             linearLayout.addHeader(R.string.activity_tab_photos);
-            for (Media media : revision.getMediaItems()) {
+            for (Media media : activityProperties.getMediaItems()) {
                 linearLayout.addImage(resourceUtil.toResourceId(media.getURI()), false);
             }
         }

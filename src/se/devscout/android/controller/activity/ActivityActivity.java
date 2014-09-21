@@ -39,7 +39,7 @@ public class ActivityActivity extends SingleFragmentActivity {
         ObjectIdentifierPojo key = (ObjectIdentifierPojo) getIntent().getSerializableExtra(INTENT_EXTRA_ACTIVITY_KEY);
         if (key != null) {
             Activity activity = getActivityBank().readFull(key);
-            setTitle(activity.getRevisions().get(activity.getRevisions().size() - 1).getName());
+            setTitle(activity.getName());
         }
     }
 

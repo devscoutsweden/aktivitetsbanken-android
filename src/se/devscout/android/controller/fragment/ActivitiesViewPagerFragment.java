@@ -9,7 +9,6 @@ import android.view.*;
 import se.devscout.android.R;
 import se.devscout.android.model.ObjectIdentifierPojo;
 import se.devscout.android.util.ActivityBankFactory;
-import se.devscout.android.util.ActivityUtil;
 import se.devscout.android.view.ViewPagerIndicator;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.model.Activity;
@@ -168,6 +167,6 @@ public class ActivitiesViewPagerFragment extends ActivityBankFragment implements
     }
 
     private void updateActivityTitle(int selectedActivityIndex) {
-        getActivity().setTitle(ActivityUtil.getLatestActivityRevision(getActivity(selectedActivityIndex)).getName());
+        getActivity().setTitle(getActivity(selectedActivityIndex).getName());
     }
 }

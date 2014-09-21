@@ -2,35 +2,44 @@ package se.devscout.android.model.repo.sql;
 
 import android.database.Cursor;
 import se.devscout.android.model.IntegerRangePojo;
-import se.devscout.android.model.repo.LocalActivityRevision;
-import se.devscout.server.api.model.ActivityKey;
+import se.devscout.android.model.repo.LocalActivity;
+import se.devscout.android.model.repo.LocalUser;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.util.Date;
 
 public class ActivityDataCursor extends BaseCursorWrapper {
     public ActivityDataCursor(Cursor cursor) {
         super(cursor);
     }
 
-    public LocalActivityRevision getActivityData(ActivityKey activityKey) {
-        LocalActivityRevision revision = new LocalActivityRevision(
-                getString(getColumnIndex(Database.activity_data.name)),
-                getInt(getColumnIndex(Database.activity_data.featured)) == 1,
-                activityKey,
-                getId()
+    public LocalActivity getActivityData(LocalUser owner) {
+        LocalActivity revision = new LocalActivity(
+                owner,
+                getId(),
+                getInt(getColumnIndex(Database.activity.server_id)),
+                getInt(getColumnIndex(Database.activity.is_publishable)) != 0
         );
-        revision.setAges(new IntegerRangePojo(getInt(getColumnIndex(Database.activity_data.age_min)), getInt(getColumnIndex(Database.activity_data.age_max))));
-        revision.setTimeActivity(new IntegerRangePojo(getInt(getColumnIndex(Database.activity_data.time_min)), getInt(getColumnIndex(Database.activity_data.time_max))));
-        revision.setParticipants(new IntegerRangePojo(getInt(getColumnIndex(Database.activity_data.participants_min)), getInt(getColumnIndex(Database.activity_data.participants_max))));
+        revision.setFeatured(getInt(getColumnIndex(Database.activity.featured)) == 1);
+        revision.setName(getString(getColumnIndex(Database.activity.name)));
+        revision.setAges(new IntegerRangePojo(getInt(getColumnIndex(Database.activity.age_min)), getInt(getColumnIndex(Database.activity.age_max))));
+        revision.setTimeActivity(new IntegerRangePojo(getInt(getColumnIndex(Database.activity.time_min)), getInt(getColumnIndex(Database.activity.time_max))));
+        revision.setParticipants(new IntegerRangePojo(getInt(getColumnIndex(Database.activity.participants_min)), getInt(getColumnIndex(Database.activity.participants_max))));
+        revision.setDateCreated(new Date(getLong(getColumnIndex(Database.activity.datetime_created))));
+//        revision.setDatePublished(new Date(getLong(getColumnIndex(Database.activity.datetime_published))));
 //              "datetime_published" DATETIME,
 //              "datetime_created" DATETIME NOT NULL,
-        revision.setMaterial(getString(getColumnIndex(Database.activity_data.descr_material)));
-        revision.setIntroduction(getString(getColumnIndex(Database.activity_data.descr_introduction)));
-        revision.setPreparation(getString(getColumnIndex(Database.activity_data.descr_prepare)));
-        revision.setDescription(getString(getColumnIndex(Database.activity_data.descr_activity)));
-        revision.setSafety(getString(getColumnIndex(Database.activity_data.descr_safety)));
-        revision.addDescriptionNote(getString(getColumnIndex(Database.activity_data.descr_notes)));
+
+        revision.setServerId(getInt(getColumnIndex(Database.activity.server_id)));
+        revision.setServerRevisionId(getInt(getColumnIndex(Database.activity.server_revision_id)));
+        revision.setPublishable(getInt(getColumnIndex(Database.activity.is_publishable)) != 0);
+
+        revision.setMaterial(getString(getColumnIndex(Database.activity.descr_material)));
+        revision.setIntroduction(getString(getColumnIndex(Database.activity.descr_introduction)));
+        revision.setPreparation(getString(getColumnIndex(Database.activity.descr_prepare)));
+        revision.setDescription(getString(getColumnIndex(Database.activity.descr_activity)));
+        revision.setSafety(getString(getColumnIndex(Database.activity.descr_safety)));
+        revision.addDescriptionNote(getString(getColumnIndex(Database.activity.descr_notes)));
+/*
         revision.setAuthor(null);
         String sourceUri = getString(getColumnIndex(Database.activity_data.source_uri));
         if (sourceUri != null) {
@@ -40,15 +49,13 @@ public class ActivityDataCursor extends BaseCursorWrapper {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
         }
+*/
         return revision;
     }
 
+/*
     public long getAuthorId() {
         return getLong(getColumnIndex(Database.activity_data.author_id));
     }
-
-    public long getActivityId() {
-        return getLong(getColumnIndex(Database.activity_data.activity_id));
-    }
-
+*/
 }

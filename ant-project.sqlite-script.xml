@@ -29,6 +29,7 @@
                 <replaceregex pattern="`\s+(TINY|SMALL|BIG)?INT\w*${regexpOptionalSize}" replace="&quot; INTEGER "
                     flags="gi" />
                 <replaceregex pattern="`\s+(VAR)?CHAR${regexpOptionalSize}" replace="&quot; TEXT " flags="gi" />
+                <replaceregex pattern="`\s+TEXT" replace="&quot; TEXT " flags="gi" />
                 <replaceregex pattern="`\s+(BLOB|BINARY)${regexpOptionalSize}" replace="&quot; NONE " flags="gi" />
                 <replaceregex pattern="`\s+(REAL|FLOAT|DOUBLE)?INT\w*\s" replace="&quot; REAL " flags="gi" />
                 <!-- Everything not match by the previous datatype conversions are converted to NUMERIC. Look for words preceeded by the ` character but NOT followed by the ` character. -->

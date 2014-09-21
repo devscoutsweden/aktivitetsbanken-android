@@ -9,7 +9,6 @@ import se.devscout.android.R;
 import se.devscout.android.model.ObjectIdentifierPojo;
 import se.devscout.android.util.ResourceUtil;
 import se.devscout.server.api.model.Activity;
-import se.devscout.server.api.model.ActivityRevision;
 import se.devscout.server.api.model.Media;
 
 public class ActivityTabsFragment extends TabsFragment {
@@ -47,31 +46,31 @@ public class ActivityTabsFragment extends TabsFragment {
         StaticFragmentsPagerAdapter pagerAdapter = new StaticFragmentsPagerAdapter(fragmentManager, getActivity());
 
         Activity activity = getActivityBank().readFull(key);
-        ActivityRevision revision = activity.getRevisions().get(activity.getRevisions().size() - 1);
+//        ActivityRevision revision = activity.getRevisions().get(activity.getRevisions().size() - 1);
 
         ResourceUtil resourceUtil = new ResourceUtil(getActivity());
 
         SimpleDocumentFragment mainTabFragment = SimpleDocumentFragment.create();
-        if (revision.getCoverMedia() != null) {
-            mainTabFragment.addImage(resourceUtil.toResourceId(revision.getCoverMedia().getURI()), false);
+        if (activity.getCoverMedia() != null) {
+            mainTabFragment.addImage(resourceUtil.toResourceId(activity.getCoverMedia().getURI()), false);
         }
         mainTabFragment
-                .addHeaderAndText(R.string.activity_introduction, revision.getDescriptionIntroduction())
-                .addHeaderAndText(R.string.activity_preparations, revision.getDescriptionPreparation())
-                .addHeaderAndText(R.string.activity_how_to_do, revision.getDescription())
-                .addHeaderAndText(R.string.activity_safety, revision.getDescriptionSafety())
-                .addHeaderAndText(R.string.activity_notes, revision.getDescriptionNotes());
+                .addHeaderAndText(R.string.activity_introduction, activity.getDescriptionIntroduction())
+                .addHeaderAndText(R.string.activity_preparations, activity.getDescriptionPreparation())
+                .addHeaderAndText(R.string.activity_how_to_do, activity.getDescription())
+                .addHeaderAndText(R.string.activity_safety, activity.getDescriptionSafety())
+                .addHeaderAndText(R.string.activity_notes, activity.getDescriptionNotes());
 
         pagerAdapter.addTab(R.string.activity_tab_description, R.drawable.ic_action_about, mainTabFragment);
 
-        if (revision.getDescriptionMaterial() != null && revision.getDescriptionMaterial().length() > 0) {
+        if (activity.getDescriptionMaterial() != null && activity.getDescriptionMaterial().length() > 0) {
             SimpleDocumentFragment materialTabFragment = SimpleDocumentFragment.create()
-                    .addBodyText(revision.getDescriptionMaterial());
+                    .addBodyText(activity.getDescriptionMaterial());
             pagerAdapter.addTab(R.string.activity_tab_material, R.drawable.ic_action_paste, materialTabFragment);
         }
-        if (!revision.getMediaItems().isEmpty()) {
+        if (!activity.getMediaItems().isEmpty()) {
             SimpleDocumentFragment mediaTabFragment = SimpleDocumentFragment.create();
-            for (Media media : revision.getMediaItems()) {
+            for (Media media : activity.getMediaItems()) {
                 mediaTabFragment.addImage(resourceUtil.toResourceId(media.getURI()), false);
             }
             pagerAdapter.addTab(R.string.activity_tab_photos, R.drawable.ic_action_picture, mediaTabFragment);

@@ -22,31 +22,30 @@ public class QueryBuilder {
 
     public QueryBuilder() {
         mSelect.add("a." + Database.activity.owner_id);
-        mSelect.add("ad." + Database.activity_data.id);
-        mSelect.add("ad." + Database.activity_data.activity_id);
-        mSelect.add("ad." + Database.activity_data.status);
-        mSelect.add("ad." + Database.activity_data.name);
-        mSelect.add("ad." + Database.activity_data.datetime_published);
-        mSelect.add("ad." + Database.activity_data.datetime_created);
-        mSelect.add("ad." + Database.activity_data.descr_material);
-        mSelect.add("ad." + Database.activity_data.descr_introduction);
-        mSelect.add("ad." + Database.activity_data.descr_prepare);
-        mSelect.add("ad." + Database.activity_data.descr_activity);
-        mSelect.add("ad." + Database.activity_data.descr_safety);
-        mSelect.add("ad." + Database.activity_data.descr_notes);
-        mSelect.add("ad." + Database.activity_data.age_min);
-        mSelect.add("ad." + Database.activity_data.age_max);
-        mSelect.add("ad." + Database.activity_data.participants_min);
-        mSelect.add("ad." + Database.activity_data.participants_max);
-        mSelect.add("ad." + Database.activity_data.time_min);
-        mSelect.add("ad." + Database.activity_data.time_max);
-        mSelect.add("ad." + Database.activity_data.featured);
-        mSelect.add("ad." + Database.activity_data.author_id);
-        mSelect.add("ad." + Database.activity_data.source_uri);
-        mFrom.append("   " + Database.activity.T + " a " +
+        mSelect.add("a." + Database.activity.id);
+        mSelect.add("a." + Database.activity.server_id);
+        mSelect.add("a." + Database.activity.server_revision_id);
+        mSelect.add("a." + Database.activity.is_publishable);
+        mSelect.add("a." + Database.activity.name);
+        mSelect.add("a." + Database.activity.datetime_published);
+        mSelect.add("a." + Database.activity.datetime_created);
+        mSelect.add("a." + Database.activity.descr_material);
+        mSelect.add("a." + Database.activity.descr_introduction);
+        mSelect.add("a." + Database.activity.descr_prepare);
+        mSelect.add("a." + Database.activity.descr_activity);
+        mSelect.add("a." + Database.activity.descr_safety);
+        mSelect.add("a." + Database.activity.descr_notes);
+        mSelect.add("a." + Database.activity.age_min);
+        mSelect.add("a." + Database.activity.age_max);
+        mSelect.add("a." + Database.activity.participants_min);
+        mSelect.add("a." + Database.activity.participants_max);
+        mSelect.add("a." + Database.activity.time_min);
+        mSelect.add("a." + Database.activity.time_max);
+        mSelect.add("a." + Database.activity.featured);
+        mFrom.append("   " + Database.activity.T + " a "/* +
                 "   inner join " + Database.activity_data.T + " admax on a." + Database.activity.id + " = admax." + Database.activity_data.activity_id + " " +
-                "   inner join " + Database.activity_data.T + " ad on a." + Database.activity.id + " = ad." + Database.activity_data.activity_id + " ");
-        mOrderBy = Arrays.asList("a." + Database.activity.id, "ad." + Database.activity_data.id);
+                "   inner join " + Database.activity_data.T + " ad on a." + Database.activity.id + " = ad." + Database.activity_data.activity_id + " "*/);
+        mOrderBy = Arrays.asList("a." + Database.activity.id);
     }
 
     public ActivityDataCursor query(SQLiteDatabase db) {
@@ -61,11 +60,13 @@ public class QueryBuilder {
                     " where " + TextUtils.join(" and ", mWhere));
         }
         sb.append("" +
+/*
                 " group by " +
                 "   a." + Database.activity.id + ", " +
                 "   ad." + Database.activity_data.id + " " +
                 " having " +
                 "   ad." + Database.activity_data.id + " = max(admax." + Database.activity_data.id + ") " +
+*/
                 " order by " + TextUtils.join(", ", mOrderBy));
         if (mLimitResultLength > 0) {
             sb.append(" limit " + mLimitResultLength);
@@ -84,20 +85,20 @@ public class QueryBuilder {
     }
 
     public QueryBuilder addWhereIsFeatured() {
-        return addWhere("ad." + Database.activity_data.featured + " = 1");
+        return addWhere("ad." + Database.activity.featured + " = 1");
     }
 
     public QueryBuilder addWhereText(String text) {
-        return addWhere("ad." + Database.activity_data.name + " LIKE ?", "%" + text + "%");
+        return addWhere("ad." + Database.activity.name + " LIKE ?", "%" + text + "%");
     }
 
     public QueryBuilder addWhereAge(Range<Integer> range) {
-        addWhereRange(range, Database.activity_data.age_min, Database.activity_data.age_max);
+        addWhereRange(range, Database.activity.age_min, Database.activity.age_max);
         return this;
     }
 
     public QueryBuilder addWhereTime(IntegerRangePojo range) {
-        addWhereRange(range, Database.activity_data.time_min, Database.activity_data.time_max);
+        addWhereRange(range, Database.activity.time_min, Database.activity.time_max);
         return this;
     }
 

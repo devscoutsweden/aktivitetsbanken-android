@@ -1,8 +1,6 @@
 package se.devscout.android.view;
 
-import se.devscout.android.util.ActivityUtil;
 import se.devscout.server.api.model.Activity;
-import se.devscout.server.api.model.ActivityRevision;
 import se.devscout.server.api.model.Media;
 import se.devscout.server.api.model.Range;
 
@@ -19,14 +17,14 @@ public class ActivitiesListItem implements Serializable {
     private URI mCoverMedia;
 
     public ActivitiesListItem(Activity activity) {
-        ActivityRevision src = ActivityUtil.getLatestActivityRevision(activity);
-        mName = src.getName();
-        mParticipants = src.getParticipants();
-        mTimeActivity = src.getTimeActivity();
-        mDescription = src.getDescription();
-        mAges = src.getAges();
+//        ActivityRevision src = ActivityUtil.getLatestActivityRevision(activity);
+        mName = activity.getName();
+        mParticipants = activity.getParticipants();
+        mTimeActivity = activity.getTimeActivity();
+        mDescription = activity.getDescription();
+        mAges = activity.getAges();
         mId = activity.getId();
-        for (Media media : src.getMediaItems()) {
+        for (Media media : activity.getMediaItems()) {
             mCoverMedia = media.getURI();
             break;
         }
