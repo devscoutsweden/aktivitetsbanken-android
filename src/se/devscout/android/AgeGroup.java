@@ -1,6 +1,5 @@
 package se.devscout.android;
 
-import android.graphics.Color;
 import se.devscout.server.api.model.ObjectIdentifier;
 import se.devscout.server.api.model.Range;
 import se.devscout.server.api.model.ScoutAgeRange;
