@@ -33,7 +33,7 @@ public abstract class AbstractActivitiesFinderComponentFactory implements Serial
         ACTIVITIES_FINDERS.add(new WelcomeMessageWidgetSpecification(R.string.welcomeWidgetTitle, R.drawable.ic_drawer));
         ACTIVITIES_FINDERS.add(new SearchActivitiesFinderComponentFactory(R.string.startTabSearch, R.drawable.ic_drawer));
         ACTIVITIES_FINDERS.add(new SpontaneousActivitiesFinderComponentFactory(R.string.startTabSpontaneousActivity, R.drawable.ic_drawer));
-        ACTIVITIES_FINDERS.add(new FavouriteActivitiesFinderComponentFactory(R.string.startTabFavourites, R.drawable.ic_action_important));
+//        ACTIVITIES_FINDERS.add(new FavouriteActivitiesFinderComponentFactory(R.string.startTabFavourites, R.drawable.ic_action_important));
         ACTIVITIES_FINDERS.add(new FeaturedActivitiesFinderComponentFactory(R.string.startTabFeatured, R.drawable.ic_action_good));
         ACTIVITIES_FINDERS.add(new ByCategoryActivitiesFinderComponentFactory(R.string.startTabCategories, R.drawable.ic_action_labels));
         ACTIVITIES_FINDERS.add(new AbstractActivitiesFinderComponentFactory(R.string.startTabSearch, R.drawable.ic_action_search, true) {
