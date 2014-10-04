@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import se.devscout.android.R;
-import se.devscout.android.model.ObjectIdentifierPojo;
+import se.devscout.android.model.ObjectIdentifierBean;
 import se.devscout.android.util.ResourceUtil;
 import se.devscout.android.view.SimpleDocumentLayout;
 import se.devscout.server.api.model.ActivityKey;
@@ -25,7 +25,7 @@ public class ActivityFragment extends ActivityBankFragment {
 
     private static final Pattern WHITE_SPACE_PATTERN = Pattern.compile("\\s+");
 
-    private ObjectIdentifierPojo mActivityKey;
+    private ObjectIdentifierBean mActivityKey;
 
     private static interface Item {
         void append(SimpleDocumentLayout layout, LayoutInflater inflater);
@@ -37,7 +37,7 @@ public class ActivityFragment extends ActivityBankFragment {
             /*
              * Restore fields from saved state, for example after the device has been rotated.
              */
-            mActivityKey = (ObjectIdentifierPojo) savedInstanceState.getSerializable("mActivityKey");
+            mActivityKey = (ObjectIdentifierBean) savedInstanceState.getSerializable("mActivityKey");
         }
         return createView(inflater, container, getActivityBank().readActivity(mActivityKey), getActivity());
     }
@@ -122,7 +122,7 @@ public class ActivityFragment extends ActivityBankFragment {
 
     public static ActivityFragment create(ActivityKey activityKey) {
         ActivityFragment fragment = new ActivityFragment();
-        fragment.mActivityKey = new ObjectIdentifierPojo(activityKey.getId());
+        fragment.mActivityKey = new ObjectIdentifierBean(activityKey.getId());
         return fragment;
     }
 }

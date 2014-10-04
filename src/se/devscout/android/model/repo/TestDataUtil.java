@@ -6,7 +6,7 @@ import android.util.Log;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import se.devscout.android.R;
-import se.devscout.android.model.IntegerRangePojo;
+import se.devscout.android.model.IntegerRange;
 import se.devscout.server.api.model.Range;
 
 import java.io.IOException;
@@ -16,13 +16,13 @@ import java.util.List;
 import java.util.Scanner;
 
 public class TestDataUtil {
-    public static List<LocalActivity> readXMLTestData(Context ctx) {
-        List<LocalActivity> mActivities = new ArrayList<LocalActivity>();
+    public static List<ActivityBean> readXMLTestData(Context ctx) {
+        List<ActivityBean> mActivities = new ArrayList<ActivityBean>();
         XmlResourceParser parser = ctx.getResources().getXml(R.xml.activities);
         int eventType = 0;
-        LocalActivity revision = null;
-//        LocalActivityRevision revision = null;
-//        LocalActivityRevision firstRevision = null;
+        ActivityBean revision = null;
+//        ActivityRevisionBean revision = null;
+//        ActivityRevisionBean firstRevision = null;
         try {
             while ((eventType = parser.next()) != XmlPullParser.END_DOCUMENT) {
                 switch (eventType) {
@@ -36,18 +36,18 @@ public class TestDataUtil {
                             }
                             boolean featured = parser.getAttributeBooleanValue(null, "featured", false);
                             String name = parser.getAttributeValue(null, "name");
-                            revision = new LocalActivity(
+                            revision = new ActivityBean(
                                     null,
-                                    LocalActivity.debugCounter++,
+                                    ActivityBean.debugCounter++,
                                     0,
                                     0,
                                     false);
                             mActivities.add(revision);
                             revision.setName(name);
                             revision.setFeatured(featured);
-//                            firstRevision = new LocalActivityRevision("." + name, featured, revision, LocalActivityRevision.debugCounter++);
+//                            firstRevision = new ActivityRevisionBean("." + name, featured, revision, ActivityRevisionBean.debugCounter++);
 //                            revision.getRevisions().add(firstRevision);
-//                            revision = new LocalActivityRevision(name, featured, revision, LocalActivityRevision.debugCounter++);
+//                            revision = new ActivityRevisionBean(name, featured, revision, ActivityRevisionBean.debugCounter++);
 //                            revision.getRevisions().add(revision);
                         } else if ("introduction".equals(parser.getName())) {
                             revision.setIntroduction(parser.nextText());
@@ -83,11 +83,11 @@ public class TestDataUtil {
                             URI uri = URI.create(parser.getAttributeValue(null, "uri"));
 //                            revision.addMediaItem(uri, null);
                         } else if ("participants".equals(parser.getName())) {
-                            revision.setParticipants(new IntegerRangePojo(
+                            revision.setParticipants(new IntegerRange(
                                     parser.getAttributeIntValue(null, "min", 1),
                                     parser.getAttributeIntValue(null, "max", 99)));
                         } else if ("time".equals(parser.getName())) {
-                            revision.setTimeActivity(new IntegerRangePojo(
+                            revision.setTimeActivity(new IntegerRange(
                                     parser.getAttributeIntValue(null, "min", 1),
                                     parser.getAttributeIntValue(null, "max", 99)));
                         }
@@ -112,6 +112,6 @@ public class TestDataUtil {
             min = Math.min(min, value);
             max = Math.max(max, value);
         }
-        return new IntegerRangePojo(min, max);
+        return new IntegerRange(min, max);
     }
 }

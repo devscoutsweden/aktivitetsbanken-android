@@ -11,9 +11,9 @@ import android.widget.TextView;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.ActivitiesActivity;
 import se.devscout.android.controller.fragment.RangeComparator;
-import se.devscout.android.model.ObjectIdentifierPojo;
-import se.devscout.android.model.SearchHistoryPropertiesPojo;
-import se.devscout.android.model.repo.SearchHistoryDataPojo;
+import se.devscout.android.model.ObjectIdentifierBean;
+import se.devscout.android.model.SearchHistoryPropertiesBean;
+import se.devscout.android.model.repo.SearchHistoryDataBean;
 import se.devscout.android.model.repo.remote.UnauthorizedException;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.server.api.ActivityBank;
@@ -38,9 +38,9 @@ public class ActivitiesListView extends NonBlockingSearchView<ActivitiesListItem
 
     @Override
     protected void onItemClick(View view, int position) {
-        List<ObjectIdentifierPojo> keys = new ArrayList<ObjectIdentifierPojo>();
+        List<ObjectIdentifierBean> keys = new ArrayList<ObjectIdentifierBean>();
         for (ActivitiesListItem activity : getItems()) {
-            keys.add(new ObjectIdentifierPojo(activity.getId()));
+            keys.add(new ObjectIdentifierBean(activity.getId()));
         }
         getContext().startActivity(ActivitiesActivity.createIntent(getContext(), keys, position));
     }
@@ -212,8 +212,8 @@ public class ActivitiesListView extends NonBlockingSearchView<ActivitiesListItem
         protected List<ActivitiesListItem> doSearch() throws UnauthorizedException {
             ActivityBank activityBank = ActivityBankFactory.getInstance(getContext());
             List<Activity> activities = (List<Activity>) activityBank.findActivity(mFilter);
-            final SearchHistoryDataPojo searchHistoryDataPojo = new SearchHistoryDataPojo(mFilter);
-            activityBank.createSearchHistory(new SearchHistoryPropertiesPojo(null, searchHistoryDataPojo));
+            final SearchHistoryDataBean searchHistoryDataBean = new SearchHistoryDataBean(mFilter);
+            activityBank.createSearchHistory(new SearchHistoryPropertiesBean(null, searchHistoryDataBean));
             List<ActivitiesListItem> items = new ArrayList<ActivitiesListItem>();
             for (Activity activity : activities) {
                 items.add(new ActivitiesListItem(activity));

@@ -2,7 +2,7 @@ package se.devscout.android.model.repo.sql;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
-import se.devscout.android.model.IntegerRangePojo;
+import se.devscout.android.model.IntegerRange;
 import se.devscout.server.api.model.ActivityKey;
 import se.devscout.server.api.model.Range;
 import se.devscout.server.api.model.UserKey;
@@ -97,7 +97,7 @@ public class QueryBuilder {
         return this;
     }
 
-    public QueryBuilder addWhereTime(IntegerRangePojo range) {
+    public QueryBuilder addWhereTime(IntegerRange range) {
         addWhereRange(range, Database.activity.time_min, Database.activity.time_max);
         return this;
     }

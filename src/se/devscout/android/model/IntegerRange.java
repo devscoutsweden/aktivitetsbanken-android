@@ -4,15 +4,15 @@ import se.devscout.server.api.model.Range;
 
 import java.io.Serializable;
 
-public class IntegerRangePojo implements Range<Integer>, Serializable {
+public class IntegerRange implements Range<Integer>, Serializable {
 
     private Integer mMin = Integer.MIN_VALUE;
     private Integer mMax = Integer.MAX_VALUE;
 
-    public IntegerRangePojo() {
+    public IntegerRange() {
     }
 
-    public IntegerRangePojo(int min, int max) {
+    public IntegerRange(int min, int max) {
         if (min > 0) {
             mMin = min;
         }

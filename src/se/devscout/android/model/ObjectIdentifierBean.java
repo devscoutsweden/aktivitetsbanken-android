@@ -6,14 +6,14 @@ import se.devscout.server.api.model.UserKey;
 
 import java.io.Serializable;
 
-public class ObjectIdentifierPojo implements Serializable, ActivityKey, CategoryKey, UserKey {
+public class ObjectIdentifierBean implements Serializable, ActivityKey, CategoryKey, UserKey {
     private Long mId;
 
-    public ObjectIdentifierPojo(Long id) {
+    public ObjectIdentifierBean(Long id) {
         mId = id;
     }
 
-    public ObjectIdentifierPojo(int id) {
+    public ObjectIdentifierBean(int id) {
         mId = Long.valueOf(id);
     }
 

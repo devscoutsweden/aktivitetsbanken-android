@@ -8,10 +8,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import se.devscout.android.model.IntegerRangePojo;
-import se.devscout.android.model.ObjectIdentifierPojo;
-import se.devscout.android.model.repo.LocalActivity;
-import se.devscout.android.model.repo.LocalCategory;
+import se.devscout.android.model.IntegerRange;
+import se.devscout.android.model.ObjectIdentifierBean;
+import se.devscout.android.model.repo.ActivityBean;
+import se.devscout.android.model.repo.CategoryBean;
 import se.devscout.android.model.repo.sql.SQLiteActivityRepo;
 import se.devscout.android.util.InstallationProperties;
 import se.devscout.server.api.ActivityFilter;
@@ -125,7 +125,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
             String uri = "http://" + HOST + "/api/v1/activities/" + key.getId();
             JSONObject obj = getJSONObject(uri);
 
-            LocalActivity act = getLocalActivity(obj);
+            ActivityBean act = getLocalActivity(obj);
 
             processActivityFromServer(act);
 
@@ -182,14 +182,14 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     }
 
     @Override
-    public List<LocalActivity> findActivity(ActivityFilter condition) throws UnauthorizedException {
+    public List<ActivityBean> findActivity(ActivityFilter condition) throws UnauthorizedException {
         URIBuilderActivityFilterVisitor visitor = new ApiV1Visitor();
         String uri = condition.toAPIRequest(visitor).toString();
         try {
             JSONArray array = getJSONArray(uri, null);
-            ArrayList<LocalActivity> result = new ArrayList<LocalActivity>();
+            ArrayList<ActivityBean> result = new ArrayList<ActivityBean>();
             for (JSONObject obj : getJSONArrayAsList(array)) {
-                LocalActivity act = getLocalActivity(obj);
+                ActivityBean act = getLocalActivity(obj);
 
                 processActivityFromServer(act);
 
@@ -205,7 +205,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         }
     }
 
-    private void processActivityFromServer(LocalActivity act) {
+    private void processActivityFromServer(ActivityBean act) {
         //TODO: refactor into separate method for updating database.
         switch (mDatabaseHelper.getLocalActivityFreshness(act, true)) {
             case LOCAL_IS_MISSING:
@@ -224,16 +224,16 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     }
 
     @Override
-    public List<LocalCategory> readCategories() throws UnauthorizedException {
+    public List<CategoryBean> readCategories() throws UnauthorizedException {
         //TODO: Host name should not be kept in source code
         try {
             String uri = "http://" + HOST + "/api/v1/categories";
             JSONArray array = getJSONArray(uri, null);
-            ArrayList<LocalCategory> result = new ArrayList<LocalCategory>();
+            ArrayList<CategoryBean> result = new ArrayList<CategoryBean>();
             for (JSONObject obj : getJSONArrayAsList(array)) {
 //            for (int i = 0; i < array.length(); i++) {
 //                JSONObject obj = array.getJSONObject(i);
-                LocalCategory act = getLocalCategory(obj);
+                CategoryBean act = getLocalCategory(obj);
                 result.add(act);
             }
             //TODO: add functionality for caching/storing incoming data in database. Check find(...) method for inspiration. High priority.
@@ -264,8 +264,8 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         return (JSONObject) new JSONTokener(s).nextValue();
     }
 
-    private LocalCategory getLocalCategory(JSONObject obj) throws JSONException {
-        LocalCategory cat = new LocalCategory(
+    private CategoryBean getLocalCategory(JSONObject obj) throws JSONException {
+        CategoryBean cat = new CategoryBean(
                 obj.getString("group"),
                 obj.getString("name"),
                 0L,
@@ -285,14 +285,14 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         }
     }
 
-    private LocalActivity getLocalActivity(JSONObject obj) throws JSONException {
-        ObjectIdentifierPojo ownerId = null;//new ObjectIdentifierPojo(mDatabaseHelper.getOrCreateUser(new UserPropertiesPojo(null, null, obj.getLong("owner_id"), UNKNOWN_SERVER_REVISION_ID, false)));
-        LocalActivity act = new LocalActivity(ownerId,
+    private ActivityBean getLocalActivity(JSONObject obj) throws JSONException {
+        ObjectIdentifierBean ownerId = null;//new ObjectIdentifierBean(mDatabaseHelper.getOrCreateUser(new UserPropertiesBean(null, null, obj.getLong("owner_id"), UNKNOWN_SERVER_REVISION_ID, false)));
+        ActivityBean act = new ActivityBean(ownerId,
                 0L,
                 obj.getInt("id"),
                 getServerRevisionId(obj),
                 false);
-//        LocalActivityRevision revision = new LocalActivityRevision(obj.getString("title"), false, new ObjectIdentifierPojo(act.getId()), 0L);
+//        ActivityRevisionBean revision = new ActivityRevisionBean(obj.getString("title"), false, new ObjectIdentifierBean(act.getId()), 0L);
 
         act.setName(obj.getString("name"));
 //        act.setServerId(obj.getInt("id"));
@@ -341,7 +341,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         return list;
     }
 
-    private IntegerRangePojo getMinMaxRange(JSONObject obj, final String field) throws JSONException {
+    private IntegerRange getMinMaxRange(JSONObject obj, final String field) throws JSONException {
         List<String> minValues = getStrings(obj, field + "_min");
         int min = Integer.MAX_VALUE;
         for (String minValue : minValues) {
@@ -360,7 +360,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
                 Log.e(RemoteActivityRepoImpl.class.getName(), "Could not parse string as number", e);
             }
         }
-        return new IntegerRangePojo(min, max);
+        return new IntegerRange(min, max);
     }
 
     private List<String> getStrings(JSONObject obj, String field) throws JSONException {
@@ -431,10 +431,10 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
      * 3. Update existing activities, i.e. incoming activities whose server_revision_id is greater than the locally stored value.
      */
 /*
-    public void updateActivities(List<LocalActivity> incomingActivities) {
+    public void updateActivities(List<ActivityBean> incomingActivities) {
         SQLiteDatabase db = getDb();
         db.beginTransaction();
-        for (LocalActivity activity : incomingActivities) {
+        for (ActivityBean activity : incomingActivities) {
             IdCacheEntry entry = mActivityIdCache.getEntryByServerId(activity.getServerId());
             if (entry != null) {
                 // Activity is cached

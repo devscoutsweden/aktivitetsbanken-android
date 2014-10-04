@@ -3,10 +3,10 @@ package se.devscout.android.model.repo;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.model.SearchHistoryData;
 
-public class SearchHistoryDataPojo implements SearchHistoryData {
+public class SearchHistoryDataBean implements SearchHistoryData {
     private ActivityFilter mFilter;
 
-    public SearchHistoryDataPojo(ActivityFilter filter) {
+    public SearchHistoryDataBean(ActivityFilter filter) {
         mFilter = filter;
     }
 

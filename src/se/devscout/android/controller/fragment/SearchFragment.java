@@ -10,7 +10,7 @@ import android.widget.*;
 import se.devscout.android.AgeGroup;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.SearchResultActivity;
-import se.devscout.android.model.IntegerRangePojo;
+import se.devscout.android.model.IntegerRange;
 import se.devscout.server.api.ActivityFilterFactory;
 import se.devscout.server.api.ActivityFilterFactoryException;
 
@@ -18,7 +18,7 @@ public class SearchFragment extends ActivityBankFragment {
 
     private TimeRange[] mTimeRanges;
 
-    private static class TimeRange extends IntegerRangePojo {
+    private static class TimeRange extends IntegerRange {
         private String label;
 
         private TimeRange(int min, int max, String label) {

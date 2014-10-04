@@ -2,11 +2,11 @@ package se.devscout.android.model.repo.sql;
 
 import android.content.Context;
 import android.util.Log;
-import se.devscout.android.model.ObjectIdentifierPojo;
-import se.devscout.android.model.repo.LocalActivity;
-import se.devscout.android.model.repo.LocalCategory;
-import se.devscout.android.model.repo.LocalReference;
-import se.devscout.android.model.repo.LocalSearchHistory;
+import se.devscout.android.model.ObjectIdentifierBean;
+import se.devscout.android.model.repo.ActivityBean;
+import se.devscout.android.model.repo.CategoryBean;
+import se.devscout.android.model.repo.ReferenceBean;
+import se.devscout.android.model.repo.SearchHistoryBean;
 import se.devscout.android.model.repo.remote.UnauthorizedException;
 import se.devscout.android.util.SimpleFilter;
 import se.devscout.server.api.ActivityBank;
@@ -35,13 +35,13 @@ public class SQLiteActivityRepo implements ActivityBank {
 
     public SQLiteActivityRepo(Context ctx) {
         mDatabaseHelper = new DatabaseHelper(ctx);
-        mAnonymousUserKey = new ObjectIdentifierPojo(mDatabaseHelper.getAnonymousUserId());
+        mAnonymousUserKey = new ObjectIdentifierBean(mDatabaseHelper.getAnonymousUserId());
     }
 
     @Override
-    public List<LocalActivity> findActivity(ActivityFilter condition) throws UnauthorizedException {
-        ArrayList<LocalActivity> res = new ArrayList<LocalActivity>();
-        for (LocalActivity activity : mDatabaseHelper.readActivities(condition)) {
+    public List<ActivityBean> findActivity(ActivityFilter condition) throws UnauthorizedException {
+        ArrayList<ActivityBean> res = new ArrayList<ActivityBean>();
+        for (ActivityBean activity : mDatabaseHelper.readActivities(condition)) {
             if (condition instanceof SimpleFilter) {
                 SimpleFilter simpleFilter = (SimpleFilter) condition;
                 if (simpleFilter.matches(activity)) {
@@ -79,13 +79,13 @@ public class SQLiteActivityRepo implements ActivityBank {
 
     @Override
     public ActivityFilterFactory getFilterFactory() {
-        return new SQLActivityFilterFactory(new ObjectIdentifierPojo(mDatabaseHelper.getAnonymousUserId()));
+        return new SQLActivityFilterFactory(new ObjectIdentifierBean(mDatabaseHelper.getAnonymousUserId()));
     }
 
     @Override
     public Reference createReference(ActivityKey key, ReferenceProperties properties) {
         long id = mDatabaseHelper.createReference(properties);
-        return new LocalReference(id,properties.getServerId(), properties.getServerRevisionId(), properties.getType(), properties.getURI());
+        return new ReferenceBean(id,properties.getServerId(), properties.getServerRevisionId(), properties.getType(), properties.getURI());
     }
 
     @Override
@@ -99,7 +99,7 @@ public class SQLiteActivityRepo implements ActivityBank {
     }
 
     @Override
-    public List<LocalCategory> readCategories() throws UnauthorizedException {
+    public List<CategoryBean> readCategories() throws UnauthorizedException {
         return mDatabaseHelper.readCategories();
     }
 
@@ -127,8 +127,8 @@ public class SQLiteActivityRepo implements ActivityBank {
 
     @Override
     public List<? extends SearchHistory> readSearchHistory(int limit) {
-        List<LocalSearchHistory> items = mDatabaseHelper.readSearchHistory(mAnonymousUserKey, true, limit, true);
-        return new ArrayList<SearchHistory>(new LinkedHashSet<LocalSearchHistory>(items));
+        List<SearchHistoryBean> items = mDatabaseHelper.readSearchHistory(mAnonymousUserKey, true, limit, true);
+        return new ArrayList<SearchHistory>(new LinkedHashSet<SearchHistoryBean>(items));
     }
 
     @Override

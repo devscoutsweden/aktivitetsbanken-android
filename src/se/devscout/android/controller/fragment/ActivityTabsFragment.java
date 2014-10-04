@@ -6,18 +6,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import se.devscout.android.R;
-import se.devscout.android.model.ObjectIdentifierPojo;
+import se.devscout.android.model.ObjectIdentifierBean;
 import se.devscout.android.util.ResourceUtil;
 import se.devscout.server.api.model.Activity;
 import se.devscout.server.api.model.Media;
 
 public class ActivityTabsFragment extends TabsFragment {
-    private ObjectIdentifierPojo key;
+    private ObjectIdentifierBean key;
 
     public ActivityTabsFragment() {
     }
 
-    public ActivityTabsFragment(ObjectIdentifierPojo key) {
+    public ActivityTabsFragment(ObjectIdentifierBean key) {
         this.key = key;
     }
 
@@ -27,7 +27,7 @@ public class ActivityTabsFragment extends TabsFragment {
             /*
              * Restore fields from saved state, for example after the device has been rotated.
              */
-            key = (ObjectIdentifierPojo) savedInstanceState.getSerializable("key");
+            key = (ObjectIdentifierBean) savedInstanceState.getSerializable("key");
         }
         return super.onCreateView(inflater, container, savedInstanceState);
     }

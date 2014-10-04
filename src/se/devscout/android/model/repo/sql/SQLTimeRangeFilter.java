@@ -1,6 +1,6 @@
 package se.devscout.android.model.repo.sql;
 
-import se.devscout.android.model.IntegerRangePojo;
+import se.devscout.android.model.IntegerRange;
 import se.devscout.android.util.SimpleTimeRangeFilter;
 import se.devscout.server.api.model.Range;
 
@@ -11,6 +11,6 @@ public class SQLTimeRangeFilter extends SimpleTimeRangeFilter implements SQLActi
 
     @Override
     public void applyFilter(QueryBuilder queryBuilder) {
-        queryBuilder.addWhereTime(new IntegerRangePojo(getMin(), getMax()));
+        queryBuilder.addWhereTime(new IntegerRange(getMin(), getMax()));
     }
 }

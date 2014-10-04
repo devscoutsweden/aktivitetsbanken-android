@@ -2,15 +2,15 @@ package se.devscout.android.model;
 
 import se.devscout.server.api.model.ServerObjectProperties;
 
-public class ServerObjectPropertiesPojo implements ServerObjectProperties {
+public class ServerObjectPropertiesBean implements ServerObjectProperties {
     protected long mServerId;
     protected boolean mPublishable = false;
     private long mServerRevisionId;
 
-    public ServerObjectPropertiesPojo() {
+    public ServerObjectPropertiesBean() {
     }
 
-    public ServerObjectPropertiesPojo(boolean publishable, long serverId, long serverRevisionId) {
+    public ServerObjectPropertiesBean(boolean publishable, long serverId, long serverRevisionId) {
         mPublishable = publishable;
         mServerId = serverId;
         mServerRevisionId = serverRevisionId;

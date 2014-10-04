@@ -7,7 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.ActivitiesListFragment;
-import se.devscout.android.model.ObjectIdentifierPojo;
+import se.devscout.android.model.ObjectIdentifierBean;
 import se.devscout.android.view.ActivitiesListView;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.model.ActivityKey;
@@ -55,7 +55,7 @@ public class SearchResultActivity extends SingleFragmentActivity<ActivitiesListF
 
     @Override
     protected ActivitiesListFragment createFragment() {
-        ArrayList<ObjectIdentifierPojo> keys = (ArrayList<ObjectIdentifierPojo>) getIntent().getSerializableExtra(INTENT_EXTRA_ACTIVITIES);
+        ArrayList<ObjectIdentifierBean> keys = (ArrayList<ObjectIdentifierBean>) getIntent().getSerializableExtra(INTENT_EXTRA_ACTIVITIES);
         if (keys != null) {
             List<ActivityKey> activities = new ArrayList<ActivityKey>();
             for (ActivityKey key : keys) {
@@ -100,9 +100,9 @@ public class SearchResultActivity extends SingleFragmentActivity<ActivitiesListF
      */
     public static Intent createIntent(Context ctx, List<? extends se.devscout.server.api.model.Activity> activities, String title) {
 
-        ArrayList<ObjectIdentifierPojo> keys = new ArrayList<ObjectIdentifierPojo>();
+        ArrayList<ObjectIdentifierBean> keys = new ArrayList<ObjectIdentifierBean>();
         for (se.devscout.server.api.model.Activity activity : activities) {
-            keys.add(new ObjectIdentifierPojo(activity.getId()));
+            keys.add(new ObjectIdentifierBean(activity.getId()));
         }
 
         Intent intent = new Intent(ctx, SearchResultActivity.class);

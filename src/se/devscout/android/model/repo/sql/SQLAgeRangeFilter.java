@@ -1,6 +1,6 @@
 package se.devscout.android.model.repo.sql;
 
-import se.devscout.android.model.IntegerRangePojo;
+import se.devscout.android.model.IntegerRange;
 import se.devscout.android.util.SimpleAgeRangeFilter;
 import se.devscout.server.api.model.Range;
 
@@ -11,6 +11,6 @@ public class SQLAgeRangeFilter extends SimpleAgeRangeFilter implements SQLActivi
 
     @Override
     public void applyFilter(QueryBuilder queryBuilder) {
-        queryBuilder.addWhereAge(new IntegerRangePojo(getMin(), getMax()));
+        queryBuilder.addWhereAge(new IntegerRange(getMin(), getMax()));
     }
 }

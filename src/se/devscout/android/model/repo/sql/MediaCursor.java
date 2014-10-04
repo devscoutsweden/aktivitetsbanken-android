@@ -1,7 +1,7 @@
 package se.devscout.android.model.repo.sql;
 
 import android.database.Cursor;
-import se.devscout.android.model.repo.LocalMedia;
+import se.devscout.android.model.repo.MediaBean;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -11,8 +11,8 @@ public class MediaCursor extends BaseCursorWrapper {
         super(cursor);
     }
 
-    public LocalMedia getMedia() throws URISyntaxException {
-            return new LocalMedia(
+    public MediaBean getMedia() throws URISyntaxException {
+            return new MediaBean(
                     new URI(getString(getColumnIndex(Database.media.uri))),
                     getString(getColumnIndex(Database.media.mime_type)),
                     getId(),

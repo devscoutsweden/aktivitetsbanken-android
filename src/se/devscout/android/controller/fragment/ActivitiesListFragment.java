@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import se.devscout.android.R;
-import se.devscout.android.model.ObjectIdentifierPojo;
+import se.devscout.android.model.ObjectIdentifierBean;
 import se.devscout.android.view.ActivitiesListItem;
 import se.devscout.android.view.ActivitiesListView;
 import se.devscout.server.api.ActivityFilter;
@@ -70,9 +70,9 @@ public class ActivitiesListFragment extends NonBlockingSearchResultFragment<Acti
 
     public static ActivitiesListFragment create(List<ActivityKey> activities, ActivitiesListView.Sorter defaultSortOrder) {
         ActivitiesListFragment fragment = new ActivitiesListFragment();
-        ArrayList<ObjectIdentifierPojo> sortedList = new ArrayList<ObjectIdentifierPojo>();
+        ArrayList<ObjectIdentifierBean> sortedList = new ArrayList<ObjectIdentifierBean>();
         for (ActivityKey key : activities) {
-            sortedList.add(new ObjectIdentifierPojo(key.getId()));
+            sortedList.add(new ObjectIdentifierBean(key.getId()));
         }
         fragment.mSortOrder = defaultSortOrder;
         return fragment;

@@ -4,13 +4,13 @@ import se.devscout.server.api.model.ObjectIdentifier;
 
 import java.io.Serializable;
 
-class LocalObjectIdentifier implements ObjectIdentifier, Serializable {
+class ObjectIdentifierBean implements ObjectIdentifier, Serializable {
     private Long mId;
 
-    public LocalObjectIdentifier() {
+    public ObjectIdentifierBean() {
     }
 
-    public LocalObjectIdentifier(Long id) {
+    public ObjectIdentifierBean(Long id) {
         mId = id;
     }
 

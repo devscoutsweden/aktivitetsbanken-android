@@ -7,7 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.*;
 import se.devscout.android.R;
-import se.devscout.android.model.ObjectIdentifierPojo;
+import se.devscout.android.model.ObjectIdentifierBean;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.view.ViewPagerIndicator;
 import se.devscout.server.api.ActivityBank;
@@ -19,7 +19,7 @@ import java.util.List;
 
 public class ActivitiesViewPagerFragment extends ActivityBankFragment implements ViewPager.OnPageChangeListener {
 
-    protected ArrayList<ObjectIdentifierPojo> mActivities;
+    protected ArrayList<ObjectIdentifierBean> mActivities;
     protected int mSelectedIndex;
 
     private ViewPager mViewPager;
@@ -31,7 +31,7 @@ public class ActivitiesViewPagerFragment extends ActivityBankFragment implements
             /*
              * Restore fields from saved state, for example after the device has been rotated.
              */
-            mActivities = (ArrayList<ObjectIdentifierPojo>) savedInstanceState.getSerializable("mActivities");
+            mActivities = (ArrayList<ObjectIdentifierBean>) savedInstanceState.getSerializable("mActivities");
             mSelectedIndex = savedInstanceState.getInt("mSelectedIndex");
 //            Log.d(ActivitiesListFragment.class.getName(), "State (e.g. search result) has been restored.");
         }
@@ -129,9 +129,9 @@ public class ActivitiesViewPagerFragment extends ActivityBankFragment implements
 
     public static ActivitiesViewPagerFragment create(List<? extends ActivityKey> activities, int selectedIndex) {
         ActivitiesViewPagerFragment fragment = new ActivitiesViewPagerFragment();
-        ArrayList<ObjectIdentifierPojo> activityKeys = new ArrayList<ObjectIdentifierPojo>();
+        ArrayList<ObjectIdentifierBean> activityKeys = new ArrayList<ObjectIdentifierBean>();
         for (ActivityKey key : activities) {
-            activityKeys.add(new ObjectIdentifierPojo(key.getId()));
+            activityKeys.add(new ObjectIdentifierBean(key.getId()));
         }
         fragment.mActivities = activityKeys;
         fragment.mSelectedIndex = selectedIndex;

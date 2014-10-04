@@ -4,11 +4,11 @@ import se.devscout.server.api.model.CategoryProperties;
 
 import java.io.Serializable;
 
-public class CategoryPropertiesPojo extends ServerObjectPropertiesPojo implements CategoryProperties, Serializable {
+public class CategoryPropertiesBean extends ServerObjectPropertiesBean implements CategoryProperties, Serializable {
     private String mName;
     private String mGroup;
 
-    public CategoryPropertiesPojo(String group, String name, long serverId, long serverRevisionId, boolean publishable) {
+    public CategoryPropertiesBean(String group, String name, long serverId, long serverRevisionId, boolean publishable) {
         super(publishable, serverId, serverRevisionId);
         mGroup = group;
         mName = name;

@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 import se.devscout.android.controller.fragment.ActivityTabsFragment;
-import se.devscout.android.model.ObjectIdentifierPojo;
+import se.devscout.android.model.ObjectIdentifierBean;
 import se.devscout.server.api.model.Activity;
 import se.devscout.server.api.model.ActivityKey;
 
@@ -16,7 +16,7 @@ public class ActivityActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
-        ObjectIdentifierPojo key = (ObjectIdentifierPojo) getIntent().getSerializableExtra(INTENT_EXTRA_ACTIVITY_KEY);
+        ObjectIdentifierBean key = (ObjectIdentifierBean) getIntent().getSerializableExtra(INTENT_EXTRA_ACTIVITY_KEY);
         return new ActivityTabsFragment(key);
     }
 
@@ -36,7 +36,7 @@ public class ActivityActivity extends SingleFragmentActivity {
         super.onCreate(savedInstanceState);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        ObjectIdentifierPojo key = (ObjectIdentifierPojo) getIntent().getSerializableExtra(INTENT_EXTRA_ACTIVITY_KEY);
+        ObjectIdentifierBean key = (ObjectIdentifierBean) getIntent().getSerializableExtra(INTENT_EXTRA_ACTIVITY_KEY);
         if (key != null) {
             Activity activity = getActivityBank().readActivityFull(key);
             setTitle(activity.getName());
@@ -45,7 +45,7 @@ public class ActivityActivity extends SingleFragmentActivity {
 
     public static Intent createIntent(Context ctx, ActivityKey key) {
         Intent intent = new Intent(ctx, ActivityActivity.class);
-        intent.putExtra(INTENT_EXTRA_ACTIVITY_KEY, new ObjectIdentifierPojo(key.getId()));
+        intent.putExtra(INTENT_EXTRA_ACTIVITY_KEY, new ObjectIdentifierBean(key.getId()));
         return intent;
     }
 

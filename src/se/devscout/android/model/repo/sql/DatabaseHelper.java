@@ -9,7 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 import se.devscout.android.R;
-import se.devscout.android.model.UserPropertiesPojo;
+import se.devscout.android.model.UserPropertiesBean;
 import se.devscout.android.model.repo.*;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.activityfilter.AndFilter;
@@ -63,11 +63,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String STATUS_NEW = Status.NEW.name().substring(0, 1);
 
     //TODO: Everything is added to the cache (it is never cleared/purged). This is obviously not good.
-    private Map<Long, LocalActivity> mCacheActivity;
-    private Map<Long, LocalUser> mCacheUser;
-    private Map<Long, LocalCategory> mCacheCategory;
-    private Map<Long, LocalMedia> mCacheMedia;
-    private Map<Long, LocalReference> mCacheReference;
+    private Map<Long, ActivityBean> mCacheActivity;
+    private Map<Long, UserBean> mCacheUser;
+    private Map<Long, CategoryBean> mCacheCategory;
+    private Map<Long, MediaBean> mCacheMedia;
+    private Map<Long, ReferenceBean> mCacheReference;
 
     public DatabaseHelper(Context context) {
         super(context, NAME, LOGGING_CURSOR_FACTORY, VERSION);
@@ -76,11 +76,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private void clearCaches() {
-        mCacheActivity = new HashMap<Long, LocalActivity>();
-        mCacheUser = new HashMap<Long, LocalUser>();
-        mCacheCategory = new HashMap<Long, LocalCategory>();
-        mCacheMedia = new HashMap<Long, LocalMedia>();
-        mCacheReference = new HashMap<Long, LocalReference>();
+        mCacheActivity = new HashMap<Long, ActivityBean>();
+        mCacheUser = new HashMap<Long, UserBean>();
+        mCacheCategory = new HashMap<Long, CategoryBean>();
+        mCacheMedia = new HashMap<Long, MediaBean>();
+        mCacheReference = new HashMap<Long, ReferenceBean>();
     }
 
     @Override
@@ -201,9 +201,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         getDb().beginTransaction();
         try {
-            long userId = createUser(new UserPropertiesPojo("Anonym", "anonymous@scout.se", 0L, 0L, false));
+            long userId = createUser(new UserPropertiesBean("Anonym", "anonymous@scout.se", 0L, 0L, false));
             if (addTestData) {
-                List<LocalActivity> testActivities = TestDataUtil.readXMLTestData(mContext);
+                List<ActivityBean> testActivities = TestDataUtil.readXMLTestData(mContext);
                 for (Activity testActivity : testActivities) {
                     long activityId = createActivity(testActivity);
                 }
@@ -313,33 +313,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public long getOrCreateCategory(CategoryProperties category) {
-        List<LocalCategory> localCategories = readCategories();
-        for (LocalCategory localCategory : localCategories) {
-            if (localCategory.getServerId() == category.getServerId()) {
+        List<CategoryBean> localCategories = readCategories();
+        for (CategoryBean categoryBean : localCategories) {
+            if (categoryBean.getServerId() == category.getServerId()) {
                 // Bingo! Category already exists in local database.
-                return localCategory.getId();
+                return categoryBean.getId();
             }
         }
         return createCategory(category);
     }
 
     public long getOrCreateReference(ReferenceProperties reference) {
-        List<LocalReference> localReferences = readReferences();
-        for (LocalReference localReference : localReferences) {
-            if (localReference.getServerId() == reference.getServerId()) {
+        List<ReferenceBean> referencePojoList = readReferences();
+        for (ReferenceBean referencePojo : referencePojoList) {
+            if (referencePojo.getServerId() == reference.getServerId()) {
                 // Bingo! Reference already exists in local database.
-                return localReference.getId();
+                return referencePojo.getId();
             }
         }
         return createReference(reference);
     }
 
     public long getOrCreateUser(UserProperties user) {
-        List<LocalUser> localUsers = readUsers();
-        for (LocalUser localUser : localUsers) {
-            if (localUser.getServerId() == user.getServerId()) {
+        List<UserBean> userPojos = readUsers();
+        for (UserBean userPojo : userPojos) {
+            if (userPojo.getServerId() == user.getServerId()) {
                 // Bingo! Reference already exists in local database.
-                return localUser.getId();
+                return userPojo.getId();
             }
         }
         return createUser(user);
@@ -438,16 +438,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
     }
 
-    public List<? extends LocalActivity> readActivities(ActivityFilter filter) {
+    public List<? extends ActivityBean> readActivities(ActivityFilter filter) {
         QueryBuilder queryBuilder = new QueryBuilder();
         applyFilter(queryBuilder, filter);
-        ArrayList<LocalActivity> activities = new ArrayList<LocalActivity>();
-        Map<Long, LocalActivity> map = new HashMap<Long, LocalActivity>();
+        ArrayList<ActivityBean> activities = new ArrayList<ActivityBean>();
+        Map<Long, ActivityBean> map = new HashMap<Long, ActivityBean>();
         ActivityDataCursor cursor = queryBuilder.query(getDb());
         while (cursor.moveToNext()) {
             long activityId = cursor.getId();
             if (!mCacheActivity.containsKey(activityId)) {
-                LocalActivity revision = cursor.getActivityData();
+                ActivityBean revision = cursor.getActivityData();
                 map.put(revision.getId(), revision);
                 mCacheActivity.put(activityId, revision);
             }
@@ -485,8 +485,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public List<LocalCategory> readCategories() {
-        ArrayList<LocalCategory> categories = new ArrayList<LocalCategory>();
+    public List<CategoryBean> readCategories() {
+        ArrayList<CategoryBean> categories = new ArrayList<CategoryBean>();
         CategoryCursor catCursor = new CategoryCursor(getDb().query(
                 Database.category.T,
                 new String[]{Database.category.id, Database.category.server_id, Database.category.server_revision_id, Database.category.group_name, Database.category.name},
@@ -506,8 +506,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return categories;
     }
 
-    public List<LocalReference> readReferences() {
-        ArrayList<LocalReference> references = new ArrayList<LocalReference>();
+    public List<ReferenceBean> readReferences() {
+        ArrayList<ReferenceBean> references = new ArrayList<ReferenceBean>();
         ReferenceCursor refCursor = new ReferenceCursor(getDb().query(
                 Database.reference.T,
                 new String[]{Database.reference.id, Database.reference.server_id, Database.reference.server_revision_id, Database.reference.type, Database.reference.uri},
@@ -531,8 +531,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return references;
     }
 
-    public List<LocalUser> readUsers() {
-        ArrayList<LocalUser> users = new ArrayList<LocalUser>();
+    public List<UserBean> readUsers() {
+        ArrayList<UserBean> users = new ArrayList<UserBean>();
         UserCursor userCursor = new UserCursor(getDb().query(
                 Database.user.T,
                 new String[]{Database.user.id, Database.user.server_id, Database.user.server_revision_id, Database.user.display_name, Database.user.email, Database.user.email_verified, Database.user.password_algorithm, Database.user.password_hash},
@@ -552,7 +552,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return users;
     }
 
-    private void initActivitiesReferences(Map<Long, LocalActivity> revisions) {
+    private void initActivitiesReferences(Map<Long, ActivityBean> revisions) {
         ReferenceCursor refCursor = new ReferenceCursor(getDb().rawQuery("" +
                 "select " +
                 "   adr.activity_id activity_id," +
@@ -576,7 +576,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         refCursor.close();
     }
 
-    private void initActivitiesMedia(Map<Long, LocalActivity> revisions) {
+    private void initActivitiesMedia(Map<Long, ActivityBean> revisions) {
         MediaCursor mediaCursor = new MediaCursor(getDb().rawQuery("" +
                 "select " +
                 "   adm.activity_id activity_id," +
@@ -600,7 +600,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         mediaCursor.close();
     }
 
-    private void initActivitiesCategories(Map<Long, LocalActivity> revisions) {
+    private void initActivitiesCategories(Map<Long, ActivityBean> revisions) {
         CategoryCursor catCursor = new CategoryCursor(getDb().rawQuery("" +
                 "select " +
                 "   adc.activity_id activity_id," +
@@ -620,7 +620,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         catCursor.close();
     }
 
-    private LocalUser readUser(long id) {
+    private UserBean readUser(long id) {
         if (!mCacheUser.containsKey(id)) {
             UserCursor cursor = new UserCursor(getDb().rawQuery("" +
                     "select " +
@@ -677,8 +677,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 null);
     }
 
-    public ArrayList<LocalSearchHistory> readSearchHistory(UserKey user, boolean descendingOrder, int limit, boolean onlyUnique) {
-        Collection<LocalSearchHistory> items = onlyUnique ? new LinkedHashSet<LocalSearchHistory>() : new ArrayList<LocalSearchHistory>();
+    public ArrayList<SearchHistoryBean> readSearchHistory(UserKey user, boolean descendingOrder, int limit, boolean onlyUnique) {
+        Collection<SearchHistoryBean> items = onlyUnique ? new LinkedHashSet<SearchHistoryBean>() : new ArrayList<SearchHistoryBean>();
         try {
             SearchHistoryCursor cursor = new SearchHistoryCursor(getDb().query(Database.history.T,
                     new String[]{
@@ -696,7 +696,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 long id = cursor.getId();
                 if (!mBannedSearchHistoryIds.contains(id)) {
                     try {
-                        LocalSearchHistory item = cursor.getHistoryItem();
+                        SearchHistoryBean item = cursor.getHistoryItem();
                         items.add(item);
                     } catch (Throwable e) {
                         logError(e, "Could not read search history");
@@ -710,7 +710,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         } catch (Exception e) {
             logError(e, "Could not read search history");
         }
-        return items instanceof ArrayList ? (ArrayList<LocalSearchHistory>) items : new ArrayList(items);
+        return items instanceof ArrayList ? (ArrayList<SearchHistoryBean>) items : new ArrayList(items);
     }
 
     private void deleteBannedSearchHistoryItems() {
@@ -748,7 +748,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return baos.toByteArray();
     }
 
-    public LocalObjectRefreshness getLocalActivityFreshness(LocalActivity serverActivity, boolean autoSetId) {
+    public LocalObjectRefreshness getLocalActivityFreshness(ActivityBean serverActivity, boolean autoSetId) {
         DatabaseHelper.IdCacheEntry entry = mActivityIdCache.getEntryByServerId(serverActivity.getServerId());
         if (entry != null) {
             if (autoSetId) {
@@ -769,7 +769,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public LocalObjectRefreshness getLocalCategoryFreshness(LocalCategory serverActivity, boolean autoSetId) {
+    public LocalObjectRefreshness getLocalCategoryFreshness(CategoryBean serverActivity, boolean autoSetId) {
         DatabaseHelper.IdCacheEntry entry = mCategoryIdCache.getEntryByServerId(serverActivity.getServerId());
         if (entry != null) {
             if (autoSetId) {

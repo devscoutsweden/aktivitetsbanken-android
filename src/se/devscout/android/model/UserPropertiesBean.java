@@ -3,7 +3,7 @@ package se.devscout.android.model;
 import se.devscout.server.api.model.HashAlgorithm;
 import se.devscout.server.api.model.UserProperties;
 
-public class UserPropertiesPojo extends ServerObjectPropertiesPojo implements UserProperties {
+public class UserPropertiesBean extends ServerObjectPropertiesBean implements UserProperties {
     protected String mName;
     private String mDisplayName;
     private String mEmailAddress;
@@ -11,16 +11,16 @@ public class UserPropertiesPojo extends ServerObjectPropertiesPojo implements Us
     private HashAlgorithm mPasswordHashAlgorithm;
     private String mPasswordHashAlgorithmParameter;
 
-    public UserPropertiesPojo() {
+    public UserPropertiesBean() {
     }
 
-    public UserPropertiesPojo(String displayName, String emailAddress, long serverId, long serverRevisionId, boolean publishable) {
+    public UserPropertiesBean(String displayName, String emailAddress, long serverId, long serverRevisionId, boolean publishable) {
         super(publishable, serverId, serverRevisionId);
         mDisplayName = displayName;
         mEmailAddress = emailAddress;
     }
 
-    public UserPropertiesPojo(String displayName) {
+    public UserPropertiesBean(String displayName) {
         mDisplayName = displayName;
     }
 

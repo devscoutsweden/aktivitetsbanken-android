@@ -1,10 +1,10 @@
 package se.devscout.android.model.repo;
 
-import se.devscout.android.model.UserPropertiesPojo;
+import se.devscout.android.model.UserPropertiesBean;
 import se.devscout.server.api.model.User;
 
-public class LocalUser extends UserPropertiesPojo implements User {
-    public LocalUser(String displayName, String emailAddress, Long id, long serverId, long serverRevisionId) {
+public class UserBean extends UserPropertiesBean implements User {
+    public UserBean(String displayName, String emailAddress, Long id, long serverId, long serverRevisionId) {
         super(displayName, emailAddress, serverId, serverRevisionId, false);
         mId = id;
     }

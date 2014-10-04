@@ -1,9 +1,9 @@
 package se.devscout.android.model.repo.sql;
 
 import android.database.Cursor;
-import se.devscout.android.model.IntegerRangePojo;
-import se.devscout.android.model.ObjectIdentifierPojo;
-import se.devscout.android.model.repo.LocalActivity;
+import se.devscout.android.model.IntegerRange;
+import se.devscout.android.model.ObjectIdentifierBean;
+import se.devscout.android.model.repo.ActivityBean;
 
 import java.util.Date;
 
@@ -12,9 +12,9 @@ public class ActivityDataCursor extends BaseCursorWrapper {
         super(cursor);
     }
 
-    public LocalActivity getActivityData() {
-        LocalActivity revision = new LocalActivity(
-                isNull(getColumnIndex(Database.activity.owner_id)) ? null : new ObjectIdentifierPojo(getInt(getColumnIndex(Database.activity.owner_id))),
+    public ActivityBean getActivityData() {
+        ActivityBean revision = new ActivityBean(
+                isNull(getColumnIndex(Database.activity.owner_id)) ? null : new ObjectIdentifierBean(getInt(getColumnIndex(Database.activity.owner_id))),
                 getId(),
                 getInt(getColumnIndex(Database.activity.server_id)),
                 getInt(getColumnIndex(Database.activity.server_revision_id)),
@@ -22,9 +22,9 @@ public class ActivityDataCursor extends BaseCursorWrapper {
         );
         revision.setFeatured(getInt(getColumnIndex(Database.activity.featured)) == 1);
         revision.setName(getString(getColumnIndex(Database.activity.name)));
-        revision.setAges(new IntegerRangePojo(getInt(getColumnIndex(Database.activity.age_min)), getInt(getColumnIndex(Database.activity.age_max))));
-        revision.setTimeActivity(new IntegerRangePojo(getInt(getColumnIndex(Database.activity.time_min)), getInt(getColumnIndex(Database.activity.time_max))));
-        revision.setParticipants(new IntegerRangePojo(getInt(getColumnIndex(Database.activity.participants_min)), getInt(getColumnIndex(Database.activity.participants_max))));
+        revision.setAges(new IntegerRange(getInt(getColumnIndex(Database.activity.age_min)), getInt(getColumnIndex(Database.activity.age_max))));
+        revision.setTimeActivity(new IntegerRange(getInt(getColumnIndex(Database.activity.time_min)), getInt(getColumnIndex(Database.activity.time_max))));
+        revision.setParticipants(new IntegerRange(getInt(getColumnIndex(Database.activity.participants_min)), getInt(getColumnIndex(Database.activity.participants_max))));
         revision.setDateCreated(new Date(getLong(getColumnIndex(Database.activity.datetime_created))));
 //        revision.setDatePublished(new Date(getLong(getColumnIndex(Database.activity.datetime_published))));
 //              "datetime_published" DATETIME,

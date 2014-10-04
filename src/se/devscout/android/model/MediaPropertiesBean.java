@@ -4,14 +4,14 @@ import se.devscout.server.api.model.MediaProperties;
 
 import java.net.URI;
 
-public class MediaPropertiesPojo extends ServerObjectPropertiesPojo implements MediaProperties {
+public class MediaPropertiesBean extends ServerObjectPropertiesBean implements MediaProperties {
     private URI mUri;
     private String mMimeType = "image/jpeg";
 
-    public MediaPropertiesPojo() {
+    public MediaPropertiesBean() {
     }
 
-    public MediaPropertiesPojo(URI uri, String mimeType, long serverId, long serverRevisionId, boolean publishable) {
+    public MediaPropertiesBean(URI uri, String mimeType, long serverId, long serverRevisionId, boolean publishable) {
         super(publishable, serverId, serverRevisionId);
         mUri = uri;
         mMimeType = mimeType;

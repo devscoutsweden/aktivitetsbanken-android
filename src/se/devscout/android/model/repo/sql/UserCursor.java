@@ -1,15 +1,15 @@
 package se.devscout.android.model.repo.sql;
 
 import android.database.Cursor;
-import se.devscout.android.model.repo.LocalUser;
+import se.devscout.android.model.repo.UserBean;
 
 public class UserCursor extends BaseCursorWrapper {
     public UserCursor(Cursor cursor) {
         super(cursor);
     }
 
-    public LocalUser getUser() {
-        return new LocalUser(
+    public UserBean getUser() {
+        return new UserBean(
                 getString(getColumnIndex(Database.user.display_name)),
                 getString(getColumnIndex(Database.user.email)),
                 getId(),

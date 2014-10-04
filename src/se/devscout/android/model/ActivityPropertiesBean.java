@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@JsonFilter("LocalActivity")
-public class ActivityPropertiesPojo extends ServerObjectPropertiesPojo implements ActivityProperties, Serializable {
+@JsonFilter("ActivityBean")
+public class ActivityPropertiesBean extends ServerObjectPropertiesBean implements ActivityProperties, Serializable {
     private List<ActivityRevision> mRevisions = new ArrayList<ActivityRevision>();
     private UserKey mOwner;
 
-    public ActivityPropertiesPojo(boolean publishable, long serverId, long serverRevisionId, UserKey owner) {
+    public ActivityPropertiesBean(boolean publishable, long serverId, long serverRevisionId, UserKey owner) {
         super(publishable, serverId, serverRevisionId);
         mOwner = owner;
     }

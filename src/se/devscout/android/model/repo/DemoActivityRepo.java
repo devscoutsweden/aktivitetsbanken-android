@@ -14,7 +14,7 @@ import java.util.List;
 
 public class DemoActivityRepo implements ActivityBank {
     private static DemoActivityRepo ourInstance;
-    private final List<LocalActivity> mActivities;
+    private final List<ActivityBean> mActivities;
 
     public static DemoActivityRepo getInstance(Context ctx) {
         if (ourInstance == null) {
@@ -29,10 +29,10 @@ public class DemoActivityRepo implements ActivityBank {
     }
 
     @Override
-    public List<LocalActivity> findActivity(ActivityFilter condition) {
+    public List<ActivityBean> findActivity(ActivityFilter condition) {
         SimpleFilter simpleFilter = SimpleFilter.fromActivityFilter(condition);
-        ArrayList<LocalActivity> res = new ArrayList<LocalActivity>();
-        for (LocalActivity activity : mActivities) {
+        ArrayList<ActivityBean> res = new ArrayList<ActivityBean>();
+        for (ActivityBean activity : mActivities) {
             if (simpleFilter.matches(activity)) {
                 res.add(activity);
             }
@@ -56,8 +56,8 @@ public class DemoActivityRepo implements ActivityBank {
     }
 
     @Override
-    public LocalActivity readActivity(ActivityKey key) {
-        for (LocalActivity activity : mActivities) {
+    public ActivityBean readActivity(ActivityKey key) {
+        for (ActivityBean activity : mActivities) {
             if (key.getId().equals(activity.getId())) {
                 return activity;
             }

@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@JsonFilter("LocalActivityRevision")
-public class ActivityRevisionPropertiesPojo implements ActivityRevisionProperties {
+@JsonFilter("ActivityRevisionBean")
+public class ActivityRevisionPropertiesBean implements ActivityRevisionProperties {
     private String mName;
     private Date mDatePublished = new Date();
     private Date mDateCreated = new Date();
@@ -32,14 +32,14 @@ public class ActivityRevisionPropertiesPojo implements ActivityRevisionPropertie
     private User mOwner;
     private ActivityKey mActivityKey;
 
-    public ActivityRevisionPropertiesPojo() {
+    public ActivityRevisionPropertiesBean() {
     }
 
     public void setFeatured(boolean featured) {
         mFeatured = featured;
     }
 
-    public ActivityRevisionPropertiesPojo(String name, boolean featured, ActivityKey activityKey) {
+    public ActivityRevisionPropertiesBean(String name, boolean featured, ActivityKey activityKey) {
         mName = name;
         mActivityKey = activityKey;
         mFeatured = featured;
