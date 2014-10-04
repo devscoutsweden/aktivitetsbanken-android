@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.*;
-import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 import se.devscout.android.R;
@@ -487,14 +486,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public List<CategoryBean> readCategories() {
         ArrayList<CategoryBean> categories = new ArrayList<CategoryBean>();
-        CategoryCursor catCursor = new CategoryCursor(getDb().query(
-                Database.category.T,
-                new String[]{Database.category.id, Database.category.server_id, Database.category.server_revision_id, Database.category.group_name, Database.category.name},
-                null,
-                null,
-                null,
-                null,
-                Database.category.group_name + ", " + Database.category.name));
+        CategoryCursor catCursor = new CategoryCursor(getDb());
         while (catCursor.moveToNext()) {
             long categoryId = catCursor.getId();
             if (!mCacheCategory.containsKey(categoryId)) {
@@ -508,14 +500,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public List<ReferenceBean> readReferences() {
         ArrayList<ReferenceBean> references = new ArrayList<ReferenceBean>();
-        ReferenceCursor refCursor = new ReferenceCursor(getDb().query(
-                Database.reference.T,
-                new String[]{Database.reference.id, Database.reference.server_id, Database.reference.server_revision_id, Database.reference.type, Database.reference.uri},
-                null,
-                null,
-                null,
-                null,
-                null));
+        ReferenceCursor refCursor = new ReferenceCursor(getDb());
         while (refCursor.moveToNext()) {
             long referenceId = refCursor.getId();
             try {
@@ -533,14 +518,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public List<UserBean> readUsers() {
         ArrayList<UserBean> users = new ArrayList<UserBean>();
-        UserCursor userCursor = new UserCursor(getDb().query(
-                Database.user.T,
-                new String[]{Database.user.id, Database.user.server_id, Database.user.server_revision_id, Database.user.display_name, Database.user.email, Database.user.email_verified, Database.user.password_algorithm, Database.user.password_hash},
-                null,
-                null,
-                null,
-                null,
-                null));
+        UserCursor userCursor = new UserCursor(getDb());
         while (userCursor.moveToNext()) {
             long userId = userCursor.getId();
             if (!mCacheUser.containsKey(userId)) {
@@ -553,14 +531,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private void initActivitiesReferences(Map<Long, ActivityBean> revisions) {
-        ReferenceCursor refCursor = new ReferenceCursor(getDb().rawQuery("" +
-                "select " +
-                "   adr.activity_id activity_id," +
-                "   r.* " +
-                "from " +
-                "   " + Database.reference.T + " r inner join " + Database.activity_data_reference.T + " adr on r.id = adr.reference_id " +
-                "where " +
-                "   adr.activity_id in (" + TextUtils.join(", ", revisions.keySet()) + ")", null));
+        Set<Long> activityIds = revisions.keySet();
+        ReferenceCursor refCursor = new ReferenceCursor(getDb(), activityIds);
         while (refCursor.moveToNext()) {
             try {
                 long refId = refCursor.getId();
@@ -577,14 +549,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private void initActivitiesMedia(Map<Long, ActivityBean> revisions) {
-        MediaCursor mediaCursor = new MediaCursor(getDb().rawQuery("" +
-                "select " +
-                "   adm.activity_id activity_id," +
-                "   m.* " +
-                "from " +
-                "   " + Database.media.T + " m inner join " + Database.activity_data_media.T + " adm on m.id = adm.media_id " +
-                "where " +
-                "   adm.activity_id in (" + TextUtils.join(", ", revisions.keySet()) + ")", null));
+        Set<Long> activityIds = revisions.keySet();
+        MediaCursor mediaCursor = new MediaCursor(getDb(), activityIds);
         while (mediaCursor.moveToNext()) {
             try {
                 long mediaId = mediaCursor.getId();
@@ -601,14 +567,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private void initActivitiesCategories(Map<Long, ActivityBean> revisions) {
-        CategoryCursor catCursor = new CategoryCursor(getDb().rawQuery("" +
-                "select " +
-                "   adc.activity_id activity_id," +
-                "   c.* " +
-                "from " +
-                "   " + Database.category.T + " c inner join " + Database.activity_data_category.T + " adc on c.id = adc.category_id " +
-                "where " +
-                "   adc.activity_id in (" + TextUtils.join(", ", revisions.keySet()) + ")", null));
+        Set<Long> activityIds = revisions.keySet();
+        CategoryCursor catCursor = new CategoryCursor(getDb(), activityIds);
         while (catCursor.moveToNext()) {
             long categoryId = catCursor.getId();
             if (!mCacheCategory.containsKey(categoryId)) {
@@ -618,23 +578,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             revisions.get(activityDataId).getCategories().add(mCacheCategory.get(categoryId));
         }
         catCursor.close();
-    }
-
-    private UserBean readUser(long id) {
-        if (!mCacheUser.containsKey(id)) {
-            UserCursor cursor = new UserCursor(getDb().rawQuery("" +
-                    "select " +
-                    "   u.* " +
-                    "from " +
-                    "   " + Database.user.T + " u " +
-                    "where " +
-                    "   u.id = " + id, null));
-            if (cursor.moveToNext()) {
-                mCacheUser.put(id, cursor.getUser());
-            }
-            cursor.close();
-        }
-        return mCacheUser.get(id);
     }
 
     public Category readCategory(CategoryKey key) {
@@ -680,18 +623,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public ArrayList<SearchHistoryBean> readSearchHistory(UserKey user, boolean descendingOrder, int limit, boolean onlyUnique) {
         Collection<SearchHistoryBean> items = onlyUnique ? new LinkedHashSet<SearchHistoryBean>() : new ArrayList<SearchHistoryBean>();
         try {
-            SearchHistoryCursor cursor = new SearchHistoryCursor(getDb().query(Database.history.T,
-                    new String[]{
-                            Database.history.id,
-                            Database.history.user_id,
-                            Database.history.type,
-                            Database.history.data
-                    },
-                    Database.history.user_id + " = " + user.getId() + " and " + Database.history.type + " = ?",
-                    new String[]{String.valueOf(HistoryType.SEARCH.getDatabaseValue())},
-                    null,
-                    null,
-                    Database.history.id + (descendingOrder ? " DESC" : "")));
+            SearchHistoryCursor cursor = new SearchHistoryCursor(getDb(), user, descendingOrder);
             while (cursor.moveToNext() && (limit == 0 || items.size() < limit)) {
                 long id = cursor.getId();
                 if (!mBannedSearchHistoryIds.contains(id)) {

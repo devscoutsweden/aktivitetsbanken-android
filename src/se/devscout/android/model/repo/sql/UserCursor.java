@@ -1,11 +1,18 @@
 package se.devscout.android.model.repo.sql;
 
-import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import se.devscout.android.model.UserBean;
 
 public class UserCursor extends BaseCursorWrapper {
-    public UserCursor(Cursor cursor) {
-        super(cursor);
+    public UserCursor(SQLiteDatabase db) {
+        super(db.query(
+                Database.user.T,
+                new String[]{Database.user.id, Database.user.server_id, Database.user.server_revision_id, Database.user.display_name, Database.user.email, Database.user.email_verified, Database.user.password_algorithm, Database.user.password_hash},
+                null,
+                null,
+                null,
+                null,
+                null));
     }
 
     public UserBean getUser() {
