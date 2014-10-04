@@ -59,7 +59,7 @@ public class SearchResultActivity extends SingleFragmentActivity<ActivitiesListF
         if (keys != null) {
             List<ActivityKey> activities = new ArrayList<ActivityKey>();
             for (ActivityKey key : keys) {
-                activities.add(getActivityBank().readFull(key));
+                activities.add(getActivityBank().readActivityFull(key));
             }
             return ActivitiesListFragment.create(activities, ActivitiesListView.Sorter.NAME);
         } else {

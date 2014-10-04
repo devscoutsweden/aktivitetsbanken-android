@@ -39,7 +39,7 @@ public class ActivityFragment extends ActivityBankFragment {
              */
             mActivityKey = (ObjectIdentifierPojo) savedInstanceState.getSerializable("mActivityKey");
         }
-        return createView(inflater, container, getActivityBank().read(mActivityKey), getActivity());
+        return createView(inflater, container, getActivityBank().readActivity(mActivityKey), getActivity());
     }
 
     public static View createView(LayoutInflater inflater, ViewGroup container, ActivityProperties activityProperties, Context context) {

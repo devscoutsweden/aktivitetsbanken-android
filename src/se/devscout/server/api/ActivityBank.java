@@ -1,22 +1,23 @@
 package se.devscout.server.api;
 
+import se.devscout.android.model.repo.remote.UnauthorizedException;
 import se.devscout.server.api.model.*;
 
 import java.util.List;
 
 public interface ActivityBank {
 
-    List<? extends Activity> find(ActivityFilter condition);
+    List<? extends Activity> findActivity(ActivityFilter condition) throws UnauthorizedException;
 
-    Activity create(ActivityProperties properties);
+    Activity createActivity(ActivityProperties properties);
 
-    void delete(ActivityKey key);
+    void deleteActivity(ActivityKey key);
 
-    ActivityProperties update(ActivityKey key, ActivityProperties properties);
+    ActivityProperties updateActivity(ActivityKey key, ActivityProperties properties);
 
-    ActivityProperties read(ActivityKey key);
+    ActivityProperties readActivity(ActivityKey key);
 
-    Activity readFull(ActivityKey key);
+    Activity readActivityFull(ActivityKey key);
 
     ActivityFilterFactory getFilterFactory();
 
@@ -26,7 +27,7 @@ public interface ActivityBank {
 
     List<? extends Reference> readReferences(ActivityKey key);
 
-    List<? extends Category> readCategories();
+    List<? extends Category> readCategories() throws UnauthorizedException;
 
     Category readCategoryFull(CategoryKey key);
 
@@ -45,4 +46,6 @@ public interface ActivityBank {
     void addListener(ActivityBankListener listener);
 
     void removeListener(ActivityBankListener listener);
+
+    Boolean createAnonymousAPIUser();
 }

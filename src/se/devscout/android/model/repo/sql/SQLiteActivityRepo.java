@@ -7,6 +7,7 @@ import se.devscout.android.model.repo.LocalActivity;
 import se.devscout.android.model.repo.LocalCategory;
 import se.devscout.android.model.repo.LocalReference;
 import se.devscout.android.model.repo.LocalSearchHistory;
+import se.devscout.android.model.repo.remote.UnauthorizedException;
 import se.devscout.android.util.SimpleFilter;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.ActivityBankListener;
@@ -38,7 +39,7 @@ public class SQLiteActivityRepo implements ActivityBank {
     }
 
     @Override
-    public List<LocalActivity> find(ActivityFilter condition) {
+    public List<LocalActivity> findActivity(ActivityFilter condition) throws UnauthorizedException {
         ArrayList<LocalActivity> res = new ArrayList<LocalActivity>();
         for (LocalActivity activity : mDatabaseHelper.readActivities(condition)) {
             if (condition instanceof SimpleFilter) {
@@ -52,28 +53,28 @@ public class SQLiteActivityRepo implements ActivityBank {
     }
 
     @Override
-    public Activity create(ActivityProperties properties) {
+    public Activity createActivity(ActivityProperties properties) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void delete(ActivityKey key) {
+    public void deleteActivity(ActivityKey key) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public ActivityProperties update(ActivityKey key, ActivityProperties properties) {
+    public ActivityProperties updateActivity(ActivityKey key, ActivityProperties properties) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Activity read(ActivityKey key) {
+    public Activity readActivity(ActivityKey key) {
         return mDatabaseHelper.readActivity(key);
     }
 
     @Override
-    public Activity readFull(ActivityKey key) {
-        return read(key);
+    public Activity readActivityFull(ActivityKey key) {
+        return readActivity(key);
     }
 
     @Override
@@ -84,7 +85,7 @@ public class SQLiteActivityRepo implements ActivityBank {
     @Override
     public Reference createReference(ActivityKey key, ReferenceProperties properties) {
         long id = mDatabaseHelper.createReference(properties);
-        return new LocalReference(id, properties.getType(), properties.getURI());
+        return new LocalReference(id,properties.getServerId(), properties.getServerRevisionId(), properties.getType(), properties.getURI());
     }
 
     @Override
@@ -98,7 +99,7 @@ public class SQLiteActivityRepo implements ActivityBank {
     }
 
     @Override
-    public List<LocalCategory> readCategories() {
+    public List<LocalCategory> readCategories() throws UnauthorizedException {
         return mDatabaseHelper.readCategories();
     }
 
@@ -154,6 +155,12 @@ public class SQLiteActivityRepo implements ActivityBank {
     @Override
     public void removeListener(ActivityBankListener listener) {
         mListeners.remove(listener);
+    }
+
+    @Override
+    public Boolean createAnonymousAPIUser() {
+        // TODO: implement this for when client is offline the first time an API call is made
+        throw new UnsupportedOperationException();
     }
 
     private void fireSearchHistoryItemAdded(SearchHistory searchHistoryItem) {

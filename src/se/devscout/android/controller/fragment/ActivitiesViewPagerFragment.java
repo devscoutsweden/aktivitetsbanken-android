@@ -50,7 +50,7 @@ public class ActivitiesViewPagerFragment extends ActivityBankFragment implements
                 Activity activity = getActivity(i);
                 return ActivityFragment.create(activity);
 /*
-                SimpleDocumentFragment fragment = SimpleDocumentFragment.create();
+                SimpleDocumentFragment fragment = SimpleDocumentFragment.createActivity();
 
                 ActivityRevision revision = ActivityUtil.getLatestActivityRevision(activity);
 
@@ -124,7 +124,7 @@ public class ActivitiesViewPagerFragment extends ActivityBankFragment implements
     }
 
     protected Activity getActivity(int index) {
-        return getActivityBank().readFull(mActivities.get(index));
+        return getActivityBank().readActivityFull(mActivities.get(index));
     }
 
     public static ActivitiesViewPagerFragment create(List<? extends ActivityKey> activities, int selectedIndex) {

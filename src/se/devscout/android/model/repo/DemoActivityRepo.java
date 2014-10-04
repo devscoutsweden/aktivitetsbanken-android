@@ -29,7 +29,7 @@ public class DemoActivityRepo implements ActivityBank {
     }
 
     @Override
-    public List<LocalActivity> find(ActivityFilter condition) {
+    public List<LocalActivity> findActivity(ActivityFilter condition) {
         SimpleFilter simpleFilter = SimpleFilter.fromActivityFilter(condition);
         ArrayList<LocalActivity> res = new ArrayList<LocalActivity>();
         for (LocalActivity activity : mActivities) {
@@ -41,22 +41,22 @@ public class DemoActivityRepo implements ActivityBank {
     }
 
     @Override
-    public Activity create(ActivityProperties properties) {
+    public Activity createActivity(ActivityProperties properties) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void delete(ActivityKey key) {
+    public void deleteActivity(ActivityKey key) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public ActivityProperties update(ActivityKey key, ActivityProperties properties) {
+    public ActivityProperties updateActivity(ActivityKey key, ActivityProperties properties) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public LocalActivity read(ActivityKey key) {
+    public LocalActivity readActivity(ActivityKey key) {
         for (LocalActivity activity : mActivities) {
             if (key.getId().equals(activity.getId())) {
                 return activity;
@@ -66,8 +66,8 @@ public class DemoActivityRepo implements ActivityBank {
     }
 
     @Override
-    public Activity readFull(ActivityKey key) {
-        return read(key);
+    public Activity readActivityFull(ActivityKey key) {
+        return readActivity(key);
     }
 
     @Override
@@ -137,6 +137,11 @@ public class DemoActivityRepo implements ActivityBank {
 
     @Override
     public void removeListener(ActivityBankListener listener) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Boolean createAnonymousAPIUser() {
         throw new UnsupportedOperationException();
     }
 }

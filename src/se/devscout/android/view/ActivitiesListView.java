@@ -14,6 +14,7 @@ import se.devscout.android.controller.fragment.RangeComparator;
 import se.devscout.android.model.ObjectIdentifierPojo;
 import se.devscout.android.model.SearchHistoryPropertiesPojo;
 import se.devscout.android.model.repo.SearchHistoryDataPojo;
+import se.devscout.android.model.repo.remote.UnauthorizedException;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.ActivityFilter;
@@ -71,6 +72,10 @@ public class ActivitiesListView extends NonBlockingSearchView<ActivitiesListItem
 
     @Override
     public void setResult(List<ActivitiesListItem> result) {
+        if (result == null) {
+            //TODO: Necessary? Remove?
+            result = new ArrayList<ActivitiesListItem>();
+        }
         if (mSortOrder != null) {
             Collections.sort(result, mSortOrder);
         }
@@ -204,9 +209,9 @@ public class ActivitiesListView extends NonBlockingSearchView<ActivitiesListItem
     public class ActivitiesSearchTask extends SearchTask {
 
         @Override
-        protected List<ActivitiesListItem> doSearch() {
+        protected List<ActivitiesListItem> doSearch() throws UnauthorizedException {
             ActivityBank activityBank = ActivityBankFactory.getInstance(getContext());
-            List<Activity> activities = (List<Activity>) activityBank.find(mFilter);
+            List<Activity> activities = (List<Activity>) activityBank.findActivity(mFilter);
             final SearchHistoryDataPojo searchHistoryDataPojo = new SearchHistoryDataPojo(mFilter);
             activityBank.createSearchHistory(new SearchHistoryPropertiesPojo(null, searchHistoryDataPojo));
             List<ActivitiesListItem> items = new ArrayList<ActivitiesListItem>();

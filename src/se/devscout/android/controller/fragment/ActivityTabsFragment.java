@@ -45,7 +45,7 @@ public class ActivityTabsFragment extends TabsFragment {
     protected StaticFragmentsPagerAdapter createPagerAdapter(FragmentManager fragmentManager) {
         StaticFragmentsPagerAdapter pagerAdapter = new StaticFragmentsPagerAdapter(fragmentManager, getActivity());
 
-        Activity activity = getActivityBank().readFull(key);
+        Activity activity = getActivityBank().readActivityFull(key);
 //        ActivityRevision revision = activity.getRevisions().get(activity.getRevisions().size() - 1);
 
         ResourceUtil resourceUtil = new ResourceUtil(getActivity());

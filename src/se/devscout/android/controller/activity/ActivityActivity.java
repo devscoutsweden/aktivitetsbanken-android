@@ -38,7 +38,7 @@ public class ActivityActivity extends SingleFragmentActivity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         ObjectIdentifierPojo key = (ObjectIdentifierPojo) getIntent().getSerializableExtra(INTENT_EXTRA_ACTIVITY_KEY);
         if (key != null) {
-            Activity activity = getActivityBank().readFull(key);
+            Activity activity = getActivityBank().readActivityFull(key);
             setTitle(activity.getName());
         }
     }
