@@ -3,6 +3,7 @@ package se.devscout.android.view;
 import android.content.Context;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.CategoryListItem;
+import se.devscout.android.model.repo.remote.UnauthorizedException;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.SimpleCategoryFilter;
 import se.devscout.server.api.ActivityFilter;
@@ -27,21 +28,38 @@ public class CategoriesListSearchView extends QuickSearchListView<CategoryListIt
 
     @Override
     protected int getImageResId(CategoryListItem item) {
-        int resourceId = getResourceId(item.getGroup() + "_" + item.getName(), "drawable");
-        return resourceId > 0 ? resourceId : getResourceId(item.getGroup(), "drawable");
-    }
+        String resName = toResourceName(item.getGroup() + "_" + item.getName());
 
-    private int getResourceId(String text, String type) {
-        String resName = toResourceName(text);
-        // TODO Fix hard-coded icons.
-        if ("scoutmethod_friluftsliv".equals(resName)) {
-            return R.drawable.scout_method_outdoors;
-        } else if ("scoutmethod_patrullen".equals(resName)) {
-            return R.drawable.scout_method_troupe;
+        if (resName.equals("andaktstillastund")) {
+            return R.drawable.scoutconcept_andaktstillastund;
+        } else if (resName.equals("ceremonier")) {
+            return R.drawable.scoutconcept_ceremonier;
+        } else if (resName.equals("diskussion")) {
+            return R.drawable.scoutconcept_diskussion;
+        } else if (resName.equals("friluftslivland")) {
+            return R.drawable.scoutconcept_friluftslivland;
+        } else if (resName.equals("friluftslivsj")) {
+            return R.drawable.scoutconcept_friluftslivsj;
+        } else if (resName.equals("hantverkpyssel")) {
+            return R.drawable.scoutconcept_hantverkpyssel;
+        } else if (resName.equals("lekar")) {
+            return R.drawable.scoutconcept_lekar;
+        } else if (resName.equals("lgerbl")) {
+            return R.drawable.scoutconcept_lgerbl;
+        } else if (resName.equals("matlagning")) {
+            return R.drawable.scoutconcept_matlagning;
+        } else if (resName.equals("teatermusiksng")) {
+            return R.drawable.scoutconcept_teatermusiksng;
+        } else if (resName.equals("utomhus")) {
+            return R.drawable.scoutconcept_utomhus;
+        } else if (resName.equals("scoutmethod")) {
+            return R.drawable.scoutmethod;
+        } else if (resName.equals("scoutmethod_friluftsliv")) {
+            return R.drawable.scoutmethod_friluftsliv;
+        } else if (resName.equals("scoutmethod_patrullen")) {
+            return R.drawable.scoutmethod_patrullen;
         } else {
-            String packageName = getContext().getPackageName();
-            int identifier = getResources().getIdentifier(resName, type, packageName);
-            return identifier;
+            return 0;
         }
     }
 
@@ -51,19 +69,17 @@ public class CategoriesListSearchView extends QuickSearchListView<CategoryListIt
 
     @Override
     protected String getTitle(CategoryListItem option) {
-        int resourceId = getResourceId(option.getName(), "string");
-        return resourceId > 0 ? getContext().getString(resourceId) : option.getName();
+        return option.getName();
     }
 
     @Override
     protected String getSubtitle(CategoryListItem option) {
-        int resourceId = getResourceId(option.getGroup(), "string");
-        return resourceId > 0 ? getContext().getString(resourceId) : option.getGroup();
+        return option.getGroup();
     }
 
     @Override
     protected ActivityFilter createFilter(CategoryListItem option) {
-        return new SimpleCategoryFilter(option);
+        return new SimpleCategoryFilter(option.getGroup(), option.getName(), option.getServerId());
     }
 
     @Override
@@ -73,7 +89,7 @@ public class CategoriesListSearchView extends QuickSearchListView<CategoryListIt
 
     private class MySearchTask extends SearchTask {
         @Override
-        protected List<CategoryListItem> doSearch() {
+        protected List<CategoryListItem> doSearch() throws UnauthorizedException {
             List<? extends Category> categories = ActivityBankFactory.getInstance(getContext()).readCategories();
             List<CategoryListItem> result = new ArrayList<CategoryListItem>();
             for (Category category : categories) {

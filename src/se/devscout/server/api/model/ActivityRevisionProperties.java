@@ -41,7 +41,7 @@ public interface ActivityRevisionProperties {
 
     URI getSourceURI();
 
-    User getAuthor();
+    UserKey getAuthor();
 
     List<? extends Media> getMediaItems();
 

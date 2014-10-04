@@ -12,6 +12,7 @@ public class Database {
         final static String password_hash = "password_hash";
         final static String password_algorithm = "password_algorithm";
         final static String display_name = "display_name";
+        final static String server_revision_id="server_revision_id";
 //        final static String is_local_only = "is_local_only";
     }
 
@@ -25,6 +26,7 @@ public class Database {
         final static String name = "name";
         final static String owner_id = "owner_id";
         final static String status = "status";
+        final static String server_revision_id = "server_revision_id";
     }
 
     public static class media {
@@ -36,6 +38,7 @@ public class Database {
         //        final static String status = "status";
         final static String is_publishable = "is_publishable";
         final static String mime_type = "mime_type";
+        final static String server_revision_id = "server_revision_id";
 //        final static String hash = "hash";
     }
 
@@ -46,6 +49,7 @@ public class Database {
         final static String server_id = "server_id";
         final static String uri = "uri";
         final static String type = "type";
+        final static String server_revision_id = "server_revision_id";
     }
 
     public static class activity {

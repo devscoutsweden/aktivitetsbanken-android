@@ -7,5 +7,5 @@ public interface CategoryFilter extends ActivityFilter {
 
     String getName();
 
-    int getServerId();
+    long getServerId();
 }

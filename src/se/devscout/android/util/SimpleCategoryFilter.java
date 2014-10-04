@@ -5,7 +5,6 @@ import se.devscout.server.api.ActivityFilterVisitor;
 import se.devscout.server.api.URIBuilderActivityFilterVisitor;
 import se.devscout.server.api.model.ActivityProperties;
 import se.devscout.server.api.model.Category;
-import se.devscout.server.api.model.CategoryProperties;
 
 /**
  * Tests if activity is assigned to a certain category.
@@ -13,12 +12,12 @@ import se.devscout.server.api.model.CategoryProperties;
 public class SimpleCategoryFilter extends SimpleFilter implements se.devscout.server.api.activityfilter.CategoryFilter {
     private final String name;
     private final String group;
-    private int serverId;
+    private long serverId;
 
-    public SimpleCategoryFilter(CategoryProperties properties) {
-        name = properties.getName();
-        group = properties.getGroup();
-        serverId = properties.getServerId();
+    public SimpleCategoryFilter(String group, String name, long serverId) {
+        this.group = group;
+        this.name = name;
+        this.serverId = serverId;
     }
 
     @Override
@@ -67,7 +66,7 @@ public class SimpleCategoryFilter extends SimpleFilter implements se.devscout.se
     }
 
     @Override
-    public int getServerId() {
+    public long getServerId() {
         return serverId;
     }
 }

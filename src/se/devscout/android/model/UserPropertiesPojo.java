@@ -14,8 +14,8 @@ public class UserPropertiesPojo extends ServerObjectPropertiesPojo implements Us
     public UserPropertiesPojo() {
     }
 
-    public UserPropertiesPojo(String displayName, String emailAddress, int serverId, boolean publishable) {
-        super(publishable, serverId);
+    public UserPropertiesPojo(String displayName, String emailAddress, long serverId, long serverRevisionId, boolean publishable) {
+        super(publishable, serverId, serverRevisionId);
         mDisplayName = displayName;
         mEmailAddress = emailAddress;
     }

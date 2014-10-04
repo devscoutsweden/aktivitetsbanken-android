@@ -31,7 +31,10 @@ public class CategoryTrackListView extends QuickSearchListView<CategoryTrack> {
 
     @Override
     protected ActivityFilter createFilter(CategoryTrack option) {
-        return new SimpleCategoryFilter(option.getScoutCategoryTrack());
+        return new SimpleCategoryFilter(
+                option.getScoutCategoryTrack().getGroup(),
+                option.getScoutCategoryTrack().getName(),
+                option.getScoutCategoryTrack().getServerId());
     }
 
     @Override

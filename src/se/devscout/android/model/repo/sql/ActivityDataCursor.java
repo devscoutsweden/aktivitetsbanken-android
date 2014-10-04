@@ -2,8 +2,8 @@ package se.devscout.android.model.repo.sql;
 
 import android.database.Cursor;
 import se.devscout.android.model.IntegerRangePojo;
+import se.devscout.android.model.ObjectIdentifierPojo;
 import se.devscout.android.model.repo.LocalActivity;
-import se.devscout.android.model.repo.LocalUser;
 
 import java.util.Date;
 
@@ -12,11 +12,12 @@ public class ActivityDataCursor extends BaseCursorWrapper {
         super(cursor);
     }
 
-    public LocalActivity getActivityData(LocalUser owner) {
+    public LocalActivity getActivityData() {
         LocalActivity revision = new LocalActivity(
-                owner,
+                isNull(getColumnIndex(Database.activity.owner_id)) ? null : new ObjectIdentifierPojo(getInt(getColumnIndex(Database.activity.owner_id))),
                 getId(),
                 getInt(getColumnIndex(Database.activity.server_id)),
+                getInt(getColumnIndex(Database.activity.server_revision_id)),
                 getInt(getColumnIndex(Database.activity.is_publishable)) != 0
         );
         revision.setFeatured(getInt(getColumnIndex(Database.activity.featured)) == 1);
@@ -29,9 +30,9 @@ public class ActivityDataCursor extends BaseCursorWrapper {
 //              "datetime_published" DATETIME,
 //              "datetime_created" DATETIME NOT NULL,
 
-        revision.setServerId(getInt(getColumnIndex(Database.activity.server_id)));
-        revision.setServerRevisionId(getInt(getColumnIndex(Database.activity.server_revision_id)));
-        revision.setPublishable(getInt(getColumnIndex(Database.activity.is_publishable)) != 0);
+//        revision.setServerId(getInt(getColumnIndex(Database.activity.server_id)));
+//        revision.setServerRevisionId(getInt(getColumnIndex(Database.activity.server_revision_id)));
+//        revision.setPublishable(getInt(getColumnIndex(Database.activity.is_publishable)) != 0);
 
         revision.setMaterial(getString(getColumnIndex(Database.activity.descr_material)));
         revision.setIntroduction(getString(getColumnIndex(Database.activity.descr_introduction)));

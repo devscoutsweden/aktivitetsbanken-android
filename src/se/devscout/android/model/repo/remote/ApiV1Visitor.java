@@ -12,7 +12,7 @@ public class ApiV1Visitor implements URIBuilderActivityFilterVisitor {
 
     public ApiV1Visitor() {
         //TODO: the host to use should be a configuration parameter, and preferable something that can change with time without having to redistribute the app.
-        mUriBuilder = Uri.parse("http://infinite-forest-4832.herokuapp.com/api/v1/activities").buildUpon();
+        mUriBuilder = Uri.parse("http://" + RemoteActivityRepoImpl.HOST + "/api/v1/activities").buildUpon();
     }
 
     @Override
@@ -34,7 +34,6 @@ public class ApiV1Visitor implements URIBuilderActivityFilterVisitor {
 
     @Override
     public Uri visit(CategoryFilter filter) {
-//        throw new UnsupportedOperationException();
         mUriBuilder.appendQueryParameter("categories[]", String.valueOf(filter.getServerId()));
         return mUriBuilder.build();
     }
@@ -42,7 +41,6 @@ public class ApiV1Visitor implements URIBuilderActivityFilterVisitor {
     @Override
     public Uri visit(IsUserFavouriteFilter filter) {
         throw new UnsupportedOperationException();
-//        return mUriBuilder.build();
     }
 
     @Override

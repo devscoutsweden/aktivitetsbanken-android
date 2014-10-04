@@ -1,6 +1,6 @@
 package se.devscout.server.api.model;
 
-public interface UserProperties {
+public interface UserProperties extends ServerObjectProperties {
     String getName();
 
     String getDisplayName();

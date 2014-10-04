@@ -10,8 +10,8 @@ public class LocalReference extends ReferencePropertiesPojo implements Reference
     public static long debugCounter;
     private Long mId;
 
-    public LocalReference(Long id, ReferenceType type, URI uri) {
-        super(type, uri);
+    public LocalReference(Long id, long serverId, long serverRevisionId, ReferenceType type, URI uri) {
+        super(false, serverId, serverRevisionId, type, uri);
         mId = id;
     }
 

@@ -17,6 +17,7 @@ public class MediaCursor extends BaseCursorWrapper {
                     getString(getColumnIndex(Database.media.mime_type)),
                     getId(),
                     getInt(getColumnIndex(Database.media.server_id)),
+                    getInt(getColumnIndex(Database.media.server_revision_id)),
                     getInt(getColumnIndex(Database.media.is_publishable)) != 0);
     }
 }

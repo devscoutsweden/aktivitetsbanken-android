@@ -5,13 +5,19 @@ import se.devscout.server.api.model.ReferenceType;
 
 import java.net.URI;
 
-public class ReferencePropertiesPojo implements ReferenceProperties {
+public class ReferencePropertiesPojo extends ServerObjectPropertiesPojo implements ReferenceProperties {
     private URI mURI;
     private ReferenceType mType;
 
-    public ReferencePropertiesPojo(ReferenceType type, URI URI) {
+    public ReferencePropertiesPojo(ReferenceType type, URI uri) {
         mType = type;
-        mURI = URI;
+        mURI = uri;
+    }
+
+    public ReferencePropertiesPojo(boolean publishable, long serverId, long serverRevisionId, ReferenceType type, URI uri) {
+        super(publishable, serverId, serverRevisionId);
+        mType = type;
+        mURI = uri;
     }
 
     @Override

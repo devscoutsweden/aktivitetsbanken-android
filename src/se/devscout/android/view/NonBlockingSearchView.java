@@ -14,13 +14,15 @@ import android.view.ViewParent;
 import android.widget.*;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.ActivitiesListFragment;
+import se.devscout.android.model.repo.remote.UnauthorizedException;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public abstract class NonBlockingSearchView<T extends Serializable> extends FrameLayout implements AdapterView.OnItemClickListener, View.OnClickListener/*, FragmentListener */{
+public abstract class NonBlockingSearchView<T extends Serializable> extends FrameLayout implements AdapterView.OnItemClickListener, View.OnClickListener/*, FragmentListener */ {
     /**
      * Keeps track of which items were shown when the activity (fragment) was "unloaded".
      */
@@ -241,7 +243,21 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
     }
 */
 
-    public abstract class SearchTask extends AsyncTask<Object, Object, List<T>> {
+    private class SearchTaskResult {
+        private Throwable mThrowable;
+        private List<T> mResult;
+
+        private SearchTaskResult(List<T> result) {
+            mResult = result;
+        }
+
+        private SearchTaskResult(Throwable throwable) {
+            mThrowable = throwable;
+        }
+    }
+
+    public abstract class SearchTask extends AsyncTask<Object, Object, SearchTaskResult> {
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -249,23 +265,54 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
         }
 
         @Override
-        protected List<T> doInBackground(Object... voids) {
+        protected SearchTaskResult doInBackground(Object... voids) {
             Log.d(NonBlockingSearchView.class.getName(), "Start of doInBackground as part of " + NonBlockingSearchView.this.getClass().getName());
-            List<T> list = doSearch();
+            List<T> list = null;
+            try {
+                list = doSearch();
+            } catch (UnauthorizedException e) {
+                Log.i(NonBlockingSearchView.class.getName(), "Could not complete search due to authorization problem.", e);
+                return new SearchTaskResult(e);
+            }
             Log.d(NonBlockingSearchView.class.getName(), "End of doInBackground as part of " + NonBlockingSearchView.this.getClass().getName());
-            return list;
+            return new SearchTaskResult(list);
         }
 
         @Override
-        protected void onPostExecute(List<T> result) {
-            Log.d(NonBlockingSearchView.class.getName(), "Search task has completed. " + result.size() + " were returned.");
-            setResult(result);
+        protected void onPostExecute(SearchTaskResult result) {
+            Log.d(NonBlockingSearchView.class.getName(), "Search task has completed. ");
+            if (result != null) {
+                if (result.mResult != null) {
+                    Log.d(NonBlockingSearchView.class.getName(), result.mResult.size() + " items were returned.");
+                    setResult(result.mResult);
+                } else {
+                    if (result.mThrowable instanceof UnauthorizedException) {
+                        Log.d(NonBlockingSearchView.class.getName(), "The search failed because of an authorization problem. Assume that this is because the API key was either missing or incorrect. The 'create anonymous user process' will be started and the result will be set to an empty list.");
+                        UnauthorizedException exception = (UnauthorizedException) result.mThrowable;
+                        AnonymousUserFactory factory = AnonymousUserFactory.getInstance();
+                        AnonymousUserFactoryListener callback = new AnonymousUserFactoryListener() {
+                            @Override
+                            public void onAnonymousUserCreated(boolean success) {
+                                runSearchTaskInNewThread();
+                            }
+                        };
+
+                        factory.createAnonymousUser(callback, NonBlockingSearchView.this.getContext());
+                    } else {
+                        Log.d(NonBlockingSearchView.class.getName(), "Something went wrong when searching since the result was 'null'. The result will be set to an empty list.");
+                    }
+                    setResult(Collections.<T>emptyList());
+                }
+            } else {
+                setResult(Collections.<T>emptyList());
+            }
+
             synchronized (NonBlockingSearchView.this) {
                 mSearchPending = false;
             }
         }
 
-        protected abstract List<T> doSearch();
+        protected abstract List<T> doSearch() throws UnauthorizedException;
 
     }
 }

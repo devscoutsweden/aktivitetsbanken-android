@@ -13,7 +13,8 @@ public class UserCursor extends BaseCursorWrapper {
                 getString(getColumnIndex(Database.user.display_name)),
                 getString(getColumnIndex(Database.user.email)),
                 getId(),
-                getInt(getColumnIndex(Database.user.server_id))
+                getInt(getColumnIndex(Database.user.server_id)),
+                getInt(getColumnIndex(Database.user.server_revision_id))
         );
     }
 }

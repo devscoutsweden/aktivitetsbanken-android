@@ -1,6 +1,5 @@
 package se.devscout.android.util;
 
-import se.devscout.android.model.CategoryPropertiesPojo;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.ActivityFilterFactory;
 import se.devscout.server.api.RandomActivitiesFilter;
@@ -45,8 +44,8 @@ public class PrimitiveActivityFilterFactory implements ActivityFilterFactory {
     }
 
     @Override
-    public SimpleCategoryFilter createCategoryFilter(String group, String name, int serverId) {
-        return new SimpleCategoryFilter(new CategoryPropertiesPojo(group, name, serverId, false));
+    public SimpleCategoryFilter createCategoryFilter(String group, String name, long serverId) {
+        return new SimpleCategoryFilter(group, name, serverId);
     }
 
     @Override

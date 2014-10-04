@@ -12,14 +12,10 @@ import java.util.List;
 @JsonFilter("LocalActivity")
 public class ActivityPropertiesPojo extends ServerObjectPropertiesPojo implements ActivityProperties, Serializable {
     private List<ActivityRevision> mRevisions = new ArrayList<ActivityRevision>();
-    private User mOwner;
-    private boolean publishable;
-    private int serverId;
+    private UserKey mOwner;
 
-    private int serverRevisionId;
-
-    public ActivityPropertiesPojo(boolean publishable, int serverId, User owner) {
-        super(publishable, serverId);
+    public ActivityPropertiesPojo(boolean publishable, long serverId, long serverRevisionId, UserKey owner) {
+        super(publishable, serverId, serverRevisionId);
         mOwner = owner;
     }
     private String mName;
@@ -192,49 +188,15 @@ public class ActivityPropertiesPojo extends ServerObjectPropertiesPojo implement
     }
 
     @Override
-    public int getServerId() {
-        return serverId;
-    }
-
-    @Override
-    public int getServerRevisionId() {
-        return serverRevisionId;
-    }
-
-    @Override
-    public User getOwner() {
+    public UserKey getOwner() {
         return mOwner;
     }
-
-    @Override
-    public boolean isPublishable() {
-        return publishable;
-    }
-
 
     public void setOwner(User owner) {
         mOwner = owner;
     }
 
-    public void setServerRevisionId(int serverRevisionId) {
-        this.serverRevisionId = serverRevisionId;
-    }
-
-    public void setServerId(int serverId) {
-        this.serverId = serverId;
-    }
-
-    public void setPublishable(boolean publishable) {
-        this.publishable = publishable;
-    }
-
     public void setDateCreated(Date dateCreated) {
         mDateCreated = dateCreated;
     }
-
-/*
-    public void setDatePublished(Date datePublished) {
-        mDatePublished = datePublished;
-    }
-*/
 }

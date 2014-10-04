@@ -40,6 +40,7 @@ public class TestDataUtil {
                                     null,
                                     LocalActivity.debugCounter++,
                                     0,
+                                    0,
                                     false);
                             mActivities.add(revision);
                             revision.setName(name);

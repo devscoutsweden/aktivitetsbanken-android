@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 import se.devscout.android.R;
+import se.devscout.android.model.UserPropertiesPojo;
 import se.devscout.android.model.repo.*;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.activityfilter.AndFilter;
@@ -37,6 +38,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
     private Set<Long> mBannedSearchHistoryIds = new HashSet<Long>();
     private ActivityIdCache mActivityIdCache = new ActivityIdCache();
+    private CategoryIdCache mCategoryIdCache = new CategoryIdCache();
 
 
     public SQLiteDatabase getDb() {
@@ -177,6 +179,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public long createReference(ReferenceProperties properties) {
         try {
             ContentValues values = new ContentValues();
+            values.put(Database.reference.server_id, properties.getServerId());
             values.put(Database.reference.type, properties.getType().name().substring(0, 1));
             values.put(Database.reference.uri, properties.getURI().toString());
             long id = getDb().insertOrThrow(Database.reference.T, null, values);
@@ -198,7 +201,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         getDb().beginTransaction();
         try {
-            long userId = createUser();
+            long userId = createUser(new UserPropertiesPojo("Anonym", "anonymous@scout.se", 0L, 0L, false));
             if (addTestData) {
                 List<LocalActivity> testActivities = TestDataUtil.readXMLTestData(mContext);
                 for (Activity testActivity : testActivities) {
@@ -213,56 +216,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    private long createUser() {
+    private long createUser(UserProperties properties) {
         ContentValues userValues = new ContentValues();
-        userValues.put(Database.user.email, "testdata@devscout.se");
-        userValues.put(Database.user.display_name, "Testdata");
+        userValues.put(Database.user.server_id, properties.getServerId());
+        userValues.put(Database.user.server_revision_id, properties.getServerRevisionId());
+        userValues.put(Database.user.display_name, properties.getDisplayName());
+        userValues.put(Database.user.email, properties.getEmailAddress());
+//        userValues.put(Database.user.email_verified, properties.isEmailAddressVerified());
+//        userValues.put(Database.user.password_algorithm, properties.getPasswordHashAlgorithm());
+//        userValues.put(Database.user.password_hash, "Testdata");
         return getDb().insertOrThrow(Database.user.T, null, userValues);
     }
 
     public long createActivity(ActivityProperties properties) {
         ContentValues values = createContentValues(properties);
 
-//        values.put(Database.activity.owner_id, owner);
-        /*
-     "is_publishable" INTEGER NOT NULL,
-     "owner_id" INTEGER NOT NULL,
-     "name" TEXT NOT NULL,
-     "datetime_created" NUMERIC NOT NULL,
-     "descr_activity" NUMERIC NOT NULL,
-         */
         long activityId = getDb().insertOrThrow(Database.activity.T, null, values);
         mActivityIdCache.invalidate();
 
-/*
-        for (Category category : properties.getCategories()) {
-            addActivityDataCategory(activityId, category.getGroup(), category.getName(), properties.getOwner().getId());
-        }
-*/
         // Associated categories
 
-//        getDb().delete(Database.activity_data_category.T, Database.activity_data_category.activity_data_id + "=" + key.getId(), null);
+        addCategoriesToActivity(activityId, properties.getCategories());
 
-        for (Category category : properties.getCategories()) {
-
-            long categoryId = getOrCreateCategory(category);
-
-            ContentValues associationEntry = new ContentValues();
-            associationEntry.put(Database.activity_data_category.category_id, categoryId);
-            associationEntry.put(Database.activity_data_category.activity_data_id, activityId);
-            getDb().insert(Database.activity_data_category.T, null, associationEntry);
-        }
-
-
-
+        addReferencesToActivity(activityId, properties.getReferences());
 /*
         boolean first = true;
         for (Media media : properties.getMediaItems()) {
             addActivityDataMedia(activityId, first, media);
             first = false;
-        }
-        for (ReferenceProperties reference : properties.getReferences()) {
-            addActivityDataReference(activityId, reference);
         }
 */
         return activityId;
@@ -279,18 +260,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
         // Associated categories
-
-        getDb().delete(Database.activity_data_category.T, Database.activity_data_category.activity_data_id + "=" + key.getId(), null);
-
-        for (Category category : properties.getCategories()) {
-
-            long categoryId = getOrCreateCategory(category);
-
-            ContentValues associationEntry = new ContentValues();
-            associationEntry.put(Database.activity_data_category.category_id, categoryId);
-            associationEntry.put(Database.activity_data_category.activity_data_id, key.getId());
-            getDb().insert(Database.activity_data_category.T, null, associationEntry);
-        }
+        deleteCategoriesFromActivity(key);
+        addCategoriesToActivity(key.getId(), properties.getCategories());
 
         // Associated media
 
@@ -303,16 +274,45 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 */
 
         // Associated references
+        deleteReferencesFromActivity(key);
+        addReferencesToActivity(key.getId(), properties.getReferences());
 
-/*
-        for (ReferenceProperties reference : properties.getReferences()) {
-            addActivityDataReference(activityId, reference);
-        }
-*/
         return true;
     }
 
-    private long getOrCreateCategory(Category category) {
+    private void deleteCategoriesFromActivity(ActivityKey key) {
+        getDb().delete(Database.activity_data_category.T, Database.activity_data_category.activity_data_id + "=" + key.getId(), null);
+    }
+
+    private void deleteReferencesFromActivity(ActivityKey key) {
+        getDb().delete(Database.activity_data_reference.T, Database.activity_data_reference.activity_data_id + "=" + key.getId(), null);
+    }
+
+    private void addCategoriesToActivity(Long activityId, List<? extends Category> categories) {
+        for (Category category : categories) {
+
+            long categoryId = getOrCreateCategory(category);
+
+            ContentValues associationEntry = new ContentValues();
+            associationEntry.put(Database.activity_data_category.category_id, categoryId);
+            associationEntry.put(Database.activity_data_category.activity_data_id, activityId);
+            getDb().insert(Database.activity_data_category.T, null, associationEntry);
+        }
+    }
+
+    private void addReferencesToActivity(Long activityId, List<? extends Reference> references) {
+        for (Reference reference : references) {
+
+            long referenceId = getOrCreateReference(reference);
+
+            ContentValues associationEntry = new ContentValues();
+            associationEntry.put(Database.activity_data_reference.reference_id, referenceId);
+            associationEntry.put(Database.activity_data_reference.activity_data_id, activityId);
+            getDb().insert(Database.activity_data_reference.T, null, associationEntry);
+        }
+    }
+
+    public long getOrCreateCategory(CategoryProperties category) {
         List<LocalCategory> localCategories = readCategories();
         for (LocalCategory localCategory : localCategories) {
             if (localCategory.getServerId() == category.getServerId()) {
@@ -321,6 +321,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
         }
         return createCategory(category);
+    }
+
+    public long getOrCreateReference(ReferenceProperties reference) {
+        List<LocalReference> localReferences = readReferences();
+        for (LocalReference localReference : localReferences) {
+            if (localReference.getServerId() == reference.getServerId()) {
+                // Bingo! Reference already exists in local database.
+                return localReference.getId();
+            }
+        }
+        return createReference(reference);
+    }
+
+    public long getOrCreateUser(UserProperties user) {
+        List<LocalUser> localUsers = readUsers();
+        for (LocalUser localUser : localUsers) {
+            if (localUser.getServerId() == user.getServerId()) {
+                // Bingo! Reference already exists in local database.
+                return localUser.getId();
+            }
+        }
+        return createUser(user);
     }
 
     private ContentValues createContentValues(ActivityProperties properties) {
@@ -362,19 +384,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (ages != null) {
             values.put(Database.activity.age_min, ages.getMin());
             values.put(Database.activity.age_max, ages.getMax());
+        } else {
+            values.putNull(Database.activity.age_min);
+            values.putNull(Database.activity.age_max);
         }
         Range<Integer> participants = properties.getParticipants();
         if (participants != null) {
             values.put(Database.activity.participants_min, participants.getMin());
             values.put(Database.activity.participants_max, participants.getMax());
+        } else {
+            values.putNull(Database.activity.participants_min);
+            values.putNull(Database.activity.participants_max);
         }
         Range<Integer> time = properties.getTimeActivity();
         if (time != null) {
             values.put(Database.activity.time_min, time.getMin());
             values.put(Database.activity.time_max, time.getMax());
+        } else {
+            values.putNull(Database.activity.time_min);
+            values.putNull(Database.activity.time_max);
         }
         values.put(Database.activity.featured, properties.isFeatured() ? 1 : 0);
-        values.put(Database.activity.owner_id, properties.getOwner() != null ? properties.getOwner().getId() : USER_ID_ANONYMOUS);
+        if (properties.getOwner() != null) {
+            values.put(Database.activity.owner_id, properties.getOwner().getId());
+        } else {
+            values.putNull(Database.activity.owner_id);
+        }
 //        values.put(Database.activity_data.source_uri, properties.getSourceURI() != null ? properties.getSourceURI().toString() : null);
         return values;
     }
@@ -403,60 +438,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
     }
 
-    private void addActivityDataReference(long activityDataId, ReferenceProperties reference) {
-        Cursor cursor = getDb().query(Database.reference.T, new String[]{Database.reference.id}, Database.reference.uri + " = ? and " + Database.reference.type + " = ?", new String[]{reference.getURI().toString(), reference.getType().name().substring(0, 1)}, null, null, null);
-        long refId;
-        if (cursor.moveToFirst()) {
-            refId = cursor.getLong(0);
-        } else {
-            ContentValues refValues = new ContentValues();
-            refValues.put(Database.reference.uri, reference.getURI().toString());
-            refValues.put(Database.reference.type, reference.getType().name().substring(0, 1));
-            refId = getDb().insertOrThrow(Database.reference.T, null, refValues);
-        }
-        if (refId >= 0) {
-            ContentValues actDataRefValues = new ContentValues();
-            actDataRefValues.put(Database.activity_data_reference.activity_data_id, activityDataId);
-            actDataRefValues.put(Database.activity_data_reference.reference_id, refId);
-            getDb().insertOrThrow(Database.activity_data_reference.T, null, actDataRefValues);
-        }
-        cursor.close();
-    }
-
-    private void addActivityDataCategory(long activityDataId, String group, String name, long ownerId) {
-        Cursor cursor = getDb().query(Database.category.T, new String[]{Database.category.id}, Database.category.group_name + " = ? and " + Database.category.name + " = ?", new String[]{group, name}, null, null, null);
-        long catId;
-        if (cursor.moveToFirst()) {
-            catId = cursor.getLong(0);
-        } else {
-            ContentValues refValues = new ContentValues();
-            byte[] bytes = new byte[16];
-            ByteBuffer bb = ByteBuffer.wrap(bytes);
-            bb.order(ByteOrder.LITTLE_ENDIAN);//) or ByteOrder.BIG_ENDIAN);
-            UUID uuid = UUID.randomUUID();
-            bb.putLong(uuid.getMostSignificantBits());
-            bb.putLong(uuid.getLeastSignificantBits());
-
-            // to reverse
-//        bb.flip();
-//        UUID uuid = new UUID(bb.getLong(), bb.getLong());
-
-            refValues.put(Database.category.status, STATUS_NEW);
-            refValues.put(Database.category.uuid, bb.array());
-            refValues.put(Database.category.group_name, group);
-            refValues.put(Database.category.name, name);
-            refValues.put(Database.category.owner_id, ownerId);
-            catId = getDb().insertOrThrow(Database.category.T, null, refValues);
-        }
-        if (catId >= 0) {
-            ContentValues actDataCatValues = new ContentValues();
-            actDataCatValues.put(Database.activity_data_category.activity_data_id, activityDataId);
-            actDataCatValues.put(Database.activity_data_category.category_id, catId);
-            getDb().insertOrThrow(Database.activity_data_category.T, null, actDataCatValues);
-        }
-        cursor.close();
-    }
-
     public List<? extends LocalActivity> readActivities(ActivityFilter filter) {
         QueryBuilder queryBuilder = new QueryBuilder();
         applyFilter(queryBuilder, filter);
@@ -466,7 +447,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         while (cursor.moveToNext()) {
             long activityId = cursor.getId();
             if (!mCacheActivity.containsKey(activityId)) {
-                LocalActivity revision = cursor.getActivityData(readUser(cursor.getLong(cursor.getColumnIndex("owner_id"))));
+                LocalActivity revision = cursor.getActivityData();
                 map.put(revision.getId(), revision);
                 mCacheActivity.put(activityId, revision);
             }
@@ -508,23 +489,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<LocalCategory> categories = new ArrayList<LocalCategory>();
         CategoryCursor catCursor = new CategoryCursor(getDb().query(
                 Database.category.T,
-                new String[]{Database.category.id, Database.category.server_id, Database.category.group_name, Database.category.name},
+                new String[]{Database.category.id, Database.category.server_id, Database.category.server_revision_id, Database.category.group_name, Database.category.name},
                 null,
                 null,
                 null,
                 null,
                 Database.category.group_name + ", " + Database.category.name));
-//        CategoryCursor catCursor = new CategoryCursor(getDb().rawQuery("" +
-//                "select " +
-//                "   c." + Database.category.id + ", " +
-//                "   c." + Database.category.group_name + ", " +
-//                "   c." + Database.category.name + " " +
-//                "from " +
-//                "   " + Database.category.T + " a " +
-//                "order by " +
-//                "   c." + Database.category.group_name + ", " +
-//                "   c." + Database.category.name, null));
-
         while (catCursor.moveToNext()) {
             long categoryId = catCursor.getId();
             if (!mCacheCategory.containsKey(categoryId)) {
@@ -534,6 +504,52 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         catCursor.close();
         return categories;
+    }
+
+    public List<LocalReference> readReferences() {
+        ArrayList<LocalReference> references = new ArrayList<LocalReference>();
+        ReferenceCursor refCursor = new ReferenceCursor(getDb().query(
+                Database.reference.T,
+                new String[]{Database.reference.id, Database.reference.server_id, Database.reference.server_revision_id, Database.reference.type, Database.reference.uri},
+                null,
+                null,
+                null,
+                null,
+                null));
+        while (refCursor.moveToNext()) {
+            long referenceId = refCursor.getId();
+            try {
+                if (!mCacheReference.containsKey(referenceId)) {
+                    mCacheReference.put(referenceId, refCursor.getReference());
+                }
+                references.add(mCacheReference.get(referenceId));
+            } catch (URISyntaxException e) {
+                Log.e(DatabaseHelper.class.getName(), "Could not parse URI in database. Reference " + referenceId + " will not be accessible by client.", e);
+            }
+        }
+        refCursor.close();
+        return references;
+    }
+
+    public List<LocalUser> readUsers() {
+        ArrayList<LocalUser> users = new ArrayList<LocalUser>();
+        UserCursor userCursor = new UserCursor(getDb().query(
+                Database.user.T,
+                new String[]{Database.user.id, Database.user.server_id, Database.user.server_revision_id, Database.user.display_name, Database.user.email, Database.user.email_verified, Database.user.password_algorithm, Database.user.password_hash},
+                null,
+                null,
+                null,
+                null,
+                null));
+        while (userCursor.moveToNext()) {
+            long userId = userCursor.getId();
+            if (!mCacheUser.containsKey(userId)) {
+                mCacheUser.put(userId, userCursor.getUser());
+            }
+            users.add(mCacheUser.get(userId));
+        }
+        userCursor.close();
+        return users;
     }
 
     private void initActivitiesReferences(Map<Long, LocalActivity> revisions) {
@@ -732,23 +748,82 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return baos.toByteArray();
     }
 
-    public ActivityIdCache getActivityIdCache() {
-        return mActivityIdCache;
+    public LocalObjectRefreshness getLocalActivityFreshness(LocalActivity serverActivity, boolean autoSetId) {
+        DatabaseHelper.IdCacheEntry entry = mActivityIdCache.getEntryByServerId(serverActivity.getServerId());
+        if (entry != null) {
+            if (autoSetId) {
+                serverActivity.setId(entry.getId());
+            }
+            // Activity is cached
+            if (entry.getServerRevisionId() < serverActivity.getServerRevisionId()) {
+                // Incoming data is newer than cached data
+                return LocalObjectRefreshness.LOCAL_IS_OLD;
+            } else {
+                // No need to do anything
+                return LocalObjectRefreshness.LOCAL_IS_UP_TO_DATE;
+            }
+        } else {
+            // Incoming data is a new (non-cached) activity. Add it to the local database.
+            return LocalObjectRefreshness.LOCAL_IS_MISSING;
+        }
+
     }
 
-    public class ActivityIdCache {
-        private List<IdCacheEntry> mEntries = null;
+    public LocalObjectRefreshness getLocalCategoryFreshness(LocalCategory serverActivity, boolean autoSetId) {
+        DatabaseHelper.IdCacheEntry entry = mCategoryIdCache.getEntryByServerId(serverActivity.getServerId());
+        if (entry != null) {
+            if (autoSetId) {
+                serverActivity.setId(entry.getId());
+            }
+            // Activity is cached
+            if (entry.getServerRevisionId() < serverActivity.getServerRevisionId()) {
+                // Incoming data is newer than cached data
+                return LocalObjectRefreshness.LOCAL_IS_OLD;
+            } else {
+                // No need to do anything
+                return LocalObjectRefreshness.LOCAL_IS_UP_TO_DATE;
+            }
+        } else {
+            // Incoming data is a new (non-cached) activity. Add it to the local database.
+            return LocalObjectRefreshness.LOCAL_IS_MISSING;
+        }
 
-        private void invalidate() {
+    }
+
+    public class ActivityIdCache extends ServerObjectIdCache {
+        public ActivityIdCache() {
+            super(Database.activity.id, Database.activity.server_id, Database.activity.server_revision_id);
+        }
+    }
+
+    public class CategoryIdCache extends ServerObjectIdCache {
+        public CategoryIdCache() {
+            super(Database.category.id, Database.category.server_id, Database.category.server_revision_id);
+        }
+    }
+
+    public class ServerObjectIdCache {
+        private List<IdCacheEntry> mEntries = null;
+        private String mIdColumnName;
+        private String mServerIdColumnName;
+        private String mServerRevisionIdColumnName;
+
+        public ServerObjectIdCache(String idColumnName, String serverIdColumnName, String serverRevisionIdColumnName) {
+            mIdColumnName = idColumnName;
+            mServerIdColumnName = serverIdColumnName;
+            mServerRevisionIdColumnName = serverRevisionIdColumnName;
+        }
+
+        void invalidate() {
             mEntries = null;
         }
 
         private void update() {
             if (mEntries == null) {
                 mEntries = new ArrayList<IdCacheEntry>();
-                Cursor localIdsQuery = getDb().query(Database.activity.T, new String[]{Database.activity.id, Database.activity.server_id, Database.activity.server_revision_id}, null, null, null, null, null);
+                Cursor localIdsQuery = getDb().query(Database.activity.T, new String[]{mIdColumnName, mServerIdColumnName, mServerRevisionIdColumnName}, null, null, null, null, null);
                 while (localIdsQuery.moveToNext()) {
-                    IdCacheEntry entry = new IdCacheEntry(localIdsQuery.getInt(localIdsQuery.getColumnIndex(Database.activity.id)), localIdsQuery.getInt(localIdsQuery.getColumnIndex(Database.activity.server_id)), localIdsQuery.getInt(localIdsQuery.getColumnIndex(Database.activity.server_revision_id)));
+                    IdCacheEntry entry = new IdCacheEntry(localIdsQuery.getInt(localIdsQuery.getColumnIndex(mIdColumnName)), localIdsQuery.getInt(localIdsQuery.getColumnIndex(mServerIdColumnName)), localIdsQuery.getInt(localIdsQuery.getColumnIndex(mServerRevisionIdColumnName)));
                     mEntries.add(entry);
                 }
             }
@@ -764,7 +839,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return false;
         }
 
-        public IdCacheEntry getEntryByServerId(int id) {
+        public IdCacheEntry getEntryByServerId(long id) {
             update();
             for (IdCacheEntry entry : mEntries) {
                 if (entry.mServerId == id) {
@@ -774,7 +849,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return null;
         }
 
-        boolean isCachedServerRevisionLessThan(int serverId, int serverRevisionId) {
+        boolean isCachedServerRevisionLessThan(long serverId, long serverRevisionId) {
             update();
             for (IdCacheEntry entry : mEntries) {
                 if (entry.mServerId == serverId && entry.mServerRevisionId < serverRevisionId) {
@@ -787,10 +862,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public class IdCacheEntry {
         private long mId;
-        private int mServerId;
-        private int mServerRevisionId;
+        private long mServerId;
+        private long mServerRevisionId;
 
-        public IdCacheEntry(long id, int serverId, int serverRevisionId) {
+        public IdCacheEntry(long id, long serverId, long serverRevisionId) {
             mId = id;
             mServerId = serverId;
             mServerRevisionId = serverRevisionId;
@@ -800,11 +875,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return mId;
         }
 
-        public int getServerId() {
+        public long getServerId() {
             return mServerId;
         }
 
-        public int getServerRevisionId() {
+        public long getServerRevisionId() {
             return mServerRevisionId;
         }
     }

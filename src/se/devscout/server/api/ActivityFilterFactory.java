@@ -14,7 +14,7 @@ public interface ActivityFilterFactory {
 
     OrFilter createOrFilter(ActivityFilter... filters);
 
-    CategoryFilter createCategoryFilter(String group, String name, int serverId);
+    CategoryFilter createCategoryFilter(String group, String name, long serverId);
 
     TextFilter createTextFilter(String condition);
 

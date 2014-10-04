@@ -16,7 +16,9 @@ public class ReferenceCursor extends BaseCursorWrapper {
     public LocalReference getReference() throws URISyntaxException {
         return new LocalReference(
                 getId(),
-                ReferenceType.READ_MORE/*refCursor.getString(refCursor.getColumnIndex("mime_type"))*/,
+                getInt(getColumnIndex(Database.reference.server_id)),
+                getInt(getColumnIndex(Database.reference.server_revision_id)),
+                ReferenceType.READ_MORE,
                 new URI(getString(getColumnIndex(Database.reference.uri))));
 
     }

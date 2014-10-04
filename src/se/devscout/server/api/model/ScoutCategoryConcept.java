@@ -25,8 +25,18 @@ public enum ScoutCategoryConcept implements CategoryProperties {
     }
 
     @Override
-    public int getServerId() {
+    public long getServerId() {
         return -1;
+    }
+
+    @Override
+    public long getServerRevisionId() {
+        return -1;
+    }
+
+    @Override
+    public boolean isPublishable() {
+        return false;
     }
 
     @Override

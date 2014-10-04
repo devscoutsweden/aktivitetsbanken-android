@@ -8,8 +8,8 @@ public class CategoryPropertiesPojo extends ServerObjectPropertiesPojo implement
     private String mName;
     private String mGroup;
 
-    public CategoryPropertiesPojo(String group, String name, int serverId, boolean publishable) {
-        super(publishable, serverId);
+    public CategoryPropertiesPojo(String group, String name, long serverId, long serverRevisionId, boolean publishable) {
+        super(publishable, serverId, serverRevisionId);
         mGroup = group;
         mName = name;
     }

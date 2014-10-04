@@ -9,13 +9,17 @@ public class LocalCategory extends CategoryPropertiesPojo implements Category, S
     public static long debugCounter;
     private Long mId;
 
-    public LocalCategory(String group, String name, Long id, int serverId) {
-        super(group, name, serverId, false);
+    public LocalCategory(String group, String name, Long id, long serverId, long serverRevisionId) {
+        super(group, name, serverId, serverRevisionId, false);
         mId = id;
     }
 
     @Override
     public Long getId() {
         return mId;
+    }
+
+    public void setId(long id) {
+        mId = id;
     }
 }

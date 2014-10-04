@@ -31,7 +31,11 @@ public class CategoryConceptListView extends QuickSearchListView<CategoryConcept
 
     @Override
     protected ActivityFilter createFilter(CategoryConcept option) {
-        return new SimpleCategoryFilter(option.getScoutCategoryConcept());
+        return new SimpleCategoryFilter(
+                option.getScoutCategoryConcept().getGroup(),
+                option.getScoutCategoryConcept().getName(),
+                option.getScoutCategoryConcept().getServerId()
+        );
     }
 
     @Override

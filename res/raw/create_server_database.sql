@@ -1,9 +1,7 @@
 CREATE TABLE IF NOT EXISTS "user" ( "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
      "server_id" INTEGER,
-     "email" TEXT,
-     "email_verified" INTEGER,
-     "password_hash" NONE,
-     "password_algorithm" TEXT,
+     "server_revision_id" INTEGER,
+     "api_key" TEXT,
      "display_name" TEXT);
 
 CREATE UNIQUE INDEX "user_server_id_UNIQUE" ON "user" ("server_id" ASC);
@@ -12,7 +10,7 @@ CREATE TABLE IF NOT EXISTS "activity" ( "id" INTEGER NOT NULL PRIMARY KEY AUTOIN
      "server_id" INTEGER,
      "server_revision_id" INTEGER,
      "is_publishable" INTEGER NOT NULL,
-     "owner_id" INTEGER NOT NULL,
+     "owner_id" INTEGER,
      "name" TEXT NOT NULL,
      "datetime_published" NUMERIC,
      "datetime_created" NUMERIC NOT NULL,
@@ -42,7 +40,7 @@ CREATE TABLE IF NOT EXISTS "comment" ( "id" INTEGER NOT NULL PRIMARY KEY AUTOINC
      "server_revision_id" INTEGER,
      "is_publishable" INTEGER NOT NULL,
      "activity_id" INTEGER NOT NULL,
-     "owner_id" INTEGER NOT NULL,
+     "owner_id" INTEGER,
      "text" TEXT,
      "datetime_created" NUMERIC,
      CONSTRAINT "fk_comment_activity1" FOREIGN KEY ("activity_id") REFERENCES "activity" ("id") ON DELETE CASCADE ON UPDATE RESTRICT,
@@ -56,10 +54,11 @@ CREATE UNIQUE INDEX "comment_server_id_UNIQUE" ON "comment" ("server_id" ASC);
 
 CREATE TABLE IF NOT EXISTS "category" ( "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
      "server_id" INTEGER,
+     "server_revision_id" INTEGER,
      "uuid" NONE NOT NULL,
      "group_name" TEXT,
      "name" TEXT NOT NULL,
-     "owner_id" INTEGER NOT NULL,
+     "owner_id" INTEGER,
      "status" TEXT NOT NULL,
      CONSTRAINT "fk_category_user1" FOREIGN KEY ("owner_id") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE RESTRICT);
 
@@ -74,6 +73,7 @@ CREATE UNIQUE INDEX "category_server_id_UNIQUE" ON "category" ("server_id" ASC);
 
 CREATE TABLE IF NOT EXISTS "media" ( "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
      "server_id" INTEGER,
+     "server_revision_id" INTEGER,
      "is_publishable" INTEGER NOT NULL,
      "uri" TEXT,
      "mime_type" TEXT NOT NULL);
@@ -82,6 +82,7 @@ CREATE UNIQUE INDEX "media_server_id_UNIQUE" ON "media" ("server_id" ASC);
 
 CREATE TABLE IF NOT EXISTS "reference" ( "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
      "server_id" INTEGER,
+     "server_revision_id" INTEGER,
      "uri" TEXT NOT NULL,
      "type" TEXT NOT NULL);
 

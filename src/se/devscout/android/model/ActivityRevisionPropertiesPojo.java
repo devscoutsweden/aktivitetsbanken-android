@@ -159,7 +159,7 @@ public class ActivityRevisionPropertiesPojo implements ActivityRevisionPropertie
     }
 
     @Override
-    public User getAuthor() {
+    public UserKey getAuthor() {
         return mAuthor;
     }
 
