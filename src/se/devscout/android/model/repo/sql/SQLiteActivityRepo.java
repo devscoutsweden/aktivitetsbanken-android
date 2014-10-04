@@ -2,11 +2,7 @@ package se.devscout.android.model.repo.sql;
 
 import android.content.Context;
 import android.util.Log;
-import se.devscout.android.model.ObjectIdentifierBean;
-import se.devscout.android.model.repo.ActivityBean;
-import se.devscout.android.model.repo.CategoryBean;
-import se.devscout.android.model.repo.ReferenceBean;
-import se.devscout.android.model.repo.SearchHistoryBean;
+import se.devscout.android.model.*;
 import se.devscout.android.model.repo.remote.UnauthorizedException;
 import se.devscout.android.util.SimpleFilter;
 import se.devscout.server.api.ActivityBank;

@@ -1,9 +1,9 @@
 package se.devscout.android.model.repo.sql;
 
 import android.database.Cursor;
+import se.devscout.android.model.ActivityBean;
 import se.devscout.android.model.IntegerRange;
 import se.devscout.android.model.ObjectIdentifierBean;
-import se.devscout.android.model.repo.ActivityBean;
 
 import java.util.Date;
 

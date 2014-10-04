@@ -1,7 +1,7 @@
 package se.devscout.android.model.repo.sql;
 
 import android.database.Cursor;
-import se.devscout.android.model.repo.UserBean;
+import se.devscout.android.model.UserBean;
 
 public class UserCursor extends BaseCursorWrapper {
     public UserCursor(Cursor cursor) {

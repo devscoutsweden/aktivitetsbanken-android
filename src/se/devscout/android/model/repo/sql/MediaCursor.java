@@ -1,7 +1,7 @@
 package se.devscout.android.model.repo.sql;
 
 import android.database.Cursor;
-import se.devscout.android.model.repo.MediaBean;
+import se.devscout.android.model.MediaBean;
 
 import java.net.URI;
 import java.net.URISyntaxException;

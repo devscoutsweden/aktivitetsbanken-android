@@ -1,7 +1,7 @@
 package se.devscout.android.model.repo.sql;
 
 import android.database.Cursor;
-import se.devscout.android.model.repo.CategoryBean;
+import se.devscout.android.model.CategoryBean;
 
 public class CategoryCursor extends BaseCursorWrapper {
     public CategoryCursor(Cursor cursor) {

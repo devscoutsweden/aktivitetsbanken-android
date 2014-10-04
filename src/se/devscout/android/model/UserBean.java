@@ -1,6 +1,5 @@
-package se.devscout.android.model.repo;
+package se.devscout.android.model;
 
-import se.devscout.android.model.UserPropertiesBean;
 import se.devscout.server.api.model.User;
 
 public class UserBean extends UserPropertiesBean implements User {

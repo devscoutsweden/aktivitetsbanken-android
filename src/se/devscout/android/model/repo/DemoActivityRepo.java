@@ -1,6 +1,7 @@
 package se.devscout.android.model.repo;
 
 import android.content.Context;
+import se.devscout.android.model.ActivityBean;
 import se.devscout.android.util.PrimitiveActivityFilterFactory;
 import se.devscout.android.util.SimpleFilter;
 import se.devscout.server.api.ActivityBank;

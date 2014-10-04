@@ -1,7 +1,6 @@
-package se.devscout.android.model.repo;
+package se.devscout.android.model;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
-import se.devscout.android.model.ActivityPropertiesBean;
 import se.devscout.server.api.model.Activity;
 import se.devscout.server.api.model.UserKey;
 

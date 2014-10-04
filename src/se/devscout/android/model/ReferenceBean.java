@@ -1,6 +1,5 @@
-package se.devscout.android.model.repo;
+package se.devscout.android.model;
 
-import se.devscout.android.model.ReferencePropertiesBean;
 import se.devscout.server.api.model.Reference;
 import se.devscout.server.api.model.ReferenceType;
 

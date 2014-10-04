@@ -2,7 +2,7 @@ package se.devscout.android.model.repo.sql;
 
 import android.database.Cursor;
 import se.devscout.android.model.ObjectIdentifierBean;
-import se.devscout.android.model.repo.SearchHistoryBean;
+import se.devscout.android.model.SearchHistoryBean;
 import se.devscout.server.api.model.UserKey;
 
 import java.io.ByteArrayInputStream;

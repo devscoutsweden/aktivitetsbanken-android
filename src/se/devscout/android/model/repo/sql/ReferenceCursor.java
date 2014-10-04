@@ -1,7 +1,7 @@
 package se.devscout.android.model.repo.sql;
 
 import android.database.Cursor;
-import se.devscout.android.model.repo.ReferenceBean;
+import se.devscout.android.model.ReferenceBean;
 import se.devscout.server.api.model.ReferenceType;
 
 import java.net.URI;

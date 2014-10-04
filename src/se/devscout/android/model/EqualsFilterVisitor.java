@@ -1,4 +1,4 @@
-package se.devscout.android.model.repo;
+package se.devscout.android.model;
 
 import se.devscout.android.model.repo.sql.SQLRandomActivitiesFilter;
 import se.devscout.server.api.ActivityFilter;
