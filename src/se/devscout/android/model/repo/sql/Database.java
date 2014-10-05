@@ -7,13 +7,9 @@ public class Database {
 
         final static String id = "id";
         final static String server_id = "server_id";
-        final static String email = "email";
-        final static String email_verified = "email_verified";
-        final static String password_hash = "password_hash";
-        final static String password_algorithm = "password_algorithm";
+        final static String server_revision_id = "server_revision_id";
+        final static String api_key = "api_key";
         final static String display_name = "display_name";
-        final static String server_revision_id="server_revision_id";
-//        final static String is_local_only = "is_local_only";
     }
 
     public static class category {

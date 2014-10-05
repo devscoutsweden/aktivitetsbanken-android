@@ -13,12 +13,25 @@ public class ObjectIdentifierBean implements Serializable, ActivityKey, Category
         mId = id;
     }
 
-    public ObjectIdentifierBean(int id) {
-        mId = Long.valueOf(id);
-    }
-
     @Override
     public Long getId() {
         return mId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ObjectIdentifierBean)) return false;
+
+        ObjectIdentifierBean that = (ObjectIdentifierBean) o;
+
+        if (!mId.equals(that.mId)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return mId.hashCode();
     }
 }

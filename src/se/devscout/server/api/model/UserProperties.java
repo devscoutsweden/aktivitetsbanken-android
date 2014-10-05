@@ -5,13 +5,13 @@ public interface UserProperties extends ServerObjectProperties {
 
     String getDisplayName();
 
-    String getEmailAddress();
+    String getAPIKey();
 
-    boolean isEmailAddressVerified();
+//    boolean isEmailAddressVerified();
 
-    byte[] getPasswordHash();
+//    byte[] getPasswordHash();
 
-    HashAlgorithm getPasswordHashAlgorithm();
+//    HashAlgorithm getPasswordHashAlgorithm();
 
-    String getPasswordHashAlgorithmParameter();
+//    String getPasswordHashAlgorithmParameter();
 }

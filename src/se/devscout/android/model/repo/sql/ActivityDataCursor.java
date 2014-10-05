@@ -14,7 +14,7 @@ public class ActivityDataCursor extends BaseCursorWrapper {
 
     public ActivityBean getActivityData() {
         ActivityBean revision = new ActivityBean(
-                isNull(getColumnIndex(Database.activity.owner_id)) ? null : new ObjectIdentifierBean(getInt(getColumnIndex(Database.activity.owner_id))),
+                isNull(getColumnIndex(Database.activity.owner_id)) ? null : new ObjectIdentifierBean(getLong(getColumnIndex(Database.activity.owner_id))),
                 getId(),
                 getInt(getColumnIndex(Database.activity.server_id)),
                 getInt(getColumnIndex(Database.activity.server_revision_id)),
