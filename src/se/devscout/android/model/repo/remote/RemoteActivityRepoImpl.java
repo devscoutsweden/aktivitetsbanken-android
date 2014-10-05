@@ -1,8 +1,7 @@
 package se.devscout.android.model.repo.remote;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import android.os.AsyncTask;
 import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,6 +13,7 @@ import se.devscout.android.model.IntegerRange;
 import se.devscout.android.model.ObjectIdentifierBean;
 import se.devscout.android.model.repo.sql.SQLiteActivityRepo;
 import se.devscout.android.util.InstallationProperties;
+import se.devscout.android.util.PreferencesUtil;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.URIBuilderActivityFilterVisitor;
 import se.devscout.server.api.model.*;
@@ -26,6 +26,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -35,10 +36,33 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     private static final String HTTP_HEADER_AUTHORIZATION = "Authorization";
     private static final String HTTP_HEADER_CONTENT_TYPE = "Content-Type";
     private static final String HTTP_HEADER_X_ANDROID_APP_INSTALLATION_ID = "X-AndroidAppInstallationId";
-    private static final String PREFERENCE_API_KEY = "api_key";
+    //    private static final String PREFERENCE_API_KEY = "api_key";
     private static final long UNKNOWN_SERVER_REVISION_ID = 0L;
     private static RemoteActivityRepoImpl ourInstance;
     private final Context mContext;
+
+/*
+    private BackgroundTasksHandlerThread mBackgroundTasksHandlerThread;
+
+    public BackgroundTasksHandlerThread getBackgroundTasksHandlerThread() {
+        if (mBackgroundTasksHandlerThread == null) {
+            mBackgroundTasksHandlerThread = new BackgroundTasksHandlerThread(new Handler(), mContext);
+
+            mBackgroundTasksHandlerThread.setListener(new BackgroundTasksHandlerThread.Listener() {
+                @Override
+                public void onDone(Object token, Object response) {
+                    Log.i(RemoteActivityRepoImpl.class.getName(), "Task completed");
+                }
+            });
+
+            // TODO: It would be nice the .quit() was eventually called. Some way. Perhaps the thread "quits itself" when the queue is empty!?
+            mBackgroundTasksHandlerThread.start();
+            mBackgroundTasksHandlerThread.getLooper();
+            Log.i(RemoteActivityRepoImpl.class.getName(), "Started background task thread");
+        }
+        return mBackgroundTasksHandlerThread;
+    }
+*/
 
     public static RemoteActivityRepoImpl getInstance(Context ctx) {
         if (ourInstance == null) {
@@ -65,9 +89,9 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     }
 
     @Override
-    public SearchHistory createSearchHistory(HistoryProperties<SearchHistoryData> properties) {
+    public SearchHistory createSearchHistory(HistoryProperties<SearchHistoryData> properties, UserKey userKey) {
         //TODO: this method probably does not have to be overloaded, as long as search history should only be stored server-side as well. Low priority.
-        return super.createSearchHistory(properties);
+        return super.createSearchHistory(properties, userKey);
     }
 
     @Override
@@ -95,8 +119,9 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
             JSONObject body = new JSONObject();
             body.put("display_name", "android-app-" + InstallationProperties.getInstance(mContext).getId());
             JSONObject response = getJSONObject(uri, body, HttpMethod.POST);
-            String apiKey = response.getString(PREFERENCE_API_KEY);
-            return PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString(PREFERENCE_API_KEY, apiKey).commit();
+            String apiKey = response.getString("api_key");
+            setAnonymousUserAPIKey(apiKey, PreferencesUtil.getInstance(mContext).getCurrentUser());
+            return true;
         } catch (JSONException e) {
             Log.e(RemoteActivityRepoImpl.class.getName(), "Could not create anonymous API user because of JSON problem.", e);
             return false;
@@ -105,6 +130,9 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
             return false;
         } catch (UnauthorizedException e) {
             Log.e(RemoteActivityRepoImpl.class.getName(), "Could not create anonymous API user because of authorization problem.", e);
+            return false;
+        } catch (UnhandledHttpResponseCodeException e) {
+            Log.e(RemoteActivityRepoImpl.class.getName(), "Could not create anonymous API user because of an unhandled problem.", e);
             return false;
         }
     }
@@ -159,20 +187,51 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     }
 
     @Override
-    public List<? extends SearchHistory> readSearchHistory(int limit) {
-        return super.readSearchHistory(limit);
+    public List<? extends SearchHistory> readSearchHistory(int limit, UserKey userKey) {
+        return super.readSearchHistory(limit, userKey);
     }
 
     @Override
     public void setFavourite(ActivityKey activityKey, UserKey userKey) {
-        //TODO: implement/overload/fix this method. High priority.
         super.setFavourite(activityKey, userKey);
+        createSendSetFavouritesTask().execute();
     }
 
     @Override
     public void unsetFavourite(ActivityKey activityKey, UserKey userKey) {
-        //TODO: implement/overload/fix this method. High priority.
         super.unsetFavourite(activityKey, userKey);
+        createSendSetFavouritesTask().execute();
+    }
+
+    private AsyncTask<Void, Void, Void> createSendSetFavouritesTask() {
+        return new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                try {
+                    sendSetFavouritesRequest();
+                } catch (IOException e) {
+                    Log.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server", e);
+                } catch (UnauthorizedException e) {
+                    Log.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server", e);
+                } catch (UnhandledHttpResponseCodeException e) {
+                    Log.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server", e);
+                }
+                return null;
+            }
+        };
+    }
+
+    public void sendSetFavouritesRequest() throws IOException, UnauthorizedException, UnhandledHttpResponseCodeException {
+        List<ActivityBean> favourites = super.findActivity(getFilterFactory().createIsUserFavouriteFilter(PreferencesUtil.getInstance(mContext).getCurrentUser()));
+//        Set<ActivityKey> favourites = mDatabaseHelper.getFavourites(PreferencesUtil.getInstance(mContext).getCurrentUser());
+        JSONArray jsonArray = new JSONArray();
+        for (ActivityBean key : favourites) {
+            jsonArray.put(key.getServerId());
+        }
+        String uri = "http://" + HOST + "/api/v1/favourites";
+
+        readUrl(uri, new JSONObject(Collections.singletonMap("id", jsonArray)).toString(), HttpMethod.PUT);
     }
 
     @Override
@@ -201,6 +260,9 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
             return super.findActivity(condition);
         } catch (JSONException e) {
             Log.e(RemoteActivityRepoImpl.class.getName(), "Error parsing JSON response", e);
+            return super.findActivity(condition);
+        } catch (UnhandledHttpResponseCodeException e) {
+            Log.e(RemoteActivityRepoImpl.class.getName(), "Cannot handle server response.", e);
             return super.findActivity(condition);
         }
     }
@@ -245,21 +307,26 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         } catch (JSONException e) {
             Log.e(RemoteActivityRepoImpl.class.getName(), "Error parsing JSON response", e);
             return super.readCategories();
+        } catch (UnhandledHttpResponseCodeException e) {
+            Log.e(RemoteActivityRepoImpl.class.getName(), "Cannot handle server response.", e);
+            return super.readCategories();
         }
     }
 
-    private JSONArray getJSONArray(String uri, JSONObject body) throws IOException, JSONException, UnauthorizedException {
-        String s = readUrlAsString(uri, body, HttpMethod.GET);
+    private JSONArray getJSONArray(String uri, JSONObject body) throws IOException, JSONException, UnauthorizedException, UnhandledHttpResponseCodeException {
+        String s = readUrlAsString(uri, body != null ? body.toString() : null, HttpMethod.GET);
         Log.i(RemoteActivityRepoImpl.class.getName(), "Server response: " + s);
         return (JSONArray) new JSONTokener(s).nextValue();
     }
 
-    private JSONObject getJSONObject(String uri, JSONObject body) throws IOException, JSONException, UnauthorizedException {
+/*
+    private JSONObject getJSONObject(String uri, JSONObject body) throws IOException, JSONException, UnauthorizedException, UnhandledHttpResponseCodeException {
         return getJSONObject(uri, body, HttpMethod.GET);
     }
+*/
 
-    private JSONObject getJSONObject(String uri, JSONObject body, HttpMethod method) throws IOException, JSONException, UnauthorizedException {
-        String s = readUrlAsString(uri, body, method);
+    private JSONObject getJSONObject(String uri, JSONObject body, HttpMethod method) throws IOException, JSONException, UnauthorizedException, UnhandledHttpResponseCodeException {
+        String s = readUrlAsString(uri, body != null ? body.toString() : null, method);
         Log.i(RemoteActivityRepoImpl.class.getName(), "Server response: " + s);
         return (JSONObject) new JSONTokener(s).nextValue();
     }
@@ -322,9 +389,9 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         try {
             date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'").parse(obj.getString(fieldName));
         } catch (JSONException e) {
-            Log.e(RemoteActivityRepoImpl.class.getName(), "Could not parse " + fieldName + ". Will use current date instead.", e);
+            Log.e(RemoteActivityRepoImpl.class.getName(), "Could not parse " + fieldName + ". Will use current date instead. " + e.getMessage());
         } catch (ParseException e) {
-            Log.e(RemoteActivityRepoImpl.class.getName(), "Could not parse " + fieldName + ". Will use current date instead.", e);
+            Log.e(RemoteActivityRepoImpl.class.getName(), "Could not parse " + fieldName + ". Will use current date instead. " + e.getMessage());
         }
         return date;
     }
@@ -376,11 +443,11 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         return values;
     }
 
-    private String readUrlAsString(String urlSpec, JSONObject body, HttpMethod method) throws IOException, UnauthorizedException {
+    private String readUrlAsString(String urlSpec, String body, HttpMethod method) throws IOException, UnauthorizedException, UnhandledHttpResponseCodeException {
         return new String(readUrl(urlSpec, body, method));
     }
 
-    private byte[] readUrl(String urlSpec, JSONObject body, HttpMethod method) throws IOException, UnauthorizedException {
+    private byte[] readUrl(String urlSpec, String body, HttpMethod method) throws IOException, UnauthorizedException, UnhandledHttpResponseCodeException {
         URL url = new URL(urlSpec);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         try {
@@ -389,16 +456,16 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
             String installationId = InstallationProperties.getInstance(mContext).getId().toString();
             httpURLConnection.addRequestProperty(HTTP_HEADER_X_ANDROID_APP_INSTALLATION_ID, installationId);
 
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-            if (preferences.contains(PREFERENCE_API_KEY)) {
-                httpURLConnection.addRequestProperty(HTTP_HEADER_AUTHORIZATION, "Token token=\"" + preferences.getString(PREFERENCE_API_KEY, "") + "\"");
+            String apiKey = PreferencesUtil.getInstance(mContext).getCurrentUser() != null ? mDatabaseHelper.readUser(PreferencesUtil.getInstance(mContext).getCurrentUser()).getAPIKey() : null;
+            if (apiKey != null) {
+                httpURLConnection.addRequestProperty(HTTP_HEADER_AUTHORIZATION, "Token token=\"" + apiKey + "\"");
             }
 
             if (body != null) {
                 httpURLConnection.addRequestProperty(HTTP_HEADER_CONTENT_TYPE, "application/json; charset=" + DEFAULT_REQUEST_BODY_ENCODING);
 
                 // Writing to output string will send request
-                httpURLConnection.getOutputStream().write(body.toString().getBytes(DEFAULT_REQUEST_BODY_ENCODING));
+                httpURLConnection.getOutputStream().write(body.getBytes(DEFAULT_REQUEST_BODY_ENCODING));
             }
 
             // Asking about response code will send request, if not already sent
@@ -414,12 +481,13 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
                     }
                     out.close();
                     return out.toByteArray();
+                case HttpURLConnection.HTTP_NO_CONTENT:
+                    return null;
                 case HttpURLConnection.HTTP_UNAUTHORIZED:
                     throw new UnauthorizedException();
                 default:
-                    return null;
+                    throw new UnhandledHttpResponseCodeException(httpURLConnection.getResponseCode());
             }
-
         } finally {
             httpURLConnection.disconnect();
         }

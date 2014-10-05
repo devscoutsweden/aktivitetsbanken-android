@@ -5,11 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.*;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 import se.devscout.android.R;
 import se.devscout.android.model.*;
 import se.devscout.android.model.repo.TestDataUtil;
+import se.devscout.android.util.PreferencesUtil;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.activityfilter.AndFilter;
 import se.devscout.server.api.activityfilter.OrFilter;
@@ -90,7 +92,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             executeSQLScript(db, R.raw.create_server_database);
 //            executeSQLScript(db, R.raw.convert_server_database);
 
-            createAnonymousUser(db);
+            String apiKey = PreferenceManager.getDefaultSharedPreferences(mContext).getString("api_key", null);
+            long anonymousUserId = createUser(new UserPropertiesBean("Anonymous", apiKey, 0L, 0L, false), db);
+            PreferencesUtil.getInstance(mContext).setCurrentUser(new ObjectIdentifierBean(anonymousUserId));
 
             db.setTransactionSuccessful();
         } catch (Throwable e) {
@@ -99,17 +103,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.endTransaction();
         }
         logInfo("Done initialising database.");
-    }
-
-    public int getAnonymousUserId() {
-        return USER_ID_ANONYMOUS;
-    }
-
-    private void createAnonymousUser(SQLiteDatabase db) {
-        ContentValues values = new ContentValues();
-        values.put(Database.user.id, USER_ID_ANONYMOUS);
-        values.put(Database.user.display_name, "Anonymous");
-        db.insert(Database.user.T, null, values);
     }
 
     private void executeSQLScript(SQLiteDatabase db, int sqlScriptResId) throws IOException {
@@ -200,7 +193,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         getDb().beginTransaction();
         try {
-            long userId = createUser(new UserPropertiesBean("Anonym", "anonymous@scout.se", 0L, 0L, false));
+            long userId = createUser(new UserPropertiesBean("Anonym", null, 0L, 0L, false));
             if (addTestData) {
                 List<ActivityBean> testActivities = TestDataUtil.readXMLTestData(mContext);
                 for (Activity testActivity : testActivities) {
@@ -216,15 +209,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private long createUser(UserProperties properties) {
+        return createUser(properties, getDb());
+    }
+
+    private long createUser(UserProperties properties, SQLiteDatabase database) {
         ContentValues userValues = new ContentValues();
         userValues.put(Database.user.server_id, properties.getServerId());
         userValues.put(Database.user.server_revision_id, properties.getServerRevisionId());
         userValues.put(Database.user.display_name, properties.getDisplayName());
-        userValues.put(Database.user.email, properties.getEmailAddress());
+        userValues.put(Database.user.api_key, properties.getAPIKey());
 //        userValues.put(Database.user.email_verified, properties.isEmailAddressVerified());
 //        userValues.put(Database.user.password_algorithm, properties.getPasswordHashAlgorithm());
 //        userValues.put(Database.user.password_hash, "Testdata");
-        return getDb().insertOrThrow(Database.user.T, null, userValues);
+        return database.insertOrThrow(Database.user.T, null, userValues);
     }
 
     public long createActivity(ActivityProperties properties) {
@@ -661,11 +658,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void createSearchHistoryItem(HistoryProperties<SearchHistoryData> properties) throws IOException {
+    public void createSearchHistoryItem(HistoryProperties<SearchHistoryData> properties, UserKey userKey) throws IOException {
 
         ContentValues values = new ContentValues();
         values.put(Database.history.data, serializeObject(properties.getData()));
-        values.put(Database.history.user_id, getAnonymousUserId());
+        values.put(Database.history.user_id, userKey.getId());
         values.put(Database.history.type, String.valueOf(HistoryType.SEARCH.getDatabaseValue()));
 
         getDb().insert(Database.history.T, null, values);
@@ -720,6 +717,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return LocalObjectRefreshness.LOCAL_IS_MISSING;
         }
 
+    }
+
+    public Set<ActivityKey> getFavourites(UserKey userKey) {
+        Set<ActivityKey> result = new HashSet<ActivityKey>();
+        Cursor cursor = getDb().query(Database.favourite_activity.T,
+                new String[]{Database.favourite_activity.activity_id}, "" +
+                Database.favourite_activity.user_id + " = " + userKey.getId(),
+                null,
+                null,
+                null,
+                null);
+        while (cursor.moveToNext()) {
+            result.add(new ObjectIdentifierBean(cursor.getLong(cursor.getColumnIndex(Database.favourite_activity.activity_id))));
+        }
+        return result;
+    }
+
+    public void updateUserAPIKey(String apiKey, UserKey userKey) {
+        ContentValues values = new ContentValues();
+        values.put(Database.user.api_key, apiKey);
+        getDb().update(Database.user.T, values, Database.user.id + "=" + userKey.getId(), null);
+    }
+
+    public User readUser(UserKey key) {
+        if (!mCacheUser.containsKey(key.getId())) {
+            readUsers();
+        }
+        return mCacheUser.get(key.getId());
     }
 
     public class ActivityIdCache extends ServerObjectIdCache {
