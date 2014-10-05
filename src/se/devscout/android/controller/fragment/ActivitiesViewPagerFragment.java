@@ -9,6 +9,7 @@ import android.view.*;
 import se.devscout.android.R;
 import se.devscout.android.model.ObjectIdentifierBean;
 import se.devscout.android.util.ActivityBankFactory;
+import se.devscout.android.util.PreferencesUtil;
 import se.devscout.android.view.ViewPagerIndicator;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.model.Activity;
@@ -100,7 +101,7 @@ public class ActivitiesViewPagerFragment extends ActivityBankFragment implements
     private void initFavouriteMenuItem(Menu menu) {
         MenuItem item = menu.findItem(R.id.activityMenuFavourite);
         Activity activity = getSelectedActivity();
-        boolean favourite = ActivityBankFactory.getInstance(getActivity()).isFavourite(activity, null);
+        boolean favourite = ActivityBankFactory.getInstance(getActivity()).isFavourite(activity, PreferencesUtil.getInstance(getActivity()).getCurrentUser());
         item.setIcon(favourite ? R.drawable.ic_action_important : R.drawable.ic_action_not_important);
     }
 
@@ -112,11 +113,11 @@ public class ActivitiesViewPagerFragment extends ActivityBankFragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.activityMenuFavourite) {
             ActivityBank activityBank = ActivityBankFactory.getInstance(getActivity());
-            boolean favourite = activityBank.isFavourite(getSelectedActivity(), null);
+            boolean favourite = activityBank.isFavourite(getSelectedActivity(), PreferencesUtil.getInstance(getActivity()).getCurrentUser());
             if (favourite) {
-                activityBank.unsetFavourite(getSelectedActivity(), null);
+                activityBank.unsetFavourite(getSelectedActivity(), PreferencesUtil.getInstance(getActivity()).getCurrentUser());
             } else {
-                activityBank.setFavourite(getSelectedActivity(), null);
+                activityBank.setFavourite(getSelectedActivity(), PreferencesUtil.getInstance(getActivity()).getCurrentUser());
             }
             item.setIcon(!favourite ? R.drawable.ic_action_important : R.drawable.ic_action_not_important);
         }

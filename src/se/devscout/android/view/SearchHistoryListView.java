@@ -5,6 +5,7 @@ import se.devscout.android.R;
 import se.devscout.android.controller.fragment.SubtitleActivityFilterVisitor;
 import se.devscout.android.controller.fragment.TitleActivityFilterVisitor;
 import se.devscout.android.util.ActivityBankFactory;
+import se.devscout.android.util.PreferencesUtil;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.model.SearchHistory;
@@ -52,7 +53,7 @@ public class SearchHistoryListView extends QuickSearchListView<SearchHistoryList
         @Override
         protected List<SearchHistoryListItem> doSearch() {
             ActivityBank activityBank = ActivityBankFactory.getInstance(getContext());
-            List<? extends SearchHistory> searchHistoryList = activityBank.readSearchHistory(0);
+            List<? extends SearchHistory> searchHistoryList = activityBank.readSearchHistory(0, PreferencesUtil.getInstance(getContext()).getCurrentUser());
             List<SearchHistoryListItem> result = new ArrayList<SearchHistoryListItem>();
             for (SearchHistory searchHistory : searchHistoryList) {
                 result.add(new SearchHistoryListItem(searchHistory));

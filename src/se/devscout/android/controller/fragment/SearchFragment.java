@@ -11,6 +11,7 @@ import se.devscout.android.AgeGroup;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.SearchResultActivity;
 import se.devscout.android.model.IntegerRange;
+import se.devscout.android.util.PreferencesUtil;
 import se.devscout.server.api.ActivityFilterFactory;
 import se.devscout.server.api.ActivityFilterFactoryException;
 
@@ -153,7 +154,7 @@ public class SearchFragment extends ActivityBankFragment {
             private void initFavouritesOnlyFilter(se.devscout.server.api.activityfilter.AndFilter filter, ActivityFilterFactory mFilterFactory) throws ActivityFilterFactoryException {
                 CheckBox searchFavouritesOnlyCheckbox = (CheckBox) searchView.findViewById(R.id.searchFavouritesOnly);
                 if (searchFavouritesOnlyCheckbox.isChecked()) {
-                    filter.getFilters().add(mFilterFactory.createIsUserFavouriteFilter(null));
+                    filter.getFilters().add(mFilterFactory.createIsUserFavouriteFilter(PreferencesUtil.getInstance(getActivity()).getCurrentUser()));
                 }
             }
 

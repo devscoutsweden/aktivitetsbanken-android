@@ -2,7 +2,10 @@ package se.devscout.android.model.repo.sql;
 
 import android.content.Context;
 import android.util.Log;
-import se.devscout.android.model.*;
+import se.devscout.android.model.ActivityBean;
+import se.devscout.android.model.CategoryBean;
+import se.devscout.android.model.ReferenceBean;
+import se.devscout.android.model.SearchHistoryBean;
 import se.devscout.android.model.repo.remote.UnauthorizedException;
 import se.devscout.android.util.SimpleFilter;
 import se.devscout.server.api.ActivityBank;
@@ -18,7 +21,6 @@ import java.util.List;
 
 public class SQLiteActivityRepo implements ActivityBank {
     protected final DatabaseHelper mDatabaseHelper;
-    private UserKey mAnonymousUserKey;
     private List<ActivityBankListener> mListeners = new ArrayList<ActivityBankListener>();
     private static SQLiteActivityRepo ourInstance;
 
@@ -31,7 +33,6 @@ public class SQLiteActivityRepo implements ActivityBank {
 
     public SQLiteActivityRepo(Context ctx) {
         mDatabaseHelper = new DatabaseHelper(ctx);
-        mAnonymousUserKey = new ObjectIdentifierBean(mDatabaseHelper.getAnonymousUserId());
     }
 
     @Override
@@ -75,7 +76,7 @@ public class SQLiteActivityRepo implements ActivityBank {
 
     @Override
     public ActivityFilterFactory getFilterFactory() {
-        return new SQLActivityFilterFactory(new ObjectIdentifierBean(mDatabaseHelper.getAnonymousUserId()));
+        return new SQLActivityFilterFactory();
     }
 
     @Override
@@ -106,31 +107,31 @@ public class SQLiteActivityRepo implements ActivityBank {
 
     @Override
     public void setFavourite(ActivityKey activityKey, UserKey userKey) {
-        mDatabaseHelper.setFavourite(activityKey, mAnonymousUserKey);
+        mDatabaseHelper.setFavourite(activityKey, userKey);
         fireFavouriteChange(activityKey, userKey, true);
     }
 
     @Override
     public void unsetFavourite(ActivityKey activityKey, UserKey userKey) {
-        mDatabaseHelper.unsetFavourite(activityKey, mAnonymousUserKey);
+        mDatabaseHelper.unsetFavourite(activityKey, userKey);
         fireFavouriteChange(activityKey, userKey, false);
     }
 
     @Override
     public boolean isFavourite(ActivityKey activityKey, UserKey userKey) {
-        return mDatabaseHelper.isFavourite(activityKey, mAnonymousUserKey);
+        return mDatabaseHelper.isFavourite(activityKey, userKey);
     }
 
     @Override
-    public List<? extends SearchHistory> readSearchHistory(int limit) {
-        List<SearchHistoryBean> items = mDatabaseHelper.readSearchHistory(mAnonymousUserKey, true, limit, true);
+    public List<? extends SearchHistory> readSearchHistory(int limit, UserKey userKey) {
+        List<SearchHistoryBean> items = mDatabaseHelper.readSearchHistory(userKey, true, limit, true);
         return new ArrayList<SearchHistory>(new LinkedHashSet<SearchHistoryBean>(items));
     }
 
     @Override
-    public SearchHistory createSearchHistory(HistoryProperties<SearchHistoryData> properties) {
+    public SearchHistory createSearchHistory(HistoryProperties<SearchHistoryData> properties, UserKey userKey) {
         try {
-            mDatabaseHelper.createSearchHistoryItem(properties);
+            mDatabaseHelper.createSearchHistoryItem(properties, userKey);
             fireSearchHistoryItemAdded(null);
         } catch (IOException e) {
             Log.e(SQLiteActivityRepo.class.getName(), "Could not create search history entry", e);
@@ -175,4 +176,7 @@ public class SQLiteActivityRepo implements ActivityBank {
         mDatabaseHelper.dropDatabase(addTestData);
     }
 
+    public void setAnonymousUserAPIKey(String apiKey, UserKey userKey) {
+        mDatabaseHelper.updateUserAPIKey(apiKey, userKey);
+    }
 }

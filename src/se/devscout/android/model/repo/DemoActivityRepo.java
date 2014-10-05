@@ -117,12 +117,12 @@ public class DemoActivityRepo implements ActivityBank {
     }
 
     @Override
-    public List<? extends SearchHistory> readSearchHistory(int limit) {
+    public List<? extends SearchHistory> readSearchHistory(int limit, UserKey userKey) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public SearchHistory createSearchHistory(HistoryProperties<SearchHistoryData> properties) {
+    public SearchHistory createSearchHistory(HistoryProperties<SearchHistoryData> properties, UserKey userKey) {
         throw new UnsupportedOperationException();
     }
 

@@ -7,15 +7,13 @@ import se.devscout.server.api.model.Range;
 import se.devscout.server.api.model.UserKey;
 
 class SQLActivityFilterFactory extends PrimitiveActivityFilterFactory {
-    private final UserKey mAnonymousUserKey;
 
-    public SQLActivityFilterFactory(UserKey anonymousUserKey) {
-        mAnonymousUserKey = anonymousUserKey;
+    public SQLActivityFilterFactory() {
     }
 
     @Override
     public IsUserFavouriteFilter createIsUserFavouriteFilter(UserKey userKey) {
-        return new SQLIsUserFavouriteFilter(mAnonymousUserKey);
+        return new SQLIsUserFavouriteFilter(userKey);
     }
 
     @Override

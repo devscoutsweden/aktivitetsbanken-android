@@ -37,9 +37,9 @@ public interface ActivityBank {
 
     boolean isFavourite(ActivityKey activityKey, UserKey userKey);
 
-    List<? extends SearchHistory> readSearchHistory(int limit);
+    List<? extends SearchHistory> readSearchHistory(int limit, UserKey userKey);
 
-    SearchHistory createSearchHistory(HistoryProperties<SearchHistoryData> properties);
+    SearchHistory createSearchHistory(HistoryProperties<SearchHistoryData> properties, UserKey userKey);
 
     void deleteSearchHistory(int itemsToKeep);
 

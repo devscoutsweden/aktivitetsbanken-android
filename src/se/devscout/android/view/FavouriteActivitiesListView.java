@@ -5,6 +5,7 @@ import se.devscout.android.R;
 import se.devscout.android.controller.fragment.ActivityBankFragment;
 import se.devscout.android.controller.fragment.ActivityCoverArrayAdapter;
 import se.devscout.android.util.ActivityBankFactory;
+import se.devscout.android.util.PreferencesUtil;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class FavouriteActivitiesListView extends ActivitiesListView {
         super(context.getActivity(),
                 R.string.favouritesEmptyHeader,
                 R.string.favouritesEmptyMessage,
-                ActivityBankFactory.getInstance(context.getActivity()).getFilterFactory().createIsUserFavouriteFilter(null),
+                ActivityBankFactory.getInstance(context.getActivity()).getFilterFactory().createIsUserFavouriteFilter(PreferencesUtil.getInstance(context.getActivity()).getCurrentUser()),
                 sortOrder,
                 isListContentHeight);
     }

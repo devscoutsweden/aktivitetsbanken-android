@@ -16,6 +16,7 @@ import se.devscout.android.model.SearchHistoryDataBean;
 import se.devscout.android.model.SearchHistoryPropertiesBean;
 import se.devscout.android.model.repo.remote.UnauthorizedException;
 import se.devscout.android.util.ActivityBankFactory;
+import se.devscout.android.util.PreferencesUtil;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.model.Activity;
@@ -213,7 +214,7 @@ public class ActivitiesListView extends NonBlockingSearchView<ActivitiesListItem
             ActivityBank activityBank = ActivityBankFactory.getInstance(getContext());
             List<Activity> activities = (List<Activity>) activityBank.findActivity(mFilter);
             final SearchHistoryDataBean searchHistoryDataBean = new SearchHistoryDataBean(mFilter);
-            activityBank.createSearchHistory(new SearchHistoryPropertiesBean(null, searchHistoryDataBean));
+            activityBank.createSearchHistory(new SearchHistoryPropertiesBean(null, searchHistoryDataBean), PreferencesUtil.getInstance(getContext()).getCurrentUser());
             List<ActivitiesListItem> items = new ArrayList<ActivitiesListItem>();
             for (Activity activity : activities) {
                 items.add(new ActivitiesListItem(activity));
