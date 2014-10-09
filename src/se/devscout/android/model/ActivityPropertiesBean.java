@@ -13,6 +13,7 @@ import java.util.List;
 public class ActivityPropertiesBean extends ServerObjectPropertiesBean implements ActivityProperties, Serializable {
     private List<ActivityRevision> mRevisions = new ArrayList<ActivityRevision>();
     private UserKey mOwner;
+    private Integer mFavouritesCount;
 
     public ActivityPropertiesBean(boolean publishable, long serverId, long serverRevisionId, UserKey owner) {
         super(publishable, serverId, serverRevisionId);
@@ -163,6 +164,11 @@ public class ActivityPropertiesBean extends ServerObjectPropertiesBean implement
     }
 
     @Override
+    public Integer getFavouritesCount() {
+        return mFavouritesCount;
+    }
+
+    @Override
     public String toString() {
         return mName;
     }
@@ -198,5 +204,9 @@ public class ActivityPropertiesBean extends ServerObjectPropertiesBean implement
 
     public void setDateCreated(Date dateCreated) {
         mDateCreated = dateCreated;
+    }
+
+    public void setFavouritesCount(Integer favouritesCount) {
+        mFavouritesCount = favouritesCount;
     }
 }

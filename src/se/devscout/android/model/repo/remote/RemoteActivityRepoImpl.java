@@ -269,7 +269,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
 
     private void processActivityFromServer(ActivityBean act) {
         //TODO: refactor into separate method for updating database.
-        switch (mDatabaseHelper.getLocalActivityFreshness(act, true)) {
+        switch (mDatabaseHelper.getLocalActivityFreshness(act)) {
             case LOCAL_IS_MISSING:
                 // Incoming data is a new (non-cached) activity. Add it to the local database.
                 long id = mDatabaseHelper.createActivity(act);
@@ -277,10 +277,12 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
                 break;
             case LOCAL_IS_OLD:
                 // Incoming data is newer than cached data
+                act.setId(mDatabaseHelper.getLocalIdForActivity(act));
                 mDatabaseHelper.updateActivity(act, act);
                 break;
             case LOCAL_IS_UP_TO_DATE:
                 // No need to do anything
+                act.setId(mDatabaseHelper.getLocalIdForActivity(act));
                 break;
         }
     }
@@ -380,6 +382,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         act.setMaterial(obj.optString("descr_material", null));
         act.setPreparation(obj.optString("descr_prepare", null));
         act.setDateCreated(getDate(obj, "created_at"));
+        act.setFavouritesCount(obj.has("favourite_count") ? obj.getInt("favourite_count") : null);
 //        act.addRevisions(act);
         return act;
     }

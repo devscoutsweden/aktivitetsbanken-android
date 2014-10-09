@@ -71,6 +71,7 @@ public class Database {
         final static String time_min = "time_min";
         final static String time_max = "time_max";
         final static String featured = "featured";
+        final static String favourite_count = "favourite_count";
     }
 
 /*

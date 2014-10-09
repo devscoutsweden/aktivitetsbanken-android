@@ -41,4 +41,6 @@ public interface ActivityProperties extends ServerObjectProperties {
     List<? extends Category> getCategories();
 
     Media getCoverMedia();
+
+    Integer getFavouritesCount();
 }

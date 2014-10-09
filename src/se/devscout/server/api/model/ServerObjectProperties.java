@@ -1,12 +1,6 @@
 package se.devscout.server.api.model;
 
-public interface ServerObjectProperties {
-    /**
-     * the activity's id on the server. This is the value used to refer to the
-     * category when communicating with the server.
-     */
-    long getServerId();
-
+public interface ServerObjectProperties extends ServerObjectIdentifier {
     /**
      * the activity's revision number (id) when the activiy's data was fetched
      * from the server. This number (id) is used to check if the information in

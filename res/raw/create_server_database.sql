@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS "activity" ( "id" INTEGER NOT NULL PRIMARY KEY AUTOIN
      "time_min" INTEGER,
      "time_max" INTEGER,
      "featured" INTEGER,
+     "favourite_count" INTEGER,
      CONSTRAINT "fk_activity_user1" FOREIGN KEY ("owner_id") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE RESTRICT);
 
 CREATE INDEX "fk_activity_user1_idx" ON "activity" ("owner_id" ASC);

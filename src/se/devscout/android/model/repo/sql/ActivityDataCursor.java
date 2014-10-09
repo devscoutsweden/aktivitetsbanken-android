@@ -40,6 +40,7 @@ public class ActivityDataCursor extends BaseCursorWrapper {
         revision.setDescription(getString(getColumnIndex(Database.activity.descr_activity)));
         revision.setSafety(getString(getColumnIndex(Database.activity.descr_safety)));
         revision.addDescriptionNote(getString(getColumnIndex(Database.activity.descr_notes)));
+        revision.setFavouritesCount(isNull(getColumnIndex(Database.activity.favourite_count)) ? null : getInt(getColumnIndex(Database.activity.favourite_count)));
 /*
         revision.setAuthor(null);
         String sourceUri = getString(getColumnIndex(Database.activity_data.source_uri));

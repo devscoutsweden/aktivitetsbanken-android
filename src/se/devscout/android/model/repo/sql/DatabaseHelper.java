@@ -253,6 +253,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return false;
         }
         mActivityIdCache.invalidate();
+        mCacheActivity.remove(key.getId());
 
 
         // Associated categories
@@ -405,6 +406,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             values.put(Database.activity.owner_id, properties.getOwner().getId());
         } else {
             values.putNull(Database.activity.owner_id);
+        }
+        if (properties.getFavouritesCount() != null) {
+            values.put(Database.activity.favourite_count, properties.getFavouritesCount());
+        } else {
+            values.putNull(Database.activity.favourite_count);
         }
 //        values.put(Database.activity_data.source_uri, properties.getSourceURI() != null ? properties.getSourceURI().toString() : null);
         return values;
@@ -677,35 +683,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return baos.toByteArray();
     }
 
-    public LocalObjectRefreshness getLocalActivityFreshness(ActivityBean serverActivity, boolean autoSetId) {
-        DatabaseHelper.IdCacheEntry entry = mActivityIdCache.getEntryByServerId(serverActivity.getServerId());
-        if (entry != null) {
-            if (autoSetId) {
-                serverActivity.setId(entry.getId());
-            }
-            // Activity is cached
-            if (entry.getServerRevisionId() < serverActivity.getServerRevisionId()) {
-                // Incoming data is newer than cached data
-                return LocalObjectRefreshness.LOCAL_IS_OLD;
-            } else {
-                // No need to do anything
-                return LocalObjectRefreshness.LOCAL_IS_UP_TO_DATE;
-            }
-        } else {
-            // Incoming data is a new (non-cached) activity. Add it to the local database.
-            return LocalObjectRefreshness.LOCAL_IS_MISSING;
-        }
-
+    public LocalObjectRefreshness getLocalActivityFreshness(ActivityBean serverActivity) {
+        return getLocalActivityFreshness(serverActivity, mActivityIdCache);
     }
 
-    public LocalObjectRefreshness getLocalCategoryFreshness(CategoryBean serverActivity, boolean autoSetId) {
-        DatabaseHelper.IdCacheEntry entry = mCategoryIdCache.getEntryByServerId(serverActivity.getServerId());
+    public long getLocalIdForActivity(ServerObjectIdentifier serverObjectIdentifier) {
+        return mActivityIdCache.getEntryByServerId(serverObjectIdentifier.getServerId()).mId;
+    }
+
+    private <T extends SynchronizedServerObject> LocalObjectRefreshness getLocalActivityFreshness(T serverActivity, ServerObjectIdCache<T> idCache) {
+        DatabaseHelper.IdCacheEntry entry = idCache.getEntryByServerId(serverActivity.getServerId());
         if (entry != null) {
-            if (autoSetId) {
-                serverActivity.setId(entry.getId());
-            }
             // Activity is cached
-            if (entry.getServerRevisionId() < serverActivity.getServerRevisionId()) {
+            if (!idCache.isAdditionalValuesListIdentical(entry, serverActivity)) {
                 // Incoming data is newer than cached data
                 return LocalObjectRefreshness.LOCAL_IS_OLD;
             } else {
@@ -747,85 +737,111 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return mCacheUser.get(key.getId());
     }
 
-    public class ActivityIdCache extends ServerObjectIdCache {
+    public class ActivityIdCache extends ServerObjectIdCache<ActivityBean> {
         public ActivityIdCache() {
-            super(Database.activity.id, Database.activity.server_id, Database.activity.server_revision_id);
+            super(Database.activity.id, Database.activity.server_id, Database.activity.server_revision_id, Database.activity.favourite_count);
         }
+
+        @Override
+        protected IdCacheEntry createIdCacheEntry(ActivityBean entry) {
+            return new IdCacheEntry(entry.getId(), entry.getServerId(), new long[]{entry.getFavouritesCount() != null ? entry.getFavouritesCount().longValue() : 0});
+        }
+
     }
 
-    public class CategoryIdCache extends ServerObjectIdCache {
+    public class CategoryIdCache extends ServerObjectIdCache<CategoryBean> {
         public CategoryIdCache() {
             super(Database.category.id, Database.category.server_id, Database.category.server_revision_id);
         }
+
+        @Override
+        protected IdCacheEntry createIdCacheEntry(CategoryBean entry) {
+            return new IdCacheEntry(entry.getId(), entry.getServerId(), new long[]{entry.getServerRevisionId()});
+        }
+
     }
 
-    public class ServerObjectIdCache {
+    /**
+     * Keeps track of key object values, such as primary key value in local
+     * database and id value on the server. The purpose is to use this
+     * information to determine if the local information is stale and needs to
+     * be updated based on the most recent information from the server.
+     * <p/>
+     * The cache is also used to map identifiers of objects recieved from the
+     * server, which uses the server's own object identifiers, to the object
+     * identifiers used by within the app's database.
+     * <p/>
+     * When determining is local data is stale, start by comparing the local id
+     * to the server id. If these are equal, the class supports checking an
+     * additional list object properties to see if they might differ. This is
+     * used for versioned objects (where the primary key stays the same between
+     * edits but a revision counter gets incremented) and for objects which can
+     * be "favourited" (where changes to the "favourite counter" affects neither
+     * id nor server id).
+     *
+     * @param <T>
+     */
+    public abstract class ServerObjectIdCache<T extends ObjectIdentifier> {
         private List<IdCacheEntry> mEntries = null;
         private String mIdColumnName;
         private String mServerIdColumnName;
-        private String mServerRevisionIdColumnName;
+        private String[] mCompareColumnNames;
 
-        public ServerObjectIdCache(String idColumnName, String serverIdColumnName, String serverRevisionIdColumnName) {
+        public ServerObjectIdCache(String idColumnName, String serverIdColumnName, String... compareColumnNames) {
             mIdColumnName = idColumnName;
             mServerIdColumnName = serverIdColumnName;
-            mServerRevisionIdColumnName = serverRevisionIdColumnName;
+            mCompareColumnNames = compareColumnNames;
         }
 
         void invalidate() {
             mEntries = null;
         }
 
-        private void update() {
+        private List<IdCacheEntry> getEntries() {
             if (mEntries == null) {
                 mEntries = new ArrayList<IdCacheEntry>();
-                Cursor localIdsQuery = getDb().query(Database.activity.T, new String[]{mIdColumnName, mServerIdColumnName, mServerRevisionIdColumnName}, null, null, null, null, null);
+                String[] columnNames = Arrays.copyOf(mCompareColumnNames, mCompareColumnNames.length + 2);
+                columnNames[columnNames.length - 1] = mIdColumnName;
+                columnNames[columnNames.length - 2] = mServerIdColumnName;
+                Cursor localIdsQuery = getDb().query(Database.activity.T, columnNames, null, null, null, null, null);
                 while (localIdsQuery.moveToNext()) {
-                    IdCacheEntry entry = new IdCacheEntry(localIdsQuery.getInt(localIdsQuery.getColumnIndex(mIdColumnName)), localIdsQuery.getInt(localIdsQuery.getColumnIndex(mServerIdColumnName)), localIdsQuery.getInt(localIdsQuery.getColumnIndex(mServerRevisionIdColumnName)));
+                    long[] values = new long[mCompareColumnNames.length];
+                    for (int i = 0; i < mCompareColumnNames.length; i++) {
+                        String columnName = mCompareColumnNames[i];
+                        values[i] = localIdsQuery.getLong(localIdsQuery.getColumnIndex(columnName));
+                    }
+                    IdCacheEntry entry = new IdCacheEntry(localIdsQuery.getInt(localIdsQuery.getColumnIndex(mIdColumnName)), localIdsQuery.getInt(localIdsQuery.getColumnIndex(mServerIdColumnName)), values);
                     mEntries.add(entry);
                 }
             }
-        }
-
-        boolean containsId(long id) {
-            update();
-            for (IdCacheEntry entry : mEntries) {
-                if (entry.mId == id) {
-                    return true;
-                }
-            }
-            return false;
+            return mEntries;
         }
 
         public IdCacheEntry getEntryByServerId(long id) {
-            update();
-            for (IdCacheEntry entry : mEntries) {
-                if (entry.mServerId == id) {
+            for (IdCacheEntry entry : getEntries()) {
+                if (entry.getServerId() == id) {
                     return entry;
                 }
             }
             return null;
         }
 
-        boolean isCachedServerRevisionLessThan(long serverId, long serverRevisionId) {
-            update();
-            for (IdCacheEntry entry : mEntries) {
-                if (entry.mServerId == serverId && entry.mServerRevisionId < serverRevisionId) {
-                    return true;
-                }
-            }
-            return false;
+        public boolean isAdditionalValuesListIdentical(IdCacheEntry entry, T entry2) {
+            return entry.isAdditionalValuesListIdentical(createIdCacheEntry(entry2));
         }
+
+        protected abstract IdCacheEntry createIdCacheEntry(T entry);
     }
 
     public class IdCacheEntry {
+        private final long[] mCompareValues;
         private long mId;
         private long mServerId;
-        private long mServerRevisionId;
 
-        public IdCacheEntry(long id, long serverId, long serverRevisionId) {
+        public IdCacheEntry(long id, long serverId, long[] values) {
             mId = id;
             mServerId = serverId;
-            mServerRevisionId = serverRevisionId;
+            mCompareValues = values;
         }
 
         public long getId() {
@@ -836,8 +852,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return mServerId;
         }
 
-        public long getServerRevisionId() {
-            return mServerRevisionId;
+        public boolean isAdditionalValuesListIdentical(IdCacheEntry idCacheEntry) {
+            for (int i = 0; i < mCompareValues.length; i++) {
+                long value = mCompareValues[i];
+                if (value != idCacheEntry.mCompareValues[i]) {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

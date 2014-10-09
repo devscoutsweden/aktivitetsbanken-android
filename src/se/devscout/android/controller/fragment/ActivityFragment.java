@@ -68,6 +68,13 @@ public class ActivityFragment extends ActivityBankFragment {
         }
         ((TextView)view.findViewById(R.id.activityFactTime)).setVisibility(isTimeSet ? View.VISIBLE : View.GONE);
 
+        Integer favouritesCount = activityProperties.getFavouritesCount();
+        boolean isFavouritesCountSet = favouritesCount != null;
+        if (isFavouritesCountSet) {
+            ((TextView) view.findViewById(R.id.activityFactFavourites)).setText(context.getString(R.string.activitiesListItemFavouritesCount, favouritesCount));
+        }
+        ((TextView)view.findViewById(R.id.activityFactFavourites)).setVisibility(isFavouritesCountSet ? View.VISIBLE : View.GONE);
+
         String categories = TextUtils.join(", ", activityProperties.getCategories());
         boolean isCategoriesSet = categories.length() > 0;
         if (isCategoriesSet) {
