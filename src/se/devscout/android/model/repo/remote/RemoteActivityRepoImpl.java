@@ -31,7 +31,7 @@ import java.util.Date;
 import java.util.List;
 
 public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
-    static final String HOST = "infinite-forest-4832.herokuapp.com";
+    static final String HOST = "devscout.mikaelsvensson.info:10081";
     private static final String DEFAULT_REQUEST_BODY_ENCODING = "utf-8";
     private static final String HTTP_HEADER_AUTHORIZATION = "Authorization";
     private static final String HTTP_HEADER_CONTENT_TYPE = "Content-Type";
