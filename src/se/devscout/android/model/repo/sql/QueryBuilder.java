@@ -86,11 +86,11 @@ public class QueryBuilder {
     }
 
     public QueryBuilder addWhereIsFeatured() {
-        return addWhere("ad." + Database.activity.featured + " = 1");
+        return addWhere("a." + Database.activity.featured + " = 1");
     }
 
     public QueryBuilder addWhereText(String text) {
-        return addWhere("ad." + Database.activity.name + " LIKE ?", "%" + text + "%");
+        return addWhere("a." + Database.activity.name + " LIKE ?", "%" + text + "%");
     }
 
     public QueryBuilder addWhereAge(Range<Integer> range) {
@@ -105,9 +105,9 @@ public class QueryBuilder {
 
     private void addWhereRange(Range<Integer> range, String minField, String maxField) {
         addWhere("not(" +
-                String.valueOf(range.getMin()) + ">= ad." + maxField +
+                String.valueOf(range.getMin()) + ">= a." + maxField +
                 " or " +
-                String.valueOf(range.getMax()) + "<= ad." + minField +
+                String.valueOf(range.getMax()) + "<= a." + minField +
                 ")");
     }
 
