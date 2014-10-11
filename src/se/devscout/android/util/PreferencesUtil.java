@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import se.devscout.android.model.ObjectIdentifierBean;
+import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.model.UserKey;
 
 import java.util.*;
@@ -25,15 +26,23 @@ public class PreferencesUtil {
         return instance;
     }
 
-    public UserKey getCurrentUser() {
+    public synchronized UserKey getCurrentUser() {
         if (mPreferences.contains("current_user_id")) {
             return new ObjectIdentifierBean(mPreferences.getLong("current_user_id", 0));
         } else {
-            return null;
+            /*
+             * This happens when the app is started for the first time.
+             *
+             * The database has not yet been created and the current_user_id has
+             * not been set. Return the value which we know that the first
+             * created user will have, namely the first primary value generated
+             * for any SQLite table (=1).
+             */
+            return new ObjectIdentifierBean(ActivityBank.DEFAULT_USER_ID);
         }
     }
 
-    public void setCurrentUser(UserKey userKey) {
+    public synchronized void setCurrentUser(UserKey userKey) {
         mPreferences.edit().putLong("current_user_id", userKey.getId()).commit();
     }
 

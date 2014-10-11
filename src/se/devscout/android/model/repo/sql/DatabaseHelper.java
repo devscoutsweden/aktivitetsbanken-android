@@ -41,8 +41,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private ActivityIdCache mActivityIdCache = new ActivityIdCache();
     private CategoryIdCache mCategoryIdCache = new CategoryIdCache();
 
-
-    public SQLiteDatabase getDb() {
+    /**
+     * This method is synchronized as to prevent multiple "search threads" from
+     * trying to access, and consequently trying to create, the database at the
+     * same time. One thread gets to create the database and the other simply
+     * have to wait for it to finish.
+     */
+    public synchronized SQLiteDatabase getDb() {
         if (db == null) {
             db = getWritableDatabase();
         }
@@ -665,7 +670,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void createSearchHistoryItem(HistoryProperties<SearchHistoryData> properties, UserKey userKey) throws IOException {
-
         ContentValues values = new ContentValues();
         values.put(Database.history.data, serializeObject(properties.getData()));
         values.put(Database.history.user_id, userKey.getId());
@@ -728,6 +732,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(Database.user.api_key, apiKey);
         getDb().update(Database.user.T, values, Database.user.id + "=" + userKey.getId(), null);
+
+        mCacheUser.remove(userKey.getId());
     }
 
     public User readUser(UserKey key) {
