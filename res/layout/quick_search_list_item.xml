@@ -38,7 +38,7 @@
         android:layout_width="@dimen/uiBlockSize"
         android:layout_height="@dimen/uiBlockSize"
         android:id="@+id/quickSearchListItemImage"
-        android:src="@drawable/icon"
+        android:src="@drawable/launcher"
         android:baselineAlignBottom="false"
         android:scaleType="fitCenter"
         android:layout_alignParentLeft="true"
