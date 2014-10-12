@@ -65,6 +65,7 @@
     <string name="activitiesListItemParticipants">%1$s pers.</string>
     <string name="activitiesListItemAges">%1$s år</string>
     <string name="activitiesListItemTime">%1$s min</string>
+    <string name="activitiesListItemFavouritesCount">%1$s</string>
     <string name="activity_introduction">Introduktion</string>
     <string name="activity_preparations">Förberedelser</string>
     <string name="activity_how_to_do">Genomförande</string>
@@ -145,5 +146,8 @@
     <string name="preferenceApiKey">API Key</string>
     <string name="preferenceApiKeySummary">An API key is often necessary when
         making changes that may be visible to other users.
+    </string>
+    <string name="preferenceCurrentUserId">Nuvarande användar-id</string>
+    <string name="preferenceCurrentUserIdSummary">Internt id-nummer för nuvarande användare
     </string>
 </resources>
