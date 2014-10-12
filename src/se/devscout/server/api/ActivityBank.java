@@ -49,5 +49,5 @@ public interface ActivityBank {
 
     void removeListener(ActivityBankListener listener);
 
-    Boolean createAnonymousAPIUser();
+    boolean createAnonymousAPIUser();
 }

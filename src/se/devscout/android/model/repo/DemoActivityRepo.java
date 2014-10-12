@@ -142,7 +142,7 @@ public class DemoActivityRepo implements ActivityBank {
     }
 
     @Override
-    public Boolean createAnonymousAPIUser() {
+    public boolean createAnonymousAPIUser() {
         throw new UnsupportedOperationException();
     }
 }

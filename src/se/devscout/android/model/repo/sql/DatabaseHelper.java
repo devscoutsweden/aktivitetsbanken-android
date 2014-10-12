@@ -728,12 +728,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result;
     }
 
-    public void updateUserAPIKey(String apiKey, UserKey userKey) {
+    public boolean updateUserAPIKey(String apiKey, UserKey userKey) {
+        logInfo("Setting API key for user " + userKey.getId() + " to " + apiKey + " in database.");
+
         ContentValues values = new ContentValues();
         values.put(Database.user.api_key, apiKey);
-        getDb().update(Database.user.T, values, Database.user.id + "=" + userKey.getId(), null);
+        int rowsUpdated = getDb().update(Database.user.T, values, Database.user.id + "=" + userKey.getId(), null);
 
         mCacheUser.remove(userKey.getId());
+
+        return rowsUpdated == 1;
     }
 
     public User readUser(UserKey key) {

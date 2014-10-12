@@ -3,6 +3,7 @@ package se.devscout.android.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import se.devscout.android.model.ObjectIdentifierBean;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.model.UserKey;
@@ -28,7 +29,9 @@ public class PreferencesUtil {
 
     public synchronized UserKey getCurrentUser() {
         if (mPreferences.contains("current_user_id")) {
-            return new ObjectIdentifierBean(mPreferences.getLong("current_user_id", 0));
+            long currentUserId = mPreferences.getLong("current_user_id", 0);
+            Log.d(PreferencesUtil.class.getName(), "Getting current_user_id = " + currentUserId);
+            return new ObjectIdentifierBean(currentUserId);
         } else {
             /*
              * This happens when the app is started for the first time.
@@ -38,12 +41,15 @@ public class PreferencesUtil {
              * created user will have, namely the first primary value generated
              * for any SQLite table (=1).
              */
-            return new ObjectIdentifierBean(ActivityBank.DEFAULT_USER_ID);
+            Long defaultUserId = ActivityBank.DEFAULT_USER_ID;
+            Log.d(PreferencesUtil.class.getName(), "Getting current_user_id = " + defaultUserId + " (fallback)");
+            return new ObjectIdentifierBean(defaultUserId);
         }
     }
 
     public synchronized void setCurrentUser(UserKey userKey) {
-        mPreferences.edit().putLong("current_user_id", userKey.getId()).commit();
+        boolean commit = mPreferences.edit().putLong("current_user_id", userKey.getId()).commit();
+        Log.i(PreferencesUtil.class.getName(), "Setting current_user_id = " + userKey.getId() + " (success: " + commit + ")");
     }
 
     public static List<String> getStringList(SharedPreferences preferences, String prefKey, List<String> defaultOrder) {

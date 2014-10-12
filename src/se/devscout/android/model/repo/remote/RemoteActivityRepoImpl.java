@@ -13,6 +13,7 @@ import se.devscout.android.model.IntegerRange;
 import se.devscout.android.model.ObjectIdentifierBean;
 import se.devscout.android.model.repo.sql.SQLiteActivityRepo;
 import se.devscout.android.util.InstallationProperties;
+import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.PreferencesUtil;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.URIBuilderActivityFilterVisitor;
@@ -113,15 +114,23 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     }
 
     @Override
-    public Boolean createAnonymousAPIUser() {
+    public boolean createAnonymousAPIUser() {
         try {
             String uri = "http://" + HOST + "/api/v1/users";
             JSONObject body = new JSONObject();
             body.put("display_name", "android-app-" + InstallationProperties.getInstance(mContext).getId());
             JSONObject response = getJSONObject(uri, body, HttpMethod.POST);
             String apiKey = response.getString("api_key");
-            setAnonymousUserAPIKey(apiKey, PreferencesUtil.getInstance(mContext).getCurrentUser());
-            return true;
+            if (apiKey != null && apiKey.length() > 0) {
+                boolean success = setAnonymousUserAPIKey(apiKey, PreferencesUtil.getInstance(mContext).getCurrentUser());
+                if (!success) {
+                    Log.e(RemoteActivityRepoImpl.class.getName(), "Failed to set API key.");
+                }
+                return success;
+            } else {
+                Log.e(RemoteActivityRepoImpl.class.getName(), "Did not receive API key in server response.");
+                return false;
+            }
         } catch (JSONException e) {
             Log.e(RemoteActivityRepoImpl.class.getName(), "Could not create anonymous API user because of JSON problem.", e);
             return false;
@@ -205,7 +214,9 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
 
     private AsyncTask<Void, Void, Void> createSendSetFavouritesTask() {
         return new AsyncTask<Void, Void, Void>() {
-
+            {
+                LogUtil.initExceptionLogging(mContext);
+            }
             @Override
             protected Void doInBackground(Void... voids) {
                 try {
@@ -231,7 +242,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         }
         String uri = "http://" + HOST + "/api/v1/favourites";
 
-        readUrl(uri, new JSONObject(Collections.singletonMap("id", jsonArray)).toString(), HttpMethod.PUT);
+        readUrlAsBytes(uri, new JSONObject(Collections.singletonMap("id", jsonArray)).toString(), HttpMethod.PUT);
     }
 
     @Override
@@ -317,7 +328,6 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
 
     private JSONArray getJSONArray(String uri, JSONObject body) throws IOException, JSONException, UnauthorizedException, UnhandledHttpResponseCodeException {
         String s = readUrlAsString(uri, body != null ? body.toString() : null, HttpMethod.GET);
-        Log.i(RemoteActivityRepoImpl.class.getName(), "Server response: " + s);
         return (JSONArray) new JSONTokener(s).nextValue();
     }
 
@@ -329,7 +339,6 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
 
     private JSONObject getJSONObject(String uri, JSONObject body, HttpMethod method) throws IOException, JSONException, UnauthorizedException, UnhandledHttpResponseCodeException {
         String s = readUrlAsString(uri, body != null ? body.toString() : null, method);
-        Log.i(RemoteActivityRepoImpl.class.getName(), "Server response: " + s);
         return (JSONObject) new JSONTokener(s).nextValue();
     }
 
@@ -446,8 +455,49 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         return values;
     }
 
-    private String readUrlAsString(String urlSpec, String body, HttpMethod method) throws IOException, UnauthorizedException, UnhandledHttpResponseCodeException {
-        return new String(readUrl(urlSpec, body, method));
+    private String readUrlAsString(String urlSpec, String body, HttpMethod method) throws IOException, UnhandledHttpResponseCodeException, UnauthorizedException {
+        byte[] data = readUrlAsBytes(urlSpec, body, method);
+        if (data != null) {
+            String s = new String(data);
+            Log.d(RemoteActivityRepoImpl.class.getName(), "Server response: " + s);
+            return s;
+        } else {
+            Log.d(RemoteActivityRepoImpl.class.getName(), "Server response contained no data");
+            return null;
+        }
+    }
+
+    private byte[] readUrlAsBytes(String urlSpec, String body, HttpMethod method) throws IOException, UnauthorizedException, UnhandledHttpResponseCodeException {
+        try {
+            return readUrl(urlSpec, body, method);
+        } catch (UnauthorizedException e) {
+            Log.e(RemoteActivityRepoImpl.class.getName(), "Server said that user is unauthorized");
+            if (getAPIKey() == null) {
+                // User is unauthorized and has no API key, so the first this to try is to create an API key!
+                Log.i(RemoteActivityRepoImpl.class.getName(), "Server said that user is unauthorized and there is no API key assigned to the app. Try to create one.");
+                synchronized (this) {
+                    /*
+                     * Double-check condition in case multiple "search threads"
+                     * try to send unauthorized requests at the same time. Both
+                     * thread will eventually enter the synchronized block but
+                     * the second one will exit immediately since the first
+                     * thread (presumably) created an API key and stored it.
+                     */
+                    if (getAPIKey() == null) {
+                        if (createAnonymousAPIUser()) {
+                            Log.i(RemoteActivityRepoImpl.class.getName(), "API " + getAPIKey() + " key has been created.");
+                        } else {
+                            Log.i(RemoteActivityRepoImpl.class.getName(), "Could not create API key");
+                        }
+                    }
+                }
+                if (getAPIKey() != null) {
+                    Log.d(RemoteActivityRepoImpl.class.getName(), "API key (" + getAPIKey() + ") exists and request will be resent.");
+                    return readUrl(urlSpec, body, method);
+                }
+            }
+            throw e;
+        }
     }
 
     private byte[] readUrl(String urlSpec, String body, HttpMethod method) throws IOException, UnauthorizedException, UnhandledHttpResponseCodeException {
@@ -459,10 +509,12 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
             String installationId = InstallationProperties.getInstance(mContext).getId().toString();
             httpURLConnection.addRequestProperty(HTTP_HEADER_X_ANDROID_APP_INSTALLATION_ID, installationId);
 
-            String apiKey = PreferencesUtil.getInstance(mContext).getCurrentUser() != null ? mDatabaseHelper.readUser(PreferencesUtil.getInstance(mContext).getCurrentUser()).getAPIKey() : null;
+            String apiKey = getAPIKey();
             if (apiKey != null) {
                 httpURLConnection.addRequestProperty(HTTP_HEADER_AUTHORIZATION, "Token token=\"" + apiKey + "\"");
             }
+
+            Log.d(RemoteActivityRepoImpl.class.getName(), "Sending request to " + url.toExternalForm() + " (API key: " + apiKey + ")");
 
             if (body != null) {
                 httpURLConnection.addRequestProperty(HTTP_HEADER_CONTENT_TYPE, "application/json; charset=" + DEFAULT_REQUEST_BODY_ENCODING);
@@ -479,10 +531,13 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
                     int bytesRead = 0;
                     byte[] buffer = new byte[1024];
                     InputStream in = httpURLConnection.getInputStream();
+                    int length = 0;
                     while ((bytesRead = in.read(buffer)) > 0) {
                         out.write(buffer, 0, bytesRead);
+                        length += bytesRead;
                     }
                     out.close();
+                    Log.d(RemoteActivityRepoImpl.class.getName(), "Received " + length + " bytes from server.");
                     return out.toByteArray();
                 case HttpURLConnection.HTTP_NO_CONTENT:
                     return null;
@@ -494,6 +549,10 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         } finally {
             httpURLConnection.disconnect();
         }
+    }
+
+    private String getAPIKey() {
+        return PreferencesUtil.getInstance(mContext).getCurrentUser() != null ? mDatabaseHelper.readUser(PreferencesUtil.getInstance(mContext).getCurrentUser()).getAPIKey() : null;
     }
 
     /**

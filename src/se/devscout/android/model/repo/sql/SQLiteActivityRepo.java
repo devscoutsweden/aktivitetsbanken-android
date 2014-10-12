@@ -155,7 +155,7 @@ public class SQLiteActivityRepo implements ActivityBank {
     }
 
     @Override
-    public Boolean createAnonymousAPIUser() {
+    public boolean createAnonymousAPIUser() {
         // TODO: implement this for when client is offline the first time an API call is made
         throw new UnsupportedOperationException();
     }
@@ -176,7 +176,7 @@ public class SQLiteActivityRepo implements ActivityBank {
         mDatabaseHelper.dropDatabase(addTestData);
     }
 
-    public void setAnonymousUserAPIKey(String apiKey, UserKey userKey) {
-        mDatabaseHelper.updateUserAPIKey(apiKey, userKey);
+    public boolean setAnonymousUserAPIKey(String apiKey, UserKey userKey) {
+        return mDatabaseHelper.updateUserAPIKey(apiKey, userKey);
     }
 }
