@@ -9,7 +9,7 @@
     <color name="magenta">#FFDC006B</color>
     <color name="yellow">#FFF1E400</color>
     <color name="basicVeryLight">#ffffffff</color>
-    <color name="basicLight">#ffe9e9e9</color>
+    <color name="basicLight">#ffe6e6e6</color>
     <color name="basicDark">#ff777777</color>
     <color name="basicVeryDark">#ff333333</color>
 </resources>
