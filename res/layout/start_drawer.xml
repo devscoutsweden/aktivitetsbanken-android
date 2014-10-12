@@ -9,8 +9,7 @@
     <FrameLayout
         android:id="@+id/start_content_frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/wood_by_breyer_stock" />
+        android:layout_height="match_parent"/>
     <!-- The navigation drawer -->
     <ListView android:id="@+id/start_drawer_list"
         android:layout_width="240dp"
