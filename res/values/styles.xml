@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="DevScout" parent="android:Theme.Holo.Light">
+    <style name="DevScout" parent="Theme.Devscout">
         <item name="android:windowBackground">@color/basicVeryLight</item>
         <item name="android:colorBackground">@color/basicVeryLight</item>
         <item name="android:textColor">@color/basicVeryDark</item>

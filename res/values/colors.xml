@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- #ff00: Opaque red -->
-    <color name="accentBlue">#FF003C69</color>
+    <color name="accentBlue">#FF0287B8</color>
     <color name="favoriteTintColor">#ff00</color>
     <color name="green">#FF5BAC26</color>
     <color name="blue">#FF009CDA</color>
