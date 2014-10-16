@@ -43,4 +43,12 @@ public class IntegerRange implements Range<Integer>, Serializable {
             return "";
         }
     }
+
+    public void setMax(Integer max) {
+        mMax = max;
+    }
+
+    public void setMin(Integer min) {
+        mMin = min;
+    }
 }

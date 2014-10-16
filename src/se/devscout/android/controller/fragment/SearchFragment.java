@@ -2,7 +2,6 @@ package se.devscout.android.controller.fragment;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,7 @@ import se.devscout.android.AgeGroup;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.SearchResultActivity;
 import se.devscout.android.model.IntegerRange;
+import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.PreferencesUtil;
 import se.devscout.server.api.ActivityFilterFactory;
 import se.devscout.server.api.ActivityFilterFactoryException;
@@ -110,7 +110,7 @@ public class SearchFragment extends ActivityBankFragment {
                     startActivity(SearchResultActivity.createIntent(getActivity(), filter, getString(R.string.searchResultTitle)));
                 } catch (ActivityFilterFactoryException e) {
 //                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.e(SearchFragment.class.getName(), "Could not create activity filter.", e);
+                    LogUtil.e(SearchFragment.class.getName(), "Could not create activity filter.", e);
                 }
             }
 
@@ -124,15 +124,15 @@ public class SearchFragment extends ActivityBankFragment {
             }
 
             private void initAgeFilter(se.devscout.server.api.activityfilter.AndFilter filter, ActivityFilterFactory mFilterFactory) {
-                se.devscout.server.api.activityfilter.OrFilter ageFilter = mFilterFactory.createOrFilter();
-                addAgeFilter(ageFilter, R.id.searchAgeAdventurer, AgeGroup.ADVENTURER, mFilterFactory);
-                addAgeFilter(ageFilter, R.id.searchAgeChallenger, AgeGroup.CHALLENGER, mFilterFactory);
-                addAgeFilter(ageFilter, R.id.searchAgeDiscoverer, AgeGroup.DISCOVERER, mFilterFactory);
-                addAgeFilter(ageFilter, R.id.searchAgeRover, AgeGroup.ROVER, mFilterFactory);
-                addAgeFilter(ageFilter, R.id.searchAgeTracker, AgeGroup.TRACKER, mFilterFactory);
+                IntegerRange range = new IntegerRange(Integer.MAX_VALUE, Integer.MAX_VALUE);
+                addAgeFilter(range, R.id.searchAgeAdventurer, AgeGroup.ADVENTURER, mFilterFactory);
+                addAgeFilter(range, R.id.searchAgeChallenger, AgeGroup.CHALLENGER, mFilterFactory);
+                addAgeFilter(range, R.id.searchAgeDiscoverer, AgeGroup.DISCOVERER, mFilterFactory);
+                addAgeFilter(range, R.id.searchAgeRover, AgeGroup.ROVER, mFilterFactory);
+                addAgeFilter(range, R.id.searchAgeTracker, AgeGroup.TRACKER, mFilterFactory);
 
-                if (!ageFilter.getFilters().isEmpty()) {
-                    filter.getFilters().add(ageFilter);
+                if (range.getMax() != Integer.MAX_VALUE || range.getMin() != Integer.MAX_VALUE) {
+                    filter.getFilters().add(mFilterFactory.createAgeRangeFilter(range));
                 }
             }
 
@@ -158,10 +158,15 @@ public class SearchFragment extends ActivityBankFragment {
                 }
             }
 
-            private void addAgeFilter(se.devscout.server.api.activityfilter.OrFilter ageFilter, int toggleButtonResId, AgeGroup ageGroup, ActivityFilterFactory mFilterFactory) {
+            private void addAgeFilter(IntegerRange ageRange, int toggleButtonResId, AgeGroup ageGroup, ActivityFilterFactory mFilterFactory) {
                 CheckBox checkBox = (CheckBox) searchView.findViewById(toggleButtonResId);
                 if (checkBox.isChecked()) {
-                    ageFilter.getFilters().add(mFilterFactory.createAgeRangeFilter(ageGroup.getScoutAgeRange()));
+                    if (ageRange.getMin() > ageGroup.getScoutAgeRange().getMin() || ageRange.getMin() == Integer.MAX_VALUE) {
+                        ageRange.setMin(ageGroup.getScoutAgeRange().getMin());
+                    }
+                    if (ageRange.getMax() < ageGroup.getScoutAgeRange().getMax() || ageRange.getMax() == Integer.MAX_VALUE) {
+                        ageRange.setMax(ageGroup.getScoutAgeRange().getMax());
+                    }
                 }
             }
         });

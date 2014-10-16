@@ -57,10 +57,10 @@ public class ApiV1Visitor implements URIBuilderActivityFilterVisitor {
 
     private void appendRangeFilter(RangeFilter filter, final String field) {
         if (filter.getMin() < Integer.MAX_VALUE && filter.getMin() >= 0) {
-            mUriBuilder.appendQueryParameter(field + "_min", filter.getMin().toString());
+            mUriBuilder.appendQueryParameter(field + "_1", filter.getMin().toString());
         }
         if (filter.getMax() < Integer.MAX_VALUE && filter.getMax() >= 0) {
-            mUriBuilder.appendQueryParameter(field + "_max", filter.getMax().toString());
+            mUriBuilder.appendQueryParameter(field + "_2", filter.getMax().toString());
         }
     }
 
