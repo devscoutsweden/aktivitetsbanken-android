@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +17,7 @@ import se.devscout.android.R;
 import se.devscout.android.controller.activity.drawer.*;
 import se.devscout.android.controller.fragment.AbstractActivityBankListener;
 import se.devscout.android.util.ActivityBankFactory;
+import se.devscout.android.util.LogUtil;
 import se.devscout.android.view.AbstractActivitiesFinderComponentFactory;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.model.SearchHistory;
@@ -32,6 +32,10 @@ abstract class SingleFragmentActivity<T extends Fragment> extends FragmentActivi
     private DrawerListAdapter mDrawerListAdapter;
     private AbstractActivityBankListener mActivityBankListener;
     //    private boolean mIsSearchHistoryUpdated = false;
+
+    protected SingleFragmentActivity() {
+        LogUtil.initExceptionLogging(this);
+    }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -188,7 +192,7 @@ abstract class SingleFragmentActivity<T extends Fragment> extends FragmentActivi
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        Log.i(SingleFragmentActivity.class.getName(), "You clicked " + position);
+        LogUtil.i(SingleFragmentActivity.class.getName(), "You clicked " + position);
         DrawerItem drawerItem = mDrawerListAdapter.getItem(position);
 
         if (drawerItem instanceof ExecutableDrawerItem) {

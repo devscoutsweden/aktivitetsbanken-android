@@ -4,12 +4,12 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.StartTabsFragment;
 import se.devscout.android.model.repo.sql.SQLiteActivityRepo;
+import se.devscout.android.util.LogUtil;
 
 public class StartActivity extends SingleFragmentActivity {
     @Override
@@ -27,7 +27,7 @@ public class StartActivity extends SingleFragmentActivity {
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menuStartResetDatabase:
-                Log.i(StartActivity.class.getName(), "Resetting database.");
+                LogUtil.i(StartActivity.class.getName(), "Resetting database.");
                 AlertDialog.Builder builder = new AlertDialog.Builder(StartActivity.this);
                 AlertDialog dialog = builder.setMessage("Create test data?").setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
@@ -43,7 +43,7 @@ public class StartActivity extends SingleFragmentActivity {
                     }
                 }).create();
                 dialog.show();
-                Log.i(StartActivity.class.getName(), "Database has been reset.");
+                LogUtil.i(StartActivity.class.getName(), "Database has been reset.");
                 break;
         }
         return super.onMenuItemSelected(featureId, item);

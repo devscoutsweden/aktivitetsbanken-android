@@ -2,12 +2,12 @@ package se.devscout.android.model.repo;
 
 import android.content.Context;
 import android.content.res.XmlResourceParser;
-import android.util.Log;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import se.devscout.android.R;
 import se.devscout.android.model.ActivityBean;
 import se.devscout.android.model.IntegerRange;
+import se.devscout.android.util.LogUtil;
 import se.devscout.server.api.model.Range;
 
 import java.io.IOException;
@@ -32,7 +32,7 @@ public class TestDataUtil {
                             String featuresImageValue = parser.getAttributeValue(null, "featured-image");
                             int featuredImageResId = -1;
                             if (featuresImageValue != null) {
-                                Log.i("Aktivitetsbanken", "" + featuresImageValue);
+                                LogUtil.i("Aktivitetsbanken", "" + featuresImageValue);
                                 featuredImageResId = ctx.getResources().getIdentifier(featuresImageValue, "drawable", ctx.getPackageName());
                             }
                             boolean featured = parser.getAttributeBooleanValue(null, "featured", false);
@@ -96,9 +96,9 @@ public class TestDataUtil {
                 }
             }
         } catch (XmlPullParserException e) {
-            Log.e(ctx.getString(R.string.app_name), "Could not initialize repository.", e);
+            LogUtil.e(ctx.getString(R.string.app_name), "Could not initialize repository.", e);
         } catch (IOException e) {
-            Log.e(ctx.getString(R.string.app_name), "Could not initialize repository.", e);
+            LogUtil.e(ctx.getString(R.string.app_name), "Could not initialize repository.", e);
         }
         return mActivities;
     }

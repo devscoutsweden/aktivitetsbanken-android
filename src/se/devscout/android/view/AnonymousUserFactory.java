@@ -2,8 +2,8 @@ package se.devscout.android.view;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import se.devscout.android.util.ActivityBankFactory;
+import se.devscout.android.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,13 +27,16 @@ public class AnonymousUserFactory {
     public synchronized void createAnonymousUser(AnonymousUserFactoryListener listener, final Context context) {
         if (mCreateAnonymousUserTask == null) {
             mCreateAnonymousUserTask = new AsyncTask<Void, Void, Boolean>() {
+                {
+                    LogUtil.initExceptionLogging(context);
+                }
                 @Override
                 protected Boolean doInBackground(Void... voids) {
                     try {
-                        Log.d(AnonymousUserFactory.class.getName(), "Instructing activity bank to create anonymous API user");
+                        LogUtil.d(AnonymousUserFactory.class.getName(), "Instructing activity bank to create anonymous API user");
                         return ActivityBankFactory.getInstance(context).createAnonymousAPIUser();
                     } catch (Throwable e) {
-                        Log.e(AnonymousUserFactory.class.getName(), "Exception when creating anonymous API user.", e);
+                        LogUtil.e(AnonymousUserFactory.class.getName(), "Exception when creating anonymous API user.", e);
                         return false;
                     }
                 }
@@ -44,13 +47,13 @@ public class AnonymousUserFactory {
                 }
             }.execute();
         }
-        Log.d(AnonymousUserFactory.class.getName(), "Adding AnonymousUserFactoryListener");
+        LogUtil.d(AnonymousUserFactory.class.getName(), "Adding AnonymousUserFactoryListener");
         mListeners.add(listener);
     }
 
     private synchronized void fireAnonymousUserCreated(boolean success) {
         for (AnonymousUserFactoryListener listener : mListeners) {
-            Log.d(AnonymousUserFactory.class.getName(), "Alerting AnonymousUserFactoryListener");
+            LogUtil.d(AnonymousUserFactory.class.getName(), "Alerting AnonymousUserFactoryListener");
             listener.onAnonymousUserCreated(success);
         }
         mCreateAnonymousUserTask = null;

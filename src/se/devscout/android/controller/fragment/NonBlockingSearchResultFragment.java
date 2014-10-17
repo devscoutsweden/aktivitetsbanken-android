@@ -1,10 +1,10 @@
 package se.devscout.android.controller.fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import se.devscout.android.util.LogUtil;
 import se.devscout.android.view.NonBlockingSearchView;
 
 import java.io.Serializable;
@@ -52,8 +52,8 @@ public abstract class NonBlockingSearchResultFragment<T extends Serializable, V 
         /*
          * Store fields into saved state, for example when the activity is destroyed after the device has been rotated.
          */
-        Log.d(ActivitiesListFragment.class.getName(), "Saving state");
+        LogUtil.d(ActivitiesListFragment.class.getName(), "Saving state");
         outState.putBoolean("mIsResultLoaded", mIsResultLoaded);
-        Log.d(ActivitiesListFragment.class.getName(), "State saved");
+        LogUtil.d(ActivitiesListFragment.class.getName(), "State saved");
     }
 }

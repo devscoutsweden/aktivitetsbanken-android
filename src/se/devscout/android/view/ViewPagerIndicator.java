@@ -6,9 +6,9 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import se.devscout.android.R;
+import se.devscout.android.util.LogUtil;
 
 public class ViewPagerIndicator extends View {
     private static final float CRAMPED_DOTS_PADDING_FACTOR = 0.8f;
@@ -137,7 +137,7 @@ public class ViewPagerIndicator extends View {
 
     public void setCount(int count) {
         if (count < 0) {
-            Log.i(ViewPagerIndicator.class.getName(), "Cannot set maximum value to " + count + " since minimum is 0. Will set maximum to 0.");
+            LogUtil.i(ViewPagerIndicator.class.getName(), "Cannot set maximum value to " + count + " since minimum is 0. Will set maximum to 0.");
             count = 0;
         }
         mCount = count;
@@ -150,10 +150,10 @@ public class ViewPagerIndicator extends View {
 
     public void setSelectedIndex(int selectedIndex) {
         if (selectedIndex > mCount) {
-            Log.i(ViewPagerIndicator.class.getName(), "Cannot set current value to " + selectedIndex + " since maximum is " + mCount + ". Will set current to " + mCount + ".");
+            LogUtil.i(ViewPagerIndicator.class.getName(), "Cannot set current value to " + selectedIndex + " since maximum is " + mCount + ". Will set current to " + mCount + ".");
             selectedIndex = mCount;
         } else if (selectedIndex < 0) {
-            Log.i(ViewPagerIndicator.class.getName(), "Cannot set current value to " + selectedIndex + " since minimum is 0. Will set current to 0.");
+            LogUtil.i(ViewPagerIndicator.class.getName(), "Cannot set current value to " + selectedIndex + " since minimum is 0. Will set current to 0.");
             selectedIndex = 0;
         }
         mSelectedIndex = selectedIndex;

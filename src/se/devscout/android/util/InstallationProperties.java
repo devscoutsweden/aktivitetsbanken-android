@@ -1,7 +1,6 @@
 package se.devscout.android.util;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,7 +24,7 @@ public class InstallationProperties {
 
     private InstallationProperties(Context context) throws IOException {
         mPropertiesFile = new File(context.getFilesDir(), FILE_NAME);
-        Log.d(InstallationProperties.class.getName(), "Installation properties file is " + mPropertiesFile.getAbsolutePath());
+        LogUtil.d(InstallationProperties.class.getName(), "Installation properties file is " + mPropertiesFile.getAbsolutePath());
         read();
     }
 
@@ -34,7 +33,7 @@ public class InstallationProperties {
             try {
                 instance = new InstallationProperties(context);
             } catch (IOException e) {
-                Log.e(InstallationProperties.class.getName(), "Could not create/load installation properties. Expect problems.", e);
+                LogUtil.e(InstallationProperties.class.getName(), "Could not create/load installation properties. Expect problems.", e);
             }
         }
         return instance;
@@ -48,26 +47,26 @@ public class InstallationProperties {
         if (!mPropertiesFile.exists()) {
             initPropertiesFile();
         }
-        Log.d(InstallationProperties.class.getName(), "Installation properties file is about to be read.");
+        LogUtil.d(InstallationProperties.class.getName(), "Installation properties file is about to be read.");
         FileInputStream stream = new FileInputStream(mPropertiesFile);
         mProperties = new Properties();
         mProperties.load(stream);
         stream.close();
-        Log.d(InstallationProperties.class.getName(), mProperties.size() + " installation properties have been read from file.");
+        LogUtil.d(InstallationProperties.class.getName(), mProperties.size() + " installation properties have been read from file.");
     }
 
     /**
      * Creates the properties file and generates the installation id.
      */
     private void initPropertiesFile() throws IOException {
-        Log.d(InstallationProperties.class.getName(), "Installation properties file is about to be created.");
+        LogUtil.d(InstallationProperties.class.getName(), "Installation properties file is about to be created.");
         mPropertiesFile.createNewFile();
         FileOutputStream stream = new FileOutputStream(mPropertiesFile);
         mProperties = new Properties();
         mProperties.setProperty(PROP_ID, UUID.randomUUID().toString());
         mProperties.store(stream, null);
         stream.close();
-        Log.d(InstallationProperties.class.getName(), "Installation properties file has been created.");
+        LogUtil.d(InstallationProperties.class.getName(), "Installation properties file has been created.");
     }
 
     /**

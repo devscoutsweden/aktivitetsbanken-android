@@ -30,7 +30,7 @@ public class PreferencesUtil {
     public synchronized UserKey getCurrentUser() {
         if (mPreferences.contains("current_user_id")) {
             long currentUserId = mPreferences.getLong("current_user_id", 0);
-            Log.d(PreferencesUtil.class.getName(), "Getting current_user_id = " + currentUserId);
+            LogUtil.d(PreferencesUtil.class.getName(), "Getting current_user_id = " + currentUserId);
             return new ObjectIdentifierBean(currentUserId);
         } else {
             /*
@@ -42,7 +42,7 @@ public class PreferencesUtil {
              * for any SQLite table (=1).
              */
             Long defaultUserId = ActivityBank.DEFAULT_USER_ID;
-            Log.d(PreferencesUtil.class.getName(), "Getting current_user_id = " + defaultUserId + " (fallback)");
+            LogUtil.d(PreferencesUtil.class.getName(), "Getting current_user_id = " + defaultUserId + " (fallback)");
             return new ObjectIdentifierBean(defaultUserId);
         }
     }

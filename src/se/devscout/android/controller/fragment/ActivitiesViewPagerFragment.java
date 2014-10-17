@@ -4,11 +4,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.*;
 import se.devscout.android.R;
 import se.devscout.android.model.ObjectIdentifierBean;
 import se.devscout.android.util.ActivityBankFactory;
+import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.PreferencesUtil;
 import se.devscout.android.view.ViewPagerIndicator;
 import se.devscout.server.api.ActivityBank;
@@ -34,7 +34,7 @@ public class ActivitiesViewPagerFragment extends ActivityBankFragment implements
              */
             mActivities = (ArrayList<ObjectIdentifierBean>) savedInstanceState.getSerializable("mActivities");
             mSelectedIndex = savedInstanceState.getInt("mSelectedIndex");
-//            Log.d(ActivitiesListFragment.class.getName(), "State (e.g. search result) has been restored.");
+//            LogUtil.d(ActivitiesListFragment.class.getName(), "State (e.g. search result) has been restored.");
         }
 
         setHasOptionsMenu(true);
@@ -145,10 +145,10 @@ public class ActivitiesViewPagerFragment extends ActivityBankFragment implements
         /*
          * Store fields into saved state, for example when the activity is destroyed after the device has been rotated.
          */
-        Log.d(ActivitiesListFragment.class.getName(), "Saving state");
+        LogUtil.d(ActivitiesListFragment.class.getName(), "Saving state");
         outState.putSerializable("mActivities", mActivities);
         outState.putInt("mSelectedIndex", mSelectedIndex);
-        Log.d(ActivitiesListFragment.class.getName(), "State saved");
+        LogUtil.d(ActivitiesListFragment.class.getName(), "State saved");
     }
 
     @Override

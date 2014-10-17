@@ -24,7 +24,7 @@ public abstract class SimpleRangeFilter extends SimpleFilter {
         boolean isCandidateBeforeRange = mMin >= candidate.getMax();
         boolean isCandidateAfterRange = mMax <= candidate.getMin();
         boolean match = !(isCandidateBeforeRange || isCandidateAfterRange);
-//        Log.d(getClass().getName(), "isPartlyWithin " + toString() + " candidate=" + candidate.toString() + " match: " + match);
+//        LogUtil.d(getClass().getName(), "isPartlyWithin " + toString() + " candidate=" + candidate.toString() + " match: " + match);
         return match;
     }
 
@@ -33,7 +33,7 @@ public abstract class SimpleRangeFilter extends SimpleFilter {
         boolean startsAfter = mMin <= candidate.getMin();
         boolean endsBefore = mMax >= candidate.getMax();
         boolean match = startsAfter && endsBefore;
-//        Log.d(getClass().getName(), "isFullyWithin " + toString() + " candidate=" + candidate.toString() + " match: " + match);
+//        LogUtil.d(getClass().getName(), "isFullyWithin " + toString() + " candidate=" + candidate.toString() + " match: " + match);
         return match;
     }
 

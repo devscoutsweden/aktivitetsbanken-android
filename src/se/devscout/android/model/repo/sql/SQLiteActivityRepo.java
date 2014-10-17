@@ -1,12 +1,12 @@
 package se.devscout.android.model.repo.sql;
 
 import android.content.Context;
-import android.util.Log;
 import se.devscout.android.model.ActivityBean;
 import se.devscout.android.model.CategoryBean;
 import se.devscout.android.model.ReferenceBean;
 import se.devscout.android.model.SearchHistoryBean;
 import se.devscout.android.model.repo.remote.UnauthorizedException;
+import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.SimpleFilter;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.ActivityBankListener;
@@ -134,7 +134,7 @@ public class SQLiteActivityRepo implements ActivityBank {
             mDatabaseHelper.createSearchHistoryItem(properties, userKey);
             fireSearchHistoryItemAdded(null);
         } catch (IOException e) {
-            Log.e(SQLiteActivityRepo.class.getName(), "Could not create search history entry", e);
+            LogUtil.e(SQLiteActivityRepo.class.getName(), "Could not create search history entry", e);
         }
         return null;
     }

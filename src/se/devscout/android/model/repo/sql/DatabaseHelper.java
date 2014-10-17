@@ -6,11 +6,11 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.*;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.widget.Toast;
 import se.devscout.android.R;
 import se.devscout.android.model.*;
 import se.devscout.android.model.repo.TestDataUtil;
+import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.PreferencesUtil;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.activityfilter.AndFilter;
@@ -31,7 +31,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final SQLiteDatabase.CursorFactory LOGGING_CURSOR_FACTORY = new SQLiteDatabase.CursorFactory() {
         @Override
         public Cursor newCursor(SQLiteDatabase sqLiteDatabase, SQLiteCursorDriver sqLiteCursorDriver, String s, SQLiteQuery sqLiteQuery) {
-            Log.d(DatabaseHelper.class.getName(), sqLiteQuery.toString());
+            LogUtil.d(DatabaseHelper.class.getName(), sqLiteQuery.toString());
             return new SQLiteCursor(sqLiteCursorDriver, s, sqLiteQuery);
         }
     };
@@ -129,17 +129,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private void logInfo(String msg) {
-        Log.i(DatabaseHelper.class.getName(), msg);
-//        showToast(msg);
+        LogUtil.i(DatabaseHelper.class.getName(), msg);
     }
 
     private void logDebug(String msg) {
-        Log.d(DatabaseHelper.class.getName(), msg);
+        LogUtil.d(DatabaseHelper.class.getName(), msg);
     }
 
     private void logError(Throwable e, String msg) {
-        Log.e(DatabaseHelper.class.getName(), msg, e);
-//        showToast(msg);
+        LogUtil.e(DatabaseHelper.class.getName(), msg, e);
     }
 
     private void showToast(String msg) {
@@ -257,7 +255,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             logInfo("Could not update activity " + key.getId());
             return false;
         }
-        mActivityIdCache.invalidate();
+        if (properties.getServerId() != 0) {
+            mActivityIdCache.invalidateByServerId(properties.getServerId());
+        } else {
+            mActivityIdCache.invalidate();
+        }
         mCacheActivity.remove(key.getId());
 
 
@@ -517,7 +519,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 }
                 references.add(mCacheReference.get(referenceId));
             } catch (URISyntaxException e) {
-                Log.e(DatabaseHelper.class.getName(), "Could not parse URI in database. Reference " + referenceId + " will not be accessible by client.", e);
+                LogUtil.e(DatabaseHelper.class.getName(), "Could not parse URI in database. Reference " + referenceId + " will not be accessible by client.", e);
             }
         }
         refCursor.close();
@@ -754,7 +756,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         @Override
         protected IdCacheEntry createIdCacheEntry(ActivityBean entry) {
-            return new IdCacheEntry(entry.getId(), entry.getServerId(), new long[]{entry.getFavouritesCount() != null ? entry.getFavouritesCount().longValue() : 0});
+            return new IdCacheEntry(entry.getId(), entry.getServerId(), new long[]{entry.getServerRevisionId(), entry.getFavouritesCount() != null ? entry.getFavouritesCount().longValue() : 0});
         }
 
     }
@@ -834,6 +836,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 }
             }
             return null;
+        }
+
+        public void invalidateByServerId(long id) {
+            IdCacheEntry entry = getEntryByServerId(id);
+            if (entry != null) {
+                mEntries.remove(entry);
+            }
         }
 
         public boolean isAdditionalValuesListIdentical(IdCacheEntry entry, T entry2) {

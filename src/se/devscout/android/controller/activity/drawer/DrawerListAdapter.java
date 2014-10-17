@@ -3,7 +3,6 @@ package se.devscout.android.controller.activity.drawer;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.TitleActivityFilterVisitor;
+import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.PreferencesUtil;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.model.SearchHistory;
@@ -118,20 +118,23 @@ public class DrawerListAdapter extends BaseAdapter {
     }
 
     public void loadSearchHistoryItems(final ActivityBank activityBank) {
-        Log.d(DrawerListAdapter.class.getName(), "Start of loadSearchHistoryItems");
+        LogUtil.d(DrawerListAdapter.class.getName(), "Start of loadSearchHistoryItems");
 
         AsyncTask<Void, Void, Collection<? extends SearchHistory>> task = new AsyncTask<Void, Void, Collection<? extends SearchHistory>>() {
+            {
+                LogUtil.initExceptionLogging(mContext);
+            }
             @Override
             protected Collection<? extends SearchHistory> doInBackground(Void... voids) {
-                Log.d(DrawerListAdapter.class.getName(), "Start of doInBackground");
+                LogUtil.d(DrawerListAdapter.class.getName(), "Start of doInBackground");
                 Collection<? extends SearchHistory> list = activityBank.readSearchHistory(SEARCH_HISTORY_ITEM_COUNT + 1, PreferencesUtil.getInstance(mContext).getCurrentUser());
-                Log.d(DrawerListAdapter.class.getName(), "End of doInBackground");
+                LogUtil.d(DrawerListAdapter.class.getName(), "End of doInBackground");
                 return list;
             }
 
             @Override
             protected void onPostExecute(Collection<? extends SearchHistory> searchHistoryItems) {
-                Log.d(DrawerListAdapter.class.getName(), "Start of onPostExecute");
+                LogUtil.d(DrawerListAdapter.class.getName(), "Start of onPostExecute");
                 int pos = mDrawerItems.indexOf(mSearchHistoryHeaderDrawerItem);
                 if (mSearchHistoryDrawerItems != null) {
                     mDrawerItems.removeAll(mSearchHistoryDrawerItems);
@@ -163,10 +166,10 @@ public class DrawerListAdapter extends BaseAdapter {
                     }
                     notifyDataSetChanged();
                 }
-                Log.d(DrawerListAdapter.class.getName(), "End of onPostExecute");
+                LogUtil.d(DrawerListAdapter.class.getName(), "End of onPostExecute");
             }
         };
         task.execute();
-        Log.d(DrawerListAdapter.class.getName(), "End of loadSearchHistoryItems");
+        LogUtil.d(DrawerListAdapter.class.getName(), "End of loadSearchHistoryItems");
     }
 }

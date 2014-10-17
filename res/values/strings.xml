@@ -150,4 +150,11 @@
     <string name="preferenceCurrentUserId">Nuvarande användar-id</string>
     <string name="preferenceCurrentUserIdSummary">Internt id-nummer för nuvarande användare
     </string>
+    <string name="crashReportHelp">Appen har tidigare kraschat. Du kan enkelt
+        skapa ett e-post med en felrapport så att vi kan rätta felet.
+    </string>
+    <string name="crashReportButtonLabel">Skapa brev med felrapport</string>
+    <string name="crashReportChooseCrashToReport">Välj krasch att rapportera
+    </string>
+    <string name="crashReportWidgetTitle">Rapportera problem</string>
 </resources>

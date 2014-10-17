@@ -2,7 +2,6 @@ package se.devscout.android.model.repo.remote;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,14 +51,14 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
             mBackgroundTasksHandlerThread.setListener(new BackgroundTasksHandlerThread.Listener() {
                 @Override
                 public void onDone(Object token, Object response) {
-                    Log.i(RemoteActivityRepoImpl.class.getName(), "Task completed");
+                    LogUtil.i(RemoteActivityRepoImpl.class.getName(), "Task completed");
                 }
             });
 
             // TODO: It would be nice the .quit() was eventually called. Some way. Perhaps the thread "quits itself" when the queue is empty!?
             mBackgroundTasksHandlerThread.start();
             mBackgroundTasksHandlerThread.getLooper();
-            Log.i(RemoteActivityRepoImpl.class.getName(), "Started background task thread");
+            LogUtil.i(RemoteActivityRepoImpl.class.getName(), "Started background task thread");
         }
         return mBackgroundTasksHandlerThread;
     }
@@ -124,24 +123,24 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
             if (apiKey != null && apiKey.length() > 0) {
                 boolean success = setAnonymousUserAPIKey(apiKey, PreferencesUtil.getInstance(mContext).getCurrentUser());
                 if (!success) {
-                    Log.e(RemoteActivityRepoImpl.class.getName(), "Failed to set API key.");
+                    LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Failed to set API key.");
                 }
                 return success;
             } else {
-                Log.e(RemoteActivityRepoImpl.class.getName(), "Did not receive API key in server response.");
+                LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Did not receive API key in server response.");
                 return false;
             }
         } catch (JSONException e) {
-            Log.e(RemoteActivityRepoImpl.class.getName(), "Could not create anonymous API user because of JSON problem.", e);
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not create anonymous API user because of JSON problem.", e);
             return false;
         } catch (IOException e) {
-            Log.e(RemoteActivityRepoImpl.class.getName(), "Could not create anonymous API user because of I/O problem.", e);
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not create anonymous API user because of I/O problem.", e);
             return false;
         } catch (UnauthorizedException e) {
-            Log.e(RemoteActivityRepoImpl.class.getName(), "Could not create anonymous API user because of authorization problem.", e);
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not create anonymous API user because of authorization problem.", e);
             return false;
         } catch (UnhandledHttpResponseCodeException e) {
-            Log.e(RemoteActivityRepoImpl.class.getName(), "Could not create anonymous API user because of an unhandled problem.", e);
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not create anonymous API user because of an unhandled problem.", e);
             return false;
         }
     }
@@ -168,10 +167,10 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
 
             return act;
         } catch (IOException e) {
-            Log.e(RemoteActivityRepoImpl.class.getName(), "Could not query server", e);
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not query server", e);
             return super.readActivity(key);
         } catch (JSONException e) {
-            Log.e(RemoteActivityRepoImpl.class.getName(), "Error parsing JSON response", e);
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Error parsing JSON response", e);
             return super.readActivity(key);
         }
 */
@@ -222,11 +221,11 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
                 try {
                     sendSetFavouritesRequest();
                 } catch (IOException e) {
-                    Log.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server", e);
+                    LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server", e);
                 } catch (UnauthorizedException e) {
-                    Log.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server", e);
+                    LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server", e);
                 } catch (UnhandledHttpResponseCodeException e) {
-                    Log.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server", e);
+                    LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server", e);
                 }
                 return null;
             }
@@ -267,13 +266,13 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
             }
             return result;
         } catch (IOException e) {
-            Log.e(RemoteActivityRepoImpl.class.getName(), "Could not query server", e);
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not query server", e);
             return super.findActivity(condition);
         } catch (JSONException e) {
-            Log.e(RemoteActivityRepoImpl.class.getName(), "Error parsing JSON response", e);
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Error parsing JSON response", e);
             return super.findActivity(condition);
         } catch (UnhandledHttpResponseCodeException e) {
-            Log.e(RemoteActivityRepoImpl.class.getName(), "Cannot handle server response.", e);
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Cannot handle server response.", e);
             return super.findActivity(condition);
         }
     }
@@ -315,13 +314,13 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
 //            updateLocalDatabase(result);
             return result;
         } catch (IOException e) {
-            Log.e(RemoteActivityRepoImpl.class.getName(), "Could not query server", e);
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not query server", e);
             return super.readCategories();
         } catch (JSONException e) {
-            Log.e(RemoteActivityRepoImpl.class.getName(), "Error parsing JSON response", e);
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Error parsing JSON response", e);
             return super.readCategories();
         } catch (UnhandledHttpResponseCodeException e) {
-            Log.e(RemoteActivityRepoImpl.class.getName(), "Cannot handle server response.", e);
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Cannot handle server response.", e);
             return super.readCategories();
         }
     }
@@ -401,9 +400,9 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         try {
             date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'").parse(obj.getString(fieldName));
         } catch (JSONException e) {
-            Log.e(RemoteActivityRepoImpl.class.getName(), "Could not parse " + fieldName + ". Will use current date instead. " + e.getMessage());
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not parse " + fieldName + ". Will use current date instead. " + e.getMessage());
         } catch (ParseException e) {
-            Log.e(RemoteActivityRepoImpl.class.getName(), "Could not parse " + fieldName + ". Will use current date instead. " + e.getMessage());
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not parse " + fieldName + ". Will use current date instead. " + e.getMessage());
         }
         return date;
     }
@@ -427,7 +426,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
             try {
                 min = Math.min(Integer.parseInt(minValue), min);
             } catch (NumberFormatException e) {
-                Log.e(RemoteActivityRepoImpl.class.getName(), "Could not parse string as number", e);
+                LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not parse string as number", e);
             }
         }
         List<String> maxValues = getStrings(obj, field + "_max");
@@ -436,7 +435,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
             try {
                 max = Math.max(Integer.parseInt(maxValue), max);
             } catch (NumberFormatException e) {
-                Log.e(RemoteActivityRepoImpl.class.getName(), "Could not parse string as number", e);
+                LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not parse string as number", e);
             }
         }
         return new IntegerRange(min, max);
@@ -459,10 +458,10 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         byte[] data = readUrlAsBytes(urlSpec, body, method);
         if (data != null) {
             String s = new String(data);
-            Log.d(RemoteActivityRepoImpl.class.getName(), "Server response: " + s);
+            LogUtil.d(RemoteActivityRepoImpl.class.getName(), "Server response: " + s);
             return s;
         } else {
-            Log.d(RemoteActivityRepoImpl.class.getName(), "Server response contained no data");
+            LogUtil.d(RemoteActivityRepoImpl.class.getName(), "Server response contained no data");
             return null;
         }
     }
@@ -471,10 +470,10 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         try {
             return readUrl(urlSpec, body, method);
         } catch (UnauthorizedException e) {
-            Log.e(RemoteActivityRepoImpl.class.getName(), "Server said that user is unauthorized");
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Server said that user is unauthorized");
             if (getAPIKey() == null) {
                 // User is unauthorized and has no API key, so the first this to try is to create an API key!
-                Log.i(RemoteActivityRepoImpl.class.getName(), "Server said that user is unauthorized and there is no API key assigned to the app. Try to create one.");
+                LogUtil.i(RemoteActivityRepoImpl.class.getName(), "Server said that user is unauthorized and there is no API key assigned to the app. Try to create one.");
                 synchronized (this) {
                     /*
                      * Double-check condition in case multiple "search threads"
@@ -485,14 +484,14 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
                      */
                     if (getAPIKey() == null) {
                         if (createAnonymousAPIUser()) {
-                            Log.i(RemoteActivityRepoImpl.class.getName(), "API " + getAPIKey() + " key has been created.");
+                            LogUtil.i(RemoteActivityRepoImpl.class.getName(), "API " + getAPIKey() + " key has been created.");
                         } else {
-                            Log.i(RemoteActivityRepoImpl.class.getName(), "Could not create API key");
+                            LogUtil.i(RemoteActivityRepoImpl.class.getName(), "Could not create API key");
                         }
                     }
                 }
                 if (getAPIKey() != null) {
-                    Log.d(RemoteActivityRepoImpl.class.getName(), "API key (" + getAPIKey() + ") exists and request will be resent.");
+                    LogUtil.d(RemoteActivityRepoImpl.class.getName(), "API key (" + getAPIKey() + ") exists and request will be resent.");
                     return readUrl(urlSpec, body, method);
                 }
             }
@@ -514,7 +513,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
                 httpURLConnection.addRequestProperty(HTTP_HEADER_AUTHORIZATION, "Token token=\"" + apiKey + "\"");
             }
 
-            Log.d(RemoteActivityRepoImpl.class.getName(), "Sending request to " + url.toExternalForm() + " (API key: " + apiKey + ")");
+            LogUtil.d(RemoteActivityRepoImpl.class.getName(), "Sending request to " + url.toExternalForm() + " (API key: " + apiKey + ")");
 
             if (body != null) {
                 httpURLConnection.addRequestProperty(HTTP_HEADER_CONTENT_TYPE, "application/json; charset=" + DEFAULT_REQUEST_BODY_ENCODING);
@@ -537,7 +536,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
                         length += bytesRead;
                     }
                     out.close();
-                    Log.d(RemoteActivityRepoImpl.class.getName(), "Received " + length + " bytes from server.");
+                    LogUtil.d(RemoteActivityRepoImpl.class.getName(), "Received " + length + " bytes from server.");
                     return out.toByteArray();
                 case HttpURLConnection.HTTP_NO_CONTENT:
                     return null;

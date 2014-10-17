@@ -1,12 +1,12 @@
 package se.devscout.android.controller.fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import se.devscout.android.R;
 import se.devscout.android.model.ObjectIdentifierBean;
+import se.devscout.android.util.LogUtil;
 import se.devscout.android.view.ActivitiesListItem;
 import se.devscout.android.view.ActivitiesListView;
 import se.devscout.server.api.ActivityFilter;
@@ -35,7 +35,7 @@ public class ActivitiesListFragment extends NonBlockingSearchResultFragment<Acti
              * Restore fields from saved state, for example after the device has been rotated.
              */
             mSortOrder = (ActivitiesListView.Sorter) savedInstanceState.getSerializable("mSortOrder");
-            Log.d(ActivitiesListFragment.class.getName(), "State (e.g. search result) has been restored.");
+            LogUtil.d(ActivitiesListFragment.class.getName(), "State (e.g. search result) has been restored.");
         }
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -63,9 +63,9 @@ public class ActivitiesListFragment extends NonBlockingSearchResultFragment<Acti
         /*
          * Store fields into saved state, for example when the activity is destroyed after the device has been rotated.
          */
-        Log.d(ActivitiesListFragment.class.getName(), "Saving state");
+        LogUtil.d(ActivitiesListFragment.class.getName(), "Saving state");
         outState.putSerializable("mSortOrder", mSortOrder);
-        Log.d(ActivitiesListFragment.class.getName(), "State saved");
+        LogUtil.d(ActivitiesListFragment.class.getName(), "State saved");
     }
 
     public static ActivitiesListFragment create(List<ActivityKey> activities, ActivitiesListView.Sorter defaultSortOrder) {
