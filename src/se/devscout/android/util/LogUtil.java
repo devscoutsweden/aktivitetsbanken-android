@@ -19,6 +19,7 @@ public class LogUtil {
     private static final String CRASH_REPORT_FILE_NAME_PREFIX = "crash-report-";
     private static final String CRASH_REPORT_FILE_NAME_SUFFIX = ".log";
     private static final int MAX_DAYS_TO_KEEP_CRASH_REPORT_FILE = 7;
+    private static final int MAX_LOG_ENTRY_LENGTH = 1000;
     private static final int MILLISECONDS_IN_DAY = 24 * 60 * 60 * 1000;
     private static LogUtil instance = null;
 
@@ -168,7 +169,7 @@ public class LogUtil {
     }
 
     private static void addToRollingLog(String logger, String msg, Level level, Throwable throwable) {
-        LogRecord record = new LogRecord(level, msg);
+        LogRecord record = new LogRecord(level, msg.length() > MAX_LOG_ENTRY_LENGTH ? msg.substring(0, MAX_LOG_ENTRY_LENGTH) + "..." : msg);
         record.setLoggerName(logger);
         record.setThreadID((int) Thread.currentThread().getId());
         record.setThrown(throwable);
