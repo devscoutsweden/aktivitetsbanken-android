@@ -70,7 +70,10 @@ public class SimpleDocumentLayout extends LinearLayout {
         String[] parts = text.split("\\s*\\n(\\s*\\n)+\\s*");
         for (String part : parts) {
             part = WHITE_SPACE_PATTERN.matcher(part).replaceAll(" ");
-            sb.append(part).append('\n').append('\n');
+            if (sb.length() > 0) {
+                sb.append('\n').append('\n');
+            }
+            sb.append(part);
         }
         textView.setText(sb.toString());
         addView(textView);
