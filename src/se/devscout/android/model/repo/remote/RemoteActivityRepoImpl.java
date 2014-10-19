@@ -6,10 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import se.devscout.android.model.ActivityBean;
-import se.devscout.android.model.CategoryBean;
-import se.devscout.android.model.IntegerRange;
-import se.devscout.android.model.ObjectIdentifierBean;
+import se.devscout.android.model.*;
 import se.devscout.android.model.repo.sql.SQLiteActivityRepo;
 import se.devscout.android.util.InstallationProperties;
 import se.devscout.android.util.LogUtil;
@@ -22,6 +19,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -226,6 +225,8 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
                     LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server", e);
                 } catch (UnhandledHttpResponseCodeException e) {
                     LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server", e);
+                } catch (Throwable e) {
+                    LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server due to unexpected problem.", e);
                 }
                 return null;
             }
@@ -384,6 +385,22 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
             act.getCategories().add(getLocalCategory(jsonObject));
         }
 
+        for (JSONObject jsonObject : getJSONObjectList(obj, "references")) {
+            try {
+                act.getReferences().add(getLocalReference(jsonObject));
+            } catch (URISyntaxException e) {
+                LogUtil.i(RemoteActivityRepoImpl.class.getName(), "Could not parse URI in activity reference", e);
+            }
+        }
+
+        for (JSONObject jsonObject : getJSONObjectList(obj, "media_files")) {
+            try {
+                act.getMediaItems().add(getLocalMediaFile(jsonObject));
+            } catch (URISyntaxException e) {
+                LogUtil.i(RemoteActivityRepoImpl.class.getName(), "Could not parse URI in activity media item", e);
+            }
+        }
+
         act.setSafety(obj.optString("descr_safety", null));
         act.setDescription(obj.optString("descr_main", null));
         act.setIntroduction(obj.optString("descr_introduction", null));
@@ -393,6 +410,26 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         act.setFavouritesCount(obj.has("favourite_count") ? obj.getInt("favourite_count") : null);
 //        act.addRevisions(act);
         return act;
+    }
+
+    private Media getLocalMediaFile(JSONObject jsonObject) throws JSONException, URISyntaxException {
+        return new MediaBean(
+                new URI(jsonObject.getString("uri")),
+                jsonObject.getString("mime_type"),
+                0L,
+                jsonObject.getLong("id"),
+                0L,
+                false
+        );
+    }
+
+    private Reference getLocalReference(JSONObject jsonObject) throws JSONException, URISyntaxException {
+        return new ReferenceBean(
+                0L,
+                jsonObject.getLong("id"),
+                0L,
+                new URI(jsonObject.getString("uri")),
+                jsonObject.getString("description"));
     }
 
     private Date getDate(JSONObject obj, String fieldName) {

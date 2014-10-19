@@ -9,6 +9,16 @@ import java.net.URISyntaxException;
 import java.util.Set;
 
 public class MediaCursor extends BaseCursorWrapper {
+    public MediaCursor(SQLiteDatabase db) {
+        super(db.query(
+                Database.media.T,
+                new String[]{Database.media.id, Database.media.server_id, Database.media.server_revision_id, Database.media.is_publishable, Database.media.uri, Database.media.mime_type},
+                null,
+                null,
+                null,
+                null,
+                null));
+    }
     public MediaCursor(SQLiteDatabase db, Set<Long> activityIds) {
         super(db.rawQuery("" +
                 "select " +

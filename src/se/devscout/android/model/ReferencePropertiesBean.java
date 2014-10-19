@@ -1,23 +1,22 @@
 package se.devscout.android.model;
 
 import se.devscout.server.api.model.ReferenceProperties;
-import se.devscout.server.api.model.ReferenceType;
 
 import java.net.URI;
 
 public class ReferencePropertiesBean extends ServerObjectPropertiesBean implements ReferenceProperties {
     private URI mURI;
-    private ReferenceType mType;
+    private String mDescription;
 
-    public ReferencePropertiesBean(ReferenceType type, URI uri) {
-        mType = type;
+    public ReferencePropertiesBean(URI uri, String description) {
         mURI = uri;
+        mDescription = description;
     }
 
-    public ReferencePropertiesBean(boolean publishable, long serverId, long serverRevisionId, ReferenceType type, URI uri) {
+    public ReferencePropertiesBean(boolean publishable, long serverId, long serverRevisionId, URI uri, String description) {
         super(publishable, serverId, serverRevisionId);
-        mType = type;
         mURI = uri;
+        mDescription = description;
     }
 
     @Override
@@ -26,14 +25,11 @@ public class ReferencePropertiesBean extends ServerObjectPropertiesBean implemen
     }
 
     @Override
-    public ReferenceType getType() {
-        return mType;
-    }
-    public void setURI(URI URI) {
-        mURI = URI;
+    public String getDescription() {
+        return mDescription;
     }
 
-    public void setType(ReferenceType type) {
-        mType = type;
+    public void setURI(URI URI) {
+        mURI = URI;
     }
 }

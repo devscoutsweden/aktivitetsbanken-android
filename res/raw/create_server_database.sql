@@ -85,12 +85,11 @@ CREATE TABLE IF NOT EXISTS "reference" ( "id" INTEGER NOT NULL PRIMARY KEY AUTOI
      "server_id" INTEGER,
      "server_revision_id" INTEGER,
      "uri" TEXT NOT NULL,
-     "type" TEXT NOT NULL);
-
-CREATE UNIQUE INDEX "reference_uri_type_UNIQUE" ON "reference" ("uri" ASC,
-     "type" ASC);
+     "description" TEXT);
 
 CREATE UNIQUE INDEX "reference_server_id_UNIQUE" ON "reference" ("server_id" ASC);
+
+CREATE UNIQUE INDEX "uri_UNIQUE" ON "reference" ("uri" ASC);
 
 CREATE TABLE IF NOT EXISTS "favourite_activity" ( "activity_id" INTEGER NOT NULL,
      "user_id" INTEGER NOT NULL,

@@ -1,7 +1,6 @@
 package se.devscout.android.model;
 
 import se.devscout.server.api.model.Reference;
-import se.devscout.server.api.model.ReferenceType;
 
 import java.net.URI;
 
@@ -9,8 +8,8 @@ public class ReferenceBean extends ReferencePropertiesBean implements Reference 
     public static long debugCounter;
     private Long mId;
 
-    public ReferenceBean(Long id, long serverId, long serverRevisionId, ReferenceType type, URI uri) {
-        super(false, serverId, serverRevisionId, type, uri);
+    public ReferenceBean(Long id, long serverId, long serverRevisionId, URI uri, String description) {
+        super(false, serverId, serverRevisionId, uri, description);
         mId = id;
     }
 

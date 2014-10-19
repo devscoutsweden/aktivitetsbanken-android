@@ -82,7 +82,7 @@ public class SQLiteActivityRepo implements ActivityBank {
     @Override
     public Reference createReference(ActivityKey key, ReferenceProperties properties) {
         long id = mDatabaseHelper.createReference(properties);
-        return new ReferenceBean(id,properties.getServerId(), properties.getServerRevisionId(), properties.getType(), properties.getURI());
+        return new ReferenceBean(id,properties.getServerId(), properties.getServerRevisionId(), properties.getURI(), null);
     }
 
     @Override

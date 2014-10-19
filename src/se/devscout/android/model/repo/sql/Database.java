@@ -44,7 +44,7 @@ public class Database {
         final static String id = "id";
         final static String server_id = "server_id";
         final static String uri = "uri";
-        final static String type = "type";
+        final static String description = "description";
         final static String server_revision_id = "server_revision_id";
     }
 

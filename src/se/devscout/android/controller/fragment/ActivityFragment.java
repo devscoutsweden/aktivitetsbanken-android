@@ -15,6 +15,7 @@ import se.devscout.android.view.SimpleDocumentLayout;
 import se.devscout.server.api.model.ActivityKey;
 import se.devscout.server.api.model.ActivityProperties;
 import se.devscout.server.api.model.Media;
+import se.devscout.server.api.model.Reference;
 
 import java.util.regex.Pattern;
 
@@ -69,11 +70,18 @@ public class ActivityFragment extends ActivityBankFragment {
         ((TextView)view.findViewById(R.id.activityFactTime)).setVisibility(isTimeSet ? View.VISIBLE : View.GONE);
 
         Integer favouritesCount = activityProperties.getFavouritesCount();
-        boolean isFavouritesCountSet = favouritesCount != null;
+        boolean isFavouritesCountSet = favouritesCount != null && favouritesCount > 0;
         if (isFavouritesCountSet) {
             ((TextView) view.findViewById(R.id.activityFactFavourites)).setText(context.getString(R.string.activitiesListItemFavouritesCount, favouritesCount));
         }
         ((TextView)view.findViewById(R.id.activityFactFavourites)).setVisibility(isFavouritesCountSet ? View.VISIBLE : View.GONE);
+
+        Integer commentCount = null;
+        boolean isCommented = commentCount != null && commentCount > 0;
+//        if (isCommented) {
+//            ((TextView) view.findViewById(R.id.activityFactFavourites)).setText(context.getString(R.string.activitiesListItemCommentsCount, commentCount));
+//        }
+        ((TextView)view.findViewById(R.id.activityFactComments)).setVisibility(isCommented ? View.VISIBLE : View.GONE);
 
         String categories = TextUtils.join(", ", activityProperties.getCategories());
         boolean isCategoriesSet = categories.length() > 0;
@@ -111,7 +119,14 @@ public class ActivityFragment extends ActivityBankFragment {
         if (!activityProperties.getMediaItems().isEmpty()) {
             linearLayout.addHeader(R.string.activity_tab_photos);
             for (Media media : activityProperties.getMediaItems()) {
-                linearLayout.addImage(resourceUtil.toResourceId(media.getURI()), false);
+                linearLayout.addBodyText(media.getURI().toString());
+//                linearLayout.addImage(resourceUtil.toResourceId(media.getURI()), false);
+            }
+        }
+        if (!activityProperties.getReferences().isEmpty()) {
+            linearLayout.addHeader(R.string.activity_tab_references);
+            for (Reference reference : activityProperties.getReferences()) {
+                linearLayout.addBodyText(reference.getURI().toString());
             }
         }
 

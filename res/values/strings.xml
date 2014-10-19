@@ -44,7 +44,7 @@
         mi ac, pretium velit. Etiam enim sapien, bibendum quis consequat sit amet, scelerisque ut tellus. Etiam lobortis
         tortor ac lectus aliquam, vitae porttitor est convallis. Etiam feugiat faucibus nunc eu tincidunt.
     </string>
-    <string name="activity_tab_photos">Bilder</string>
+    <string name="activity_tab_photos">Bilder och sånt</string>
     <string name="activity_tab_description">Om</string>
     <string name="startTabHome">Hem</string>
     <string name="startTabCategories">Kategorier</string>
@@ -157,4 +157,5 @@
     <string name="crashReportChooseCrashToReport">Välj krasch att rapportera
     </string>
     <string name="crashReportWidgetTitle">Rapportera problem</string>
+    <string name="activity_tab_references">Mer information</string>
 </resources>

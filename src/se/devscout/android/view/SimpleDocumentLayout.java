@@ -1,6 +1,7 @@
 package se.devscout.android.view;
 
 import android.content.Context;
+import android.text.util.Linkify;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -76,6 +77,7 @@ public class SimpleDocumentLayout extends LinearLayout {
             sb.append(part);
         }
         textView.setText(sb.toString());
+        Linkify.addLinks(textView, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
         addView(textView);
         return this;
     }
