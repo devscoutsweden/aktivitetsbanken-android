@@ -277,6 +277,9 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
             } catch (UnauthorizedException e) {
                 LogUtil.i(NonBlockingSearchView.class.getName(), "Could not complete search due to authorization problem.", e);
                 return new SearchTaskResult(e);
+            } catch (Throwable e) {
+                LogUtil.e(NonBlockingSearchView.class.getName(), "Could not complete search due to unexpected problem.", e);
+                return new SearchTaskResult(e);
             }
             LogUtil.d(NonBlockingSearchView.class.getName(), "End of doInBackground as part of " + NonBlockingSearchView.this.getClass().getName());
             return new SearchTaskResult(list);

@@ -18,6 +18,7 @@ import se.devscout.server.api.model.SearchHistory;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class DrawerListAdapter extends BaseAdapter {
@@ -126,10 +127,15 @@ public class DrawerListAdapter extends BaseAdapter {
             }
             @Override
             protected Collection<? extends SearchHistory> doInBackground(Void... voids) {
-                LogUtil.d(DrawerListAdapter.class.getName(), "Start of doInBackground");
-                Collection<? extends SearchHistory> list = activityBank.readSearchHistory(SEARCH_HISTORY_ITEM_COUNT + 1, PreferencesUtil.getInstance(mContext).getCurrentUser());
-                LogUtil.d(DrawerListAdapter.class.getName(), "End of doInBackground");
-                return list;
+                try {
+                    LogUtil.d(DrawerListAdapter.class.getName(), "Start of doInBackground");
+                    Collection<? extends SearchHistory> list = activityBank.readSearchHistory(SEARCH_HISTORY_ITEM_COUNT + 1, PreferencesUtil.getInstance(mContext).getCurrentUser());
+                    LogUtil.d(DrawerListAdapter.class.getName(), "End of doInBackground");
+                    return list;
+                } catch (Throwable e) {
+                    LogUtil.e(DrawerListAdapter.class.getName(), "Could not read search history due to unexpected problem.", e);
+                    return Collections.emptyList();
+                }
             }
 
             @Override
