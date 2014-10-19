@@ -54,6 +54,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db;
     }
 
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
     public Activity readActivity(ActivityKey key) {
         if (!mCacheActivity.containsKey(key.getId())) {
             readActivities(new SQLKeyFilter(key));
@@ -95,32 +100,42 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.beginTransaction();
         try {
             executeSQLScript(db, R.raw.create_server_database);
-//            executeSQLScript(db, R.raw.convert_server_database);
 
             String apiKey = PreferenceManager.getDefaultSharedPreferences(mContext).getString("api_key", null);
             long anonymousUserId = createUser(new UserPropertiesBean("Anonymous", apiKey, 0L, 0L, false), db);
             PreferencesUtil.getInstance(mContext).setCurrentUser(new ObjectIdentifierBean(anonymousUserId));
 
             db.setTransactionSuccessful();
-        } catch (Throwable e) {
-            logError(e, "Error!");
+            logInfo("Done initialising database.");
+        } catch (RuntimeException e) {
+            logError(e, "Failed initialising database.");
+            throw e;
         } finally {
             db.endTransaction();
         }
-        logInfo("Done initialising database.");
     }
 
-    private void executeSQLScript(SQLiteDatabase db, int sqlScriptResId) throws IOException {
-        InputStream inputStream = mContext.getResources().openRawResource(sqlScriptResId);
-        Scanner scanner = new Scanner(inputStream);
-        scanner.useDelimiter(";");
-        while (scanner.hasNext()) {
-            String cmd = scanner.next();
-            cmd = cmd.replaceAll("\\s*--.*", "").trim();
-            logDebug("Executing SQL: " + cmd);
-            db.execSQL(cmd);
+    private void executeSQLScript(SQLiteDatabase db, int sqlScriptResId) {
+        InputStream inputStream = null;
+        try {
+            inputStream = mContext.getResources().openRawResource(sqlScriptResId);
+            Scanner scanner = new Scanner(inputStream);
+            scanner.useDelimiter(";");
+            while (scanner.hasNext()) {
+                String cmd = scanner.next();
+                cmd = cmd.replaceAll("\\s*--.*", "").trim();
+                logDebug("Executing SQL: " + cmd);
+                db.execSQL(cmd);
+            }
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    logError(e, "Failed to close SQL script file");
+                }
+            }
         }
-        inputStream.close();
     }
 
     @Override
@@ -175,13 +190,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try {
             ContentValues values = new ContentValues();
             values.put(Database.reference.server_id, properties.getServerId());
-            values.put(Database.reference.type, properties.getType().name().substring(0, 1));
+            values.put(Database.reference.server_revision_id, properties.getServerRevisionId());
+            values.put(Database.reference.description, properties.getDescription());
             values.put(Database.reference.uri, properties.getURI().toString());
             long id = getDb().insertOrThrow(Database.reference.T, null, values);
             logInfo("Created reference #" + id);
             return id;
         } catch (SQLiteException e) {
             logError(e, "Could not create reference");
+            throw e;
+        }
+    }
+
+    public long createMediaItem(MediaProperties properties) {
+        try {
+            ContentValues values = new ContentValues();
+            values.put(Database.media.server_id, properties.getServerId());
+            values.put(Database.media.is_publishable, properties.isPublishable());
+            values.put(Database.media.mime_type, properties.getMimeType());
+            values.put(Database.media.server_revision_id, properties.getServerRevisionId());
+            values.put(Database.media.uri, properties.getURI().toString());
+            long id = getDb().insertOrThrow(Database.media.T, null, values);
+            logInfo("Created media item #" + id);
+            return id;
+        } catch (SQLiteException e) {
+            logError(e, "Could not create media item");
             throw e;
         }
     }
@@ -231,20 +264,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = createContentValues(properties);
 
         long activityId = getDb().insertOrThrow(Database.activity.T, null, values);
-        mActivityIdCache.invalidate();
-
-        // Associated categories
+        if (properties.getServerId() != 0) {
+            mActivityIdCache.invalidateByServerId(properties.getServerId());
+        } else {
+            mActivityIdCache.invalidate();
+        }
 
         addCategoriesToActivity(activityId, properties.getCategories());
 
         addReferencesToActivity(activityId, properties.getReferences());
-/*
-        boolean first = true;
-        for (Media media : properties.getMediaItems()) {
-            addActivityDataMedia(activityId, first, media);
-            first = false;
-        }
-*/
+
+        addMediaItemsToActivity(activityId, properties.getMediaItems());
+
         return activityId;
     }
 
@@ -267,15 +298,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         deleteCategoriesFromActivity(key);
         addCategoriesToActivity(key.getId(), properties.getCategories());
 
-        // Associated media
-
-/*
-        boolean first = true;
-        for (Media media : properties.getMediaItems()) {
-            addActivityDataMedia(activityId, first, media);
-            first = false;
-        }
-*/
+        // Associated media items
+        deleteMediaItemsFromActivity(key);
+        addMediaItemsToActivity(key.getId(), properties.getMediaItems());
 
         // Associated references
         deleteReferencesFromActivity(key);
@@ -290,6 +315,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private void deleteReferencesFromActivity(ActivityKey key) {
         getDb().delete(Database.activity_data_reference.T, Database.activity_data_reference.activity_data_id + "=" + key.getId(), null);
+    }
+
+    private void deleteMediaItemsFromActivity(ActivityKey key) {
+        getDb().delete(Database.activity_data_media.T, Database.activity_data_media.activity_data_id + "=" + key.getId(), null);
     }
 
     private void addCategoriesToActivity(Long activityId, List<? extends Category> categories) {
@@ -316,6 +345,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    private void addMediaItemsToActivity(Long activityId, List<? extends Media> mediaItems) {
+        boolean first = true;
+        for (Media media : mediaItems) {
+
+            long mediaId = getOrCreateMediaItem(media);
+
+            ContentValues associationEntry = new ContentValues();
+            associationEntry.put(Database.activity_data_media.media_id, mediaId);
+            associationEntry.put(Database.activity_data_media.activity_data_id, activityId);
+            associationEntry.put(Database.activity_data_media.featured, first ? 1 : 0);
+            getDb().insert(Database.activity_data_media.T, null, associationEntry);
+            first = false;
+        }
+    }
+
     public long getOrCreateCategory(CategoryProperties category) {
         List<CategoryBean> localCategories = readCategories();
         for (CategoryBean categoryBean : localCategories) {
@@ -336,6 +380,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
         }
         return createReference(reference);
+    }
+
+    public long getOrCreateMediaItem(MediaProperties properties) {
+        List<MediaBean> mediaBeans = readMediaItems();
+        for (MediaBean mediaBean : mediaBeans) {
+            if (mediaBean.getServerId() == properties.getServerId()) {
+                // Bingo! Media item already exists in local database.
+                return mediaBean.getId();
+            }
+        }
+        return createMediaItem(properties);
     }
 
     public long getOrCreateUser(UserProperties user) {
@@ -524,6 +579,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         refCursor.close();
         return references;
+    }
+
+    public List<MediaBean> readMediaItems() {
+        ArrayList<MediaBean> mediaItems = new ArrayList<MediaBean>();
+        MediaCursor medCursor = new MediaCursor(getDb());
+        while (medCursor.moveToNext()) {
+            long mediaId = medCursor.getId();
+            try {
+                if (!mCacheMedia.containsKey(mediaId)) {
+                    mCacheMedia.put(mediaId, medCursor.getMedia());
+                }
+                mediaItems.add(mCacheMedia.get(mediaId));
+            } catch (URISyntaxException e) {
+                LogUtil.e(DatabaseHelper.class.getName(), "Could not parse URI in database. Media item " + mediaId + " will not be accessible by client.", e);
+            }
+        }
+        medCursor.close();
+        return mediaItems;
     }
 
     public List<UserBean> readUsers() {
