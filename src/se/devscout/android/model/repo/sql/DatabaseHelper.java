@@ -39,7 +39,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
     private Set<Long> mBannedSearchHistoryIds = new HashSet<Long>();
     private ActivityIdCache mActivityIdCache = new ActivityIdCache();
-    private CategoryIdCache mCategoryIdCache = new CategoryIdCache();
 
     /**
      * This method is synchronized as to prevent multiple "search threads" from
@@ -124,8 +123,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             while (scanner.hasNext()) {
                 String cmd = scanner.next();
                 cmd = cmd.replaceAll("\\s*--.*", "").trim();
-                logDebug("Executing SQL: " + cmd);
-                db.execSQL(cmd);
+                if (cmd.length() > 0) {
+                    logDebug("Executing SQL: " + cmd);
+                    try {
+                        db.execSQL(cmd);
+                    } catch (SQLException e) {
+                        if (e.getMessage() != null && e.getMessage().contains("not an error")) {
+                            logDebug("Ignoring exception containing text 'not an error'.");
+                        } else {
+                            logError(e, "Error when executing SQL command");
+                            throw e;
+                        }
+                    }
+                } else {
+                    logDebug("Ignoring empty SQL statement.");
+                }
             }
         } finally {
             if (inputStream != null) {
@@ -229,7 +241,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         getDb().beginTransaction();
         try {
-            long userId = createUser(new UserPropertiesBean("Anonym", null, 0L, 0L, false));
             if (addTestData) {
                 List<ActivityBean> testActivities = TestDataUtil.readXMLTestData(mContext);
                 for (Activity testActivity : testActivities) {
@@ -266,6 +277,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long activityId = getDb().insertOrThrow(Database.activity.T, null, values);
         if (properties.getServerId() != 0) {
             mActivityIdCache.invalidateByServerId(properties.getServerId());
+            mActivityIdCache.addEntry(activityId, properties);
         } else {
             mActivityIdCache.invalidate();
         }
@@ -824,7 +836,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public class ActivityIdCache extends ServerObjectIdCache<ActivityBean> {
         public ActivityIdCache() {
-            super(Database.activity.id, Database.activity.server_id, Database.activity.server_revision_id, Database.activity.favourite_count);
+            super(Database.activity.T, Database.activity.id, Database.activity.server_id, Database.activity.server_revision_id, Database.activity.favourite_count);
         }
 
         @Override
@@ -832,11 +844,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return new IdCacheEntry(entry.getId(), entry.getServerId(), new long[]{entry.getServerRevisionId(), entry.getFavouritesCount() != null ? entry.getFavouritesCount().longValue() : 0});
         }
 
+        public void addEntry(long id, ActivityProperties properties) {
+            ActivityBean activityBean = new ActivityBean(null, id, properties.getServerId(), properties.getServerRevisionId(), false);
+            activityBean.setFavouritesCount(properties.getFavouritesCount());
+            addEntry(activityBean);
+        }
     }
 
     public class CategoryIdCache extends ServerObjectIdCache<CategoryBean> {
         public CategoryIdCache() {
-            super(Database.category.id, Database.category.server_id, Database.category.server_revision_id);
+            super(Database.category.T, Database.category.id, Database.category.server_id, Database.category.server_revision_id);
         }
 
         @Override
@@ -871,11 +888,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         private String mIdColumnName;
         private String mServerIdColumnName;
         private String[] mCompareColumnNames;
+        private String mTable;
 
-        public ServerObjectIdCache(String idColumnName, String serverIdColumnName, String... compareColumnNames) {
+        public ServerObjectIdCache(String table, String idColumnName, String serverIdColumnName, String... compareColumnNames) {
             mIdColumnName = idColumnName;
             mServerIdColumnName = serverIdColumnName;
             mCompareColumnNames = compareColumnNames;
+            mTable = table;
         }
 
         void invalidate() {
@@ -888,7 +907,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 String[] columnNames = Arrays.copyOf(mCompareColumnNames, mCompareColumnNames.length + 2);
                 columnNames[columnNames.length - 1] = mIdColumnName;
                 columnNames[columnNames.length - 2] = mServerIdColumnName;
-                Cursor localIdsQuery = getDb().query(Database.activity.T, columnNames, null, null, null, null, null);
+                Cursor localIdsQuery = getDb().query(mTable, columnNames, null, null, null, null, null);
                 while (localIdsQuery.moveToNext()) {
                     long[] values = new long[mCompareColumnNames.length];
                     for (int i = 0; i < mCompareColumnNames.length; i++) {
@@ -920,6 +939,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         public boolean isAdditionalValuesListIdentical(IdCacheEntry entry, T entry2) {
             return entry.isAdditionalValuesListIdentical(createIdCacheEntry(entry2));
+        }
+
+        public void addEntry(T entry) {
+            mEntries.add(createIdCacheEntry(entry));
         }
 
         protected abstract IdCacheEntry createIdCacheEntry(T entry);
