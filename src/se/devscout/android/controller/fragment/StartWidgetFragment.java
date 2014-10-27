@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -184,8 +186,18 @@ public class StartWidgetFragment extends ActivityBankFragment implements Activit
 
                                     File crashReportFile = map.get(items[i]);
 
+                                    String versionCode = "unknown version code";
+                                    String versionName = "unknown version name";
+                                    try {
+                                        PackageInfo packageInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+                                        versionCode = String.valueOf(packageInfo.versionCode);
+                                        versionName = packageInfo.versionName;
+                                    } catch (PackageManager.NameNotFoundException e) {
+                                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                                    }
+
                                     String value = MessageFormat.format("" +
-                                            "Log size: {1} bytes\n" +
+                                            "App version: {11} ({10})\n" +
                                             "Android release: {2}\n" +
                                             "Device: {3} {4} {6} {7}\n" +
                                             "\n" +
@@ -199,7 +211,9 @@ public class StartWidgetFragment extends ActivityBankFragment implements Activit
                                             Build.MODEL,
                                             Build.PRODUCT,
                                             Build.USER,
-                                            readFile(crashReportFile));
+                                            readFile(crashReportFile),
+                                            versionCode,
+                                            versionName);
                                     emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, value);
 
                         /* Send it off to the Activity-Chooser */
