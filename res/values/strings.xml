@@ -35,7 +35,7 @@
     <string name="category_track_SELF_ESTEEM">Självinsikt och självkänsla</string>
     <string name="category_track_PHYSICAL_HEALTH">Ta hand om sin kropp</string>
 
-    <string name="ageGroupListItemSubtitleFormat">%1$d-%2$d</string>
+    <string name="ageGroupListItemSubtitleFormat">%1$d-%2$d år</string>
     <string name="lipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla in fermentum dui. Etiam egestas
         ultricies tellus id venenatis. Maecenas metus nulla, molestie non ipsum eu, aliquam scelerisque nisi.
         Suspendisse eget justo nisl. Maecenas ullamcorper libero quis ligula dignissim, nec laoreet massa blandit.
