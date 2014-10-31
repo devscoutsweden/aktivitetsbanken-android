@@ -3,6 +3,7 @@ package se.devscout.android.model.repo.sql;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import se.devscout.android.model.CategoryBean;
+import se.devscout.android.model.ObjectIdentifierBean;
 
 import java.util.Set;
 
@@ -10,7 +11,7 @@ public class CategoryCursor extends BaseCursorWrapper {
     public CategoryCursor(SQLiteDatabase db) {
         super(db.query(
                 Database.category.T,
-                new String[]{Database.category.id, Database.category.server_id, Database.category.server_revision_id, Database.category.group_name, Database.category.name},
+                new String[]{Database.category.id, Database.category.server_id, Database.category.server_revision_id, Database.category.group_name, Database.category.name, Database.category.icon_media_id},
                 null,
                 null,
                 null,
@@ -35,6 +36,7 @@ public class CategoryCursor extends BaseCursorWrapper {
                 getString(getColumnIndex(Database.category.name)),
                 getId(),
                 getInt(getColumnIndex(Database.category.server_id)),
-                getInt(getColumnIndex(Database.category.server_revision_id)));
+                getInt(getColumnIndex(Database.category.server_revision_id)),
+                new ObjectIdentifierBean(getLong(getColumnIndex(Database.category.icon_media_id))));
     }
 }

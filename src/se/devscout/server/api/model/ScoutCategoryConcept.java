@@ -55,4 +55,9 @@ public enum ScoutCategoryConcept implements CategoryProperties {
     public String getGroup() {
         return "scout-concept";
     }
+
+    @Override
+    public MediaKey getIconMediaKey() {
+        return null;
+    }
 }

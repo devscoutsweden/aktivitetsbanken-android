@@ -23,6 +23,7 @@ public class Database {
         final static String owner_id = "owner_id";
         final static String status = "status";
         final static String server_revision_id = "server_revision_id";
+        final static String icon_media_id = "icon_media_id";
     }
 
     public static class media {

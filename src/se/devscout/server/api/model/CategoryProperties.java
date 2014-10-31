@@ -6,4 +6,6 @@ public interface CategoryProperties extends ServerObjectProperties{
 //    UUID getUniqueID();
 
     String getGroup();
+
+    MediaKey getIconMediaKey();
 }

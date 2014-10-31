@@ -2,11 +2,12 @@ package se.devscout.android.model;
 
 import se.devscout.server.api.model.ActivityKey;
 import se.devscout.server.api.model.CategoryKey;
+import se.devscout.server.api.model.MediaKey;
 import se.devscout.server.api.model.UserKey;
 
 import java.io.Serializable;
 
-public class ObjectIdentifierBean implements Serializable, ActivityKey, CategoryKey, UserKey {
+public class ObjectIdentifierBean implements Serializable, ActivityKey, CategoryKey, UserKey, MediaKey {
     private Long mId;
 
     public ObjectIdentifierBean(Long id) {

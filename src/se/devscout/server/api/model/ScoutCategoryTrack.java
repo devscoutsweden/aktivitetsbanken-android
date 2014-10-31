@@ -57,4 +57,9 @@ public enum ScoutCategoryTrack implements CategoryProperties {
     public String getGroup() {
         return "scout-track";
     }
+
+    @Override
+    public MediaKey getIconMediaKey() {
+        return null;
+    }
 }

@@ -19,7 +19,7 @@
         </loadfile>
         <echo message="${schemaName}" />
         <property name="regexpOptionalSize" value="\s*(\(\d+\))?" />
-        <copy file="docs-and-design/mysql-data-model.sql" tofile="res/raw/create_server_database.sql" overwrite="true">
+        <copy file="docs-and-design/mysql-data-model.sql" tofile="res/raw/db_migrate_0_create_server_database.sql" overwrite="true">
             <filterchain>
                 <replaceregex pattern="ENGINE\s*=\s*\w+" replace="" flags="gi" />
                 <!-- Delete SET, USE and CREATE SCHEMA commands. Also remove single-line comments.-->

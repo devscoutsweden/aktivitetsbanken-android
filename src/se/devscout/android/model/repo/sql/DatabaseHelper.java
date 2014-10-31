@@ -39,6 +39,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
     private Set<Long> mBannedSearchHistoryIds = new HashSet<Long>();
     private ActivityIdCache mActivityIdCache = new ActivityIdCache();
+    private CategoryIdCache mCategoryIdCache = new CategoryIdCache();
 
     /**
      * This method is synchronized as to prevent multiple "search threads" from
@@ -55,7 +56,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onOpen(SQLiteDatabase db) {
-        super.onOpen(db);    //To change body of overridden methods use File | Settings | File Templates.
+        super.onOpen(db);
     }
 
     public Activity readActivity(ActivityKey key) {
@@ -73,14 +74,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String STATUS_NEW = Status.NEW.name().substring(0, 1);
 
     //TODO: Everything is added to the cache (it is never cleared/purged). This is obviously not good.
+    // todo: How much does DatabaseHelper.mCacheCategory and DatabaseHelper.mActivityIdCache overlap?
     private Map<Long, ActivityBean> mCacheActivity;
     private Map<Long, UserBean> mCacheUser;
+    // todo: How much does DatabaseHelper.mCacheCategory and DatabaseHelper.mCategoryIdCache overlap?
     private Map<Long, CategoryBean> mCacheCategory;
     private Map<Long, MediaBean> mCacheMedia;
     private Map<Long, ReferenceBean> mCacheReference;
 
+    private static int[] DATABASE_MIGRATION_SCRIPTS = {
+            R.raw.db_migrate_0_create_server_database,
+            R.raw.db_migrate_1_category_icon
+    };
+
     public DatabaseHelper(Context context) {
-        super(context, NAME, LOGGING_CURSOR_FACTORY, VERSION);
+        super(context, NAME, LOGGING_CURSOR_FACTORY, DATABASE_MIGRATION_SCRIPTS.length);
         mContext = context;
         clearCaches();
     }
@@ -98,7 +106,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         logInfo("Starting initialising database.");
         db.beginTransaction();
         try {
-            executeSQLScript(db, R.raw.create_server_database);
+            executeSQLScript(db, DATABASE_MIGRATION_SCRIPTS[0]);
 
             String apiKey = PreferenceManager.getDefaultSharedPreferences(mContext).getString("api_key", null);
             long anonymousUserId = createUser(new UserPropertiesBean("Anonymous", apiKey, 0L, 0L, false), db);
@@ -151,8 +159,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i2) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        logInfo("Starting to upgrade database.");
+        try {
+            db.beginTransaction();
+            for (int i = oldVersion; i < newVersion; i++) {
+                executeSQLScript(db, DATABASE_MIGRATION_SCRIPTS[i]);
+            }
+            db.setTransactionSuccessful();
+            logInfo("Done upgrading database.");
+        } catch (RuntimeException e) {
+            logError(e, "Failed to upgrade database.");
+            throw e;
+        } finally {
+            db.endTransaction();
+        }
     }
 
     private void logInfo(String msg) {
@@ -176,26 +197,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public long createCategory(CategoryProperties properties) {
-        ContentValues values = new ContentValues();
 
-        byte[] bytes = new byte[16];
-        ByteBuffer bb = ByteBuffer.wrap(bytes);
-        bb.order(ByteOrder.LITTLE_ENDIAN);//) or ByteOrder.BIG_ENDIAN);
-        UUID uuid = UUID.randomUUID();
-        bb.putLong(uuid.getMostSignificantBits());
-        bb.putLong(uuid.getLeastSignificantBits());
+        ContentValues values = createContentValues(properties);
 
-        // to reverse
-//        bb.flip();
-//        UUID uuid = new UUID(bb.getLong(), bb.getLong());
-
-        values.put(Database.category.uuid, bb.array());
-        values.put(Database.category.group_name, properties.getGroup());
-        values.put(Database.category.name, properties.getName());
-        values.put(Database.category.status, " ");
-        values.put(Database.category.owner_id, -1);
-        values.put(Database.category.server_id, properties.getServerId());
-        return getDb().insertOrThrow(Database.category.T, null, values);
+        long id = getDb().insertOrThrow(Database.category.T, null, values);
+        if (properties.getServerId() != 0) {
+            mCategoryIdCache.invalidateByServerId(properties.getServerId());
+            mCategoryIdCache.addEntry(id, properties);
+        } else {
+            mCategoryIdCache.invalidate();
+        }
+        return id;
     }
 
     public long createReference(ReferenceProperties properties) {
@@ -321,6 +333,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean updateCategory(CategoryKey key, CategoryProperties properties) {
+        ContentValues values = createContentValues(properties);
+
+        if (getDb().update(Database.category.T, values, Database.category.id + "=" + key.getId(), null) != 1) {
+            logInfo("Could not update category " + key.getId());
+            return false;
+        }
+        if (properties.getServerId() != 0) {
+            mCategoryIdCache.invalidateByServerId(properties.getServerId());
+        } else {
+            mCategoryIdCache.invalidate();
+        }
+        mCacheCategory.remove(key.getId());
+
+        return true;
+    }
+
     private void deleteCategoriesFromActivity(ActivityKey key) {
         getDb().delete(Database.activity_data_category.T, Database.activity_data_category.activity_data_id + "=" + key.getId(), null);
     }
@@ -372,6 +401,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    // todo: How much does DatabaseHelper.getOrCreateCategory and RemoteActivityRepoImpl.processServerObject overlap?
     public long getOrCreateCategory(CategoryProperties category) {
         List<CategoryBean> localCategories = readCategories();
         for (CategoryBean categoryBean : localCategories) {
@@ -488,6 +518,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 //        values.put(Database.activity_data.source_uri, properties.getSourceURI() != null ? properties.getSourceURI().toString() : null);
         return values;
+    }
+
+    private ContentValues createContentValues(CategoryProperties properties) {
+        ContentValues values = new ContentValues();
+        values.put(Database.category.server_id, properties.getServerId());
+        values.put(Database.category.group_name, properties.getGroup());
+        values.put(Database.category.name, properties.getName());
+        values.putNull(Database.category.owner_id);
+        values.put(Database.category.server_revision_id, properties.getServerRevisionId());
+        values.put(Database.category.status, " ");
+        // Add UUID only because data model requires the UUID column to be non-null and unique. The UUID is never used. SQLite does not support ALTER TABLE DROP COLUMN.
+        values.put(Database.category.uuid, getUUIDBytes(UUID.randomUUID()).array());
+
+        if (properties.getIconMediaKey() != null) {
+            values.put(Database.category.icon_media_id, properties.getIconMediaKey().getId());
+        } else {
+            values.putNull(Database.category.icon_media_id);
+        }
+        return values;
+    }
+
+    private ByteBuffer getUUIDBytes(UUID uuid) {
+        byte[] bytes = new byte[16];
+        ByteBuffer bb = ByteBuffer.wrap(bytes);
+        bb.order(ByteOrder.LITTLE_ENDIAN);//) or ByteOrder.BIG_ENDIAN);
+        bb.putLong(uuid.getMostSignificantBits());
+        bb.putLong(uuid.getLeastSignificantBits());
+        return bb;
     }
 
     private void addActivityDataMedia(long activityDataId, boolean isFeatured, Media media) {
@@ -775,18 +833,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public LocalObjectRefreshness getLocalActivityFreshness(ActivityBean serverActivity) {
-        return getLocalActivityFreshness(serverActivity, mActivityIdCache);
+        return getLocalObjectFreshness(serverActivity, mActivityIdCache);
+    }
+
+    public LocalObjectRefreshness getLocalCategoryFreshness(CategoryBean serverActivity) {
+        return getLocalObjectFreshness(serverActivity, mCategoryIdCache);
     }
 
     public long getLocalIdForActivity(ServerObjectIdentifier serverObjectIdentifier) {
         return mActivityIdCache.getEntryByServerId(serverObjectIdentifier.getServerId()).mId;
     }
 
-    private <T extends SynchronizedServerObject> LocalObjectRefreshness getLocalActivityFreshness(T serverActivity, ServerObjectIdCache<T> idCache) {
-        DatabaseHelper.IdCacheEntry entry = idCache.getEntryByServerId(serverActivity.getServerId());
+    public long getLocalIdForCategory(ServerObjectIdentifier serverObjectIdentifier) {
+        return mCategoryIdCache.getEntryByServerId(serverObjectIdentifier.getServerId()).mId;
+    }
+
+    private <T extends SynchronizedServerObject> LocalObjectRefreshness getLocalObjectFreshness(T serverObject, ServerObjectIdCache<T> idCache) {
+        DatabaseHelper.IdCacheEntry entry = idCache.getEntryByServerId(serverObject.getServerId());
         if (entry != null) {
-            // Activity is cached
-            if (!idCache.isAdditionalValuesListIdentical(entry, serverActivity)) {
+            // Object is cached
+            if (!idCache.isAdditionalValuesListIdentical(entry, serverObject)) {
                 // Incoming data is newer than cached data
                 return LocalObjectRefreshness.LOCAL_IS_OLD;
             } else {
@@ -859,6 +925,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         @Override
         protected IdCacheEntry createIdCacheEntry(CategoryBean entry) {
             return new IdCacheEntry(entry.getId(), entry.getServerId(), new long[]{entry.getServerRevisionId()});
+        }
+        public void addEntry(long id, CategoryProperties properties) {
+            CategoryBean categoryBean = new CategoryBean(properties.getGroup(), properties.getName(), id, properties.getServerId(), properties.getServerRevisionId(), properties.getIconMediaKey());
+            addEntry(categoryBean);
         }
 
     }

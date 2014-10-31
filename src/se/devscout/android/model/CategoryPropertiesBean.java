@@ -1,17 +1,20 @@
 package se.devscout.android.model;
 
 import se.devscout.server.api.model.CategoryProperties;
+import se.devscout.server.api.model.MediaKey;
 
 import java.io.Serializable;
 
 public class CategoryPropertiesBean extends ServerObjectPropertiesBean implements CategoryProperties, Serializable {
     private String mName;
     private String mGroup;
+    private MediaKey mIconMediaKey;
 
-    public CategoryPropertiesBean(String group, String name, long serverId, long serverRevisionId, boolean publishable) {
+    public CategoryPropertiesBean(String group, String name, long serverId, long serverRevisionId, boolean publishable, MediaKey iconMediaKey) {
         super(publishable, serverId, serverRevisionId);
         mGroup = group;
         mName = name;
+        mIconMediaKey = iconMediaKey;
     }
 
     @Override
@@ -22,6 +25,11 @@ public class CategoryPropertiesBean extends ServerObjectPropertiesBean implement
     @Override
     public String getGroup() {
         return mGroup;
+    }
+
+    @Override
+    public MediaKey getIconMediaKey() {
+        return mIconMediaKey;
     }
 
     void setName(String name) {

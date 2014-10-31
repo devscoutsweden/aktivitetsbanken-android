@@ -162,7 +162,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
 
             ActivityBean act = getLocalActivity(obj);
 
-            processActivityFromServer(act);
+            processServerObject(act);
 
             return act;
         } catch (IOException e) {
@@ -261,7 +261,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
             for (JSONObject obj : getJSONArrayAsList(array)) {
                 ActivityBean act = getLocalActivity(obj);
 
-                processActivityFromServer(act);
+                processServerObject(act);
 
                 result.add(act);
             }
@@ -278,7 +278,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         }
     }
 
-    private void processActivityFromServer(ActivityBean act) {
+    private void processServerObject(ActivityBean act) {
         //TODO: refactor into separate method for updating database.
         switch (mDatabaseHelper.getLocalActivityFreshness(act)) {
             case LOCAL_IS_MISSING:
@@ -298,6 +298,26 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         }
     }
 
+    private void processServerObject(CategoryBean category) {
+        //TODO: refactor into separate method for updating database.
+        switch (mDatabaseHelper.getLocalCategoryFreshness(category)) {
+            case LOCAL_IS_MISSING:
+                // Incoming data is a new (non-cached) activity. Add it to the local database.
+                long id = mDatabaseHelper.createCategory(category);
+                category.setId(id);
+                break;
+            case LOCAL_IS_OLD:
+                // Incoming data is newer than cached data
+                category.setId(mDatabaseHelper.getLocalIdForCategory(category));
+                mDatabaseHelper.updateCategory(category, category);
+                break;
+            case LOCAL_IS_UP_TO_DATE:
+                // No need to do anything
+                category.setId(mDatabaseHelper.getLocalIdForCategory(category));
+                break;
+        }
+    }
+
     @Override
     public List<CategoryBean> readCategories() throws UnauthorizedException {
         //TODO: Host name should not be kept in source code
@@ -306,13 +326,12 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
             JSONArray array = getJSONArray(uri, null);
             ArrayList<CategoryBean> result = new ArrayList<CategoryBean>();
             for (JSONObject obj : getJSONArrayAsList(array)) {
-//            for (int i = 0; i < array.length(); i++) {
-//                JSONObject obj = array.getJSONObject(i);
                 CategoryBean act = getLocalCategory(obj);
+
+                processServerObject(act);
+
                 result.add(act);
             }
-            //TODO: add functionality for caching/storing incoming data in database. Check find(...) method for inspiration. High priority.
-//            updateLocalDatabase(result);
             return result;
         } catch (IOException e) {
             LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not query server", e);
@@ -343,12 +362,21 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     }
 
     private CategoryBean getLocalCategory(JSONObject obj) throws JSONException {
+        Media iconMedia = null;
+        if (obj.has("media_file")) {
+            try {
+                iconMedia = getLocalMediaFile(obj.getJSONObject("media_file"));
+            } catch (URISyntaxException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+        }
         CategoryBean cat = new CategoryBean(
                 obj.getString("group"),
                 obj.getString("name"),
                 0L,
                 obj.getInt("id"),
-                getServerRevisionId(obj));
+                getServerRevisionId(obj),
+                iconMedia != null ? new ObjectIdentifierBean(mDatabaseHelper.getOrCreateMediaItem(iconMedia)) : null);
         cat.setPublishable(false);
         return cat;
     }
