@@ -15,6 +15,7 @@ import se.devscout.android.R;
 import se.devscout.android.controller.fragment.ActivitiesListFragment;
 import se.devscout.android.model.repo.remote.UnauthorizedException;
 import se.devscout.android.util.LogUtil;
+import se.devscout.android.util.StopWatch;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -258,14 +259,20 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
 
     public abstract class SearchTask extends AsyncTask<Object, Object, SearchTaskResult> {
 
+        protected final StopWatch mStopWatch;
+
         protected SearchTask() {
+            mStopWatch = new StopWatch("SearchTask");
             LogUtil.initExceptionLogging(getContext());
+            mStopWatch.logEvent("initExceptionLogging done");
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            mStopWatch.logEvent("Start of onPreExecute");
             showLoadingSpinner();
+            mStopWatch.logEvent("End of onPreExecute");
         }
 
         @Override
@@ -273,6 +280,7 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
             LogUtil.d(NonBlockingSearchView.class.getName(), "Start of doInBackground as part of " + NonBlockingSearchView.this.getClass().getName());
             List<T> list = null;
             try {
+                mStopWatch.logEvent("Start of doSearch");
                 list = doSearch();
             } catch (UnauthorizedException e) {
                 LogUtil.i(NonBlockingSearchView.class.getName(), "Could not complete search due to authorization problem.", e);
@@ -280,13 +288,17 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
             } catch (Throwable e) {
                 LogUtil.e(NonBlockingSearchView.class.getName(), "Could not complete search due to unexpected problem.", e);
                 return new SearchTaskResult(e);
+            } finally {
+                mStopWatch.logEvent("End of doSearch");
             }
             LogUtil.d(NonBlockingSearchView.class.getName(), "End of doInBackground as part of " + NonBlockingSearchView.this.getClass().getName());
-            return new SearchTaskResult(list);
+            SearchTaskResult result = new SearchTaskResult(list);
+            return result;
         }
 
         @Override
         protected void onPostExecute(SearchTaskResult result) {
+            mStopWatch.logEvent("Start of onPostExecute");
             LogUtil.d(NonBlockingSearchView.class.getName(), "Search task has completed. ");
             if (result != null) {
                 if (result.mResult != null) {
@@ -317,6 +329,8 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
             synchronized (NonBlockingSearchView.this) {
                 mSearchPending = false;
             }
+            mStopWatch.logEvent("End of onPostExecute");
+            LogUtil.i(NonBlockingSearchView.class.getName(), mStopWatch.getSummary());
         }
 
         protected abstract List<T> doSearch() throws UnauthorizedException;

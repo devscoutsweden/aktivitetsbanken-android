@@ -212,13 +212,17 @@ public class ActivitiesListView extends NonBlockingSearchView<ActivitiesListItem
         @Override
         protected List<ActivitiesListItem> doSearch() throws UnauthorizedException {
             ActivityBank activityBank = ActivityBankFactory.getInstance(getContext());
+            mStopWatch.logEvent("Acquired ActivityBank");
             List<Activity> activities = (List<Activity>) activityBank.findActivity(mFilter);
+            mStopWatch.logEvent("Query server");
             final SearchHistoryDataBean searchHistoryDataBean = new SearchHistoryDataBean(mFilter);
             activityBank.createSearchHistory(new SearchHistoryPropertiesBean(null, searchHistoryDataBean), PreferencesUtil.getInstance(getContext()).getCurrentUser());
+            mStopWatch.logEvent("Added search to history");
             List<ActivitiesListItem> items = new ArrayList<ActivitiesListItem>();
             for (Activity activity : activities) {
                 items.add(new ActivitiesListItem(activity));
             }
+            mStopWatch.logEvent("Created list items");
             return items;
         }
     }
