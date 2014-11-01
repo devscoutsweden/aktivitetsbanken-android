@@ -27,7 +27,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/activityCoverImage"
-                    android:src="@drawable/img_1447"
                     style="@style/PhotoGallery_Thumbnail" />
 
                 <TextView
