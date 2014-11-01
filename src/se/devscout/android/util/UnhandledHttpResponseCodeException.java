@@ -1,4 +1,4 @@
-package se.devscout.android.model.repo.remote;
+package se.devscout.android.util;
 
 public class UnhandledHttpResponseCodeException extends Throwable {
     private int mResponseCode;

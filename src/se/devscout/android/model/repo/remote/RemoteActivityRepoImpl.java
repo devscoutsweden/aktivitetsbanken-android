@@ -9,21 +9,16 @@ import org.json.JSONTokener;
 import se.devscout.android.controller.fragment.TitleActivityFilterVisitor;
 import se.devscout.android.model.*;
 import se.devscout.android.model.repo.sql.SQLiteActivityRepo;
-import se.devscout.android.util.InstallationProperties;
-import se.devscout.android.util.LogUtil;
-import se.devscout.android.util.PreferencesUtil;
-import se.devscout.android.util.StopWatch;
+import se.devscout.android.util.*;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.URIBuilderActivityFilterVisitor;
 import se.devscout.server.api.model.*;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,29 +36,6 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     private static final SimpleDateFormat API_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'");
     private static RemoteActivityRepoImpl ourInstance;
     private final Context mContext;
-
-/*
-    private BackgroundTasksHandlerThread mBackgroundTasksHandlerThread;
-
-    public BackgroundTasksHandlerThread getBackgroundTasksHandlerThread() {
-        if (mBackgroundTasksHandlerThread == null) {
-            mBackgroundTasksHandlerThread = new BackgroundTasksHandlerThread(new Handler(), mContext);
-
-            mBackgroundTasksHandlerThread.setListener(new BackgroundTasksHandlerThread.Listener() {
-                @Override
-                public void onDone(Object token, Object response) {
-                    LogUtil.i(RemoteActivityRepoImpl.class.getName(), "Task completed");
-                }
-            });
-
-            // TODO: It would be nice the .quit() was eventually called. Some way. Perhaps the thread "quits itself" when the queue is empty!?
-            mBackgroundTasksHandlerThread.start();
-            mBackgroundTasksHandlerThread.getLooper();
-            LogUtil.i(RemoteActivityRepoImpl.class.getName(), "Started background task thread");
-        }
-        return mBackgroundTasksHandlerThread;
-    }
-*/
 
     public static RemoteActivityRepoImpl getInstance(Context ctx) {
         if (ourInstance == null) {
@@ -625,61 +597,28 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         }
     }
 
-    private byte[] readUrl(String urlSpec, String body, HttpMethod method) throws IOException, UnauthorizedException, UnhandledHttpResponseCodeException {
-        StopWatch stopWatch = new StopWatch("readUrl " + urlSpec);
+    private byte[] readUrl(String urlSpec, final String body, HttpMethod method) throws IOException, UnauthorizedException, UnhandledHttpResponseCodeException {
         URL url = new URL(urlSpec);
-        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-        stopWatch.logEvent("Opened connection");
-        try {
-            httpURLConnection.setRequestMethod(method.name());
+        HttpRequest request = new HttpRequest(url, method);
 
-            String installationId = InstallationProperties.getInstance(mContext).getId().toString();
-            httpURLConnection.addRequestProperty(HTTP_HEADER_X_ANDROID_APP_INSTALLATION_ID, installationId);
+        String installationId = InstallationProperties.getInstance(mContext).getId().toString();
+        request.setHeader(HTTP_HEADER_X_ANDROID_APP_INSTALLATION_ID, installationId);
 
-            String apiKey = getAPIKey();
-            if (apiKey != null) {
-                httpURLConnection.addRequestProperty(HTTP_HEADER_AUTHORIZATION, "Token token=\"" + apiKey + "\"");
-            }
-
-            LogUtil.d(RemoteActivityRepoImpl.class.getName(), "Sending request to " + url.toExternalForm() + " (API key: " + apiKey + ")");
-
-            if (body != null) {
-                httpURLConnection.addRequestProperty(HTTP_HEADER_CONTENT_TYPE, "application/json; charset=" + DEFAULT_REQUEST_BODY_ENCODING);
-
-                // Writing to output string will send request
-                httpURLConnection.getOutputStream().write(body.getBytes(DEFAULT_REQUEST_BODY_ENCODING));
-            }
-
-            // Asking about response code will send request, if not already sent
-            switch (httpURLConnection.getResponseCode()) {
-                case HttpURLConnection.HTTP_OK:
-                case HttpURLConnection.HTTP_CREATED:
-                    ByteArrayOutputStream out = new ByteArrayOutputStream();
-                    int bytesRead = 0;
-                    byte[] buffer = new byte[1024];
-                    InputStream in = httpURLConnection.getInputStream();
-                    int length = 0;
-                    stopWatch.logEvent("Sending request");
-                    while ((bytesRead = in.read(buffer)) > 0) {
-                        out.write(buffer, 0, bytesRead);
-                        length += bytesRead;
-                    }
-                    out.close();
-                    stopWatch.logEvent("Reading response");
-                    LogUtil.d(RemoteActivityRepoImpl.class.getName(), "Received " + length + " bytes from server.");
-                    return out.toByteArray();
-                case HttpURLConnection.HTTP_NO_CONTENT:
-                    return null;
-                case HttpURLConnection.HTTP_UNAUTHORIZED:
-                    throw new UnauthorizedException();
-                default:
-                    throw new UnhandledHttpResponseCodeException(httpURLConnection.getResponseCode());
-            }
-        } finally {
-            httpURLConnection.disconnect();
-            stopWatch.logEvent("Done");
-            LogUtil.i(RemoteActivityRepoImpl.class.getName(), stopWatch.getSummary());
+        String apiKey = getAPIKey();
+        if (apiKey != null) {
+            request.setHeader(HTTP_HEADER_AUTHORIZATION, "Token token=\"" + apiKey + "\"");
         }
+
+        LogUtil.d(HttpRequest.class.getName(), "Sending request to " + url.toExternalForm() + " (API key: " + apiKey + ")");
+
+        if (body != null) {
+            request.setHeader(HTTP_HEADER_CONTENT_TYPE, "application/json; charset=" + DEFAULT_REQUEST_BODY_ENCODING);
+        }
+
+        RequestBodyStreamHandler requestHandler = new StringRequestBodyStreamHandler(body, Charset.forName(DEFAULT_REQUEST_BODY_ENCODING));
+        ResponseStreamHandler<byte[]> responseHandler = new ByteArrayResponseStreamHandler();
+        HttpResponse<byte[]> response = request.run(responseHandler, requestHandler);
+        return response.getBody();
     }
 
     private String getAPIKey() {

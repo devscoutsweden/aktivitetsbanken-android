@@ -13,9 +13,9 @@ import android.view.ViewParent;
 import android.widget.*;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.ActivitiesListFragment;
-import se.devscout.android.model.repo.remote.UnauthorizedException;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.StopWatch;
+import se.devscout.android.util.UnauthorizedException;
 
 import java.io.Serializable;
 import java.util.ArrayList;
