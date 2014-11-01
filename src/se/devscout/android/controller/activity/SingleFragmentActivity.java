@@ -1,7 +1,6 @@
 package se.devscout.android.controller.activity;
 
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -14,13 +13,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.ListView;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.drawer.*;
 import se.devscout.android.controller.fragment.AbstractActivityBankListener;
-import se.devscout.android.model.repo.remote.BackgroundTasksHandlerThread;
 import se.devscout.android.util.ActivityBankFactory;
+import se.devscout.android.util.BackgroundTasksHandlerThread;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.view.AbstractActivitiesFinderComponentFactory;
 import se.devscout.server.api.ActivityBank;
@@ -44,16 +42,6 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
     public synchronized BackgroundTasksHandlerThread getBackgroundTasksHandlerThread() {
         if (mBackgroundTasksHandlerThread == null) {
             mBackgroundTasksHandlerThread = new BackgroundTasksHandlerThread(this, new Handler());
-            mBackgroundTasksHandlerThread.setListener(new BackgroundTasksHandlerThread.Listener() {
-                @Override
-                public void onDone(Object token, Object response) {
-                    if (token instanceof ImageView && response instanceof Bitmap) {
-                        ImageView imageView = (ImageView) token;
-                        imageView.setImageBitmap((Bitmap) response);
-                    }
-                    LogUtil.i(SingleFragmentActivity.class.getName(), "Task completed");
-                }
-            });
             mBackgroundTasksHandlerThread.start();
             mBackgroundTasksHandlerThread.getLooper();
 
@@ -160,6 +148,7 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
     protected void onDestroy() {
         super.onDestroy();
         if (mBackgroundTasksHandlerThread != null) {
+            mBackgroundTasksHandlerThread.close();
             mBackgroundTasksHandlerThread.quit();
         }
         if (mActivityBankListener != null) {
