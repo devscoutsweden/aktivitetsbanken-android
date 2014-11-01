@@ -7,7 +7,7 @@ import se.devscout.android.model.ReferenceBean;
 import se.devscout.android.model.SearchHistoryBean;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.SimpleFilter;
-import se.devscout.android.util.UnauthorizedException;
+import se.devscout.android.util.http.UnauthorizedException;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.ActivityBankListener;
 import se.devscout.server.api.ActivityFilter;

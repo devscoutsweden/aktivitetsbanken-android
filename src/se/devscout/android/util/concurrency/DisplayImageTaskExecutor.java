@@ -1,9 +1,11 @@
-package se.devscout.android.util;
+package se.devscout.android.util.concurrency;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import se.devscout.android.R;
+import se.devscout.android.util.*;
+import se.devscout.android.util.http.*;
 
 import java.io.BufferedOutputStream;
 import java.io.File;

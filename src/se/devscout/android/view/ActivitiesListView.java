@@ -16,7 +16,7 @@ import se.devscout.android.model.SearchHistoryDataBean;
 import se.devscout.android.model.SearchHistoryPropertiesBean;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.PreferencesUtil;
-import se.devscout.android.util.UnauthorizedException;
+import se.devscout.android.util.http.UnauthorizedException;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.model.Activity;

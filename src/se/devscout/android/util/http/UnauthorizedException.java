@@ -1,4 +1,4 @@
-package se.devscout.android.util;
+package se.devscout.android.util.http;
 
 public class UnauthorizedException extends Exception {
 }

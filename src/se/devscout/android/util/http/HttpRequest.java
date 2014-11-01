@@ -1,4 +1,7 @@
-package se.devscout.android.util;
+package se.devscout.android.util.http;
+
+import se.devscout.android.util.LogUtil;
+import se.devscout.android.util.StopWatch;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -16,7 +19,7 @@ public class HttpRequest {
         mMethod = method;
     }
 
-    public <T> HttpResponse<T> run(ResponseStreamHandler<T> responseHandler, RequestBodyStreamHandler requestHandler) throws IOException, UnauthorizedException, UnhandledHttpResponseCodeException{
+    public <T> HttpResponse<T> run(ResponseStreamHandler<T> responseHandler, RequestBodyStreamHandler requestHandler) throws IOException, UnauthorizedException, UnhandledHttpResponseCodeException {
         try {
             return run(responseHandler, requestHandler, null);
         } catch (HeaderException e) {

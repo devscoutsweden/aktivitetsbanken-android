@@ -1,8 +1,11 @@
-package se.devscout.android.util;
+package se.devscout.android.util.concurrency;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import se.devscout.android.model.repo.remote.RemoteActivityRepoImpl;
+import se.devscout.android.util.LogUtil;
+import se.devscout.android.util.http.UnauthorizedException;
+import se.devscout.android.util.http.UnhandledHttpResponseCodeException;
 
 import java.io.IOException;
 

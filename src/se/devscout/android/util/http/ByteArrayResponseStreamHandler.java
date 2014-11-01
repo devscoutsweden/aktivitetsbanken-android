@@ -1,4 +1,6 @@
-package se.devscout.android.util;
+package se.devscout.android.util.http;
+
+import se.devscout.android.util.LogUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

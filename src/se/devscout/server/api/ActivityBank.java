@@ -1,6 +1,6 @@
 package se.devscout.server.api;
 
-import se.devscout.android.util.UnauthorizedException;
+import se.devscout.android.util.http.UnauthorizedException;
 import se.devscout.server.api.model.*;
 
 import java.util.List;
