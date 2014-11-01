@@ -6,11 +6,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import se.devscout.android.controller.fragment.TitleActivityFilterVisitor;
 import se.devscout.android.model.*;
 import se.devscout.android.model.repo.sql.SQLiteActivityRepo;
 import se.devscout.android.util.InstallationProperties;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.PreferencesUtil;
+import se.devscout.android.util.StopWatch;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.URIBuilderActivityFilterVisitor;
 import se.devscout.server.api.model.*;
@@ -35,8 +37,8 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     private static final String HTTP_HEADER_AUTHORIZATION = "Authorization";
     private static final String HTTP_HEADER_CONTENT_TYPE = "Content-Type";
     private static final String HTTP_HEADER_X_ANDROID_APP_INSTALLATION_ID = "X-AndroidAppInstallationId";
-    //    private static final String PREFERENCE_API_KEY = "api_key";
     private static final long UNKNOWN_SERVER_REVISION_ID = 0L;
+    private static final SimpleDateFormat API_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'");
     private static RemoteActivityRepoImpl ourInstance;
     private final Context mContext;
 
@@ -160,7 +162,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
             String uri = "http://" + HOST + "/api/v1/activities/" + key.getId();
             JSONObject obj = getJSONObject(uri);
 
-            ActivityBean act = getLocalActivity(obj);
+            ActivityBean act = getActivityBean(obj);
 
             processServerObject(act);
 
@@ -215,6 +217,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
             {
                 LogUtil.initExceptionLogging(mContext);
             }
+
             @Override
             protected Void doInBackground(Void... voids) {
                 try {
@@ -253,18 +256,23 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
 
     @Override
     public List<ActivityBean> findActivity(ActivityFilter condition) throws UnauthorizedException {
+        StopWatch stopWatch = new StopWatch("findActivity " + condition.toString(new TitleActivityFilterVisitor(mContext)));
         URIBuilderActivityFilterVisitor visitor = new ApiV1Visitor();
         String uri = condition.toAPIRequest(visitor).toString();
         try {
+            stopWatch.logEvent("Preparing request");
             JSONArray array = getJSONArray(uri, null);
+            stopWatch.logEvent("Sending query to server and reading response");
             ArrayList<ActivityBean> result = new ArrayList<ActivityBean>();
+            stopWatch.logEvent("Parsed JSON");
             for (JSONObject obj : getJSONArrayAsList(array)) {
-                ActivityBean act = getLocalActivity(obj);
+                ActivityBean act = getActivityBean(obj);
 
                 processServerObject(act);
 
                 result.add(act);
             }
+            stopWatch.logEvent("Saving all returned data in local database");
             return result;
         } catch (IOException e) {
             LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not query server", e);
@@ -275,12 +283,15 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         } catch (UnhandledHttpResponseCodeException e) {
             LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Cannot handle server response.", e);
             return super.findActivity(condition);
+        } finally {
+            stopWatch.logEvent("The last things");
+            LogUtil.i(RemoteActivityRepoImpl.class.getName(), stopWatch.getSummary());
         }
     }
 
     private void processServerObject(ActivityBean act) {
         //TODO: refactor into separate method for updating database.
-        switch (mDatabaseHelper.getLocalActivityFreshness(act)) {
+        switch (mDatabaseHelper.getLocalFreshness(act)) {
             case LOCAL_IS_MISSING:
                 // Incoming data is a new (non-cached) activity. Add it to the local database.
                 long id = mDatabaseHelper.createActivity(act);
@@ -288,19 +299,19 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
                 break;
             case LOCAL_IS_OLD:
                 // Incoming data is newer than cached data
-                act.setId(mDatabaseHelper.getLocalIdForActivity(act));
+                act.setId(mDatabaseHelper.getLocalIdByServerId(act));
                 mDatabaseHelper.updateActivity(act, act);
                 break;
             case LOCAL_IS_UP_TO_DATE:
                 // No need to do anything
-                act.setId(mDatabaseHelper.getLocalIdForActivity(act));
+                act.setId(mDatabaseHelper.getLocalIdByServerId(act));
                 break;
         }
     }
 
     private void processServerObject(CategoryBean category) {
         //TODO: refactor into separate method for updating database.
-        switch (mDatabaseHelper.getLocalCategoryFreshness(category)) {
+        switch (mDatabaseHelper.getLocalFreshness(category)) {
             case LOCAL_IS_MISSING:
                 // Incoming data is a new (non-cached) activity. Add it to the local database.
                 long id = mDatabaseHelper.createCategory(category);
@@ -308,12 +319,52 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
                 break;
             case LOCAL_IS_OLD:
                 // Incoming data is newer than cached data
-                category.setId(mDatabaseHelper.getLocalIdForCategory(category));
+                category.setId(mDatabaseHelper.getLocalIdByServerId(category));
                 mDatabaseHelper.updateCategory(category, category);
                 break;
             case LOCAL_IS_UP_TO_DATE:
                 // No need to do anything
-                category.setId(mDatabaseHelper.getLocalIdForCategory(category));
+                category.setId(mDatabaseHelper.getLocalIdByServerId(category));
+                break;
+        }
+    }
+
+    private void processServerObject(MediaBean media) {
+        //TODO: refactor into separate method for updating database.
+        switch (mDatabaseHelper.getLocalFreshness(media)) {
+            case LOCAL_IS_MISSING:
+                // Incoming data is a new (non-cached) activity. Add it to the local database.
+                long id = mDatabaseHelper.createMediaItem(media);
+                media.setId(id);
+                break;
+            case LOCAL_IS_OLD:
+                // Incoming data is newer than cached data
+                media.setId(mDatabaseHelper.getLocalIdByServerId(media));
+                mDatabaseHelper.updateMediaItem(media, media);
+                break;
+            case LOCAL_IS_UP_TO_DATE:
+                // No need to do anything
+                media.setId(mDatabaseHelper.getLocalIdByServerId(media));
+                break;
+        }
+    }
+
+    private void processServerObject(ReferenceBean reference) {
+        //TODO: refactor into separate method for updating database.
+        switch (mDatabaseHelper.getLocalFreshness(reference)) {
+            case LOCAL_IS_MISSING:
+                // Incoming data is a new (non-cached) activity. Add it to the local database.
+                long id = mDatabaseHelper.createReference(reference);
+                reference.setId(id);
+                break;
+            case LOCAL_IS_OLD:
+                // Incoming data is newer than cached data
+                reference.setId(mDatabaseHelper.getLocalIdByServerId(reference));
+                mDatabaseHelper.updateReference(reference, reference);
+                break;
+            case LOCAL_IS_UP_TO_DATE:
+                // No need to do anything
+                reference.setId(mDatabaseHelper.getLocalIdByServerId(reference));
                 break;
         }
     }
@@ -326,7 +377,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
             JSONArray array = getJSONArray(uri, null);
             ArrayList<CategoryBean> result = new ArrayList<CategoryBean>();
             for (JSONObject obj : getJSONArrayAsList(array)) {
-                CategoryBean act = getLocalCategory(obj);
+                CategoryBean act = getCategoryBean(obj);
 
                 processServerObject(act);
 
@@ -346,28 +397,29 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     }
 
     private JSONArray getJSONArray(String uri, JSONObject body) throws IOException, JSONException, UnauthorizedException, UnhandledHttpResponseCodeException {
+        StopWatch stopWatch = new StopWatch("getJSONArray from " + uri);
         String s = readUrlAsString(uri, body != null ? body.toString() : null, HttpMethod.GET);
-        return (JSONArray) new JSONTokener(s).nextValue();
+        stopWatch.logEvent("Fetched data");
+        JSONArray jsonArray = (JSONArray) new JSONTokener(s).nextValue();
+        stopWatch.logEvent("Parsed data");
+        LogUtil.i(RemoteActivityRepoImpl.class.getName(), stopWatch.getSummary());
+        return jsonArray;
     }
-
-/*
-    private JSONObject getJSONObject(String uri, JSONObject body) throws IOException, JSONException, UnauthorizedException, UnhandledHttpResponseCodeException {
-        return getJSONObject(uri, body, HttpMethod.GET);
-    }
-*/
 
     private JSONObject getJSONObject(String uri, JSONObject body, HttpMethod method) throws IOException, JSONException, UnauthorizedException, UnhandledHttpResponseCodeException {
         String s = readUrlAsString(uri, body != null ? body.toString() : null, method);
         return (JSONObject) new JSONTokener(s).nextValue();
     }
 
-    private CategoryBean getLocalCategory(JSONObject obj) throws JSONException {
-        Media iconMedia = null;
+    private CategoryBean getCategoryBean(JSONObject obj) throws JSONException {
+        ObjectIdentifierBean iconMediaKey = null;
         if (obj.has("media_file")) {
             try {
-                iconMedia = getLocalMediaFile(obj.getJSONObject("media_file"));
+                MediaBean iconMedia = getMediaFileBean(obj.getJSONObject("media_file"));
+                processServerObject(iconMedia);
+                iconMediaKey = iconMedia != null ? new ObjectIdentifierBean(iconMedia) : null;
             } catch (URISyntaxException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                LogUtil.i(RemoteActivityRepoImpl.class.getName(), "Could not parse URI in category's media item", e);
             }
         }
         CategoryBean cat = new CategoryBean(
@@ -376,7 +428,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
                 0L,
                 obj.getInt("id"),
                 getServerRevisionId(obj),
-                iconMedia != null ? new ObjectIdentifierBean(mDatabaseHelper.getOrCreateMediaItem(iconMedia)) : null);
+                iconMediaKey);
         cat.setPublishable(false);
         return cat;
     }
@@ -391,7 +443,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         }
     }
 
-    private ActivityBean getLocalActivity(JSONObject obj) throws JSONException {
+    private ActivityBean getActivityBean(JSONObject obj) throws JSONException {
         ObjectIdentifierBean ownerId = null;//new ObjectIdentifierBean(mDatabaseHelper.getOrCreateUser(new UserPropertiesBean(null, null, obj.getLong("owner_id"), UNKNOWN_SERVER_REVISION_ID, false)));
         ActivityBean act = new ActivityBean(ownerId,
                 0L,
@@ -410,12 +462,16 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         act.setParticipants(getMinMaxRange(obj, "participants"));
 
         for (JSONObject jsonObject : getJSONObjectList(obj, "categories")) {
-            act.getCategories().add(getLocalCategory(jsonObject));
+            CategoryBean categoryBean = getCategoryBean(jsonObject);
+            processServerObject(categoryBean);
+            act.getCategories().add(categoryBean);
         }
 
         for (JSONObject jsonObject : getJSONObjectList(obj, "references")) {
             try {
-                act.getReferences().add(getLocalReference(jsonObject));
+                ReferenceBean referenceBean = getReferenceBean(jsonObject);
+                processServerObject(referenceBean);
+                act.getReferences().add(referenceBean);
             } catch (URISyntaxException e) {
                 LogUtil.i(RemoteActivityRepoImpl.class.getName(), "Could not parse URI in activity reference", e);
             }
@@ -423,7 +479,9 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
 
         for (JSONObject jsonObject : getJSONObjectList(obj, "media_files")) {
             try {
-                act.getMediaItems().add(getLocalMediaFile(jsonObject));
+                MediaBean mediaFile = getMediaFileBean(jsonObject);
+                processServerObject(mediaFile);
+                act.getMediaItems().add(mediaFile);
             } catch (URISyntaxException e) {
                 LogUtil.i(RemoteActivityRepoImpl.class.getName(), "Could not parse URI in activity media item", e);
             }
@@ -440,7 +498,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         return act;
     }
 
-    private Media getLocalMediaFile(JSONObject jsonObject) throws JSONException, URISyntaxException {
+    private MediaBean getMediaFileBean(JSONObject jsonObject) throws JSONException, URISyntaxException {
         return new MediaBean(
                 new URI(jsonObject.getString("uri")),
                 jsonObject.getString("mime_type"),
@@ -451,7 +509,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         );
     }
 
-    private Reference getLocalReference(JSONObject jsonObject) throws JSONException, URISyntaxException {
+    private ReferenceBean getReferenceBean(JSONObject jsonObject) throws JSONException, URISyntaxException {
         return new ReferenceBean(
                 0L,
                 jsonObject.getLong("id"),
@@ -461,15 +519,18 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     }
 
     private Date getDate(JSONObject obj, String fieldName) {
-        Date date = new Date();
         try {
-            date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'").parse(obj.getString(fieldName));
+            if (obj.has(fieldName)) {
+                return API_DATE_FORMAT.parse(obj.getString(fieldName));
+            } else {
+                LogUtil.d(RemoteActivityRepoImpl.class.getName(), "JSON object does not have a field called " + fieldName + ". Will use current date instead.");
+            }
         } catch (JSONException e) {
-            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not parse " + fieldName + ". Will use current date instead. " + e.getMessage());
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not parse " + fieldName + ". Will use current date instead. " + e.getMessage() + ".");
         } catch (ParseException e) {
-            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not parse " + fieldName + ". Will use current date instead. " + e.getMessage());
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not parse " + fieldName + ". Will use current date instead. " + e.getMessage() + ".");
         }
-        return date;
+        return new Date();
     }
 
     private List<JSONObject> getJSONObjectList(JSONObject obj, String arrayAttributeName) throws JSONException {
@@ -565,8 +626,10 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     }
 
     private byte[] readUrl(String urlSpec, String body, HttpMethod method) throws IOException, UnauthorizedException, UnhandledHttpResponseCodeException {
+        StopWatch stopWatch = new StopWatch("readUrl " + urlSpec);
         URL url = new URL(urlSpec);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+        stopWatch.logEvent("Opened connection");
         try {
             httpURLConnection.setRequestMethod(method.name());
 
@@ -596,11 +659,13 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
                     byte[] buffer = new byte[1024];
                     InputStream in = httpURLConnection.getInputStream();
                     int length = 0;
+                    stopWatch.logEvent("Sending request");
                     while ((bytesRead = in.read(buffer)) > 0) {
                         out.write(buffer, 0, bytesRead);
                         length += bytesRead;
                     }
                     out.close();
+                    stopWatch.logEvent("Reading response");
                     LogUtil.d(RemoteActivityRepoImpl.class.getName(), "Received " + length + " bytes from server.");
                     return out.toByteArray();
                 case HttpURLConnection.HTTP_NO_CONTENT:
@@ -612,6 +677,8 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
             }
         } finally {
             httpURLConnection.disconnect();
+            stopWatch.logEvent("Done");
+            LogUtil.i(RemoteActivityRepoImpl.class.getName(), stopWatch.getSummary());
         }
     }
 

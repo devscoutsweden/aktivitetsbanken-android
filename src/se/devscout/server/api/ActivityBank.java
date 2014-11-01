@@ -50,4 +50,6 @@ public interface ActivityBank {
     void removeListener(ActivityBankListener listener);
 
     boolean createAnonymousAPIUser();
+
+    Media readMediaItem(MediaKey key);
 }

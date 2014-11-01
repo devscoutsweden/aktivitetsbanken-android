@@ -160,6 +160,11 @@ public class SQLiteActivityRepo implements ActivityBank {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public Media readMediaItem(MediaKey key) {
+        return mDatabaseHelper.readMedia(key);
+    }
+
     private void fireSearchHistoryItemAdded(SearchHistory searchHistoryItem) {
         for (ActivityBankListener listener : mListeners) {
             listener.onSearchHistoryItemAdded(searchHistoryItem);

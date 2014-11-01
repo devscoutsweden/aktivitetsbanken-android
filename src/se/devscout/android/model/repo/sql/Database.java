@@ -13,66 +13,65 @@ public class Database {
     }
 
     public static class category {
-        final static String T = "category";
+        public final static String T = "category";
 
-        final static String id = "id";
-        final static String server_id = "server_id";
-        final static String uuid = "uuid";
-        final static String group_name = "group_name";
-        final static String name = "name";
-        final static String owner_id = "owner_id";
-        final static String status = "status";
-        final static String server_revision_id = "server_revision_id";
-        final static String icon_media_id = "icon_media_id";
+        public final static String id = "id";
+        public final static String server_id = "server_id";
+        public final static String uuid = "uuid";
+        public final static String group_name = "group_name";
+        public final static String name = "name";
+        public final static String owner_id = "owner_id";
+        public final static String status = "status";
+        public final static String server_revision_id = "server_revision_id";
+        public final static String icon_media_id = "icon_media_id";
     }
 
     public static class media {
-        final static String T = "media";
-        final static String id = "id";
-        //        final static String data = "data";
-        final static String server_id = "server_id";
-        final static String uri = "uri";
-        //        final static String status = "status";
-        final static String is_publishable = "is_publishable";
-        final static String mime_type = "mime_type";
-        final static String server_revision_id = "server_revision_id";
-//        final static String hash = "hash";
+        public final static String T = "media";
+
+        public final static String id = "id";
+        public final static String server_id = "server_id";
+        public final static String uri = "uri";
+        public final static String is_publishable = "is_publishable";
+        public final static String mime_type = "mime_type";
+        public final static String server_revision_id = "server_revision_id";
     }
 
     public static class reference {
-        final static String T = "reference";
+        public final static String T = "reference";
 
-        final static String id = "id";
-        final static String server_id = "server_id";
-        final static String uri = "uri";
-        final static String description = "description";
-        final static String server_revision_id = "server_revision_id";
+        public final static String id = "id";
+        public final static String server_id = "server_id";
+        public final static String uri = "uri";
+        public final static String description = "description";
+        public final static String server_revision_id = "server_revision_id";
     }
 
     public static class activity {
-        final static String T = "activity";
-        final static String id = "id";
-        final static String owner_id = "owner_id";
-        final static String server_id = "server_id";
-        final static String server_revision_id = "server_revision_id";
-        final static String is_publishable = "is_publishable";
-        final static String name = "name";
-        final static String datetime_published = "datetime_published";
-        final static String datetime_created = "datetime_created";
-        final static String descr_material = "descr_material";
-        final static String descr_introduction = "descr_introduction";
-        final static String descr_prepare = "descr_prepare";
-        final static String descr_activity = "descr_activity";
-        final static String descr_safety = "descr_safety";
-        final static String descr_notes = "descr_notes";
-        final static String age_min = "age_min";
-        final static String age_max = "age_max";
-        final static String participants_min = "participants_min";
-        final static String participants_max = "participants_max";
-        final static String time_min = "time_min";
-        final static String time_max = "time_max";
-        final static String featured = "featured";
-        final static String favourite_count = "favourite_count";
+        public final static String T = "activity";
+
+        public final static String id = "id";
+        public final static String owner_id = "owner_id";
+        public final static String server_id = "server_id";
+        public final static String server_revision_id = "server_revision_id";
+        public final static String is_publishable = "is_publishable";
+        public final static String name = "name";
+        public final static String datetime_published = "datetime_published";
+        public final static String datetime_created = "datetime_created";
+        public final static String descr_material = "descr_material";
+        public final static String descr_introduction = "descr_introduction";
+        public final static String descr_prepare = "descr_prepare";
+        public final static String descr_activity = "descr_activity";
+        public final static String descr_safety = "descr_safety";
+        public final static String descr_notes = "descr_notes";
+        public final static String age_min = "age_min";
+        public final static String age_max = "age_max";
+        public final static String participants_min = "participants_min";
+        public final static String participants_max = "participants_max";
+        public final static String time_min = "time_min";
+        public final static String time_max = "time_max";
+        public final static String featured = "featured";
+        public final static String favourite_count = "favourite_count";
     }
 
 /*

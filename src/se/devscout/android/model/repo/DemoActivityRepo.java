@@ -145,4 +145,9 @@ public class DemoActivityRepo implements ActivityBank {
     public boolean createAnonymousAPIUser() {
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    public Media readMediaItem(MediaKey key) {
+        throw new UnsupportedOperationException();
+    }
 }

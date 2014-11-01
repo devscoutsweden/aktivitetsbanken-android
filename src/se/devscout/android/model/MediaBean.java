@@ -18,4 +18,8 @@ public class MediaBean extends MediaPropertiesBean implements Media, Serializabl
     public Long getId() {
         return mId;
     }
+
+    public void setId(long id) {
+        mId = id;
+    }
 }

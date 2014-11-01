@@ -10,6 +10,10 @@ import android.widget.Toast;
 import se.devscout.android.R;
 import se.devscout.android.model.*;
 import se.devscout.android.model.repo.TestDataUtil;
+import se.devscout.android.model.repo.sql.cache.ActivityIdCache;
+import se.devscout.android.model.repo.sql.cache.CategoryIdCache;
+import se.devscout.android.model.repo.sql.cache.MediaIdCache;
+import se.devscout.android.model.repo.sql.cache.ReferenceIdCache;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.PreferencesUtil;
 import se.devscout.server.api.ActivityFilter;
@@ -35,11 +39,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return new SQLiteCursor(sqLiteCursorDriver, s, sqLiteQuery);
         }
     };
-    private static final int USER_ID_ANONYMOUS = -1;//Integer.MAX_VALUE;
     private SQLiteDatabase db;
     private Set<Long> mBannedSearchHistoryIds = new HashSet<Long>();
-    private ActivityIdCache mActivityIdCache = new ActivityIdCache();
-    private CategoryIdCache mCategoryIdCache = new CategoryIdCache();
+    private ActivityIdCache mActivityIdCache = new ActivityIdCache(this);
+    private CategoryIdCache mCategoryIdCache = new CategoryIdCache(this);
+    private MediaIdCache mMediaIdCache = new MediaIdCache(this);
+    private ReferenceIdCache mReferenceIdCache = new ReferenceIdCache(this);
 
     /**
      * This method is synchronized as to prevent multiple "search threads" from
@@ -188,37 +193,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         LogUtil.e(DatabaseHelper.class.getName(), msg, e);
     }
 
-    private void showToast(String msg) {
-        if (mCurrentToast != null) {
-            mCurrentToast.cancel();
-        }
-        mCurrentToast = Toast.makeText(mContext, msg, Toast.LENGTH_SHORT);
-        mCurrentToast.show();
-    }
-
     public long createCategory(CategoryProperties properties) {
-
-        ContentValues values = createContentValues(properties);
-
-        long id = getDb().insertOrThrow(Database.category.T, null, values);
-        if (properties.getServerId() != 0) {
-            mCategoryIdCache.invalidateByServerId(properties.getServerId());
-            mCategoryIdCache.addEntry(id, properties);
-        } else {
-            mCategoryIdCache.invalidate();
+        try {
+            ContentValues values = createContentValues(properties);
+            long id = getDb().insertOrThrow(Database.category.T, null, values);
+            mCategoryIdCache.onInsert(id, properties);
+            logInfo("Created category #" + id);
+            return id;
+        } catch (SQLiteException e) {
+            logError(e, "Could not create category");
+            throw e;
         }
-        return id;
     }
 
     public long createReference(ReferenceProperties properties) {
         try {
-            ContentValues values = new ContentValues();
-            values.put(Database.reference.server_id, properties.getServerId());
-            values.put(Database.reference.server_revision_id, properties.getServerRevisionId());
-            values.put(Database.reference.description, properties.getDescription());
-            values.put(Database.reference.uri, properties.getURI().toString());
+            ContentValues values = createContentValues(properties);
             long id = getDb().insertOrThrow(Database.reference.T, null, values);
             logInfo("Created reference #" + id);
+            mReferenceIdCache.onInsert(id, properties);
             return id;
         } catch (SQLiteException e) {
             logError(e, "Could not create reference");
@@ -228,19 +221,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public long createMediaItem(MediaProperties properties) {
         try {
-            ContentValues values = new ContentValues();
-            values.put(Database.media.server_id, properties.getServerId());
-            values.put(Database.media.is_publishable, properties.isPublishable());
-            values.put(Database.media.mime_type, properties.getMimeType());
-            values.put(Database.media.server_revision_id, properties.getServerRevisionId());
-            values.put(Database.media.uri, properties.getURI().toString());
+            ContentValues values = createContentValues(properties);
             long id = getDb().insertOrThrow(Database.media.T, null, values);
             logInfo("Created media item #" + id);
+            mMediaIdCache.onInsert(id, properties);
             return id;
         } catch (SQLiteException e) {
             logError(e, "Could not create media item");
             throw e;
         }
+    }
+
+    private ContentValues createContentValues(ReferenceProperties properties) {
+        ContentValues values = new ContentValues();
+        values.put(Database.reference.server_id, properties.getServerId());
+        values.put(Database.reference.server_revision_id, properties.getServerRevisionId());
+        values.put(Database.reference.description, properties.getDescription());
+        values.put(Database.reference.uri, properties.getURI().toString());
+        return values;
     }
 
     public void dropDatabase(boolean addTestData) {
@@ -287,12 +285,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = createContentValues(properties);
 
         long activityId = getDb().insertOrThrow(Database.activity.T, null, values);
-        if (properties.getServerId() != 0) {
-            mActivityIdCache.invalidateByServerId(properties.getServerId());
-            mActivityIdCache.addEntry(activityId, properties);
-        } else {
-            mActivityIdCache.invalidate();
-        }
+
+        mActivityIdCache.onInsert(activityId, properties);
 
         addCategoriesToActivity(activityId, properties.getCategories());
 
@@ -310,11 +304,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             logInfo("Could not update activity " + key.getId());
             return false;
         }
-        if (properties.getServerId() != 0) {
-            mActivityIdCache.invalidateByServerId(properties.getServerId());
-        } else {
-            mActivityIdCache.invalidate();
-        }
+        mActivityIdCache.onUpdate(properties);
         mCacheActivity.remove(key.getId());
 
 
@@ -340,14 +330,46 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             logInfo("Could not update category " + key.getId());
             return false;
         }
-        if (properties.getServerId() != 0) {
-            mCategoryIdCache.invalidateByServerId(properties.getServerId());
-        } else {
-            mCategoryIdCache.invalidate();
-        }
+        mCategoryIdCache.onUpdate(properties);
         mCacheCategory.remove(key.getId());
 
         return true;
+    }
+
+    public boolean updateMediaItem(MediaKey key, MediaProperties properties) {
+        ContentValues values = createContentValues(properties);
+
+        if (getDb().update(Database.media.T, values, Database.media.id + "=" + key.getId(), null) != 1) {
+            logInfo("Could not update media item " + key.getId());
+            return false;
+        }
+        mMediaIdCache.onUpdate(properties);
+        mCacheMedia.remove(key.getId());
+
+        return true;
+    }
+
+    public boolean updateReference(ReferenceKey key, ReferenceProperties properties) {
+        ContentValues values = createContentValues(properties);
+
+        if (getDb().update(Database.reference.T, values, Database.reference.id + "=" + key.getId(), null) != 1) {
+            logInfo("Could not update reference " + key.getId());
+            return false;
+        }
+        mReferenceIdCache.onUpdate(properties);
+        mCacheReference.remove(key.getId());
+
+        return true;
+    }
+
+    private ContentValues createContentValues(MediaProperties properties) {
+        ContentValues values = new ContentValues();
+        values.put(Database.media.server_id, properties.getServerId());
+        values.put(Database.media.is_publishable, properties.isPublishable());
+        values.put(Database.media.mime_type, properties.getMimeType());
+        values.put(Database.media.server_revision_id, properties.getServerRevisionId());
+        values.put(Database.media.uri, properties.getURI().toString());
+        return values;
     }
 
     private void deleteCategoriesFromActivity(ActivityKey key) {
@@ -403,36 +425,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // todo: How much does DatabaseHelper.getOrCreateCategory and RemoteActivityRepoImpl.processServerObject overlap?
     public long getOrCreateCategory(CategoryProperties category) {
-        List<CategoryBean> localCategories = readCategories();
-        for (CategoryBean categoryBean : localCategories) {
-            if (categoryBean.getServerId() == category.getServerId()) {
-                // Bingo! Category already exists in local database.
-                return categoryBean.getId();
-            }
+        long id = getLocalIdByServerId(category);
+        if (id > 0) {
+            return id;
+        } else {
+            return createCategory(category);
         }
-        return createCategory(category);
-    }
-
-    public long getOrCreateReference(ReferenceProperties reference) {
-        List<ReferenceBean> referencePojoList = readReferences();
-        for (ReferenceBean referencePojo : referencePojoList) {
-            if (referencePojo.getServerId() == reference.getServerId()) {
-                // Bingo! Reference already exists in local database.
-                return referencePojo.getId();
-            }
-        }
-        return createReference(reference);
     }
 
     public long getOrCreateMediaItem(MediaProperties properties) {
-        List<MediaBean> mediaBeans = readMediaItems();
-        for (MediaBean mediaBean : mediaBeans) {
-            if (mediaBean.getServerId() == properties.getServerId()) {
-                // Bingo! Media item already exists in local database.
-                return mediaBean.getId();
-            }
+        long id = getLocalIdByServerId(properties);
+        if (id > 0) {
+            return id;
+        } else {
+            return createMediaItem(properties);
         }
-        return createMediaItem(properties);
+    }
+
+    public long getOrCreateReference(ReferenceProperties properties) {
+        long id = getLocalIdByServerId(properties);
+        if (id > 0) {
+            return id;
+        } else {
+            return createReference(properties);
+        }
     }
 
     public long getOrCreateUser(UserProperties user) {
@@ -635,6 +651,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public List<ReferenceBean> readReferences() {
         ArrayList<ReferenceBean> references = new ArrayList<ReferenceBean>();
+        mCacheReference.clear();
         ReferenceCursor refCursor = new ReferenceCursor(getDb());
         while (refCursor.moveToNext()) {
             long referenceId = refCursor.getId();
@@ -653,6 +670,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public List<MediaBean> readMediaItems() {
         ArrayList<MediaBean> mediaItems = new ArrayList<MediaBean>();
+        mCacheMedia.clear();
         MediaCursor medCursor = new MediaCursor(getDb());
         while (medCursor.moveToNext()) {
             long mediaId = medCursor.getId();
@@ -671,6 +689,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public List<UserBean> readUsers() {
         ArrayList<UserBean> users = new ArrayList<UserBean>();
+        mCacheUser.clear();
         UserCursor userCursor = new UserCursor(getDb());
         while (userCursor.moveToNext()) {
             long userId = userCursor.getId();
@@ -738,6 +757,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             readCategories();
         }
         return mCacheCategory.get(key.getId());
+    }
+
+    public Media readMedia(MediaKey key) {
+        if (key != null) {
+            if (!mCacheMedia.containsKey(key.getId())) {
+                readMediaItems();
+            }
+            return mCacheMedia.get(key.getId());
+        } else {
+            return null;
+        }
     }
 
     public boolean isFavourite(ActivityKey activity, UserKey user) {
@@ -832,38 +862,36 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return baos.toByteArray();
     }
 
-    public LocalObjectRefreshness getLocalActivityFreshness(ActivityBean serverActivity) {
-        return getLocalObjectFreshness(serverActivity, mActivityIdCache);
+    public LocalObjectRefreshness getLocalFreshness(ActivityBean serverObject) {
+        return mActivityIdCache.getLocalObjectFreshness(serverObject);
     }
 
-    public LocalObjectRefreshness getLocalCategoryFreshness(CategoryBean serverActivity) {
-        return getLocalObjectFreshness(serverActivity, mCategoryIdCache);
+    public LocalObjectRefreshness getLocalFreshness(CategoryBean serverObject) {
+        return mCategoryIdCache.getLocalObjectFreshness(serverObject);
     }
 
-    public long getLocalIdForActivity(ServerObjectIdentifier serverObjectIdentifier) {
-        return mActivityIdCache.getEntryByServerId(serverObjectIdentifier.getServerId()).mId;
+    public LocalObjectRefreshness getLocalFreshness(MediaBean serverObject) {
+        return mMediaIdCache.getLocalObjectFreshness(serverObject);
     }
 
-    public long getLocalIdForCategory(ServerObjectIdentifier serverObjectIdentifier) {
-        return mCategoryIdCache.getEntryByServerId(serverObjectIdentifier.getServerId()).mId;
+    public LocalObjectRefreshness getLocalFreshness(ReferenceBean serverObject) {
+        return mReferenceIdCache.getLocalObjectFreshness(serverObject);
     }
 
-    private <T extends SynchronizedServerObject> LocalObjectRefreshness getLocalObjectFreshness(T serverObject, ServerObjectIdCache<T> idCache) {
-        DatabaseHelper.IdCacheEntry entry = idCache.getEntryByServerId(serverObject.getServerId());
-        if (entry != null) {
-            // Object is cached
-            if (!idCache.isAdditionalValuesListIdentical(entry, serverObject)) {
-                // Incoming data is newer than cached data
-                return LocalObjectRefreshness.LOCAL_IS_OLD;
-            } else {
-                // No need to do anything
-                return LocalObjectRefreshness.LOCAL_IS_UP_TO_DATE;
-            }
-        } else {
-            // Incoming data is a new (non-cached) activity. Add it to the local database.
-            return LocalObjectRefreshness.LOCAL_IS_MISSING;
-        }
+    public long getLocalIdByServerId(ActivityProperties serverObjectIdentifier) {
+        return mActivityIdCache.getLocalIdByServerId(serverObjectIdentifier);
+    }
 
+    public long getLocalIdByServerId(CategoryProperties serverObjectIdentifier) {
+        return mCategoryIdCache.getLocalIdByServerId(serverObjectIdentifier);
+    }
+
+    public long getLocalIdByServerId(MediaProperties serverObjectIdentifier) {
+        return mMediaIdCache.getLocalIdByServerId(serverObjectIdentifier);
+    }
+
+    public long getLocalIdByServerId(ReferenceProperties serverObjectIdentifier) {
+        return mReferenceIdCache.getLocalIdByServerId(serverObjectIdentifier);
     }
 
     public Set<ActivityKey> getFavourites(UserKey userKey) {
@@ -900,151 +928,4 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return mCacheUser.get(key.getId());
     }
 
-    public class ActivityIdCache extends ServerObjectIdCache<ActivityBean> {
-        public ActivityIdCache() {
-            super(Database.activity.T, Database.activity.id, Database.activity.server_id, Database.activity.server_revision_id, Database.activity.favourite_count);
-        }
-
-        @Override
-        protected IdCacheEntry createIdCacheEntry(ActivityBean entry) {
-            return new IdCacheEntry(entry.getId(), entry.getServerId(), new long[]{entry.getServerRevisionId(), entry.getFavouritesCount() != null ? entry.getFavouritesCount().longValue() : 0});
-        }
-
-        public void addEntry(long id, ActivityProperties properties) {
-            ActivityBean activityBean = new ActivityBean(null, id, properties.getServerId(), properties.getServerRevisionId(), false);
-            activityBean.setFavouritesCount(properties.getFavouritesCount());
-            addEntry(activityBean);
-        }
-    }
-
-    public class CategoryIdCache extends ServerObjectIdCache<CategoryBean> {
-        public CategoryIdCache() {
-            super(Database.category.T, Database.category.id, Database.category.server_id, Database.category.server_revision_id);
-        }
-
-        @Override
-        protected IdCacheEntry createIdCacheEntry(CategoryBean entry) {
-            return new IdCacheEntry(entry.getId(), entry.getServerId(), new long[]{entry.getServerRevisionId()});
-        }
-        public void addEntry(long id, CategoryProperties properties) {
-            CategoryBean categoryBean = new CategoryBean(properties.getGroup(), properties.getName(), id, properties.getServerId(), properties.getServerRevisionId(), properties.getIconMediaKey());
-            addEntry(categoryBean);
-        }
-
-    }
-
-    /**
-     * Keeps track of key object values, such as primary key value in local
-     * database and id value on the server. The purpose is to use this
-     * information to determine if the local information is stale and needs to
-     * be updated based on the most recent information from the server.
-     * <p/>
-     * The cache is also used to map identifiers of objects recieved from the
-     * server, which uses the server's own object identifiers, to the object
-     * identifiers used by within the app's database.
-     * <p/>
-     * When determining is local data is stale, start by comparing the local id
-     * to the server id. If these are equal, the class supports checking an
-     * additional list object properties to see if they might differ. This is
-     * used for versioned objects (where the primary key stays the same between
-     * edits but a revision counter gets incremented) and for objects which can
-     * be "favourited" (where changes to the "favourite counter" affects neither
-     * id nor server id).
-     *
-     * @param <T>
-     */
-    public abstract class ServerObjectIdCache<T extends ObjectIdentifier> {
-        private List<IdCacheEntry> mEntries = null;
-        private String mIdColumnName;
-        private String mServerIdColumnName;
-        private String[] mCompareColumnNames;
-        private String mTable;
-
-        public ServerObjectIdCache(String table, String idColumnName, String serverIdColumnName, String... compareColumnNames) {
-            mIdColumnName = idColumnName;
-            mServerIdColumnName = serverIdColumnName;
-            mCompareColumnNames = compareColumnNames;
-            mTable = table;
-        }
-
-        void invalidate() {
-            mEntries = null;
-        }
-
-        private List<IdCacheEntry> getEntries() {
-            if (mEntries == null) {
-                mEntries = new ArrayList<IdCacheEntry>();
-                String[] columnNames = Arrays.copyOf(mCompareColumnNames, mCompareColumnNames.length + 2);
-                columnNames[columnNames.length - 1] = mIdColumnName;
-                columnNames[columnNames.length - 2] = mServerIdColumnName;
-                Cursor localIdsQuery = getDb().query(mTable, columnNames, null, null, null, null, null);
-                while (localIdsQuery.moveToNext()) {
-                    long[] values = new long[mCompareColumnNames.length];
-                    for (int i = 0; i < mCompareColumnNames.length; i++) {
-                        String columnName = mCompareColumnNames[i];
-                        values[i] = localIdsQuery.getLong(localIdsQuery.getColumnIndex(columnName));
-                    }
-                    IdCacheEntry entry = new IdCacheEntry(localIdsQuery.getInt(localIdsQuery.getColumnIndex(mIdColumnName)), localIdsQuery.getInt(localIdsQuery.getColumnIndex(mServerIdColumnName)), values);
-                    mEntries.add(entry);
-                }
-            }
-            return mEntries;
-        }
-
-        public IdCacheEntry getEntryByServerId(long id) {
-            for (IdCacheEntry entry : getEntries()) {
-                if (entry.getServerId() == id) {
-                    return entry;
-                }
-            }
-            return null;
-        }
-
-        public void invalidateByServerId(long id) {
-            IdCacheEntry entry = getEntryByServerId(id);
-            if (entry != null) {
-                mEntries.remove(entry);
-            }
-        }
-
-        public boolean isAdditionalValuesListIdentical(IdCacheEntry entry, T entry2) {
-            return entry.isAdditionalValuesListIdentical(createIdCacheEntry(entry2));
-        }
-
-        public void addEntry(T entry) {
-            mEntries.add(createIdCacheEntry(entry));
-        }
-
-        protected abstract IdCacheEntry createIdCacheEntry(T entry);
-    }
-
-    public class IdCacheEntry {
-        private final long[] mCompareValues;
-        private long mId;
-        private long mServerId;
-
-        public IdCacheEntry(long id, long serverId, long[] values) {
-            mId = id;
-            mServerId = serverId;
-            mCompareValues = values;
-        }
-
-        public long getId() {
-            return mId;
-        }
-
-        public long getServerId() {
-            return mServerId;
-        }
-
-        public boolean isAdditionalValuesListIdentical(IdCacheEntry idCacheEntry) {
-            for (int i = 0; i < mCompareValues.length; i++) {
-                long value = mCompareValues[i];
-                if (value != idCacheEntry.mCompareValues[i]) {
-                    return false;
-                }
-            }
-            return true;
-        }
-    }
 }

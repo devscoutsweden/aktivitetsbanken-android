@@ -17,4 +17,8 @@ public class ReferenceBean extends ReferencePropertiesBean implements Reference 
     public Long getId() {
         return mId;
     }
+
+    public void setId(long id) {
+        mId = id;
+    }
 }
