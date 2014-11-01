@@ -1,6 +1,7 @@
 package se.devscout.android.view;
 
 import android.content.Context;
+import android.widget.ImageView;
 import se.devscout.android.AgeGroup;
 import se.devscout.android.R;
 import se.devscout.android.util.ActivityBankFactory;
@@ -15,7 +16,7 @@ public class AgeGroupListView extends QuickSearchListView<AgeGroup> {
     }
 
     @Override
-    protected int getImageResId(AgeGroup item) {
+    protected int getImageResId(AgeGroup item, ImageView imageView) {
         return item.getLogoResId();
     }
 

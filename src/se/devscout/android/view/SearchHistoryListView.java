@@ -1,6 +1,7 @@
 package se.devscout.android.view;
 
 import android.content.Context;
+import android.widget.ImageView;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.SubtitleActivityFilterVisitor;
 import se.devscout.android.controller.fragment.TitleActivityFilterVisitor;
@@ -25,7 +26,7 @@ public class SearchHistoryListView extends QuickSearchListView<SearchHistoryList
     }
 
     @Override
-    protected int getImageResId(SearchHistoryListItem item) {
+    protected int getImageResId(SearchHistoryListItem item, ImageView imageView) {
         return R.drawable.ic_action_search;
     }
 

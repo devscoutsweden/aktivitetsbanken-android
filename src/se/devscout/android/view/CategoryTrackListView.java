@@ -1,6 +1,7 @@
 package se.devscout.android.view;
 
 import android.content.Context;
+import android.widget.ImageView;
 import se.devscout.android.CategoryTrack;
 import se.devscout.android.R;
 import se.devscout.android.util.SimpleCategoryFilter;
@@ -15,7 +16,7 @@ public class CategoryTrackListView extends QuickSearchListView<CategoryTrack> {
     }
 
     @Override
-    protected int getImageResId(CategoryTrack item) {
+    protected int getImageResId(CategoryTrack item, ImageView imageView) {
         return item.getLogoResId();
     }
 

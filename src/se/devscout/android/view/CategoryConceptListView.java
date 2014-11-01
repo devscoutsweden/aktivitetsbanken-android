@@ -1,6 +1,7 @@
 package se.devscout.android.view;
 
 import android.content.Context;
+import android.widget.ImageView;
 import se.devscout.android.CategoryConcept;
 import se.devscout.android.R;
 import se.devscout.android.util.SimpleCategoryFilter;
@@ -15,7 +16,7 @@ public class CategoryConceptListView extends QuickSearchListView<CategoryConcept
     }
 
     @Override
-    protected int getImageResId(CategoryConcept item) {
+    protected int getImageResId(CategoryConcept item, ImageView imageView) {
         return item.getLogoResId();
     }
 

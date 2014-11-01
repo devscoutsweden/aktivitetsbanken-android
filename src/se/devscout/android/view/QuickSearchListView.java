@@ -42,7 +42,7 @@ public abstract class QuickSearchListView<T extends Serializable> extends NonBlo
                 TextView subtitleView = (TextView) convertView.findViewById(R.id.quickSearchListItemSubtitle);
                 subtitleView.setText(getSubtitle(item));
                 ImageView imageView = (ImageView) convertView.findViewById(R.id.quickSearchListItemImage);
-                int imageResId = getImageResId(item);
+                int imageResId = getImageResId(item, imageView);
                 if (imageResId > 0) {
                     imageView.setImageResource(imageResId);
                 }
@@ -58,7 +58,7 @@ public abstract class QuickSearchListView<T extends Serializable> extends NonBlo
         getContext().startActivity(SearchResultActivity.createIntent(getContext(), createFilter(item), getSearchResultTitle(item)));
     }
 
-    protected abstract int getImageResId(T item);
+    protected abstract int getImageResId(T item, ImageView imageView);
 
     protected abstract String getTitle(T option);
 
