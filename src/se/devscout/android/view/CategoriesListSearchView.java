@@ -9,6 +9,7 @@ import se.devscout.android.controller.fragment.CategoryListItem;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.SimpleCategoryFilter;
+import se.devscout.android.util.concurrency.BackgroundTask;
 import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
 import se.devscout.android.util.http.UnauthorizedException;
 import se.devscout.server.api.ActivityFilter;
@@ -43,6 +44,7 @@ public class CategoriesListSearchView extends QuickSearchListView<CategoryListIt
         if (media != null) {
             imageView.setTag(R.id.imageViewUri, media.getURI());
             mActivity.getBackgroundTasksHandlerThread().queueGetMediaResource(imageView, media.getURI());
+            mActivity.getBackgroundTasksHandlerThread().queueCleanCache();
         }
         return R.drawable.ic_action_labels;
     }
@@ -68,17 +70,18 @@ public class CategoriesListSearchView extends QuickSearchListView<CategoryListIt
     }
 
     @Override
-    public void onDone(Object[] parameters, Object response) {
-        if (parameters[0] instanceof ImageView && parameters[1] instanceof URI && response instanceof Bitmap) {
-            ImageView imageView = (ImageView) parameters[0];
-            URI loadedURI = (URI) parameters[1];
-            if (loadedURI.equals(imageView.getTag(R.id.imageViewUri))) {
-                imageView.setImageBitmap((Bitmap) response);
-            } else {
-                LogUtil.d(SingleFragmentActivity.class.getName(), "Image has been loaded but the image view has been recycled and is now used for another image.");
+    public void onDone(Object[] parameters, Object response, BackgroundTask task) {
+        if (task == BackgroundTask.DISPLAY_IMAGE) {
+            if (parameters[0] instanceof ImageView && parameters[1] instanceof URI && response instanceof Bitmap) {
+                ImageView imageView = (ImageView) parameters[0];
+                URI loadedURI = (URI) parameters[1];
+                if (loadedURI.equals(imageView.getTag(R.id.imageViewUri))) {
+                    imageView.setImageBitmap((Bitmap) response);
+                } else {
+                    LogUtil.d(SingleFragmentActivity.class.getName(), "Image has been loaded but the image view has been recycled and is now used for another image.");
+                }
             }
         }
-        LogUtil.i(SingleFragmentActivity.class.getName(), "Task completed");
     }
 
     private class MySearchTask extends SearchTask {

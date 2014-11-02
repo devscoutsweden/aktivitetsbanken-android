@@ -18,22 +18,17 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
         Object run(Object[] params, Context context);
     }
 
-    public static enum BackgroundTask {
-        SET_FAVOURIT,
-        DISPLAY_IMAGE;
-    }
-
     private Handler mHandler;
     private Handler mResponseHandler;
     private Context mContext;
 
-    private List<Integer> mPendingGetMediaResources = new ArrayList();
+    private Map<Integer, BackgroundTask> mPendingTasks = new LinkedHashMap<Integer, BackgroundTask>();
     public void postReponse(Runnable runnable) {
         mResponseHandler.post(runnable);
     }
 
     public interface Listener {
-        void onDone(Object[] token, Object response);
+        void onDone(Object[] token, Object response, BackgroundTask task);
     }
 
     public BackgroundTasksHandlerThread(Context context, Handler responseHandler) {
@@ -44,47 +39,39 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
 
     @Override
     protected synchronized void onLooperPrepared() {
-        final Map<BackgroundTask, BackgroundTaskExecutor> executors = new HashMap<BackgroundTask, BackgroundTaskExecutor>();
-        executors.put(BackgroundTask.SET_FAVOURIT, new SetFavouritesTaskExecutor());
-        executors.put(BackgroundTask.DISPLAY_IMAGE, new DisplayImageTaskExecutor());
-        mHandler = new Handler() {
+        mHandler = new MessageHandler();
 
-            @Override
-            public void handleMessage(final Message msg) {
-                final Object[] parameters = mTaskParameters.get(msg.obj);
-                final Object result = executors.get(BackgroundTask.values()[msg.what]).run(parameters, mContext);
-                mTaskParameters.remove(msg.obj);
-                postReponse(new Runnable() {
-                    @Override
-                    public void run() {
-                        fireOnDone(parameters, result);
-                    }
-                });
-            }
-
-        };
-        for (Integer pendingGetMediaResource : mPendingGetMediaResources) {
-            LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Sending pending message to target");
-            mHandler.obtainMessage(BackgroundTask.DISPLAY_IMAGE.ordinal(), pendingGetMediaResource).sendToTarget();
+        for (Map.Entry<Integer, BackgroundTask> entry : mPendingTasks.entrySet()) {
+            Integer taskNumber = entry.getKey();
+            BackgroundTask what = entry.getValue();
+            LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Pending " + what.name() + " will now be scheduled for execution.");
+            mHandler.obtainMessage(what.ordinal(), taskNumber).sendToTarget();
         }
     }
 
     private Map<Integer, Object[]> mTaskParameters = Collections.synchronizedMap(new HashMap<Integer, Object[]>());
 
     public void queueSetFavourites() {
-        mHandler.obtainMessage(BackgroundTask.SET_FAVOURIT.ordinal()).sendToTarget();
+        queueTask(BackgroundTask.SET_FAVOURITES);
+    }
+
+    public void queueCleanCache() {
+        queueTask(BackgroundTask.CLEAN_CACHE);
     }
 
     public synchronized void queueGetMediaResource(ImageView imageView, URI uri) {
+        LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Wants to display " + uri + " in an image view.");
+        queueTask(BackgroundTask.DISPLAY_IMAGE, imageView, uri);
+    }
+
+    private void queueTask(BackgroundTask task, Object... parameters) {
         taskCount++;
-        Object[] parameters = {imageView, uri};
         mTaskParameters.put(taskCount, parameters);
         if (mHandler == null) {
             LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Handler not yet initialised");
-            mPendingGetMediaResources.add(taskCount);
+            mPendingTasks.put(taskCount, task);
         } else {
-            LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Wants to display " + uri + " in an image view.");
-            mHandler.obtainMessage(BackgroundTask.DISPLAY_IMAGE.ordinal(), taskCount).sendToTarget();
+            mHandler.obtainMessage(task.ordinal(), taskCount).sendToTarget();
         }
     }
 
@@ -104,10 +91,36 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
         mListeners.remove(listener);
     }
 
-    private void fireOnDone(Object[] parameters, Object response) {
+    private void fireOnDone(Object[] parameters, Object response, BackgroundTask task) {
         for (Listener listener : mListeners) {
-            listener.onDone(parameters, response);
+            listener.onDone(parameters, response, task);
         }
     }
 
+    private class MessageHandler extends Handler {
+
+        private Map<BackgroundTask,BackgroundTaskExecutor> mExecutors = new HashMap<BackgroundTask, BackgroundTaskExecutor>();
+
+        {
+            for (BackgroundTask backgroundTask : BackgroundTask.values()) {
+                mExecutors.put(backgroundTask, backgroundTask.createExecutor());
+            }
+        }
+
+        @Override
+        public void handleMessage(final Message msg) {
+            final Object[] parameters = mTaskParameters.get(msg.obj);
+            final BackgroundTask task = BackgroundTask.values()[msg.what];
+            LogUtil.i(BackgroundTasksHandlerThread.class.getName(), "Executing background task " + task.name());
+            final Object result = mExecutors.get(task).run(parameters, mContext);
+            mTaskParameters.remove(msg.obj);
+            postReponse(new Runnable() {
+                @Override
+                public void run() {
+                    fireOnDone(parameters, result, task);
+                }
+            });
+        }
+
+    }
 }
