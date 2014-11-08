@@ -3,7 +3,9 @@ package se.devscout.android.util.http;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.StopWatch;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
@@ -42,8 +44,11 @@ public class HttpRequest {
 
             // Writing to output string will send request
             if (mMethod != HttpMethod.GET && requestHandler != null) {
+                httpURLConnection.setDoOutput(true);
                 requestHandler.write(httpURLConnection.getOutputStream());
             }
+
+            stopWatch.logEvent("Data sent");
 
             // Asking about response code will send request, if not already sent
             response.setCode(httpURLConnection.getResponseCode());
@@ -53,7 +58,8 @@ public class HttpRequest {
             switch (httpURLConnection.getResponseCode()) {
                 case HttpURLConnection.HTTP_OK:
                 case HttpURLConnection.HTTP_CREATED:
-                    response.setBody(responseHandler.read(httpURLConnection.getInputStream()));
+                    InputStream is = new BufferedInputStream(httpURLConnection.getInputStream());
+                    response.setBody(responseHandler.read(is));
                     break;
                 case HttpURLConnection.HTTP_NO_CONTENT:
                     break;
@@ -65,7 +71,7 @@ public class HttpRequest {
         } finally {
             httpURLConnection.disconnect();
             stopWatch.logEvent("Done");
-            LogUtil.i(HttpRequest.class.getName(), stopWatch.getSummary());
+            LogUtil.d(HttpRequest.class.getName(), stopWatch.getSummary());
         }
         return response;
     }
