@@ -3,6 +3,7 @@ package se.devscout.server.api;
 import se.devscout.android.util.SimpleAgeRangeFilter;
 import se.devscout.server.api.activityfilter.*;
 import se.devscout.server.api.model.Range;
+import se.devscout.server.api.model.ServerObjectIdentifier;
 import se.devscout.server.api.model.UserKey;
 
 public interface ActivityFilterFactory {
@@ -23,4 +24,6 @@ public interface ActivityFilterFactory {
     IsUserFavouriteFilter createIsUserFavouriteFilter(UserKey userKey);
 
     RandomActivitiesFilter createRandomActivitiesFilter(int numberOfActivities);
+
+    ServerObjectIdentifiersFilter createServerObjectIdentifierFilter(ServerObjectIdentifier identifier);
 }

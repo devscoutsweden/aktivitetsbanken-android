@@ -1,5 +1,6 @@
 package se.devscout.android.model;
 
+import android.text.TextUtils;
 import se.devscout.android.model.repo.sql.SQLRandomActivitiesFilter;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.ActivityFilterVisitor;
@@ -60,12 +61,17 @@ class EqualsFilterVisitor implements ActivityFilterVisitor {
     }
 
     @Override
-    public String visit(ActivityKeyFilter filter) {
-        return "activity" + filter.getActivityKey().getId();
+    public String visit(ActivityKeysFilter filter) {
+        return "activity" + TextUtils.join(",", filter.getActivityKeys());
     }
 
     @Override
     public String visit(SQLRandomActivitiesFilter filter) {
         return "random" + filter.getNumberOfActivities();
+    }
+
+    @Override
+    public String visit(ServerObjectIdentifiersFilter filter) {
+        return "serverid" + TextUtils.join(",", filter.getIdentifiers());
     }
 }

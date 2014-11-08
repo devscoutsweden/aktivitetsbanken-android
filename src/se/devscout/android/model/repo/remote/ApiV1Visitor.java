@@ -1,6 +1,7 @@
 package se.devscout.android.model.repo.remote;
 
 import android.net.Uri;
+import android.text.TextUtils;
 import se.devscout.android.model.repo.sql.SQLRandomActivitiesFilter;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.URIBuilderActivityFilterVisitor;
@@ -77,14 +78,19 @@ public class ApiV1Visitor implements URIBuilderActivityFilterVisitor {
     }
 
     @Override
-    public Uri visit(ActivityKeyFilter filter) {
-        mUriBuilder.appendPath("/" + filter.getActivityKey().getId());
-        return mUriBuilder.build();
+    public Uri visit(ActivityKeysFilter filter) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Uri visit(SQLRandomActivitiesFilter filter) {
         mUriBuilder.appendQueryParameter("random", String.valueOf(filter.getNumberOfActivities()));
+        return mUriBuilder.build();
+    }
+
+    @Override
+    public Uri visit(ServerObjectIdentifiersFilter filter) {
+        mUriBuilder.appendQueryParameter("id", TextUtils.join(",", filter.getIdentifiers()));
         return mUriBuilder.build();
     }
 }

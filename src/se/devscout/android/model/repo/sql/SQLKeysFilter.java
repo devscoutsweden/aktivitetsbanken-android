@@ -4,20 +4,20 @@ import android.net.Uri;
 import se.devscout.android.util.SimpleFilter;
 import se.devscout.server.api.ActivityFilterVisitor;
 import se.devscout.server.api.URIBuilderActivityFilterVisitor;
-import se.devscout.server.api.activityfilter.ActivityKeyFilter;
+import se.devscout.server.api.activityfilter.ActivityKeysFilter;
 import se.devscout.server.api.model.ActivityKey;
 import se.devscout.server.api.model.ActivityProperties;
 
-class SQLKeyFilter extends SimpleFilter implements ActivityKeyFilter, SQLActivityFilter {
-    private ActivityKey mActivityKey;
+class SQLKeysFilter extends SimpleFilter implements ActivityKeysFilter, SQLActivityFilter {
+    private ActivityKey[] mActivityKeys;
 
-    public SQLKeyFilter(ActivityKey activityKey) {
-        mActivityKey = activityKey;
+    public SQLKeysFilter(ActivityKey... activityKeys) {
+        mActivityKeys = activityKeys;
     }
 
     @Override
-    public ActivityKey getActivityKey() {
-        return mActivityKey;
+    public ActivityKey[] getActivityKeys() {
+        return mActivityKeys;
     }
 
     @Override
@@ -27,7 +27,7 @@ class SQLKeyFilter extends SimpleFilter implements ActivityKeyFilter, SQLActivit
 
     @Override
     public void applyFilter(QueryBuilder queryBuilder) {
-        queryBuilder.addWhereActivity(mActivityKey);
+        queryBuilder.addWhereActivities(mActivityKeys);
     }
 
     @Override

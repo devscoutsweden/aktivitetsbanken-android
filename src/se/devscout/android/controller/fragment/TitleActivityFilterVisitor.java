@@ -1,6 +1,7 @@
 package se.devscout.android.controller.fragment;
 
 import android.content.Context;
+import android.text.TextUtils;
 import se.devscout.android.R;
 import se.devscout.android.model.repo.sql.SQLRandomActivitiesFilter;
 import se.devscout.server.api.ActivityFilter;
@@ -78,12 +79,17 @@ public class TitleActivityFilterVisitor implements ActivityFilterVisitor {
     }
 
     @Override
-    public String visit(ActivityKeyFilter filter) {
-        return "ACT-" + filter.getActivityKey().getId();
+    public String visit(ActivityKeysFilter filter) {
+        return "ACT-" + TextUtils.join(",", filter.getActivityKeys());
     }
 
     @Override
     public String visit(SQLRandomActivitiesFilter filter) {
         return mContext.getString(R.string.title_filter_visitor_random, filter.getNumberOfActivities());
+    }
+
+    @Override
+    public String visit(ServerObjectIdentifiersFilter filter) {
+        return "SERVERID-" + TextUtils.join(",", filter.getIdentifiers());
     }
 }

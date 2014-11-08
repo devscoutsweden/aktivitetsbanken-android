@@ -20,7 +20,9 @@ public interface BaseActivityFilterVisitor<T> {
 
     T visit(TextFilter filter);
 
-    T visit(ActivityKeyFilter filter);
+    T visit(ActivityKeysFilter filter);
 
     T visit(SQLRandomActivitiesFilter filter);
+
+    T visit(ServerObjectIdentifiersFilter filter);
 }

@@ -81,8 +81,8 @@ public class QueryBuilder {
         return this;
     }
 
-    public QueryBuilder addWhereActivity(ActivityKey activityKey) {
-        return addWhere("a." + Database.activity.id + " = " + activityKey.getId());
+    public QueryBuilder addWhereActivities(ActivityKey... activityKeys) {
+        return addWhere("a." + Database.activity.id + " IN (" + TextUtils.join(",", activityKeys) + ")");
     }
 
     public QueryBuilder addWhereIsFeatured() {
