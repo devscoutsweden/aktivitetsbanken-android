@@ -17,7 +17,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".controller.activity.ActivityActivity"></activity>
         <activity android:name=".controller.activity.ActivitiesActivity"></activity>
         <activity android:name=".controller.activity.SearchResultActivity"></activity>
         <activity android:name=".controller.activity.FragmentCreatorActivity"></activity>
