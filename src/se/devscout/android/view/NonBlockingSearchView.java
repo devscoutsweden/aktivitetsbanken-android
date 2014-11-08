@@ -330,7 +330,7 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
                 mSearchPending = false;
             }
             mStopWatch.logEvent("End of onPostExecute");
-            LogUtil.i(NonBlockingSearchView.class.getName(), mStopWatch.getSummary());
+            LogUtil.d(NonBlockingSearchView.class.getName(), mStopWatch.getSummary());
         }
 
         protected abstract List<T> doSearch() throws UnauthorizedException;

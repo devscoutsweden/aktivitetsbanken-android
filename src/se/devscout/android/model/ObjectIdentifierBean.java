@@ -36,4 +36,9 @@ public class ObjectIdentifierBean implements Serializable, ActivityKey, Category
     public int hashCode() {
         return mId.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return String.valueOf(mId);
+    }
 }

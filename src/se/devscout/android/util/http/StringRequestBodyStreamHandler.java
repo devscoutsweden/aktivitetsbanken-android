@@ -1,5 +1,8 @@
 package se.devscout.android.util.http;
 
+import se.devscout.android.util.LogUtil;
+import se.devscout.android.util.StopWatch;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
@@ -14,6 +17,10 @@ public class StringRequestBodyStreamHandler implements RequestBodyStreamHandler 
     }
     @Override
     public void write(OutputStream stream) throws IOException {
-        stream.write(mBody.getBytes(mCharset));
+        StopWatch stopWatch = new StopWatch("Writing to stream");
+        byte[] bytes = mBody.getBytes(mCharset);
+        stream.write(bytes);
+        stopWatch.logEvent("Sent " + bytes.length + " bytes to server.");
+        LogUtil.d(StringRequestBodyStreamHandler.class.getName(), stopWatch.getSummary());
     }
 }
