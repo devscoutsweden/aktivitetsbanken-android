@@ -5,7 +5,9 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
 import android.widget.ImageView;
+import se.devscout.android.model.repo.remote.RemoteActivityRepoImpl;
 import se.devscout.android.util.LogUtil;
+import se.devscout.server.api.model.ActivityKey;
 
 import java.net.URI;
 import java.util.*;
@@ -14,7 +16,7 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
     private int taskCount;
     private List<Listener> mListeners = new ArrayList<Listener>();
 
-    static interface BackgroundTaskExecutor {
+    public static interface BackgroundTaskExecutor {
         Object run(Object[] params, Context context);
     }
 
@@ -28,7 +30,7 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
     }
 
     public interface Listener {
-        void onDone(Object[] token, Object response, BackgroundTask task);
+        void onDone(Object[] parameters, Object response, BackgroundTask task);
     }
 
     public BackgroundTasksHandlerThread(Context context, Handler responseHandler) {
@@ -53,6 +55,12 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
 
     public void queueSetFavourites() {
         queueTask(BackgroundTask.SET_FAVOURITES);
+    }
+
+    public void queueReadActivity(final ActivityKey activityKey, final RemoteActivityRepoImpl remoteActivityRepo) {
+        remoteActivityRepo.addPendingActivityReadRequests(activityKey);
+
+        queueTask(BackgroundTask.READ_ACTIVITY, remoteActivityRepo);
     }
 
     public void queueCleanCache() {
@@ -99,7 +107,7 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
 
     private class MessageHandler extends Handler {
 
-        private Map<BackgroundTask,BackgroundTaskExecutor> mExecutors = new HashMap<BackgroundTask, BackgroundTaskExecutor>();
+        private Map<BackgroundTask, BackgroundTaskExecutor> mExecutors = new HashMap<BackgroundTask, BackgroundTaskExecutor>();
 
         {
             for (BackgroundTask backgroundTask : BackgroundTask.values()) {

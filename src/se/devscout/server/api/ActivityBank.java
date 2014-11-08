@@ -1,5 +1,6 @@
 package se.devscout.server.api;
 
+import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
 import se.devscout.android.util.http.UnauthorizedException;
 import se.devscout.server.api.model.*;
 
@@ -17,9 +18,9 @@ public interface ActivityBank {
 
     ActivityProperties updateActivity(ActivityKey key, ActivityProperties properties);
 
-    ActivityProperties readActivity(ActivityKey key);
+    void readActivityAsync(ActivityKey key, OnReadDoneCallback<Activity> callback, BackgroundTasksHandlerThread tasksHandlerThread);
 
-    Activity readActivityFull(ActivityKey key);
+    List<? extends Activity> readActivities(ActivityKey... keys) throws UnauthorizedException;
 
     ActivityFilterFactory getFilterFactory();
 
@@ -37,7 +38,7 @@ public interface ActivityBank {
 
     void unsetFavourite(ActivityKey activityKey, UserKey userKey);
 
-    boolean isFavourite(ActivityKey activityKey, UserKey userKey);
+    Boolean isFavourite(ActivityKey activityKey, UserKey userKey);
 
     List<? extends SearchHistory> readSearchHistory(int limit, UserKey userKey);
 

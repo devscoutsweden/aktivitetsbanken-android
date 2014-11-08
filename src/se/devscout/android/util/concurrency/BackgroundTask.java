@@ -18,6 +18,12 @@ public enum BackgroundTask {
         BackgroundTasksHandlerThread.BackgroundTaskExecutor createExecutor() {
             return new DisplayImageTaskExecutor();
         }
+    },
+    READ_ACTIVITY {
+        @Override
+        BackgroundTasksHandlerThread.BackgroundTaskExecutor createExecutor() {
+            return new ReadActivitiesTaskExecutor();
+        }
     };
 
     abstract BackgroundTasksHandlerThread.BackgroundTaskExecutor createExecutor();
