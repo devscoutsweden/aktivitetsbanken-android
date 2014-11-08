@@ -2,6 +2,7 @@ package se.devscout.android.controller.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,45 +10,36 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import se.devscout.android.R;
+import se.devscout.android.controller.activity.SingleFragmentActivity;
 import se.devscout.android.model.ObjectIdentifierBean;
+import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.ResourceUtil;
 import se.devscout.android.view.SimpleDocumentLayout;
+import se.devscout.server.api.OnReadDoneCallback;
+import se.devscout.server.api.model.Activity;
 import se.devscout.server.api.model.ActivityKey;
-import se.devscout.server.api.model.ActivityProperties;
 import se.devscout.server.api.model.Media;
 import se.devscout.server.api.model.Reference;
-
-import java.util.regex.Pattern;
 
 /**
  * Fragment for displaying (very) simple documents with headings, body paragraphs and images.
  */
-public class ActivityFragment extends ActivityBankFragment {
-
-    private static final Pattern WHITE_SPACE_PATTERN = Pattern.compile("\\s+");
+public class ActivityFragment extends ActivityBankFragment implements OnReadDoneCallback<Activity> {
 
     private ObjectIdentifierBean mActivityKey;
 
-    private static interface Item {
-        void append(SimpleDocumentLayout layout, LayoutInflater inflater);
-    }
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            /*
-             * Restore fields from saved state, for example after the device has been rotated.
-             */
-            mActivityKey = (ObjectIdentifierBean) savedInstanceState.getSerializable("mActivityKey");
+    public void onRead(Activity activityProperties) {
+        FragmentActivity context = getActivity();
+        View view = getView();
+        if (view == null || context == null) {
+            LogUtil.e(ActivityFragment.class.getName(), "Could not display activity information since view or context is null: view = " + view + " context = " + context);
+            return;
         }
-        return createView(inflater, container, getActivityBank().readActivity(mActivityKey), getActivity());
-    }
 
-    public static View createView(LayoutInflater inflater, ViewGroup container, ActivityProperties activityProperties, Context context) {
-        View view = inflater.inflate(R.layout.activity, container, false);
-        SimpleDocumentLayout linearLayout = (SimpleDocumentLayout) view.findViewById(R.id.activityDocument);
+        context.invalidateOptionsMenu();
 
-//        ActivityRevision revision = ActivityUtil.getLatestActivityRevision(activityProperties);
+        view.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 
         String ages = activityProperties.getAges().toString();
         String participantCount = activityProperties.getParticipants().toString();
@@ -59,36 +51,35 @@ public class ActivityFragment extends ActivityBankFragment {
             ((TextView) view.findViewById(R.id.activityFactAgeAndParticipants)).setText(context.getString(R.string.activityFactAge, ages));
         }
         boolean isAgeAndParticipantsSet = ages.length() > 0 || participantCount.length() > 0;
-        ((TextView)view.findViewById(R.id.activityFactAgeAndParticipants)).setVisibility(isAgeAndParticipantsSet ? View.VISIBLE : View.GONE);
-
+        ((TextView) view.findViewById(R.id.activityFactAgeAndParticipants)).setVisibility(isAgeAndParticipantsSet ? View.VISIBLE : View.GONE);
 
         String time = activityProperties.getTimeActivity().toString();
         boolean isTimeSet = time.length() > 0;
         if (isTimeSet) {
             ((TextView) view.findViewById(R.id.activityFactTime)).setText(context.getString(R.string.activitiesListItemTime, time));
         }
-        ((TextView)view.findViewById(R.id.activityFactTime)).setVisibility(isTimeSet ? View.VISIBLE : View.GONE);
+        ((TextView) view.findViewById(R.id.activityFactTime)).setVisibility(isTimeSet ? View.VISIBLE : View.GONE);
 
         Integer favouritesCount = activityProperties.getFavouritesCount();
         boolean isFavouritesCountSet = favouritesCount != null && favouritesCount > 0;
         if (isFavouritesCountSet) {
             ((TextView) view.findViewById(R.id.activityFactFavourites)).setText(context.getString(R.string.activitiesListItemFavouritesCount, favouritesCount));
         }
-        ((TextView)view.findViewById(R.id.activityFactFavourites)).setVisibility(isFavouritesCountSet ? View.VISIBLE : View.GONE);
+        ((TextView) view.findViewById(R.id.activityFactFavourites)).setVisibility(isFavouritesCountSet ? View.VISIBLE : View.GONE);
 
         Integer commentCount = null;
         boolean isCommented = commentCount != null && commentCount > 0;
 //        if (isCommented) {
 //            ((TextView) view.findViewById(R.id.activityFactFavourites)).setText(context.getString(R.string.activitiesListItemCommentsCount, commentCount));
 //        }
-        ((TextView)view.findViewById(R.id.activityFactComments)).setVisibility(isCommented ? View.VISIBLE : View.GONE);
+        ((TextView) view.findViewById(R.id.activityFactComments)).setVisibility(isCommented ? View.VISIBLE : View.GONE);
 
         String categories = TextUtils.join(", ", activityProperties.getCategories());
         boolean isCategoriesSet = categories.length() > 0;
         if (isCategoriesSet) {
-            ((TextView)view.findViewById(R.id.activityFactCategories)).setText(categories);
+            ((TextView) view.findViewById(R.id.activityFactCategories)).setText(categories);
         }
-        ((TextView)view.findViewById(R.id.activityFactCategories)).setVisibility(isCategoriesSet ? View.VISIBLE : View.GONE);
+        ((TextView) view.findViewById(R.id.activityFactCategories)).setVisibility(isCategoriesSet ? View.VISIBLE : View.GONE);
 
         ResourceUtil resourceUtil = new ResourceUtil(context);
 
@@ -108,6 +99,7 @@ public class ActivityFragment extends ActivityBankFragment {
         } else {
             view.findViewById(R.id.activityCover).setVisibility(View.GONE);
         }
+        SimpleDocumentLayout linearLayout = (SimpleDocumentLayout) view.findViewById(R.id.activityDocument);
         linearLayout
                 .addHeaderAndText(R.string.activity_introduction, activityProperties.getDescriptionIntroduction())
                 .addHeaderAndText(R.string.activity_tab_material, activityProperties.getDescriptionMaterial())
@@ -130,7 +122,38 @@ public class ActivityFragment extends ActivityBankFragment {
             }
         }
 
+        view.findViewById(R.id.scrollView).setVisibility(View.VISIBLE);
+    }
+
+    private static interface Item {
+        void append(SimpleDocumentLayout layout, LayoutInflater inflater);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            /*
+             * Restore fields from saved state, for example after the device has been rotated.
+             */
+            mActivityKey = (ObjectIdentifierBean) savedInstanceState.getSerializable("mActivityKey");
+        }
+        return createView(inflater, container, container.getRootView().getContext());
+    }
+
+    public View createView(LayoutInflater inflater, ViewGroup container, Context context) {
+
+        View view = inflater.inflate(R.layout.activity, container, false);
+
+        view.findViewById(R.id.scrollView).setVisibility(View.INVISIBLE);
+
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        getActivityBank().readActivityAsync(mActivityKey, this, ((SingleFragmentActivity) view.getRootView().getContext()).getBackgroundTasksHandlerThread());
     }
 
     @Override

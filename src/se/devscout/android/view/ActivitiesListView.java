@@ -40,10 +40,12 @@ public class ActivitiesListView extends NonBlockingSearchView<ActivitiesListItem
     @Override
     protected void onItemClick(View view, int position) {
         List<ObjectIdentifierBean> keys = new ArrayList<ObjectIdentifierBean>();
+        ArrayList<String> titles = new ArrayList<>();
         for (ActivitiesListItem activity : getItems()) {
             keys.add(new ObjectIdentifierBean(activity.getId()));
+            titles.add(activity.getName());
         }
-        getContext().startActivity(ActivitiesActivity.createIntent(getContext(), keys, position));
+        getContext().startActivity(ActivitiesActivity.createIntent(getContext(), keys, titles, position));
     }
 
     @Override

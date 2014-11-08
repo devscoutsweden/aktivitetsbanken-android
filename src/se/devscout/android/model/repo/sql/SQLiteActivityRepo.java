@@ -7,11 +7,9 @@ import se.devscout.android.model.ReferenceBean;
 import se.devscout.android.model.SearchHistoryBean;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.SimpleFilter;
+import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
 import se.devscout.android.util.http.UnauthorizedException;
-import se.devscout.server.api.ActivityBank;
-import se.devscout.server.api.ActivityBankListener;
-import se.devscout.server.api.ActivityFilter;
-import se.devscout.server.api.ActivityFilterFactory;
+import se.devscout.server.api.*;
 import se.devscout.server.api.model.*;
 
 import java.io.IOException;
@@ -65,13 +63,16 @@ public class SQLiteActivityRepo implements ActivityBank {
     }
 
     @Override
-    public Activity readActivity(ActivityKey key) {
-        return mDatabaseHelper.readActivity(key);
+    public void readActivityAsync(ActivityKey key, OnReadDoneCallback<Activity> callback, BackgroundTasksHandlerThread tasksHandlerThread) {
+        if (callback != null) {
+            ActivityBean activity = mDatabaseHelper.readActivities(key).get(0);
+            callback.onRead(activity);
+        }
     }
 
     @Override
-    public Activity readActivityFull(ActivityKey key) {
-        return readActivity(key);
+    public List<ActivityBean> readActivities(ActivityKey... keys) throws UnauthorizedException {
+        return mDatabaseHelper.readActivities(keys);
     }
 
     @Override
@@ -118,7 +119,7 @@ public class SQLiteActivityRepo implements ActivityBank {
     }
 
     @Override
-    public boolean isFavourite(ActivityKey activityKey, UserKey userKey) {
+    public Boolean isFavourite(ActivityKey activityKey, UserKey userKey) {
         return mDatabaseHelper.isFavourite(activityKey, userKey);
     }
 

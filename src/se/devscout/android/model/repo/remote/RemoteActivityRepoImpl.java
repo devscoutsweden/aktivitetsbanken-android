@@ -1,17 +1,26 @@
 package se.devscout.android.model.repo.remote;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import se.devscout.android.controller.fragment.TitleActivityFilterVisitor;
 import se.devscout.android.model.*;
+import se.devscout.android.model.repo.sql.LocalObjectRefreshness;
 import se.devscout.android.model.repo.sql.SQLiteActivityRepo;
-import se.devscout.android.util.*;
+import se.devscout.android.util.InstallationProperties;
+import se.devscout.android.util.LogUtil;
+import se.devscout.android.util.PreferencesUtil;
+import se.devscout.android.util.StopWatch;
+import se.devscout.android.util.concurrency.BackgroundTask;
+import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
 import se.devscout.android.util.http.*;
 import se.devscout.server.api.ActivityFilter;
+import se.devscout.server.api.OnReadDoneCallback;
 import se.devscout.server.api.URIBuilderActivityFilterVisitor;
 import se.devscout.server.api.model.*;
 
@@ -22,10 +31,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     static final String HOST = "devscout.mikaelsvensson.info:10081";
@@ -37,6 +43,10 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     private static final SimpleDateFormat API_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'");
     private static RemoteActivityRepoImpl ourInstance;
     private final Context mContext;
+
+    private Map<Long, OnReadDoneCallback<Activity>> mActivityReadRequestCallbacks = new HashMap<Long, OnReadDoneCallback<Activity>>();
+    private BackgroundTasksHandlerThread.Listener mBackgroundTasksListener;
+
 
     public static RemoteActivityRepoImpl getInstance(Context ctx) {
         if (ourInstance == null) {
@@ -120,34 +130,62 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     }
 
     @Override
-    public boolean isFavourite(ActivityKey activityKey, UserKey userKey) {
-        //TODO: implement/overload/fix this method. High priority.
-        return super.isFavourite(activityKey, userKey);
+    public Boolean isFavourite(ActivityKey activityKey, UserKey userKey) {
+        if (activityKey.getId() < 0) {
+            long id = mDatabaseHelper.getLocalIdByServerId(new ActivityPropertiesBean(false, -activityKey.getId(), 0, null));
+            if (id != -1) {
+                return super.isFavourite(new ObjectIdentifierBean(id), userKey);
+            } else {
+                return null;
+            }
+        } else {
+            return super.isFavourite(activityKey, userKey);
+        }
     }
 
     @Override
-    public Activity readActivity(ActivityKey key) {
+    public void readActivityAsync(ActivityKey key, OnReadDoneCallback callback, BackgroundTasksHandlerThread tasksHandlerThread) {
         //TODO: implement/overload/fix this method. High priority.
-        return super.readActivity(key);
-/*
-        //TODO: Host name should not be kept in source code
-        try {
-            String uri = "http://" + HOST + "/api/v1/activities/" + key.getId();
-            JSONObject obj = getJSONObject(uri);
 
-            ActivityBean act = getActivityBean(obj);
-
-            processServerObject(act);
-
-            return act;
-        } catch (IOException e) {
-            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not query server", e);
-            return super.readActivity(key);
-        } catch (JSONException e) {
-            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Error parsing JSON response", e);
-            return super.readActivity(key);
+        if (key.getId() < 0) {
+            long id = mDatabaseHelper.getLocalIdByServerId(new ActivityPropertiesBean(false, -key.getId(), 0, null));
+            if (id != -1) {
+                LogUtil.i(RemoteActivityRepoImpl.class.getName(), "Activity with serverId = " + -key.getId() + " was initially not cached locally but it is now cached.");
+                super.readActivityAsync(new ObjectIdentifierBean(id), callback, tasksHandlerThread);
+            } else {
+                synchronized (mActivityReadRequestCallbacks) {
+                    mActivityReadRequestCallbacks.put(key.getId(), callback);
+                }
+                initBackgroundTasksListener(tasksHandlerThread);
+                tasksHandlerThread.queueReadActivity(new ObjectIdentifierBean(key.getId()), this);
+            }
+        } else {
+            super.readActivityAsync(key, callback, tasksHandlerThread);
         }
-*/
+    }
+
+    private void initBackgroundTasksListener(BackgroundTasksHandlerThread tasksHandlerThread) {
+        if (mBackgroundTasksListener == null) {
+            synchronized (this) {
+                if (mBackgroundTasksListener == null) {
+                    mBackgroundTasksListener = new BackgroundTasksHandlerThread.Listener() {
+                        @Override
+                        public void onDone(Object[] parameters, Object response, BackgroundTask task) {
+                            if (task == BackgroundTask.READ_ACTIVITY) {
+                                List<ActivityBean> activities = (List<ActivityBean>) response;
+                                for (Activity activity : activities) {
+                                    OnReadDoneCallback<Activity> callback = invokeActivityReadCallback(activity);
+                                    if (callback != null) {
+                                        callback.onRead(activity);
+                                    }
+                                }
+                            }
+                        }
+                    };
+                }
+                tasksHandlerThread.addListener(mBackgroundTasksListener);
+            }
+        }
     }
 
     @Override
@@ -157,9 +195,38 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     }
 
     @Override
-    public Activity readActivityFull(ActivityKey key) {
+    public List<ActivityBean> readActivities(ActivityKey... keys) throws UnauthorizedException {
         //TODO: implement/overload/fix this method. High priority.
-        return super.readActivityFull(key);
+        List<ServerObjectIdentifierBean> missing = new ArrayList<>();
+        List<ActivityKey> existing = new ArrayList<>();
+        for (ActivityKey key : keys) {
+            if (key.getId() < 0) {
+                long id = mDatabaseHelper.getLocalIdByServerId(new ActivityPropertiesBean(false, -key.getId(), 0, null));
+                if (id != -1) {
+                    LogUtil.i(RemoteActivityRepoImpl.class.getName(), "Activity with serverId = " + -key.getId() + " was initially not cached but is now.");
+                    existing.add(new ObjectIdentifierBean(id));
+                } else {
+                    missing.add(new ServerObjectIdentifierBean(-key.getId()));
+                }
+            } else {
+                existing.add(key);
+            }
+        }
+
+        LogUtil.d(RemoteActivityRepoImpl.class.getName(), "readActivities: missing=" + TextUtils.join(",", missing) + " existing=" + TextUtils.join(",", existing));
+
+        List<ActivityBean> result = new ArrayList<>();
+        List<ActivityBean> activities1 = super.readActivities(existing.toArray(new ActivityKey[existing.size()]));
+        result.addAll(activities1);
+        if (!missing.isEmpty()) {
+            LogUtil.i(RemoteActivityRepoImpl.class.getName(), "Requesting data for these server-only activities: " + TextUtils.join(",", missing));
+            ServerObjectIdentifier[] identifiers = new ServerObjectIdentifier[missing.size()];
+            RemoveServerObjectIdentifiersFilter condition = new RemoveServerObjectIdentifiersFilter(missing.toArray(identifiers));
+            List<ActivityBean> activities = findActivities(condition, null);
+            result.addAll(activities);
+        }
+
+        return result;
     }
 
     @Override
@@ -229,19 +296,57 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
 
     @Override
     public List<ActivityBean> findActivity(ActivityFilter condition) throws UnauthorizedException {
-        StopWatch stopWatch = new StopWatch("findActivity " + condition.toString(new TitleActivityFilterVisitor(mContext)));
+        String[] attrNames = {
+                "name",
+//                "descr_main",
+                "featured",
+                "age_max",
+                "age_min",
+                "participants_max",
+                "participants_min",
+                "time_max",
+                "time_min"};
+        return findActivities(condition, attrNames);
+    }
+
+    private List<ActivityBean> findActivities(ActivityFilter condition, String[] attrNames) throws UnauthorizedException {
         URIBuilderActivityFilterVisitor visitor = new ApiV1Visitor();
-        String uri = condition.toAPIRequest(visitor).toString();
+        Uri uri2 = condition.toAPIRequest(visitor);
+        if (attrNames != null) {
+            Uri.Builder builder = uri2.buildUpon();
+            for (String attrName : attrNames) {
+                builder.appendQueryParameter("attrs[]", attrName);
+            }
+            uri2 = builder.build();
+        }
+        StopWatch stopWatch = new StopWatch("findActivity " + condition.toString(new TitleActivityFilterVisitor(mContext)));
+        String uri = uri2.toString();
         try {
             stopWatch.logEvent("Preparing request");
             JSONArray array = getJSONArray(uri, null);
             stopWatch.logEvent("Sending query to server and reading response");
-            ArrayList<ActivityBean> result = new ArrayList<ActivityBean>();
+            ArrayList<ActivityBean> result = new ArrayList<>();
             stopWatch.logEvent("Parsed JSON");
             for (JSONObject obj : getJSONArrayAsList(array)) {
                 ActivityBean act = getActivityBean(obj);
 
-                processServerObject(act);
+                if (attrNames == null) {
+                    processServerObject(act);
+                } else {
+                    LocalObjectRefreshness localFreshness = mDatabaseHelper.getLocalFreshness(act);
+                    switch (localFreshness) {
+                        case LOCAL_IS_UP_TO_DATE:
+                            act.setId(mDatabaseHelper.getLocalIdByServerId(act));
+                            break;
+                        case LOCAL_IS_OLD:
+                            act.setId(mDatabaseHelper.getLocalIdByServerId(act));
+                            act.setId(-act.getServerId());
+                            break;
+                        case LOCAL_IS_MISSING:
+                            act.setId(-act.getServerId());
+                            break;
+                    }
+                }
 
                 result.add(act);
             }
@@ -258,13 +363,14 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
             return super.findActivity(condition);
         } finally {
             stopWatch.logEvent("The last things");
-            LogUtil.i(RemoteActivityRepoImpl.class.getName(), stopWatch.getSummary());
+            LogUtil.d(RemoteActivityRepoImpl.class.getName(), stopWatch.getSummary());
         }
     }
 
     private void processServerObject(ActivityBean act) {
         //TODO: refactor into separate method for updating database.
-        switch (mDatabaseHelper.getLocalFreshness(act)) {
+        LocalObjectRefreshness localFreshness = mDatabaseHelper.getLocalFreshness(act);
+        switch (localFreshness) {
             case LOCAL_IS_MISSING:
                 // Incoming data is a new (non-cached) activity. Add it to the local database.
                 long id = mDatabaseHelper.createActivity(act);
@@ -375,7 +481,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         stopWatch.logEvent("Fetched data");
         JSONArray jsonArray = (JSONArray) new JSONTokener(s).nextValue();
         stopWatch.logEvent("Parsed data");
-        LogUtil.i(RemoteActivityRepoImpl.class.getName(), stopWatch.getSummary());
+        LogUtil.d(RemoteActivityRepoImpl.class.getName(), stopWatch.getSummary());
         return jsonArray;
     }
 
@@ -507,7 +613,12 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     }
 
     private List<JSONObject> getJSONObjectList(JSONObject obj, String arrayAttributeName) throws JSONException {
-        return getJSONArrayAsList(obj.getJSONArray(arrayAttributeName));
+        if (obj.has(arrayAttributeName)) {
+            return getJSONArrayAsList(obj.getJSONArray(arrayAttributeName));
+        } else {
+            LogUtil.d(RemoteActivityRepoImpl.class.getName(), "Will return empty list instead of the (missing) array '" + arrayAttributeName + "'.");
+            return Collections.emptyList();
+        }
     }
 
     private List<JSONObject> getJSONArrayAsList(JSONArray jsonArray) throws JSONException {
@@ -624,6 +735,37 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
 
     private String getAPIKey() {
         return PreferencesUtil.getInstance(mContext).getCurrentUser() != null ? mDatabaseHelper.readUser(PreferencesUtil.getInstance(mContext).getCurrentUser()).getAPIKey() : null;
+    }
+
+    public OnReadDoneCallback<Activity> invokeActivityReadCallback(Activity activity) {
+        synchronized (mActivityReadRequestCallbacks) {
+            OnReadDoneCallback<Activity> callback = mActivityReadRequestCallbacks.get(activity.getId());
+            if (callback != null) {
+                mActivityReadRequestCallbacks.remove(activity.getId());
+                return callback;
+            } else {
+                callback = mActivityReadRequestCallbacks.get(-activity.getServerId());
+                mActivityReadRequestCallbacks.remove(-activity.getServerId());
+                return callback;
+            }
+        }
+    }
+
+    private List<ActivityKey> mPendingActivityReadRequests = new ArrayList<>();
+
+    public ActivityKey[] getPendingActivityReadRequests() {
+        synchronized (mPendingActivityReadRequests) {
+            ActivityKey[] keys = mPendingActivityReadRequests.toArray(new ActivityKey[mPendingActivityReadRequests.size()]);
+            mPendingActivityReadRequests.clear();
+            return keys;
+        }
+    }
+
+    public void addPendingActivityReadRequests(ActivityKey activityKey) {
+        synchronized (mPendingActivityReadRequests) {
+            mPendingActivityReadRequests.remove(activityKey);
+            mPendingActivityReadRequests.add(0, activityKey);
+        }
     }
 
     /**

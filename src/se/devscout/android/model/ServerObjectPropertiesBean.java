@@ -2,8 +2,7 @@ package se.devscout.android.model;
 
 import se.devscout.server.api.model.ServerObjectProperties;
 
-public class ServerObjectPropertiesBean implements ServerObjectProperties {
-    protected long mServerId;
+public class ServerObjectPropertiesBean extends ServerObjectIdentifierBean implements ServerObjectProperties {
     protected boolean mPublishable = false;
     private long mServerRevisionId;
 
@@ -11,14 +10,9 @@ public class ServerObjectPropertiesBean implements ServerObjectProperties {
     }
 
     public ServerObjectPropertiesBean(boolean publishable, long serverId, long serverRevisionId) {
+        super(serverId);
         mPublishable = publishable;
-        mServerId = serverId;
         mServerRevisionId = serverRevisionId;
-    }
-
-    @Override
-    public long getServerId() {
-        return mServerId;
     }
 
     @Override
@@ -39,7 +33,4 @@ public class ServerObjectPropertiesBean implements ServerObjectProperties {
         this.mServerRevisionId = serverRevisionId;
     }
 
-    public void setServerId(long serverId) {
-        mServerId = serverId;
-    }
 }

@@ -12,13 +12,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ActivitiesActivity extends SingleFragmentActivity {
-    private static final String INTENT_EXTRA_ACTIVITY_KEY = "activityKeys";
+    private static final String INTENT_EXTRA_ACTIVITY_KEYS = "activityKeys";
+    private static final String INTENT_EXTRA_ACTIVITY_TITLES = "activityTitles";
     private static final String INTENT_EXTRA_SELECTED_INDEX = "selectedIndex";
 
     @Override
     protected Fragment createFragment() {
-        List<ObjectIdentifierBean> keys = (List<ObjectIdentifierBean>) getIntent().getSerializableExtra(INTENT_EXTRA_ACTIVITY_KEY);
-        return ActivitiesViewPagerFragment.create(keys, getIntent().getIntExtra(INTENT_EXTRA_SELECTED_INDEX, 0));
+        List<ObjectIdentifierBean> keys = (List<ObjectIdentifierBean>) getIntent().getSerializableExtra(INTENT_EXTRA_ACTIVITY_KEYS);
+        ArrayList<String> titles = (ArrayList<String>) getIntent().getSerializableExtra(INTENT_EXTRA_ACTIVITY_TITLES);
+        return ActivitiesViewPagerFragment.create(keys, titles, getIntent().getIntExtra(INTENT_EXTRA_SELECTED_INDEX, 0));
     }
 
     @Override
@@ -39,9 +41,10 @@ public class ActivitiesActivity extends SingleFragmentActivity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    public static Intent createIntent(Context ctx, List<ObjectIdentifierBean> keys, int selectedIndex) {
+    public static Intent createIntent(Context ctx, List<ObjectIdentifierBean> keys, ArrayList<String> titles, int selectedIndex) {
         Intent intent = new Intent(ctx, ActivitiesActivity.class);
-        intent.putExtra(INTENT_EXTRA_ACTIVITY_KEY, new ArrayList<ObjectIdentifierBean>(keys));
+        intent.putExtra(INTENT_EXTRA_ACTIVITY_KEYS, new ArrayList<>(keys));
+        intent.putExtra(INTENT_EXTRA_ACTIVITY_TITLES, titles);
         intent.putExtra(INTENT_EXTRA_SELECTED_INDEX, selectedIndex);
         return intent;
     }

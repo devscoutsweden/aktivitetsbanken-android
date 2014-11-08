@@ -7,19 +7,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.ActivitiesListFragment;
-import se.devscout.android.model.ObjectIdentifierBean;
 import se.devscout.android.view.ActivitiesListView;
 import se.devscout.server.api.ActivityFilter;
-import se.devscout.server.api.model.ActivityKey;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public class SearchResultActivity extends SingleFragmentActivity<ActivitiesListFragment> {
 
-    private static final String INTENT_EXTRA_ACTIVITIES = "activities";
     private static final String INTENT_EXTRA_FILTER = "filter";
     private static final String TITLE_RES_ID = "title";
 
@@ -55,20 +50,11 @@ public class SearchResultActivity extends SingleFragmentActivity<ActivitiesListF
 
     @Override
     protected ActivitiesListFragment createFragment() {
-        ArrayList<ObjectIdentifierBean> keys = (ArrayList<ObjectIdentifierBean>) getIntent().getSerializableExtra(INTENT_EXTRA_ACTIVITIES);
-        if (keys != null) {
-            List<ActivityKey> activities = new ArrayList<ActivityKey>();
-            for (ActivityKey key : keys) {
-                activities.add(getActivityBank().readActivityFull(key));
-            }
-            return ActivitiesListFragment.create(activities, ActivitiesListView.Sorter.NAME);
-        } else {
-            ActivityFilter filter = (ActivityFilter) getIntent().getSerializableExtra(INTENT_EXTRA_FILTER);
-            if (filter != null) {
-                return ActivitiesListFragment.create(filter, ActivitiesListView.Sorter.NAME);
-            }
-            throw new IllegalArgumentException("Neither activities nor filter specified when starting activity.");
+        ActivityFilter filter = (ActivityFilter) getIntent().getSerializableExtra(INTENT_EXTRA_FILTER);
+        if (filter != null) {
+            return ActivitiesListFragment.create(filter, ActivitiesListView.Sorter.NAME);
         }
+        throw new IllegalArgumentException("Neither activities nor filter specified when starting activity.");
     }
 
     @Override
@@ -87,28 +73,6 @@ public class SearchResultActivity extends SingleFragmentActivity<ActivitiesListF
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    /**
-     * Create intent for starting search result activity with a specific set of activities (activities which have
-     * already been loaded/fetched from the database).
-     *
-     * @param ctx
-     * @param activities
-     * @param title
-     * @return
-     */
-    public static Intent createIntent(Context ctx, List<? extends se.devscout.server.api.model.Activity> activities, String title) {
-
-        ArrayList<ObjectIdentifierBean> keys = new ArrayList<ObjectIdentifierBean>();
-        for (se.devscout.server.api.model.Activity activity : activities) {
-            keys.add(new ObjectIdentifierBean(activity.getId()));
-        }
-
-        Intent intent = new Intent(ctx, SearchResultActivity.class);
-        intent.putExtra(INTENT_EXTRA_ACTIVITIES, keys);
-        intent.putExtra(TITLE_RES_ID, title);
-        return intent;
     }
 
     /**

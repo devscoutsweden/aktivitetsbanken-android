@@ -12,7 +12,6 @@ import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.PreferencesUtil;
 import se.devscout.android.view.ViewPagerIndicator;
 import se.devscout.server.api.ActivityBank;
-import se.devscout.server.api.model.Activity;
 import se.devscout.server.api.model.ActivityKey;
 
 import java.util.ArrayList;
@@ -20,7 +19,8 @@ import java.util.List;
 
 public class ActivitiesViewPagerFragment extends ActivityBankFragment implements ViewPager.OnPageChangeListener {
 
-    protected ArrayList<ObjectIdentifierBean> mActivities;
+    protected ArrayList<ObjectIdentifierBean> mActivityKeys;
+    protected ArrayList<String> mActivityTitles;
     protected int mSelectedIndex;
 
     private ViewPager mViewPager;
@@ -32,56 +32,49 @@ public class ActivitiesViewPagerFragment extends ActivityBankFragment implements
             /*
              * Restore fields from saved state, for example after the device has been rotated.
              */
-            mActivities = (ArrayList<ObjectIdentifierBean>) savedInstanceState.getSerializable("mActivities");
+            mActivityKeys = (ArrayList<ObjectIdentifierBean>) savedInstanceState.getSerializable("mActivityKeys");
+            mActivityTitles = (ArrayList<String>) savedInstanceState.getSerializable("mActivityTitles");
             mSelectedIndex = savedInstanceState.getInt("mSelectedIndex");
 //            LogUtil.d(ActivitiesListFragment.class.getName(), "State (e.g. search result) has been restored.");
         }
 
         setHasOptionsMenu(true);
 
-        View view = inflater.inflate(R.layout.view_pager, container, false);
+        final View view = inflater.inflate(R.layout.view_pager, container, false);
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
         mViewPagerIndicator = (ViewPagerIndicator) view.findViewById(R.id.viewPagerIndicator);
-        mViewPagerIndicator.setVisibility(mActivities.size() > 1 ? View.VISIBLE : View.GONE);
-        mViewPagerIndicator.setCount(mActivities.size());
+        mViewPagerIndicator.setVisibility(mActivityKeys.size() > 1 ? View.VISIBLE : View.GONE);
+        mViewPagerIndicator.setCount(mActivityKeys.size());
         mViewPager.setOnPageChangeListener(this);
         FragmentStatePagerAdapter pageAdapter = new FragmentStatePagerAdapter(getChildFragmentManager()) {
             @Override
             public Fragment getItem(int i) {
-                Activity activity = getActivity(i);
-                return ActivityFragment.create(activity);
+                ActivityKey key = mActivityKeys.get(i);
+//                prefetch(i);
+                ActivityFragment activityFragment = ActivityFragment.create(key);
+                return activityFragment;
+            }
+
 /*
-                SimpleDocumentFragment fragment = SimpleDocumentFragment.createActivity();
+            private void prefetch(int index) {
+                BackgroundTasksHandlerThread handlerThread = ((SingleFragmentActivity) view.getRootView().getContext()).getBackgroundTasksHandlerThread();
+                ActivityBank activityBank = getActivityBank();
 
-                ActivityRevision revision = ActivityUtil.getLatestActivityRevision(activity);
-
-                ResourceUtil resourceUtil = new ResourceUtil(getActivity());
-
-                if (revision.getCoverMedia() != null) {
-                    fragment.addImage(resourceUtil.toResourceId(revision.getCoverMedia().getURI()), true);
-                }
-                fragment
-                        .addHeaderAndText(R.string.activity_introduction, revision.getDescriptionIntroduction())
-                        .addHeaderAndText(R.string.activity_tab_material, revision.getDescriptionMaterial())
-                        .addHeaderAndText(R.string.activity_preparations, revision.getDescriptionPreparation())
-                        .addHeaderAndText(R.string.activity_how_to_do, revision.getDescription())
-                        .addHeaderAndText(R.string.activity_safety, revision.getDescriptionSafety())
-                        .addHeaderAndText(R.string.activity_notes, revision.getDescriptionNotes());
-
-                if (!revision.getMediaItems().isEmpty()) {
-                    fragment.addHeader(R.string.activity_tab_photos);
-                    for (Media media : revision.getMediaItems()) {
-                        fragment.addImage(resourceUtil.toResourceId(media.getURI()), false);
+                activityBank.readActivityAsync(mActivityKeys.get(index), null, handlerThread);
+                for (int prefetchIndex = 0; prefetchIndex < 5; prefetchIndex++) {
+                    if (index - prefetchIndex >= 0) {
+                        activityBank.readActivityAsync(mActivityKeys.get(index - prefetchIndex), null, handlerThread);
+                    }
+                    if (index + prefetchIndex < mActivityKeys.size()) {
+                        activityBank.readActivityAsync(mActivityKeys.get(index + prefetchIndex), null, handlerThread);
                     }
                 }
-
-                return fragment;
-*/
             }
+*/
 
             @Override
             public int getCount() {
-                return mActivities.size();
+                return mActivityKeys.size();
             }
         };
         mViewPager.setAdapter(pageAdapter);
@@ -100,41 +93,43 @@ public class ActivitiesViewPagerFragment extends ActivityBankFragment implements
 
     private void initFavouriteMenuItem(Menu menu) {
         MenuItem item = menu.findItem(R.id.activityMenuFavourite);
-        Activity activity = getSelectedActivity();
-        boolean favourite = ActivityBankFactory.getInstance(getActivity()).isFavourite(activity, PreferencesUtil.getInstance(getActivity()).getCurrentUser());
-        item.setIcon(favourite ? R.drawable.ic_action_important : R.drawable.ic_action_not_important);
-    }
-
-    private Activity getSelectedActivity() {
-        return getActivity(mSelectedIndex);
+        ActivityKey activityKey = getActivity(mSelectedIndex);
+        Boolean isFavourite = ActivityBankFactory.getInstance(getActivity()).isFavourite(activityKey, PreferencesUtil.getInstance(getActivity()).getCurrentUser());
+        if (isFavourite != null) {
+            item.setIcon(isFavourite ? R.drawable.ic_action_important : R.drawable.ic_action_not_important);
+        } else {
+            item.setVisible(false);
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.activityMenuFavourite) {
             ActivityBank activityBank = ActivityBankFactory.getInstance(getActivity());
-            boolean favourite = activityBank.isFavourite(getSelectedActivity(), PreferencesUtil.getInstance(getActivity()).getCurrentUser());
+            ActivityKey activityKey = getActivity(mSelectedIndex);
+            boolean favourite = activityBank.isFavourite(activityKey, PreferencesUtil.getInstance(getActivity()).getCurrentUser());
             if (favourite) {
-                activityBank.unsetFavourite(getSelectedActivity(), PreferencesUtil.getInstance(getActivity()).getCurrentUser());
+                activityBank.unsetFavourite(activityKey, PreferencesUtil.getInstance(getActivity()).getCurrentUser());
             } else {
-                activityBank.setFavourite(getSelectedActivity(), PreferencesUtil.getInstance(getActivity()).getCurrentUser());
+                activityBank.setFavourite(activityKey, PreferencesUtil.getInstance(getActivity()).getCurrentUser());
             }
             item.setIcon(!favourite ? R.drawable.ic_action_important : R.drawable.ic_action_not_important);
         }
-        return super.onOptionsItemSelected(item);    //To change body of overridden methods use File | Settings | File Templates.
+        return super.onOptionsItemSelected(item);
     }
 
-    protected Activity getActivity(int index) {
-        return getActivityBank().readActivityFull(mActivities.get(index));
+    protected ActivityKey getActivity(int index) {
+        return mActivityKeys.get(index);
     }
 
-    public static ActivitiesViewPagerFragment create(List<? extends ActivityKey> activities, int selectedIndex) {
+    public static ActivitiesViewPagerFragment create(List<? extends ActivityKey> activities, ArrayList<String> titles, int selectedIndex) {
         ActivitiesViewPagerFragment fragment = new ActivitiesViewPagerFragment();
         ArrayList<ObjectIdentifierBean> activityKeys = new ArrayList<ObjectIdentifierBean>();
         for (ActivityKey key : activities) {
             activityKeys.add(new ObjectIdentifierBean(key.getId()));
         }
-        fragment.mActivities = activityKeys;
+        fragment.mActivityKeys = activityKeys;
+        fragment.mActivityTitles = titles;
         fragment.mSelectedIndex = selectedIndex;
         return fragment;
     }
@@ -146,7 +141,8 @@ public class ActivitiesViewPagerFragment extends ActivityBankFragment implements
          * Store fields into saved state, for example when the activity is destroyed after the device has been rotated.
          */
         LogUtil.d(ActivitiesListFragment.class.getName(), "Saving state");
-        outState.putSerializable("mActivities", mActivities);
+        outState.putSerializable("mActivityKeys", mActivityKeys);
+        outState.putSerializable("mActivityTitles", mActivityTitles);
         outState.putInt("mSelectedIndex", mSelectedIndex);
         LogUtil.d(ActivitiesListFragment.class.getName(), "State saved");
     }
@@ -168,6 +164,6 @@ public class ActivitiesViewPagerFragment extends ActivityBankFragment implements
     }
 
     private void updateActivityTitle(int selectedActivityIndex) {
-        getActivity().setTitle(getActivity(selectedActivityIndex).getName());
+        getActivity().setTitle(mActivityTitles.get(selectedActivityIndex));
     }
 }

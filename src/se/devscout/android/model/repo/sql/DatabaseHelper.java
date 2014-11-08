@@ -64,11 +64,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         super.onOpen(db);
     }
 
-    public Activity readActivity(ActivityKey key) {
-        if (!mCacheActivity.containsKey(key.getId())) {
-            readActivities(new SQLKeyFilter(key));
+    public List<ActivityBean> readActivities(ActivityKey... keys) {
+        List<ActivityBean> res = new ArrayList<>();
+        List<ActivityKey> missing = new ArrayList<>();
+        for (ActivityKey key : keys) {
+            if (!mCacheActivity.containsKey(key.getId())) {
+                missing.add(key);
+            }
         }
-        return mCacheActivity.get(key.getId());
+        if (!missing.isEmpty()) {
+            readActivities(new SQLKeysFilter(missing.toArray(new ActivityKey[missing.size()])));
+        }
+        for (ActivityKey key : keys) {
+            res.add(mCacheActivity.get(key.getId()));
+        }
+        return res;
     }
 
     private static final int VERSION = 1;
@@ -111,7 +121,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         logInfo("Starting initialising database.");
         db.beginTransaction();
         try {
-            executeSQLScript(db, DATABASE_MIGRATION_SCRIPTS[0]);
+            executeSQLScripts(db, 0, DATABASE_MIGRATION_SCRIPTS.length);
 
             String apiKey = PreferenceManager.getDefaultSharedPreferences(mContext).getString("api_key", null);
             long anonymousUserId = createUser(new UserPropertiesBean("Anonymous", apiKey, 0L, 0L, false), db);
@@ -168,9 +178,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         logInfo("Starting to upgrade database.");
         try {
             db.beginTransaction();
-            for (int i = oldVersion; i < newVersion; i++) {
-                executeSQLScript(db, DATABASE_MIGRATION_SCRIPTS[i]);
-            }
+            executeSQLScripts(db, oldVersion, newVersion);
             db.setTransactionSuccessful();
             logInfo("Done upgrading database.");
         } catch (RuntimeException e) {
@@ -178,6 +186,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             throw e;
         } finally {
             db.endTransaction();
+        }
+    }
+
+    private void executeSQLScripts(SQLiteDatabase db, int fromInclusive, int toExclusive) {
+        for (int i = fromInclusive; i < toExclusive; i++) {
+            executeSQLScript(db, DATABASE_MIGRATION_SCRIPTS[i]);
         }
     }
 

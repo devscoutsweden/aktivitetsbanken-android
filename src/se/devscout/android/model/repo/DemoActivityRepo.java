@@ -4,10 +4,8 @@ import android.content.Context;
 import se.devscout.android.model.ActivityBean;
 import se.devscout.android.util.PrimitiveActivityFilterFactory;
 import se.devscout.android.util.SimpleFilter;
-import se.devscout.server.api.ActivityBank;
-import se.devscout.server.api.ActivityBankListener;
-import se.devscout.server.api.ActivityFilter;
-import se.devscout.server.api.ActivityFilterFactory;
+import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
+import se.devscout.server.api.*;
 import se.devscout.server.api.model.*;
 
 import java.util.ArrayList;
@@ -57,18 +55,17 @@ public class DemoActivityRepo implements ActivityBank {
     }
 
     @Override
-    public ActivityBean readActivity(ActivityKey key) {
+    public void readActivityAsync(ActivityKey key, OnReadDoneCallback<Activity> callback, BackgroundTasksHandlerThread tasksHandlerThread) {
         for (ActivityBean activity : mActivities) {
             if (key.getId().equals(activity.getId())) {
-                return activity;
+                callback.onRead(activity);
             }
         }
-        return null;
     }
 
     @Override
-    public Activity readActivityFull(ActivityKey key) {
-        return readActivity(key);
+    public List<ActivityBean> readActivities(ActivityKey... keys) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -112,7 +109,7 @@ public class DemoActivityRepo implements ActivityBank {
     }
 
     @Override
-    public boolean isFavourite(ActivityKey activityKey, UserKey userKey) {
+    public Boolean isFavourite(ActivityKey activityKey, UserKey userKey) {
         throw new UnsupportedOperationException();
     }
 
