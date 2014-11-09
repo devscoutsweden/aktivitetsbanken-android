@@ -64,7 +64,7 @@ public class HttpRequest {
                 case HttpURLConnection.HTTP_CREATED:
                     MeasuredBufferedInputStream measuredBufferedInputStream = new MeasuredBufferedInputStream(httpURLConnection.getInputStream());
                     InputStream is = measuredBufferedInputStream;
-                    if (httpURLConnection.getHeaderField(HEADER_CONTENT_ENCODING).equals(HEADER_CONTENT_ENCODING_GZIP)) {
+                    if (HEADER_CONTENT_ENCODING_GZIP.equals(httpURLConnection.getHeaderField(HEADER_CONTENT_ENCODING))) {
                         is = new GZIPInputStream(is);
                     }
                     response.setBody(responseHandler.read(is));
