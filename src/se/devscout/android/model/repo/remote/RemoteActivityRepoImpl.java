@@ -203,8 +203,8 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     @Override
     public List<ActivityBean> readActivities(ActivityKey... keys) throws UnauthorizedException {
         //TODO: implement/overload/fix this method. High priority.
-        List<ServerObjectIdentifierBean> missing = new ArrayList<>();
-        List<ActivityKey> existing = new ArrayList<>();
+        List<ServerObjectIdentifierBean> missing = new ArrayList<ServerObjectIdentifierBean>();
+        List<ActivityKey> existing = new ArrayList<ActivityKey>();
         for (ActivityKey key : keys) {
             if (key.getId() < 0) {
                 long id = mDatabaseHelper.getLocalIdByServerId(new ActivityPropertiesBean(false, -key.getId(), 0, null));
@@ -221,7 +221,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
 
         LogUtil.d(RemoteActivityRepoImpl.class.getName(), "readActivities: missing=" + TextUtils.join(",", missing) + " existing=" + TextUtils.join(",", existing));
 
-        List<ActivityBean> result = new ArrayList<>();
+        List<ActivityBean> result = new ArrayList<ActivityBean>();
         List<ActivityBean> activities1 = super.readActivities(existing.toArray(new ActivityKey[existing.size()]));
         result.addAll(activities1);
         if (!missing.isEmpty()) {
@@ -338,7 +338,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
             stopWatch.logEvent("Preparing request");
             JSONArray array = getJSONArray(uri, null);
             stopWatch.logEvent("Sending query to server and reading response");
-            ArrayList<ActivityBean> result = new ArrayList<>();
+            ArrayList<ActivityBean> result = new ArrayList<ActivityBean>();
             stopWatch.logEvent("Parsed JSON");
             for (JSONObject obj : getJSONArrayAsList(array)) {
                 ActivityBean act = getActivityBean(obj);
@@ -766,7 +766,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         }
     }
 
-    private List<ActivityKey> mPendingActivityReadRequests = new ArrayList<>();
+    private List<ActivityKey> mPendingActivityReadRequests = new ArrayList<ActivityKey>();
 
     public ActivityKey[] getPendingActivityReadRequests() {
         synchronized (mPendingActivityReadRequests) {

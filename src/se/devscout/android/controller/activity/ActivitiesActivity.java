@@ -43,7 +43,7 @@ public class ActivitiesActivity extends SingleFragmentActivity {
 
     public static Intent createIntent(Context ctx, List<ObjectIdentifierBean> keys, ArrayList<String> titles, int selectedIndex) {
         Intent intent = new Intent(ctx, ActivitiesActivity.class);
-        intent.putExtra(INTENT_EXTRA_ACTIVITY_KEYS, new ArrayList<>(keys));
+        intent.putExtra(INTENT_EXTRA_ACTIVITY_KEYS, new ArrayList<ObjectIdentifierBean>(keys));
         intent.putExtra(INTENT_EXTRA_ACTIVITY_TITLES, titles);
         intent.putExtra(INTENT_EXTRA_SELECTED_INDEX, selectedIndex);
         return intent;
