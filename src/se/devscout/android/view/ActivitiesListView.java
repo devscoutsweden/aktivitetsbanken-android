@@ -152,8 +152,6 @@ public class ActivitiesListView extends NonBlockingSearchView<ActivitiesListItem
 
             initTitle(convertView, activity);
 
-            initDescription(convertView, activity);
-
             initTime(convertView, activity);
 
             initAgeGroups(convertView, activity);
@@ -197,15 +195,6 @@ public class ActivitiesListView extends NonBlockingSearchView<ActivitiesListItem
                 timeTextView.setText(getContext().getResources().getString(R.string.activitiesListItemTime, timeActivity.toString()));
             }
             timeTextView.setVisibility(show ? View.VISIBLE : View.GONE);
-        }
-
-        private void initDescription(View convertView, ActivitiesListItem activity) {
-            TextView descriptionTextView = (TextView) convertView.findViewById(R.id.activitiesListItemSubtitle);
-            String description = activity.getDescription();
-            if (description != null) {
-                descriptionTextView.setText(description.substring(0, Math.min(100, description.length())));
-            }
-            descriptionTextView.setVisibility(description != null ? View.VISIBLE : View.INVISIBLE);
         }
     }
 

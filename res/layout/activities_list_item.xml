@@ -3,7 +3,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:devscout="http://schemas.android.com/apk/res/se.devscout.android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="@dimen/uiBlockSize">
 
     <TextView
         android:layout_width="wrap_content"
@@ -16,25 +16,10 @@
         android:ellipsize="end"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/linearLayout"
-        android:singleLine="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Description"
-        android:id="@+id/activitiesListItemSubtitle"
-        android:textColor="@android:color/secondary_text_light"
-        android:paddingLeft="@dimen/defaultMargin"
-        android:paddingRight="@dimen/defaultMargin"
-        android:paddingBottom="@dimen/defaultMargin"
-        android:paddingTop="0dp"
-        android:textSize="@dimen/smallTextSize"
-        android:layout_below="@id/activitiesListItemTitle"
-        android:layout_alignRight="@+id/activitiesListItemTitle"
-        android:ellipsize="end"
-        android:layout_alignParentLeft="true"
-        android:singleLine="true" />
+        android:singleLine="true"
+        android:gravity="center_vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/linearLayout" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -44,7 +29,7 @@
         android:layout_alignParentTop="true"
         android:id="@+id/linearLayout"
         android:gravity="center_vertical|right"
-        android:layout_alignBottom="@+id/activitiesListItemSubtitle">
+        android:layout_alignParentBottom="true">
 
         <se.devscout.android.view.AgeGroupView
             android:layout_width="60sp"
