@@ -70,7 +70,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     @Override
     public Reference createReference(ActivityKey key, ReferenceProperties properties) {
         //TODO: this method probably does not have to be overloaded, provided references are automatically created by the server when activities are created/updated. Low priority.
-        return super.createReference(key, properties);
+        return super.createReference(fixActivityKey(key), properties);
     }
 
     @Override
@@ -82,13 +82,13 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     @Override
     public void deleteActivity(ActivityKey key) {
         //TODO: implement/overload/fix this method. Low priority.
-        super.deleteActivity(key);
+        super.deleteActivity(fixActivityKey(key));
     }
 
     @Override
     public void deleteReference(ActivityKey key, ReferenceKey referenceKey) {
         //TODO: this method probably does not have to be overloaded, provided references are automatically created by the server when activities are created/updated. Low priority.
-        super.deleteReference(key, referenceKey);
+        super.deleteReference(fixActivityKey(key), referenceKey);
     }
 
     @Override
@@ -132,15 +132,20 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
 
     @Override
     public Boolean isFavourite(ActivityKey activityKey, UserKey userKey) {
+        ActivityKey key = fixActivityKey(activityKey);
+        return key != null ? super.isFavourite(key, userKey) : null;
+    }
+
+    private ActivityKey fixActivityKey(ActivityKey activityKey) {
         if (activityKey.getId() < 0) {
             long id = mDatabaseHelper.getLocalIdByServerId(new ActivityPropertiesBean(false, -activityKey.getId(), 0, null));
             if (id != -1) {
-                return super.isFavourite(new ObjectIdentifierBean(id), userKey);
+                return new ObjectIdentifierBean(id);
             } else {
                 return null;
             }
         } else {
-            return super.isFavourite(activityKey, userKey);
+            return activityKey;
         }
     }
 
@@ -231,9 +236,10 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     }
 
     @Override
-    public List<Reference> readReferences(ActivityKey key) {
+    public List<Reference> readReferences(ActivityKey activityKey) {
         //TODO: implement/overload/fix this method. High priority.
-        return super.readReferences(key);
+        ActivityKey key = fixActivityKey(activityKey);
+        return key != null ? super.readReferences(key) : null;
     }
 
     @Override
@@ -243,14 +249,20 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
 
     @Override
     public void setFavourite(ActivityKey activityKey, UserKey userKey) {
-        super.setFavourite(activityKey, userKey);
-        createSendSetFavouritesTask().execute();
+        ActivityKey key = fixActivityKey(activityKey);
+        if (key != null) {
+            super.setFavourite(key, userKey);
+            createSendSetFavouritesTask().execute();
+        }
     }
 
     @Override
     public void unsetFavourite(ActivityKey activityKey, UserKey userKey) {
-        super.unsetFavourite(activityKey, userKey);
-        createSendSetFavouritesTask().execute();
+        ActivityKey key = fixActivityKey(activityKey);
+        if (key != null) {
+            super.unsetFavourite(key, userKey);
+            createSendSetFavouritesTask().execute();
+        }
     }
 
     private AsyncTask<Void, Void, Void> createSendSetFavouritesTask() {
@@ -290,16 +302,16 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     }
 
     @Override
-    public ActivityProperties updateActivity(ActivityKey key, ActivityProperties properties) {
+    public ActivityProperties updateActivity(ActivityKey activityKey, ActivityProperties properties) {
         //TODO: implement/overload/fix this method. Low priority.
-        return super.updateActivity(key, properties);
+        ActivityKey key = fixActivityKey(activityKey);
+        return key != null ? super.updateActivity(key, properties) : null;
     }
 
     @Override
     public List<ActivityBean> findActivity(ActivityFilter condition) throws UnauthorizedException {
         String[] attrNames = {
                 "name",
-//                "descr_main",
                 "featured",
                 "age_max",
                 "age_min",
