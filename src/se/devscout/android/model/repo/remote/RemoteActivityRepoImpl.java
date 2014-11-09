@@ -41,6 +41,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     private static final String HTTP_HEADER_X_ANDROID_APP_INSTALLATION_ID = "X-AndroidAppInstallationId";
     private static final long UNKNOWN_SERVER_REVISION_ID = 0L;
     private static final SimpleDateFormat API_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'");
+    private static final String HTTP_HEADER_ACCEPT_ENCODING = "Accept-Encoding";
     private static RemoteActivityRepoImpl ourInstance;
     private final Context mContext;
 
@@ -478,7 +479,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     private JSONArray getJSONArray(String uri, JSONObject body) throws IOException, JSONException, UnauthorizedException, UnhandledHttpResponseCodeException {
         StopWatch stopWatch = new StopWatch("getJSONArray from " + uri);
         String s = readUrlAsString(uri, body != null ? body.toString() : null, HttpMethod.GET);
-        stopWatch.logEvent("Fetched data");
+        stopWatch.logEvent("Fetched " + s.length() + " characters of data");
         JSONArray jsonArray = (JSONArray) new JSONTokener(s).nextValue();
         stopWatch.logEvent("Parsed data");
         LogUtil.d(RemoteActivityRepoImpl.class.getName(), stopWatch.getSummary());
@@ -715,6 +716,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
 
         String installationId = InstallationProperties.getInstance(mContext).getId().toString();
         request.setHeader(HTTP_HEADER_X_ANDROID_APP_INSTALLATION_ID, installationId);
+        request.setHeader(HTTP_HEADER_ACCEPT_ENCODING, HttpRequest.HEADER_CONTENT_ENCODING_GZIP);
 
         String apiKey = getAPIKey();
         if (apiKey != null) {

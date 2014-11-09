@@ -10,8 +10,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
 
 public class HttpRequest {
+    private static final String HEADER_CONTENT_ENCODING = "Content-Encoding";
+    public static final String HEADER_CONTENT_ENCODING_GZIP = "gzip";
     private final URL mUrl;
     private final HttpMethod mMethod;
     private Map<String, String> mHeaders = new HashMap<String, String>();
@@ -29,6 +32,7 @@ public class HttpRequest {
             return null;
         }
     }
+
     public <T> HttpResponse<T> run(ResponseStreamHandler<T> responseHandler, RequestBodyStreamHandler requestHandler, ResponseHeadersValidator responseHeadersValidator) throws IOException, UnauthorizedException, UnhandledHttpResponseCodeException, HeaderException {
         HttpResponse<T> response = new HttpResponse<T>();
 
@@ -58,8 +62,14 @@ public class HttpRequest {
             switch (httpURLConnection.getResponseCode()) {
                 case HttpURLConnection.HTTP_OK:
                 case HttpURLConnection.HTTP_CREATED:
-                    InputStream is = new BufferedInputStream(httpURLConnection.getInputStream());
+                    MeasuredBufferedInputStream measuredBufferedInputStream = new MeasuredBufferedInputStream(httpURLConnection.getInputStream());
+                    InputStream is = measuredBufferedInputStream;
+                    if (httpURLConnection.getHeaderField(HEADER_CONTENT_ENCODING).equals(HEADER_CONTENT_ENCODING_GZIP)) {
+                        is = new GZIPInputStream(is);
+                    }
                     response.setBody(responseHandler.read(is));
+                    stopWatch.logEvent("Read " + measuredBufferedInputStream.getLength() + " bytes from connection.");
+                    is.close();
                     break;
                 case HttpURLConnection.HTTP_NO_CONTENT:
                     break;
@@ -81,6 +91,30 @@ public class HttpRequest {
             mHeaders.put(header, value);
         } else {
             mHeaders.remove(header);
+        }
+    }
+
+    private static class MeasuredBufferedInputStream extends BufferedInputStream {
+        private int mLength;
+
+        public MeasuredBufferedInputStream(InputStream inputStream) {
+            super(inputStream);
+        }
+
+        @Override
+        public synchronized int read(byte[] buffer, int offset, int byteCount) throws IOException {
+            mLength += byteCount;
+            return super.read(buffer, offset, byteCount);
+        }
+
+        @Override
+        public synchronized int read() throws IOException {
+            mLength++;
+            return super.read();
+        }
+
+        private int getLength() {
+            return mLength;
         }
     }
 }
