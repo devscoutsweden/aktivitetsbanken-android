@@ -341,6 +341,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
                             break;
                         case LOCAL_IS_OLD:
                             act.setId(mDatabaseHelper.getLocalIdByServerId(act));
+                            //TODO: Document how negative numbers are used to indicate "activities which have not yet been stored locally"
                             act.setId(-act.getServerId());
                             break;
                         case LOCAL_IS_MISSING:
