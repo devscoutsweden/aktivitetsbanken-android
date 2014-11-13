@@ -1,7 +1,6 @@
 package se.devscout.android.controller.fragment;
 
 import android.content.Context;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,7 +48,11 @@ public class ActivityCoverFragment extends ActivityBankFragment implements View.
         }
 
         final ImageView favIcon = (ImageView) view.findViewById(R.id.activityCoverFavoriteIcon);
-        favIcon.setColorFilter(container.getResources().getColor(R.color.favoriteTintColor), PorterDuff.Mode.SRC_IN);
+//        favIcon.setColorFilter(container.getResources().getColor(R.color.favoriteTintColor), PorterDuff.Mode.SRC_IN);
+        favIcon.setVisibility(View.GONE);
+
+        final ImageView shareIcon = (ImageView) view.findViewById(R.id.activityCoverShareIcon);
+        shareIcon.setVisibility(View.GONE);
 /*
         favIcon.setOnClickListener(new View.OnClickListener() {
             private boolean tinted = false;

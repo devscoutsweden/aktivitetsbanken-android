@@ -39,6 +39,8 @@ public class WidgetView extends RelativeLayout implements FragmentListener {
         if (mTitleTextId > 0) {
             final TextView title = (TextView) findViewById(R.id.textView);
             title.setText(mTitleTextId);
+
+            findViewById(R.id.imageView).setVisibility(GONE);
         } else {
             findViewById(R.id.linearLayout).setVisibility(GONE);
         }
