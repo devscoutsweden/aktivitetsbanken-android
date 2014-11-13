@@ -47,6 +47,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
 
     private Map<Long, OnReadDoneCallback<Activity>> mActivityReadRequestCallbacks = new HashMap<Long, OnReadDoneCallback<Activity>>();
     private BackgroundTasksHandlerThread.Listener mBackgroundTasksListener;
+    private List<ObjectIdentifierBean> mActivitiesWhichAreOld = new ArrayList<ObjectIdentifierBean>();
 
 
     public static RemoteActivityRepoImpl getInstance(Context ctx) {
@@ -155,7 +156,8 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
 
         if (key.getId() < 0) {
             long id = mDatabaseHelper.getLocalIdByServerId(new ActivityPropertiesBean(false, -key.getId(), 0, null));
-            if (id != -1) {
+            boolean isUptodateInDatabase = !mActivitiesWhichAreOld.contains(new ObjectIdentifierBean(id));
+            if (id != -1 && isUptodateInDatabase) {
                 LogUtil.i(RemoteActivityRepoImpl.class.getName(), "Activity with serverId = " + -key.getId() + " was initially not cached locally but it is now cached.");
                 super.readActivityAsync(new ObjectIdentifierBean(id), callback, tasksHandlerThread);
             } else {
@@ -208,7 +210,8 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         for (ActivityKey key : keys) {
             if (key.getId() < 0) {
                 long id = mDatabaseHelper.getLocalIdByServerId(new ActivityPropertiesBean(false, -key.getId(), 0, null));
-                if (id != -1) {
+                boolean isUptodateInDatabase = !mActivitiesWhichAreOld.contains(new ObjectIdentifierBean(id));
+                if (id != -1 && isUptodateInDatabase) {
                     LogUtil.i(RemoteActivityRepoImpl.class.getName(), "Activity with serverId = " + -key.getId() + " was initially not cached but is now.");
                     existing.add(new ObjectIdentifierBean(id));
                 } else {
@@ -305,6 +308,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     public ActivityProperties updateActivity(ActivityKey activityKey, ActivityProperties properties) {
         //TODO: implement/overload/fix this method. Low priority.
         ActivityKey key = fixActivityKey(activityKey);
+        mActivitiesWhichAreOld.remove(new ObjectIdentifierBean(key.getId()));
         return key != null ? super.updateActivity(key, properties) : null;
     }
 
@@ -324,7 +328,13 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
 
     private List<ActivityBean> findActivities(ActivityFilter condition, String[] attrNames) throws UnauthorizedException {
         URIBuilderActivityFilterVisitor visitor = new ApiV1Visitor();
-        Uri uri2 = condition.toAPIRequest(visitor);
+        Uri uri2 = null;
+        try {
+            uri2 = condition.toAPIRequest(visitor);
+        } catch (UnsupportedOperationException e) {
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "App does not think API can handle the search query. Delegate search to database and pray that the database supports the query!", e);
+            return super.findActivity(condition);
+        }
         if (attrNames != null) {
             Uri.Builder builder = uri2.buildUpon();
             for (String attrName : attrNames) {
@@ -347,12 +357,14 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
                     processServerObject(act);
                 } else {
                     LocalObjectRefreshness localFreshness = mDatabaseHelper.getLocalFreshness(act);
+                    long localId = mDatabaseHelper.getLocalIdByServerId(act);
                     switch (localFreshness) {
                         case LOCAL_IS_UP_TO_DATE:
-                            act.setId(mDatabaseHelper.getLocalIdByServerId(act));
+                            act.setId(localId);
                             break;
                         case LOCAL_IS_OLD:
-                            act.setId(mDatabaseHelper.getLocalIdByServerId(act));
+                            act.setId(localId);
+                            mActivitiesWhichAreOld.add(new ObjectIdentifierBean(localId));
                             //TODO: Document how negative numbers are used to indicate "activities which have not yet been stored locally"
                             act.setId(-act.getServerId());
                             break;
@@ -394,6 +406,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
                 // Incoming data is newer than cached data
                 act.setId(mDatabaseHelper.getLocalIdByServerId(act));
                 mDatabaseHelper.updateActivity(act, act);
+                mActivitiesWhichAreOld.remove(new ObjectIdentifierBean(act.getId()));
                 break;
             case LOCAL_IS_UP_TO_DATE:
                 // No need to do anything
