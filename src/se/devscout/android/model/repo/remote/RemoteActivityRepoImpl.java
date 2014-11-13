@@ -48,6 +48,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     private Map<Long, OnReadDoneCallback<Activity>> mActivityReadRequestCallbacks = new HashMap<Long, OnReadDoneCallback<Activity>>();
     private BackgroundTasksHandlerThread.Listener mBackgroundTasksListener;
     private List<ObjectIdentifierBean> mActivitiesWhichAreOld = new ArrayList<ObjectIdentifierBean>();
+    private List<CategoryBean> mCachedCategories;
 
 
     public static RemoteActivityRepoImpl getInstance(Context ctx) {
@@ -478,28 +479,30 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     @Override
     public List<CategoryBean> readCategories() throws UnauthorizedException {
         //TODO: Host name should not be kept in source code
-        try {
-            String uri = "http://" + HOST + "/api/v1/categories";
-            JSONArray array = getJSONArray(uri, null);
-            ArrayList<CategoryBean> result = new ArrayList<CategoryBean>();
-            for (JSONObject obj : getJSONArrayAsList(array)) {
-                CategoryBean act = getCategoryBean(obj);
+        if (mCachedCategories == null) {
+            try {
+                String uri = "http://" + HOST + "/api/v1/categories";
+                JSONArray array = getJSONArray(uri, null);
+                mCachedCategories = new ArrayList<CategoryBean>();
+                for (JSONObject obj : getJSONArrayAsList(array)) {
+                    CategoryBean act = getCategoryBean(obj);
 
-                processServerObject(act);
+                    processServerObject(act);
 
-                result.add(act);
+                    mCachedCategories.add(act);
+                }
+            } catch (IOException e) {
+                LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not query server", e);
+                mCachedCategories = super.readCategories();
+            } catch (JSONException e) {
+                LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Error parsing JSON response", e);
+                mCachedCategories = super.readCategories();
+            } catch (UnhandledHttpResponseCodeException e) {
+                LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Cannot handle server response.", e);
+                mCachedCategories = super.readCategories();
             }
-            return result;
-        } catch (IOException e) {
-            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not query server", e);
-            return super.readCategories();
-        } catch (JSONException e) {
-            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Error parsing JSON response", e);
-            return super.readCategories();
-        } catch (UnhandledHttpResponseCodeException e) {
-            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Cannot handle server response.", e);
-            return super.readCategories();
         }
+        return mCachedCategories;
     }
 
     private JSONArray getJSONArray(String uri, JSONObject body) throws IOException, JSONException, UnauthorizedException, UnhandledHttpResponseCodeException {

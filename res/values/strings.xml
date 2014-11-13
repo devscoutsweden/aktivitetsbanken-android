@@ -93,10 +93,11 @@
     <string name="searchAgeGroupsLabel">Passande åldergrupper</string>
     <string name="searchTimeLabel">Tidsåtgång</string>
     <string name="searchOtherConditionsLabel">Övriga sökalternativ</string>
-    <string name="searchFeaturedOnlyLabel">Måste vara utvald av redaktör</string>
-    <string name="searchFavouritesOnlyLabel">Måste vara bland mina favoriter</string>
+    <string name="searchFeaturedOnlyLabel">Enbart utvalda av redaktör</string>
+    <string name="searchFavouritesOnlyLabel">Enbart mina favoriter</string>
     <string name="searchButtonLabel">Sök...</string>
-    <string name="searchTimeOptionAny">Spelar ingen roll</string>
+    <string name="searchCategoryOptionAny">Alla kategorier</string>
+    <string name="searchTimeOptionAny">Både korta och långa aktiviteter</string>
     <string name="searchTimeOption5min">Högst 5 minuter</string>
     <string name="searchTimeOption15min">Högst 15 minuter</string>
     <string name="searchTimeOption15to30min">Omkring 15-30 min</string>
@@ -158,4 +159,7 @@
     </string>
     <string name="crashReportWidgetTitle">Rapportera problem</string>
     <string name="activity_tab_references">Mer information</string>
+    <string name="searchCategoryLabel">Kategori</string>
+    <string name="searchNoFiltersMessage">Du måste begränsa sökningen lite
+    </string>
 </resources>

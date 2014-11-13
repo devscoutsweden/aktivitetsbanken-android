@@ -28,6 +28,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
 
+<!--
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -35,13 +36,15 @@
                 android:id="@+id/textView"
                 android:layout_marginTop="@dimen/defaultMargin"
                 android:textSize="@dimen/mediumTextSize" />
+-->
 
             <EditText
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="hajk"
+                android:textSize="@dimen/mediumTextSize"
                 android:id="@+id/searchText" />
 
+<!--
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -49,6 +52,7 @@
                 android:id="@+id/textView1"
                 android:layout_marginTop="@dimen/defaultMargin"
                 android:textSize="@dimen/mediumTextSize" />
+-->
 
             <GridLayout
                 android:layout_width="wrap_content"
@@ -101,6 +105,7 @@
                     style="@style/VerticalCheckbox.Bottom" />
             </GridLayout>
 
+<!--
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -108,13 +113,33 @@
                 android:id="@+id/textView2"
                 android:layout_marginTop="@dimen/defaultMargin"
                 android:textSize="@dimen/mediumTextSize" />
+-->
 
             <Spinner
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/searchTimeSpinner"
+                android:layout_marginTop="@dimen/defaultMargin"
                 android:spinnerMode="dropdown" />
 
+<!--
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/searchCategoryLabel"
+                android:id="@+id/textView2"
+                android:layout_marginTop="@dimen/defaultMargin"
+                android:textSize="@dimen/mediumTextSize" />
+-->
+
+            <Spinner
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/searchCategorySpinner"
+                android:layout_marginTop="@dimen/defaultMargin"
+                android:spinnerMode="dropdown" />
+
+<!--
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -122,18 +147,21 @@
                 android:id="@+id/textView3"
                 android:layout_marginTop="@dimen/defaultMargin"
                 android:textSize="@dimen/mediumTextSize" />
+-->
 
             <CheckBox
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/searchFeaturedOnlyLabel"
                 android:id="@+id/searchFeaturedOnly"
+                android:layout_marginTop="@dimen/defaultMargin"
                 android:singleLine="false" />
 
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/searchFavouritesOnlyLabel"
+                android:layout_marginTop="@dimen/defaultMargin"
                 android:id="@+id/searchFavouritesOnly" />
 
         </LinearLayout>

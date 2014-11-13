@@ -1,6 +1,7 @@
 package se.devscout.android.controller.fragment;
 
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,15 +10,24 @@ import android.widget.*;
 import se.devscout.android.AgeGroup;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.SearchResultActivity;
+import se.devscout.android.model.CategoryBean;
 import se.devscout.android.model.IntegerRange;
+import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.PreferencesUtil;
+import se.devscout.android.util.http.UnauthorizedException;
 import se.devscout.server.api.ActivityFilterFactory;
 import se.devscout.server.api.ActivityFilterFactoryException;
+import se.devscout.server.api.model.Category;
+
+import java.util.List;
 
 public class SearchFragment extends ActivityBankFragment {
 
     private TimeRange[] mTimeRanges;
+    private TimeRange anyTimeRange;
+    private Category anyCategory;
+    private int mInitialCategorySpinnerSelection;
 
     private static class TimeRange extends IntegerRange {
         private String label;
@@ -40,6 +50,7 @@ public class SearchFragment extends ActivityBankFragment {
         SharedPreferences.Editor editor = getPreferences().edit();
 
         editor.putInt("searchTimeSpinner", ((Spinner) view.findViewById(R.id.searchTimeSpinner)).getSelectedItemPosition());
+        editor.putInt("searchCategorySpinner", ((Spinner) view.findViewById(R.id.searchCategorySpinner)).getSelectedItemPosition());
         editor.putString("searchText", ((TextView) view.findViewById(R.id.searchText)).getText().toString());
         editor.putBoolean("searchAgeAdventurer", ((CheckBox) view.findViewById(R.id.searchAgeAdventurer)).isChecked());
         editor.putBoolean("searchAgeChallenger", ((CheckBox) view.findViewById(R.id.searchAgeChallenger)).isChecked());
@@ -54,6 +65,7 @@ public class SearchFragment extends ActivityBankFragment {
 
     public void loadSavedValues(View view) {
         ((Spinner) view.findViewById(R.id.searchTimeSpinner)).setSelection(Math.min(getPreferences().getInt("searchTimeSpinner", 0), mTimeRanges.length - 1));
+        mInitialCategorySpinnerSelection = getPreferences().getInt("searchCategorySpinner", 0);
         ((TextView) view.findViewById(R.id.searchText)).setText(getPreferences().getString("searchText", ""));
         ((CheckBox) view.findViewById(R.id.searchAgeAdventurer)).setChecked(getPreferences().getBoolean("searchAgeAdventurer", false));
         ((CheckBox) view.findViewById(R.id.searchAgeChallenger)).setChecked(getPreferences().getBoolean("searchAgeChallenger", false));
@@ -68,8 +80,9 @@ public class SearchFragment extends ActivityBankFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View searchView = inflater.inflate(R.layout.search_activity, container, false);
 
+        anyTimeRange = new TimeRange(0, Integer.MAX_VALUE, getString(R.string.searchTimeOptionAny));
         mTimeRanges = new TimeRange[]{
-                new TimeRange(0, Integer.MAX_VALUE, getString(R.string.searchTimeOptionAny)),
+                anyTimeRange,
                 new TimeRange(0, 5, getString(R.string.searchTimeOption5min)),
                 new TimeRange(0, 15, getString(R.string.searchTimeOption15min)),
                 new TimeRange(10, 35, getString(R.string.searchTimeOption15to30min)),
@@ -78,6 +91,9 @@ public class SearchFragment extends ActivityBankFragment {
                 new TimeRange(120, Integer.MAX_VALUE, getString(R.string.searchTimeOptionMoreThan2hours))};
 
         final Spinner spinner = initTimeDropDown(searchView);
+
+        anyCategory = new CategoryBean(null, getString(R.string.searchCategoryOptionAny), 0L, 0L, 0L, null);
+        final Spinner categoryDropDown = initCategoryDropDown(searchView);
 
         initAdditionalCheckboxLabel(searchView, R.id.searchAgeAdventurerLogo, R.id.searchAgeAdventurer);
         initAdditionalCheckboxLabel(searchView, R.id.searchAgeChallengerLogo, R.id.searchAgeChallenger);
@@ -107,16 +123,29 @@ public class SearchFragment extends ActivityBankFragment {
 
                     initTimeRange(filter, mFilterFactory);
 
-                    startActivity(SearchResultActivity.createIntent(getActivity(), filter, getString(R.string.searchResultTitle)));
+                    initCategory(filter, mFilterFactory);
+
+                    if (filter.getFilters().size() == 0) {
+                        Toast.makeText(getActivity(), R.string.searchNoFiltersMessage, Toast.LENGTH_SHORT).show();
+                    } else {
+                        startActivity(SearchResultActivity.createIntent(getActivity(), filter, getString(R.string.searchResultTitle)));
+                    }
                 } catch (ActivityFilterFactoryException e) {
 //                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     LogUtil.e(SearchFragment.class.getName(), "Could not create activity filter.", e);
                 }
             }
 
+            private void initCategory(se.devscout.server.api.activityfilter.AndFilter filter, ActivityFilterFactory mFilterFactory) {
+                Category selectedCategory = (Category) categoryDropDown.getSelectedItem();
+                if (selectedCategory != anyCategory) {
+                    filter.getFilters().add(mFilterFactory.createCategoryFilter(selectedCategory.getGroup(), selectedCategory.getName(), selectedCategory.getServerId()));
+                }
+            }
+
             private void initTimeRange(se.devscout.server.api.activityfilter.AndFilter filter, ActivityFilterFactory mFilterFactory) {
                 TimeRange selectedTimeRange = (TimeRange) spinner.getSelectedItem();
-                if (selectedTimeRange != null && selectedTimeRange.getMin() >= 0 && selectedTimeRange.getMax() < Integer.MAX_VALUE) {
+                if (selectedTimeRange != anyTimeRange) {
                     // A time range is selected and it is not the "any-option".
                     se.devscout.server.api.activityfilter.TimeRangeFilter filter1 = mFilterFactory.createTimeRangeFilter(selectedTimeRange);
                     filter.getFilters().add(filter1);
@@ -181,6 +210,45 @@ public class SearchFragment extends ActivityBankFragment {
                 mTimeRanges);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+        return spinner;
+    }
+
+    private Spinner initCategoryDropDown(View searchView) {
+        final Spinner spinner = (Spinner) searchView.findViewById(R.id.searchCategorySpinner);
+        AsyncTask<Void, Void, Category[]> task = new AsyncTask<Void, Void, Category[]>() {
+
+            @Override
+            protected Category[] doInBackground(Void... voids) {
+                try {
+                    List<? extends Category> res = ActivityBankFactory.getInstance(getActivity()).readCategories();
+                    Category[] categories1 = new Category[res.size() + 1];
+                    categories1[0] = anyCategory;
+                    for (int i = 0; i < res.size(); i++) {
+                        Category category = res.get(i);
+                        categories1[i + 1] = category;
+                    }
+                    return categories1;
+                } catch (UnauthorizedException e) {
+                    LogUtil.i(SearchFragment.class.getName(), "Could not complete search due to authorization problem.", e);
+                    return new Category[]{anyCategory};
+                }
+            }
+
+            @Override
+            protected void onPostExecute(Category[] categories) {
+                ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(
+                        getActivity(),
+                        android.R.layout.simple_spinner_item,
+                        categories);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(adapter);
+                spinner.setSelection(Math.min(mInitialCategorySpinnerSelection, categories.length - 1));
+                spinner.setVisibility(View.VISIBLE);
+            }
+        };
+        task.execute();
+
+        spinner.setVisibility(View.GONE);
         return spinner;
     }
 
