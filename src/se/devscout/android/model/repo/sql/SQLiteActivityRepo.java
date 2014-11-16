@@ -13,6 +13,7 @@ import se.devscout.server.api.*;
 import se.devscout.server.api.model.*;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -164,6 +165,11 @@ public class SQLiteActivityRepo implements ActivityBank {
     @Override
     public Media readMediaItem(MediaKey key) {
         return mDatabaseHelper.readMedia(key);
+    }
+
+    @Override
+    public URI getMediaItemURI(MediaProperties mediaProperties, int width, int height) {
+        return mediaProperties.getURI();
     }
 
     private void fireSearchHistoryItemAdded(SearchHistory searchHistoryItem) {

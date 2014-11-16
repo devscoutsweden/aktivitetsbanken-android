@@ -4,6 +4,7 @@ import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
 import se.devscout.android.util.http.UnauthorizedException;
 import se.devscout.server.api.model.*;
 
+import java.net.URI;
 import java.util.List;
 
 public interface ActivityBank {
@@ -53,4 +54,6 @@ public interface ActivityBank {
     boolean createAnonymousAPIUser();
 
     Media readMediaItem(MediaKey key);
+
+    URI getMediaItemURI(MediaProperties mediaProperties, int width, int height);
 }

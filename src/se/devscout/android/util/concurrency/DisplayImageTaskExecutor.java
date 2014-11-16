@@ -16,12 +16,12 @@ import java.util.Collections;
 import java.util.List;
 
 class DisplayImageTaskExecutor extends ImageCacheTaskExecutor {
-    private final ResponseHeadersValidator MAXIMUM_SIZE_VALIDATOR = new ContentLengthValidator(20000);
     private List<URI> blockedURLs = Collections.synchronizedList(new ArrayList<URI>());
 
     @Override
     public Bitmap run(Object[] params, Context context) {
         final URI uri = (URI) params[1];
+        int maxFileSize = params.length > 2 && params[2] != null && params[2] instanceof Integer ? (Integer) params[2] : 10000;
         if (uri == null) {
             LogUtil.e(BackgroundTasksHandlerThread.class.getName(), "Nothing to do. No URI for object.");
             return null;
@@ -36,7 +36,7 @@ class DisplayImageTaskExecutor extends ImageCacheTaskExecutor {
             LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Retrieved " + uri + " from cache.");
         } else {
             try {
-                bitmap = getBitmapFromURI(uri, true, context);
+                bitmap = getBitmapFromURI(uri, true, context, maxFileSize);
                 LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Downloaded image from " + uri);
             } catch (HeaderException e) {
                 blockedURLs.add(uri);
@@ -59,13 +59,13 @@ class DisplayImageTaskExecutor extends ImageCacheTaskExecutor {
         return bitmap;
     }
 
-    private Bitmap getBitmapFromURI(URI uri, boolean storeInCache, Context context) throws IOException, UnauthorizedException, UnhandledHttpResponseCodeException, HeaderException {
+    private Bitmap getBitmapFromURI(URI uri, boolean storeInCache, Context context, int maxFileSize) throws IOException, UnauthorizedException, UnhandledHttpResponseCodeException, HeaderException {
         Bitmap bitmap;
         URL url = uri.toURL();
         HttpRequest request = new HttpRequest(url, HttpMethod.GET);
 
         ResponseStreamHandler<byte[]> responseHandler = new ByteArrayResponseStreamHandler();
-        HttpResponse<byte[]> response = request.run(responseHandler, null, MAXIMUM_SIZE_VALIDATOR);
+        HttpResponse<byte[]> response = request.run(responseHandler, null, new ContentLengthValidator(maxFileSize));
 
         byte[] data = response.getBody();
         bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);

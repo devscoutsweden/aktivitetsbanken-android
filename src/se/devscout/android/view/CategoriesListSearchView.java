@@ -43,7 +43,7 @@ public class CategoriesListSearchView extends QuickSearchListView<CategoryListIt
         Media media = ActivityBankFactory.getInstance(getContext()).readMediaItem(item.getIconMediaKey());
         if (media != null) {
             imageView.setTag(R.id.imageViewUri, media.getURI());
-            mActivity.getBackgroundTasksHandlerThread().queueGetMediaResource(imageView, media.getURI());
+            mActivity.getBackgroundTasksHandlerThread().queueGetMediaResource(imageView, media.getURI(), 10000);
             mActivity.getBackgroundTasksHandlerThread().queueCleanCache();
         }
         return R.drawable.ic_action_labels;

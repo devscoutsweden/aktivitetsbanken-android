@@ -133,6 +133,16 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     }
 
     @Override
+    public URI getMediaItemURI(MediaProperties mediaProperties, int width, int height) {
+        try {
+            return new URI("http://" + HOST + "/api/v1/media_files/" + mediaProperties.getServerId() + "/file?size=" + Math.max(width, height));
+        } catch (URISyntaxException e) {
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "A very unexpected exception was thrown, but life (app!) will go on.", e);
+            return super.getMediaItemURI(mediaProperties, width, height);
+        }
+    }
+
+    @Override
     public Boolean isFavourite(ActivityKey activityKey, UserKey userKey) {
         ActivityKey key = fixActivityKey(activityKey);
         return key != null ? super.isFavourite(key, userKey) : null;

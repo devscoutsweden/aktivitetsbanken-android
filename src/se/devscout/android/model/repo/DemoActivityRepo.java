@@ -8,6 +8,7 @@ import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
 import se.devscout.server.api.*;
 import se.devscout.server.api.model.*;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -145,6 +146,11 @@ public class DemoActivityRepo implements ActivityBank {
 
     @Override
     public Media readMediaItem(MediaKey key) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public URI getMediaItemURI(MediaProperties mediaProperties, int width, int height) {
         throw new UnsupportedOperationException();
     }
 }

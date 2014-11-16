@@ -25,6 +25,7 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
     private Context mContext;
 
     private Map<Integer, BackgroundTask> mPendingTasks = new LinkedHashMap<Integer, BackgroundTask>();
+
     public void postReponse(Runnable runnable) {
         mResponseHandler.post(runnable);
     }
@@ -67,9 +68,9 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
         queueTask(BackgroundTask.CLEAN_CACHE);
     }
 
-    public synchronized void queueGetMediaResource(ImageView imageView, URI uri) {
+    public synchronized void queueGetMediaResource(ImageView imageView, URI uri, int maxFileSize) {
         LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Wants to display " + uri + " in an image view.");
-        queueTask(BackgroundTask.DISPLAY_IMAGE, imageView, uri);
+        queueTask(BackgroundTask.DISPLAY_IMAGE, imageView, uri, Integer.valueOf(maxFileSize));
     }
 
     private void queueTask(BackgroundTask task, Object... parameters) {
@@ -93,10 +94,12 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
 
     public void addListener(Listener listener) {
         mListeners.add(listener);
+        LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Added listener " + listener.toString());
     }
 
     public void removeListener(Listener listener) {
         mListeners.remove(listener);
+        LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Removed listener " + listener.toString());
     }
 
     private void fireOnDone(Object[] parameters, Object response, BackgroundTask task) {
