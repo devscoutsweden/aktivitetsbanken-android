@@ -7,13 +7,13 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
 import se.devscout.android.model.ObjectIdentifierBean;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.ResourceUtil;
+import se.devscout.android.view.ActivityCoverView;
 import se.devscout.android.view.SimpleDocumentLayout;
 import se.devscout.server.api.OnReadDoneCallback;
 import se.devscout.server.api.model.Activity;
@@ -24,14 +24,12 @@ import se.devscout.server.api.model.Reference;
 /**
  * Fragment for displaying (very) simple documents with headings, body paragraphs and images.
  */
-public class ActivityFragment extends ActivityBankFragment implements OnReadDoneCallback<Activity> {
+public class ActivityFragment extends ActivityBankFragment/* implements BackgroundTasksHandlerThread.Listener */ {
 
     private ObjectIdentifierBean mActivityKey;
 
-    @Override
-    public void onRead(Activity activityProperties) {
+    public void onRead(Activity activityProperties, View view) {
         FragmentActivity context = getActivity();
-        View view = getView();
         if (view == null || context == null) {
             LogUtil.e(ActivityFragment.class.getName(), "Could not display activity information since view or context is null: view = " + view + " context = " + context);
             return;
@@ -84,8 +82,7 @@ public class ActivityFragment extends ActivityBankFragment implements OnReadDone
         ResourceUtil resourceUtil = new ResourceUtil(context);
 
         if (activityProperties.getCoverMedia() != null) {
-            ImageView activityCoverImage = (ImageView) view.findViewById(R.id.activityCoverImage);
-            activityCoverImage.setImageResource(resourceUtil.toResourceId(activityProperties.getCoverMedia().getURI()));
+            ((ActivityCoverView) view.findViewById(R.id.activityCover)).init(activityProperties.getCoverMedia(), null, (SingleFragmentActivity) context);
 
             TextView activityCoverMore = (TextView) view.findViewById(R.id.activityCoverMore);
             if (activityProperties.getMediaItems().size() > 1) {
@@ -99,6 +96,7 @@ public class ActivityFragment extends ActivityBankFragment implements OnReadDone
         } else {
             view.findViewById(R.id.activityCover).setVisibility(View.GONE);
         }
+
         SimpleDocumentLayout linearLayout = (SimpleDocumentLayout) view.findViewById(R.id.activityDocument);
         linearLayout
                 .addHeaderAndText(R.string.activity_introduction, activityProperties.getDescriptionIntroduction())
@@ -112,7 +110,6 @@ public class ActivityFragment extends ActivityBankFragment implements OnReadDone
             linearLayout.addHeader(R.string.activity_tab_photos);
             for (Media media : activityProperties.getMediaItems()) {
                 linearLayout.addBodyText(media.getURI().toString());
-//                linearLayout.addImage(resourceUtil.toResourceId(media.getURI()), false);
             }
         }
         if (!activityProperties.getReferences().isEmpty()) {
@@ -123,6 +120,7 @@ public class ActivityFragment extends ActivityBankFragment implements OnReadDone
         }
 
         view.findViewById(R.id.scrollView).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.progressBar).setVisibility(View.GONE);
     }
 
     private static interface Item {
@@ -150,10 +148,16 @@ public class ActivityFragment extends ActivityBankFragment implements OnReadDone
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(final View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        getActivityBank().readActivityAsync(mActivityKey, this, ((SingleFragmentActivity) view.getRootView().getContext()).getBackgroundTasksHandlerThread());
+        OnReadDoneCallback<Activity> callback = new OnReadDoneCallback<Activity>() {
+            @Override
+            public void onRead(Activity object) {
+                ActivityFragment.this.onRead(object, view);
+            }
+        };
+        getActivityBank().readActivityAsync(mActivityKey, callback, ((SingleFragmentActivity) view.getRootView().getContext()).getBackgroundTasksHandlerThread());
     }
 
     @Override

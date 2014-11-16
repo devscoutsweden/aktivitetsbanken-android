@@ -4,14 +4,14 @@ import com.fasterxml.jackson.annotation.JsonFilter;
 import se.devscout.server.api.model.*;
 
 import java.io.Serializable;
-import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 @JsonFilter("ActivityBean")
 public class ActivityPropertiesBean extends ServerObjectPropertiesBean implements ActivityProperties, Serializable {
-    private List<ActivityRevision> mRevisions = new ArrayList<ActivityRevision>();
+    private static final List<String> IMAGE_MIME_TYPES = Arrays.asList("image/jpeg", "image/png");
     private UserKey mOwner;
     private Integer mFavouritesCount;
 
@@ -35,10 +35,7 @@ public class ActivityPropertiesBean extends ServerObjectPropertiesBean implement
     private Range<Integer> mTimePreparation;
     private Range<Integer> mParticipants;
     protected List<Media> mMediaItems = new ArrayList<Media>();
-    private URI mSourceURI;
     protected List<Reference> mReferences = new ArrayList<Reference>();
-
-    private ActivityKey mActivityKey;
 
     public void setFeatured(boolean featured) {
         mFeatured = featured;
@@ -160,6 +157,13 @@ public class ActivityPropertiesBean extends ServerObjectPropertiesBean implement
 
     @Override
     public Media getCoverMedia() {
+        if (mMediaItems != null) {
+            for (Media media : mMediaItems) {
+                if (IMAGE_MIME_TYPES.contains(media.getMimeType())) {
+                    return media;
+                }
+            }
+        }
         return null;
     }
 
@@ -185,10 +189,6 @@ public class ActivityPropertiesBean extends ServerObjectPropertiesBean implement
         mParticipants = participants;
     }
 
-    public void setSourceURI(URI sourceURI) {
-        mSourceURI = sourceURI;
-    }
-
     public void setTimePreparation(Range<Integer> timePreparation) {
         mTimePreparation = timePreparation;
     }
@@ -196,10 +196,6 @@ public class ActivityPropertiesBean extends ServerObjectPropertiesBean implement
     @Override
     public UserKey getOwner() {
         return mOwner;
-    }
-
-    public void setOwner(User owner) {
-        mOwner = owner;
     }
 
     public void setDateCreated(Date dateCreated) {

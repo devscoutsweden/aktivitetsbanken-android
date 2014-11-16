@@ -28,7 +28,7 @@ public abstract class QuickSearchListView<T extends Serializable> extends NonBlo
         return new MySearchTask();
     }
 
-    protected ArrayAdapter<T> createAdapter(final List<T> result) {
+    protected ArrayAdapter<T> createAdapter(List<T> result) {
         return new ArrayAdapter<T>(getContext(), android.R.layout.simple_list_item_1, result) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
@@ -36,7 +36,7 @@ public abstract class QuickSearchListView<T extends Serializable> extends NonBlo
                     convertView = LayoutInflater.from(getContext()).inflate(R.layout.quick_search_list_item, null);
                 }
 
-                T item = result.get(position);
+                T item = getItem(position);
                 TextView titleView = (TextView) convertView.findViewById(R.id.quickSearchListItemTitle);
                 titleView.setText(getTitle(item));
                 TextView subtitleView = (TextView) convertView.findViewById(R.id.quickSearchListItemSubtitle);

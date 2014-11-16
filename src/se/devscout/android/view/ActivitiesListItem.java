@@ -5,7 +5,6 @@ import se.devscout.server.api.model.Media;
 import se.devscout.server.api.model.Range;
 
 import java.io.Serializable;
-import java.net.URI;
 
 public class ActivitiesListItem implements Serializable {
     private String mName;
@@ -14,20 +13,16 @@ public class ActivitiesListItem implements Serializable {
     private String mDescription;
     private Long mId;
     private Range<Integer> mAges;
-    private URI mCoverMedia;
+    private Media mCoverMedia;
 
     public ActivitiesListItem(Activity activity) {
-//        ActivityRevision src = ActivityUtil.getLatestActivityRevision(activity);
         mName = activity.getName();
         mParticipants = activity.getParticipants();
         mTimeActivity = activity.getTimeActivity();
         mDescription = activity.getDescription();
         mAges = activity.getAges();
         mId = activity.getId();
-        for (Media media : activity.getMediaItems()) {
-            mCoverMedia = media.getURI();
-            break;
-        }
+        mCoverMedia = activity.getCoverMedia();
     }
 
     public String getName() {
@@ -78,11 +73,11 @@ public class ActivitiesListItem implements Serializable {
         mAges = ages;
     }
 
-    public URI getCoverMedia() {
+    public Media getCoverMedia() {
         return mCoverMedia;
     }
 
-    public void setCoverMedia(URI coverMedia) {
+    public void setCoverMedia(Media coverMedia) {
         mCoverMedia = coverMedia;
     }
 }
