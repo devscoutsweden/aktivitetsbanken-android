@@ -23,7 +23,7 @@ public class CleanImageCacheTaskExecutor extends ImageCacheTaskExecutor {
 
     @Override
     public Object run(Object[] params, Context context) {
-        if (System.currentTimeMillis() - lastRun < MINIMUM_TIME_BETWEEN_CLEANUP) {
+        if (System.currentTimeMillis() - lastRun < getMinimumTimeBetweenCleanup()) {
             LogUtil.d(CleanImageCacheTaskExecutor.class.getName(), "Will not purge image cache since it has been less than one minute since the last clean-up.");
             return null;
         } else {
@@ -34,14 +34,22 @@ public class CleanImageCacheTaskExecutor extends ImageCacheTaskExecutor {
         long accumulatedSize = 0;
         for (File cachedFile : cachedFiles) {
             LogUtil.d(CleanImageCacheTaskExecutor.class.getName(), "Processing " + cachedFile.getName() + " ts=" + cachedFile.lastModified() + " size=" + cachedFile.length());
-            if (accumulatedSize > CACHE_SIZE_LIMIT) {
+            if (accumulatedSize > getCacheSizeLimit()) {
                 cachedFile.delete();
-                LogUtil.d(CleanImageCacheTaskExecutor.class.getName(), "Deleted " + cachedFile.getName() + " since the total size of more recently modified files exceed " + CACHE_SIZE_LIMIT + " byte.");
+                LogUtil.d(CleanImageCacheTaskExecutor.class.getName(), "Deleted " + cachedFile.getName() + " since the total size of more recently modified files exceed " + getCacheSizeLimit() + " byte.");
             } else {
                 accumulatedSize += cachedFile.length();
             }
         }
         return null;
+    }
+
+    protected int getMinimumTimeBetweenCleanup() {
+        return MINIMUM_TIME_BETWEEN_CLEANUP;
+    }
+
+    protected int getCacheSizeLimit() {
+        return CACHE_SIZE_LIMIT;
     }
 
     private File[] getCachedFiles(Context context) {

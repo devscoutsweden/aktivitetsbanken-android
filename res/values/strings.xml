@@ -160,6 +160,23 @@
     <string name="crashReportWidgetTitle">Rapportera problem</string>
     <string name="activity_tab_references">Mer information</string>
     <string name="searchCategoryLabel">Kategori</string>
-    <string name="searchNoFiltersMessage">Du måste begränsa sökningen lite
+    <string name="searchNoFiltersMessage">Du måste begränsa sökningen lite</string>
+    <string name="preferenceServerAddress">Serveradress</string>
+    <string name="preferenceServerAddressSummary">Ex. www.devscout.se</string>
+    <string name="preferenceServerDownloadLimitSmall">Datagräns för småbilder
     </string>
+    <string name="preferenceServerDownloadLimitSmallSummary">Ladda bara ner
+        bilder som är mindre (i KB räknat)</string>
+    <string name="preferenceServerDownloadLimitLarge">Datagräns för större bilder</string>
+    <string name="preferenceServerDownloadLimitLargeSummary">Ladda bara ner
+        bilder som är mindre (i KB räknat)
+    </string>
+    <string name="preferenceServer">Data och nätverk</string>
+    <string name="drawer_settings">Inställningar...</string>
+    <string name="reset_database">Töm databas i app...</string>
+    <string name="resetDatabaseConfirmationMessage">Är du säker på att du vill ta bort all information från Aktivitetsbanken som mellanlagrats i din telefon?</string>
+    <string name="resetDatabaseConfirmationOk">Ja</string>
+    <string name="resetDatabaseConfirmationCancel">Avbryt</string>
+    <string name="clearImageCacheDone">Rensning klar.</string>
+    <string name="clear_image_cache">Ta bort cachade bilder</string>
 </resources>

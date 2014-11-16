@@ -2,6 +2,7 @@ package se.devscout.android.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,9 +57,11 @@ public class ActivityCoverView extends FrameLayout implements BackgroundTasksHan
             URI coverImageURI = ActivityBankFactory.getInstance(activity).getMediaItemURI(coverMedia, screenWidth, screenWidth/* activityCoverImage.getWidth(), activityCoverImage.getHeight()*/);
             activityCoverImage.setTag(R.id.imageViewUri, coverImageURI);
             LogUtil.d(SingleFragmentActivity.class.getName(), coverImageURI + " should be loaded into " + activityCoverImage.toString());
-            activity.getBackgroundTasksHandlerThread().queueGetMediaResource(activityCoverImage, coverImageURI, 50000);
+            int limitLarge = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getContext()).getString("server_download_limit_large", "50")) * 1000;
+            activity.getBackgroundTasksHandlerThread().queueGetMediaResource(activityCoverImage, coverImageURI, limitLarge);
             activity.getBackgroundTasksHandlerThread().queueCleanCache();
 
+            activityCoverImage.setVisibility(View.INVISIBLE);
             findViewById(R.id.activityCoverProgressBar).setVisibility(View.VISIBLE);
         } else {
             findViewById(R.id.activityCoverProgressBar).setVisibility(View.GONE);
@@ -100,6 +103,7 @@ public class ActivityCoverView extends FrameLayout implements BackgroundTasksHan
                 ImageView imageView = (ImageView) parameters[0];
                 URI loadedURI = (URI) parameters[1];
                 findViewById(R.id.activityCoverProgressBar).setVisibility(View.GONE);
+                imageView.setVisibility(View.VISIBLE);
                 if (loadedURI.equals(imageView.getTag(R.id.imageViewUri))) {
                     imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                     imageView.setImageBitmap((Bitmap) response);

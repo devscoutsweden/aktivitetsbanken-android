@@ -2,6 +2,7 @@ package se.devscout.android.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.preference.PreferenceManager;
 import android.widget.ImageView;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
@@ -43,7 +44,8 @@ public class CategoriesListSearchView extends QuickSearchListView<CategoryListIt
         Media media = ActivityBankFactory.getInstance(getContext()).readMediaItem(item.getIconMediaKey());
         if (media != null) {
             imageView.setTag(R.id.imageViewUri, media.getURI());
-            mActivity.getBackgroundTasksHandlerThread().queueGetMediaResource(imageView, media.getURI(), 10000);
+            int limitSmall = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getContext()).getString("server_download_limit_small", "10")) * 1000;
+            mActivity.getBackgroundTasksHandlerThread().queueGetMediaResource(imageView, media.getURI(), limitSmall);
             mActivity.getBackgroundTasksHandlerThread().queueCleanCache();
         }
         return R.drawable.ic_action_labels;

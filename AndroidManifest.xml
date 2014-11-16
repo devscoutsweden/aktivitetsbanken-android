@@ -20,5 +20,6 @@
         <activity android:name=".controller.activity.ActivitiesActivity"></activity>
         <activity android:name=".controller.activity.SearchResultActivity"></activity>
         <activity android:name=".controller.activity.FragmentCreatorActivity"></activity>
+        <activity android:name=".controller.activity.SettingsActivity"></activity>
     </application>
 </manifest>

@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <EditTextPreference
-        android:key="api_key"
-        android:title="@string/preferenceApiKey"
-        android:summary="@string/preferenceApiKeySummary" />
+    <PreferenceCategory android:title="@string/preferenceServer">
+        <EditTextPreference
+            android:key="server_address"
+            android:defaultValue="devscout.mikaelsvensson.info:10081"
+            android:inputType="text"
+            android:title="@string/preferenceServerAddress"
+            android:summary="@string/preferenceServerAddressSummary"/>
+        <EditTextPreference
+            android:key="server_download_limit_small"
+            android:defaultValue="10"
+            android:inputType="number"
+            android:title="@string/preferenceServerDownloadLimitSmall"
+            android:summary="@string/preferenceServerDownloadLimitSmallSummary"/>
+        <EditTextPreference
+            android:key="server_download_limit_large"
+            android:defaultValue="100"
+            android:inputType="number"
+            android:title="@string/preferenceServerDownloadLimitLarge"
+            android:summary="@string/preferenceServerDownloadLimitLargeSummary"/>
+    </PreferenceCategory>
 </PreferenceScreen>

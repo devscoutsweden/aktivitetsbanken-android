@@ -3,6 +3,7 @@ package se.devscout.android.model.repo.remote;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,12 +35,10 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
-    static final String HOST = "devscout.mikaelsvensson.info:10081";
     private static final String DEFAULT_REQUEST_BODY_ENCODING = "utf-8";
     private static final String HTTP_HEADER_AUTHORIZATION = "Authorization";
     private static final String HTTP_HEADER_CONTENT_TYPE = "Content-Type";
     private static final String HTTP_HEADER_X_ANDROID_APP_INSTALLATION_ID = "X-AndroidAppInstallationId";
-    private static final long UNKNOWN_SERVER_REVISION_ID = 0L;
     private static final SimpleDateFormat API_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'");
     private static final String HTTP_HEADER_ACCEPT_ENCODING = "Accept-Encoding";
     private static RemoteActivityRepoImpl ourInstance;
@@ -61,6 +60,10 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     public RemoteActivityRepoImpl(Context ctx) {
         super(ctx);
         mContext = ctx;
+    }
+
+    private String getRemoteHost() {
+        return PreferenceManager.getDefaultSharedPreferences(mContext).getString("server_address", "devscout.mikaelsvensson.info:10081");
     }
 
     @Override
@@ -102,7 +105,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     @Override
     public boolean createAnonymousAPIUser() {
         try {
-            String uri = "http://" + HOST + "/api/v1/users";
+            String uri = "http://" + getRemoteHost() + "/api/v1/users";
             JSONObject body = new JSONObject();
             body.put("display_name", "android-app-" + InstallationProperties.getInstance(mContext).getId());
             JSONObject response = getJSONObject(uri, body, HttpMethod.POST);
@@ -135,7 +138,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     @Override
     public URI getMediaItemURI(MediaProperties mediaProperties, int width, int height) {
         try {
-            return new URI("http://" + HOST + "/api/v1/media_files/" + mediaProperties.getServerId() + "/file?size=" + Math.max(width, height));
+            return new URI("http://" + getRemoteHost() + "/api/v1/media_files/" + mediaProperties.getServerId() + "/file?size=" + Math.max(width, height));
         } catch (URISyntaxException e) {
             LogUtil.e(RemoteActivityRepoImpl.class.getName(), "A very unexpected exception was thrown, but life (app!) will go on.", e);
             return super.getMediaItemURI(mediaProperties, width, height);
@@ -310,7 +313,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         for (ActivityBean key : favourites) {
             jsonArray.put(key.getServerId());
         }
-        String uri = "http://" + HOST + "/api/v1/favourites";
+        String uri = "http://" + getRemoteHost() + "/api/v1/favourites";
 
         readUrlAsBytes(uri, new JSONObject(Collections.singletonMap("id", jsonArray)).toString(), HttpMethod.PUT);
     }
@@ -338,7 +341,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     }
 
     private List<ActivityBean> findActivities(ActivityFilter condition, String[] attrNames) throws UnauthorizedException {
-        URIBuilderActivityFilterVisitor visitor = new ApiV1Visitor();
+        URIBuilderActivityFilterVisitor visitor = new ApiV1Visitor(getRemoteHost());
         Uri uri2 = null;
         try {
             uri2 = condition.toAPIRequest(visitor);
@@ -491,7 +494,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         //TODO: Host name should not be kept in source code
         if (mCachedCategories == null) {
             try {
-                String uri = "http://" + HOST + "/api/v1/categories";
+                String uri = "http://" + getRemoteHost() + "/api/v1/categories";
                 JSONArray array = getJSONArray(uri, null);
                 mCachedCategories = new ArrayList<CategoryBean>();
                 for (JSONObject obj : getJSONArrayAsList(array)) {

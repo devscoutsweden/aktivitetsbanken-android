@@ -32,7 +32,8 @@
             style="@style/ImageOverlay_SingleTextLine"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="@dimen/uiBlockSize" />
+            android:minHeight="@dimen/uiBlockSize"
+            android:layout_alignRight="@+id/activityCoverImage" />
 
         <ImageView
             android:layout_width="wrap_content"
