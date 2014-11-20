@@ -20,10 +20,21 @@ public class CleanImageCacheTaskExecutor extends ImageCacheTaskExecutor {
     private static long lastRun = 0;
 
     private static final int CACHE_SIZE_LIMIT = 500 * 1000; // 500 KB
+    private int minimumTimeBetweenCleanup;
+    private int cacheSizeLimit;
+
+    public CleanImageCacheTaskExecutor() {
+        this(CACHE_SIZE_LIMIT, MINIMUM_TIME_BETWEEN_CLEANUP);
+    }
+
+    public CleanImageCacheTaskExecutor(int cacheSizeLimit, int minimumTimeBetweenCleanup) {
+        this.cacheSizeLimit = cacheSizeLimit;
+        this.minimumTimeBetweenCleanup = minimumTimeBetweenCleanup;
+    }
 
     @Override
     public Object run(Object[] params, Context context) {
-        if (System.currentTimeMillis() - lastRun < getMinimumTimeBetweenCleanup()) {
+        if (System.currentTimeMillis() - lastRun < minimumTimeBetweenCleanup) {
             LogUtil.d(CleanImageCacheTaskExecutor.class.getName(), "Will not purge image cache since it has been less than one minute since the last clean-up.");
             return null;
         } else {
@@ -34,22 +45,14 @@ public class CleanImageCacheTaskExecutor extends ImageCacheTaskExecutor {
         long accumulatedSize = 0;
         for (File cachedFile : cachedFiles) {
             LogUtil.d(CleanImageCacheTaskExecutor.class.getName(), "Processing " + cachedFile.getName() + " ts=" + cachedFile.lastModified() + " size=" + cachedFile.length());
-            if (accumulatedSize > getCacheSizeLimit()) {
+            if (accumulatedSize > cacheSizeLimit) {
                 cachedFile.delete();
-                LogUtil.d(CleanImageCacheTaskExecutor.class.getName(), "Deleted " + cachedFile.getName() + " since the total size of more recently modified files exceed " + getCacheSizeLimit() + " byte.");
+                LogUtil.d(CleanImageCacheTaskExecutor.class.getName(), "Deleted " + cachedFile.getName() + " since the total size of more recently modified files exceed " + cacheSizeLimit + " byte.");
             } else {
                 accumulatedSize += cachedFile.length();
             }
         }
         return null;
-    }
-
-    protected int getMinimumTimeBetweenCleanup() {
-        return MINIMUM_TIME_BETWEEN_CLEANUP;
-    }
-
-    protected int getCacheSizeLimit() {
-        return CACHE_SIZE_LIMIT;
     }
 
     private File[] getCachedFiles(Context context) {
