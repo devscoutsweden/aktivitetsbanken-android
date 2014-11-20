@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
 import se.devscout.android.view.ActivitiesListItem;
 import se.devscout.android.view.ActivityCoverView;
@@ -24,6 +26,13 @@ public class ActivityCoverArrayAdapter extends ArrayAdapter<ActivitiesListItem> 
         // TODO: Other getView should perhaps initialize components using a simiar if statement
         if (convertView == null) {
             view = new ActivityCoverView(getContext());
+            if (parent instanceof ListView) {
+                ListView listView = (ListView) parent;
+                listView.setDividerHeight(getContext().getResources().getDimensionPixelSize(se.devscout.android.R.dimen.defaultMargin));
+            } else if (parent instanceof LinearLayout) {
+                LinearLayout layout = (LinearLayout) parent;
+                layout.setDividerDrawable(getContext().getResources().getDrawable(se.devscout.android.R.drawable.list_item_padding));
+            }
         } else if (convertView instanceof ActivityCoverView) {
             view = (ActivityCoverView) convertView;
         }
