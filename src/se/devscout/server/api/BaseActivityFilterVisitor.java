@@ -25,4 +25,6 @@ public interface BaseActivityFilterVisitor<T> {
     T visit(SQLRandomActivitiesFilter filter);
 
     T visit(ServerObjectIdentifiersFilter filter);
+
+    T visit(OverallFavouriteActivitiesFilter filter);
 }

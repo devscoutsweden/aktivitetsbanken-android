@@ -21,6 +21,7 @@ import se.devscout.android.util.concurrency.BackgroundTask;
 import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
 import se.devscout.android.util.http.*;
 import se.devscout.server.api.ActivityFilter;
+import se.devscout.server.api.ActivityFilterFactory;
 import se.devscout.server.api.OnReadDoneCallback;
 import se.devscout.server.api.URIBuilderActivityFilterVisitor;
 import se.devscout.server.api.model.*;
@@ -336,7 +337,8 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
                 "participants_max",
                 "participants_min",
                 "time_max",
-                "time_min"};
+                "time_min",
+                "media_files"};
         return findActivities(condition, attrNames);
     }
 
@@ -638,6 +640,11 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
                 0L,
                 new URI(jsonObject.getString("uri")),
                 jsonObject.getString("description"));
+    }
+
+    @Override
+    public ActivityFilterFactory getFilterFactory() {
+        return new ApiV1ActivityFilterFactory();
     }
 
     private Date getDate(JSONObject obj, String fieldName) {

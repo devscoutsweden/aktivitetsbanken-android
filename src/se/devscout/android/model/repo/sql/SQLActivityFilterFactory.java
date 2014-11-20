@@ -1,12 +1,12 @@
 package se.devscout.android.model.repo.sql;
 
 import se.devscout.android.util.*;
-import se.devscout.server.api.RandomActivitiesFilter;
 import se.devscout.server.api.activityfilter.IsUserFavouriteFilter;
+import se.devscout.server.api.activityfilter.RandomActivitiesFilter;
 import se.devscout.server.api.model.Range;
 import se.devscout.server.api.model.UserKey;
 
-class SQLActivityFilterFactory extends PrimitiveActivityFilterFactory {
+public class SQLActivityFilterFactory extends PrimitiveActivityFilterFactory {
 
     public SQLActivityFilterFactory() {
     }

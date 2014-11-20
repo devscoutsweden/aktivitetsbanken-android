@@ -81,6 +81,7 @@
 
     <string name="scoutmethod">Scoutmetod</string>
     <string name="startTabFavourites">Favoriter</string>
+    <string name="startTabOverallFavourites">Mångas favoriter</string>
     <string name="searchResultDefaultEmptyMessage">Listan är tom.</string>
     <string name="searchResultDefaultEmptyHeader">New Text</string>
     <string name="favouritesEmptyHeader">Du har inga favoriter. Ännu.</string>
@@ -121,6 +122,7 @@
     <string name="title_filter_visitor_and">,\u0020</string>
     <string name="title_filter_visitor_or">,\u0020</string>
     <string name="title_filter_visitor_random">%d slumpade</string>
+    <string name="title_filter_visitor_overall_favourites">mångas favoriter</string>
     <string name="subtitle_filter_visitor_age_range">för %1$d-%2$d år</string>
     <string name="subtitle_filter_visitor_age_younger">för &lt;%1$d år</string>
     <string name="subtitle_filter_visitor_age_older">för &gt;%1$d år</string>
@@ -133,6 +135,7 @@
     <string name="subtitle_filter_visitor_and">\u0020och\u0020</string>
     <string name="subtitle_filter_visitor_or">\u0020eller\u0020</string>
     <string name="subtitle_filter_visitor_random">%d slumpade</string>
+    <string name="subtitle_filter_visitor_overall_favourites">De %d mest gillade</string>
     <string name="startTabSpontaneousActivity">Spontanaktivitet</string>
     <string name="welcomeWidgetTitle">Välkomstmeddelande</string>
     <string name="startSelectWidgets">Välj kort...</string>
@@ -179,4 +182,5 @@
     <string name="resetDatabaseConfirmationCancel">Avbryt</string>
     <string name="clearImageCacheDone">Rensning klar.</string>
     <string name="clear_image_cache">Ta bort cachade bilder</string>
+    <string name="show_usage_stats">Visa statistik...</string>
 </resources>

@@ -92,4 +92,9 @@ public class SubtitleActivityFilterVisitor implements ActivityFilterVisitor {
     public String visit(ServerObjectIdentifiersFilter filter) {
         return "SERVERID-" + TextUtils.join(",", filter.getIdentifiers());
     }
+
+    @Override
+    public String visit(OverallFavouriteActivitiesFilter filter) {
+        return mContext.getString(R.string.subtitle_filter_visitor_overall_favourites, filter.getNumberOfActivities());
+    }
 }

@@ -93,4 +93,10 @@ public class ApiV1Visitor implements URIBuilderActivityFilterVisitor {
         mUriBuilder.appendQueryParameter("id", TextUtils.join(",", filter.getIdentifiers()));
         return mUriBuilder.build();
     }
+
+    @Override
+    public Uri visit(OverallFavouriteActivitiesFilter filter) {
+        mUriBuilder.appendQueryParameter("favourites", String.valueOf(filter.getNumberOfActivities()));
+        return mUriBuilder.build();
+    }
 }

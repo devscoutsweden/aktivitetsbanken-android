@@ -74,4 +74,9 @@ class EqualsFilterVisitor implements ActivityFilterVisitor {
     public String visit(ServerObjectIdentifiersFilter filter) {
         return "serverid" + TextUtils.join(",", filter.getIdentifiers());
     }
+
+    @Override
+    public String visit(OverallFavouriteActivitiesFilter filter) {
+        return "overallfavourite" + filter.getNumberOfActivities();
+    }
 }

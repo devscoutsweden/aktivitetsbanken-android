@@ -3,8 +3,8 @@ package se.devscout.android.model.repo.sql;
 import android.net.Uri;
 import se.devscout.android.util.SimpleFilter;
 import se.devscout.server.api.ActivityFilterVisitor;
-import se.devscout.server.api.RandomActivitiesFilter;
 import se.devscout.server.api.URIBuilderActivityFilterVisitor;
+import se.devscout.server.api.activityfilter.RandomActivitiesFilter;
 import se.devscout.server.api.model.ActivityProperties;
 
 public class SQLRandomActivitiesFilter extends SimpleFilter implements SQLActivityFilter, RandomActivitiesFilter {
@@ -23,7 +23,6 @@ public class SQLRandomActivitiesFilter extends SimpleFilter implements SQLActivi
     public String toString(ActivityFilterVisitor visitor) {
         return visitor.visit(this);
     }
-
 
     @Override
     public void applyFilter(QueryBuilder queryBuilder) {

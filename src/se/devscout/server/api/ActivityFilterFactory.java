@@ -26,4 +26,6 @@ public interface ActivityFilterFactory {
     RandomActivitiesFilter createRandomActivitiesFilter(int numberOfActivities);
 
     ServerObjectIdentifiersFilter createServerObjectIdentifierFilter(ServerObjectIdentifier identifier);
+
+    OverallFavouriteActivitiesFilter createOverallFavouriteActivitiesFilter(int numberOfActivities);
 }

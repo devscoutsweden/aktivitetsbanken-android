@@ -2,8 +2,9 @@ package se.devscout.android.util;
 
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.ActivityFilterFactory;
-import se.devscout.server.api.RandomActivitiesFilter;
 import se.devscout.server.api.activityfilter.IsUserFavouriteFilter;
+import se.devscout.server.api.activityfilter.OverallFavouriteActivitiesFilter;
+import se.devscout.server.api.activityfilter.RandomActivitiesFilter;
 import se.devscout.server.api.activityfilter.ServerObjectIdentifiersFilter;
 import se.devscout.server.api.model.Range;
 import se.devscout.server.api.model.ServerObjectIdentifier;
@@ -72,7 +73,12 @@ public class PrimitiveActivityFilterFactory implements ActivityFilterFactory {
 
     @Override
     public ServerObjectIdentifiersFilter createServerObjectIdentifierFilter(ServerObjectIdentifier identifier) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
+    }
+
+    @Override
+    public OverallFavouriteActivitiesFilter createOverallFavouriteActivitiesFilter(int numberOfActivities) {
+        throw new UnsupportedOperationException("Returing overall favourite activities is not implemented.");
     }
 
 }
