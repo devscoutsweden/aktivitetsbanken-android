@@ -2,6 +2,7 @@ package se.devscout.android.util.http;
 
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.StopWatch;
+import se.devscout.android.util.UsageLogUtil;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -69,6 +70,7 @@ public class HttpRequest {
                     }
                     response.setBody(responseHandler.read(is));
                     stopWatch.logEvent("Read " + measuredBufferedInputStream.getLength() + " bytes from connection.");
+                    UsageLogUtil.getInstance().logHttpRequest(measuredBufferedInputStream.getLength());
                     is.close();
                     break;
                 case HttpURLConnection.HTTP_NO_CONTENT:

@@ -15,4 +15,9 @@
         android:id="@+id/menuStartClearImageCache"
         android:title="@string/clear_image_cache"
         android:icon="@drawable/ic_action_picture" />
+
+    <item
+        android:id="@+id/menuStartShowUsageStats"
+        android:title="@string/show_usage_stats"
+        android:icon="@drawable/ic_action_sort_by_size" />
 </menu>
