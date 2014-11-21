@@ -29,6 +29,8 @@ public class ActivityFragment extends ActivityBankFragment/* implements Backgrou
     private ObjectIdentifierBean mActivityKey;
 
     public void onRead(Activity activityProperties, View view) {
+        view.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
+
         FragmentActivity context = getActivity();
         if (view == null || context == null) {
             LogUtil.e(ActivityFragment.class.getName(), "Could not display activity information since view or context is null: view = " + view + " context = " + context);
@@ -37,7 +39,6 @@ public class ActivityFragment extends ActivityBankFragment/* implements Backgrou
 
         context.invalidateOptionsMenu();
 
-        view.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 
         String ages = activityProperties.getAges().toString();
         String participantCount = activityProperties.getParticipants().toString();

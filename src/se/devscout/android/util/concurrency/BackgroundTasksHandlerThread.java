@@ -20,6 +20,15 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
         Object run(Object[] params, Context context);
     }
 
+
+    private static final Map<BackgroundTask, BackgroundTaskExecutor> EXECUTORS = new HashMap<BackgroundTask, BackgroundTaskExecutor>();
+
+    static {
+        for (BackgroundTask backgroundTask : BackgroundTask.values()) {
+            EXECUTORS.put(backgroundTask, backgroundTask.createExecutor());
+        }
+    }
+
     private Handler mHandler;
     private Handler mResponseHandler;
     private Context mContext;
@@ -58,7 +67,7 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
         queueTask(BackgroundTask.SET_FAVOURITES);
     }
 
-    public void queueReadActivity(final ActivityKey activityKey, final RemoteActivityRepoImpl remoteActivityRepo) {
+    public synchronized void queueReadActivity(final ActivityKey activityKey, final RemoteActivityRepoImpl remoteActivityRepo) {
         remoteActivityRepo.addPendingActivityReadRequests(activityKey);
 
         queueTask(BackgroundTask.READ_ACTIVITY, remoteActivityRepo);
@@ -68,12 +77,12 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
         queueTask(BackgroundTask.CLEAN_CACHE);
     }
 
-    public synchronized void queueGetMediaResource(ImageView imageView, URI uri, int maxFileSize) {
+    public void queueGetMediaResource(ImageView imageView, URI uri, int maxFileSize) {
         LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Wants to display " + uri + " in an image view.");
         queueTask(BackgroundTask.DISPLAY_IMAGE, imageView, uri, Integer.valueOf(maxFileSize));
     }
 
-    private void queueTask(BackgroundTask task, Object... parameters) {
+    private synchronized void queueTask(BackgroundTask task, Object... parameters) {
         taskCount++;
         mTaskParameters.put(taskCount, parameters);
         if (mHandler == null) {
@@ -84,25 +93,35 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
         }
     }
 
-    public void close() {
+    public synchronized void close() {
+        LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Closing and clearing");
         mListeners.clear();
-        for (BackgroundTask task : BackgroundTask.values()) {
-            mHandler.removeMessages(task.ordinal());
+        mListeners = null;
+        if (mHandler != null) {
+            for (BackgroundTask task : BackgroundTask.values()) {
+                mHandler.removeMessages(task.ordinal());
+            }
         }
         mTaskParameters.clear();
+        mTaskParameters = null;
     }
 
-    public void addListener(Listener listener) {
-        mListeners.add(listener);
-        LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Added listener " + listener.toString());
+    public synchronized void addListener(Listener listener) {
+        if (!mListeners.contains(listener)) {
+            mListeners.add(listener);
+//            LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Added listener " + listener.toString());
+        }
     }
 
-    public void removeListener(Listener listener) {
-        mListeners.remove(listener);
-        LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Removed listener " + listener.toString());
+    public synchronized void removeListener(Listener listener) {
+        if (mListeners.contains(listener)) {
+            mListeners.remove(listener);
+//            LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Removed listener " + listener.toString());
+        }
     }
 
     private void fireOnDone(Object[] parameters, Object response, BackgroundTask task) {
+//        LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Number of listeners: " + mListeners.size());
         for (Listener listener : mListeners) {
             listener.onDone(parameters, response, task);
         }
@@ -110,27 +129,29 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
 
     private class MessageHandler extends Handler {
 
-        private Map<BackgroundTask, BackgroundTaskExecutor> mExecutors = new HashMap<BackgroundTask, BackgroundTaskExecutor>();
-
-        {
-            for (BackgroundTask backgroundTask : BackgroundTask.values()) {
-                mExecutors.put(backgroundTask, backgroundTask.createExecutor());
-            }
-        }
-
         @Override
         public void handleMessage(final Message msg) {
-            final Object[] parameters = mTaskParameters.get(msg.obj);
+            final Object[] parameters;
+            Object obj = msg.obj;
             final BackgroundTask task = BackgroundTask.values()[msg.what];
-            LogUtil.i(BackgroundTasksHandlerThread.class.getName(), "Executing background task " + task.name());
-            final Object result = mExecutors.get(task).run(parameters, mContext);
-            mTaskParameters.remove(msg.obj);
+//            LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Background task " + obj + ": " + task.name() + " STARTED");
+            synchronized (BackgroundTasksHandlerThread.this) {
+                parameters = mTaskParameters.get(obj);
+            }
+//            LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Background task " + obj + ": " + task.name() + " BEFORE RUN");
+            final Object result = EXECUTORS.get(task).run(parameters, mContext);
+//            LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Background task " + obj + ": " + task.name() + " AFTER RUN");
+            synchronized (BackgroundTasksHandlerThread.this) {
+                mTaskParameters.remove(obj);
+            }
             postReponse(new Runnable() {
                 @Override
                 public void run() {
+//                    LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Background task postResponse/fireOnDone");
                     fireOnDone(parameters, result, task);
                 }
             });
+//            LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Background task " + obj + ": " + task.name() + " FINISHED");
         }
 
     }

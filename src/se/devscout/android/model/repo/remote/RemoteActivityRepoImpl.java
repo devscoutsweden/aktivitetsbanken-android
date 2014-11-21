@@ -61,6 +61,22 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     public RemoteActivityRepoImpl(Context ctx) {
         super(ctx);
         mContext = ctx;
+        mBackgroundTasksListener = new BackgroundTasksHandlerThread.Listener() {
+            @Override
+            public void onDone(Object[] parameters, Object response, BackgroundTask task) {
+                if (task == BackgroundTask.READ_ACTIVITY) {
+                    List<ActivityBean> activities = (List<ActivityBean>) response;
+                    LogUtil.d(RemoteActivityRepoImpl.class.getName(), activities.size() + " activities have been read.");
+                    for (Activity activity : activities) {
+                        OnReadDoneCallback<Activity> callback = invokeActivityReadCallback(activity);
+                        if (callback != null) {
+                            LogUtil.d(RemoteActivityRepoImpl.class.getName(), "Invoking callback for " + activity.toString());
+                            callback.onRead(activity);
+                        }
+                    }
+                }
+            }
+        };
     }
 
     private String getRemoteHost() {
@@ -179,35 +195,13 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
                 synchronized (mActivityReadRequestCallbacks) {
                     mActivityReadRequestCallbacks.put(key.getId(), callback);
                 }
-                initBackgroundTasksListener(tasksHandlerThread);
+
+                // addListener enforces that the listener is only added once
+                tasksHandlerThread.addListener(mBackgroundTasksListener);
                 tasksHandlerThread.queueReadActivity(new ObjectIdentifierBean(key.getId()), this);
             }
         } else {
             super.readActivityAsync(key, callback, tasksHandlerThread);
-        }
-    }
-
-    private void initBackgroundTasksListener(BackgroundTasksHandlerThread tasksHandlerThread) {
-        if (mBackgroundTasksListener == null) {
-            synchronized (this) {
-                if (mBackgroundTasksListener == null) {
-                    mBackgroundTasksListener = new BackgroundTasksHandlerThread.Listener() {
-                        @Override
-                        public void onDone(Object[] parameters, Object response, BackgroundTask task) {
-                            if (task == BackgroundTask.READ_ACTIVITY) {
-                                List<ActivityBean> activities = (List<ActivityBean>) response;
-                                for (Activity activity : activities) {
-                                    OnReadDoneCallback<Activity> callback = invokeActivityReadCallback(activity);
-                                    if (callback != null) {
-                                        callback.onRead(activity);
-                                    }
-                                }
-                            }
-                        }
-                    };
-                }
-                tasksHandlerThread.addListener(mBackgroundTasksListener);
-            }
         }
     }
 
