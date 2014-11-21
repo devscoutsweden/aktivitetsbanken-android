@@ -107,14 +107,14 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
     }
 
     public synchronized void addListener(Listener listener) {
-        if (!mListeners.contains(listener)) {
+        if (!isClosed() && !mListeners.contains(listener)) {
             mListeners.add(listener);
 //            LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Added listener " + listener.toString());
         }
     }
 
     public synchronized void removeListener(Listener listener) {
-        if (mListeners.contains(listener)) {
+        if (!isClosed() && mListeners.contains(listener)) {
             mListeners.remove(listener);
 //            LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Removed listener " + listener.toString());
         }
@@ -122,8 +122,10 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
 
     private void fireOnDone(Object[] parameters, Object response, BackgroundTask task) {
 //        LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Number of listeners: " + mListeners.size());
-        for (Listener listener : mListeners) {
-            listener.onDone(parameters, response, task);
+        if (!isClosed()) {
+            for (Listener listener : mListeners) {
+                listener.onDone(parameters, response, task);
+            }
         }
     }
 
@@ -142,17 +144,25 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
             final Object result = EXECUTORS.get(task).run(parameters, mContext);
 //            LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Background task " + obj + ": " + task.name() + " AFTER RUN");
             synchronized (BackgroundTasksHandlerThread.this) {
-                mTaskParameters.remove(obj);
-            }
-            postReponse(new Runnable() {
-                @Override
-                public void run() {
+                if (!isClosed()) {
+                    mTaskParameters.remove(obj);
+                    postReponse(new Runnable() {
+                        @Override
+                        public void run() {
 //                    LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Background task postResponse/fireOnDone");
-                    fireOnDone(parameters, result, task);
+                            fireOnDone(parameters, result, task);
+                        }
+                    });
+                } else {
+                    LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Background task completed after its associated handler thread was closed. Task's result will not be handled/processed.");
                 }
-            });
+            }
 //            LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Background task " + obj + ": " + task.name() + " FINISHED");
         }
 
+    }
+
+    private synchronized boolean isClosed() {
+        return mTaskParameters == null;
     }
 }
