@@ -5,6 +5,7 @@ public class UsageLogUtil {
 
     private long mHttpBytesRead = 0;
     private int mHttpRequestCount = 0;
+    private int mHttpTimeouts = 0;
 
     private UsageLogUtil() {
     }
@@ -31,5 +32,13 @@ public class UsageLogUtil {
 
     public int getHttpRequestCount() {
         return mHttpRequestCount;
+    }
+
+    public void logHttpTimeout() {
+        mHttpTimeouts++;
+    }
+
+    public int getHttpTimeouts() {
+        return mHttpTimeouts;
     }
 }

@@ -44,6 +44,7 @@ public class StartActivity extends SingleFragmentActivity {
                 UsageLogUtil usageLogUtil = UsageLogUtil.getInstance();
                 builder1.setMessage("" +
                         "HTTP requests: " + usageLogUtil.getHttpRequestCount() + "\n" +
+                        "HTTP timeouts: " + usageLogUtil.getHttpTimeouts() + "\n" +
                         "Data received: " + usageLogUtil.getHttpBytesRead() + " bytes");
                 builder1.show();
                 break;

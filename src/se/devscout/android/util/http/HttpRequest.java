@@ -8,6 +8,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +17,8 @@ import java.util.zip.GZIPInputStream;
 public class HttpRequest {
     private static final String HEADER_CONTENT_ENCODING = "Content-Encoding";
     public static final String HEADER_CONTENT_ENCODING_GZIP = "gzip";
+    private static final int CONNECT_TIMEOUT = 5000;
+    private static final int READ_TIMEOUT = 4000;
     private final URL mUrl;
     private final HttpMethod mMethod;
     private Map<String, String> mHeaders = new HashMap<String, String>();
@@ -38,9 +41,14 @@ public class HttpRequest {
         HttpResponse<T> response = new HttpResponse<T>();
 
         StopWatch stopWatch = new StopWatch("readUrl " + mUrl);
-        HttpURLConnection httpURLConnection = (HttpURLConnection) mUrl.openConnection();
-        stopWatch.logEvent("Opened connection");
+        long startTime = System.currentTimeMillis();
+        HttpURLConnection httpURLConnection = null;
+        UsageLogUtil usageLogUtil = UsageLogUtil.getInstance();
         try {
+            httpURLConnection = (HttpURLConnection) mUrl.openConnection();
+            stopWatch.logEvent("Connection has been opened");
+            httpURLConnection.setConnectTimeout(CONNECT_TIMEOUT);
+            httpURLConnection.setReadTimeout(READ_TIMEOUT);
             httpURLConnection.setRequestMethod(mMethod.name());
 
             for (Map.Entry<String, String> entry : mHeaders.entrySet()) {
@@ -70,7 +78,7 @@ public class HttpRequest {
                     }
                     response.setBody(responseHandler.read(is));
                     stopWatch.logEvent("Read " + measuredBufferedInputStream.getLength() + " bytes from connection.");
-                    UsageLogUtil.getInstance().logHttpRequest(measuredBufferedInputStream.getLength());
+                    usageLogUtil.logHttpRequest(measuredBufferedInputStream.getLength());
                     is.close();
                     break;
                 case HttpURLConnection.HTTP_NO_CONTENT:
@@ -80,8 +88,17 @@ public class HttpRequest {
                 default:
                     throw new UnhandledHttpResponseCodeException(httpURLConnection.getResponseCode());
             }
+        } catch (SocketTimeoutException e) {
+            long now = System.currentTimeMillis();
+            String timeString = String.valueOf(now - startTime);
+            stopWatch.logEvent("Http request failed because of socket timeout after roughly " + timeString + " ms.");
+            usageLogUtil.logHttpTimeout();
+            LogUtil.i(HttpRequest.class.getName(), "Http request #" + (usageLogUtil.getHttpRequestCount() + 1) + " failed because of timeout #" + usageLogUtil.getHttpTimeouts() + ". Wait: " + timeString + " ms. URL: " + mUrl, e);
+            throw e;
         } finally {
-            httpURLConnection.disconnect();
+            if (httpURLConnection != null) {
+                httpURLConnection.disconnect();
+            }
             stopWatch.logEvent("Done");
             LogUtil.d(HttpRequest.class.getName(), stopWatch.getSummary());
         }
