@@ -1,6 +1,5 @@
 package se.devscout.android.model;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
 import se.devscout.server.api.model.*;
 
 import java.net.URI;
@@ -8,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@JsonFilter("ActivityRevisionBean")
 public class ActivityRevisionPropertiesBean implements ActivityRevisionProperties {
     private String mName;
     private Date mDatePublished = new Date();

@@ -1,6 +1,5 @@
 package se.devscout.android.model;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
 import se.devscout.server.api.model.*;
 
 import java.io.Serializable;
@@ -9,7 +8,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-@JsonFilter("ActivityBean")
 public class ActivityPropertiesBean extends ServerObjectPropertiesBean implements ActivityProperties, Serializable {
     private static final List<String> IMAGE_MIME_TYPES = Arrays.asList("image/jpeg", "image/png");
     private UserKey mOwner;

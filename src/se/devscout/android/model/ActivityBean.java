@@ -1,12 +1,10 @@
 package se.devscout.android.model;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
 import se.devscout.server.api.model.Activity;
 import se.devscout.server.api.model.UserKey;
 
 import java.io.Serializable;
 
-@JsonFilter("ActivityBean")
 public class ActivityBean extends ActivityPropertiesBean implements Activity, Serializable, Comparable<ActivityBean> {
     public static long debugCounter;
     private Long mId;
