@@ -342,7 +342,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         try {
             uri2 = condition.toAPIRequest(visitor);
         } catch (UnsupportedOperationException e) {
-            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "App does not think API can handle the search query. Delegate search to database and pray that the database supports the query!", e);
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "App does not think API can handle the search query. Delegate search to database and pray that the database supports the query!");
             return super.findActivity(condition);
         }
         if (attrNames != null) {
