@@ -16,7 +16,7 @@
         devscout:color="@color/basicVeryDark"
         devscout:paddingDots="@dimen/microTextSize"
         devscout:count="10"
-        devscout:selectedIndex="1"
+        devscout:selectedIndex="0"
         android:focusableInTouchMode="true" />
 
     <!-- Tabs similar to those of Google Play (see http://developer.android.com/samples/SlidingTabsBasic/index.html) -->
