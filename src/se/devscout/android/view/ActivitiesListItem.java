@@ -7,6 +7,7 @@ import se.devscout.server.api.model.Range;
 import java.io.Serializable;
 
 public class ActivitiesListItem implements Serializable {
+    private final Integer mFavouritesCount;
     private String mName;
     private Range<Integer> mParticipants;
     private Range<Integer> mTimeActivity;
@@ -23,6 +24,7 @@ public class ActivitiesListItem implements Serializable {
         mAges = activity.getAges();
         mId = activity.getId();
         mCoverMedia = activity.getCoverMedia();
+        mFavouritesCount = activity.getFavouritesCount();
     }
 
     public String getName() {
@@ -79,5 +81,9 @@ public class ActivitiesListItem implements Serializable {
 
     public void setCoverMedia(Media coverMedia) {
         mCoverMedia = coverMedia;
+    }
+
+    public Integer getFavouritesCount() {
+        return mFavouritesCount;
     }
 }

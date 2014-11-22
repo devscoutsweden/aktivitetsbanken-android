@@ -120,6 +120,16 @@ public class ActivitiesListView extends NonBlockingSearchView<ActivitiesListItem
             protected Range<Integer> getRange(ActivitiesListItem activity) {
                 return activity.getTimeActivity();
             }
+        }),
+        FAVOURITE_COUNT(new Comparator<ActivitiesListItem>() {
+            @Override
+            public int compare(ActivitiesListItem item1, ActivitiesListItem item2) {
+                if (item1.getFavouritesCount() != null && item2.getFavouritesCount() != null) {
+                    return item2.getFavouritesCount().intValue() - item1.getFavouritesCount().intValue();
+                } else {
+                    return 0;
+                }
+            }
         });
 
         private final Comparator<ActivitiesListItem> mComparator;

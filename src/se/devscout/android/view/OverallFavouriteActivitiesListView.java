@@ -15,7 +15,7 @@ public class OverallFavouriteActivitiesListView extends ActivitiesListView {
      */
     public OverallFavouriteActivitiesListView(ActivityBankFragment context, boolean isListContentHeight) {
         this(context,
-                Sorter.NAME,
+                Sorter.FAVOURITE_COUNT,
                 isListContentHeight);
     }
 
