@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.SearchResultActivity;
 import se.devscout.android.controller.fragment.ActivityBankFragment;
@@ -40,7 +41,12 @@ public class SearchActivitiesFinderComponentFactory extends AbstractActivitiesFi
                 @Override
                 public void onClick(View view) {
                     EditText textField = (EditText) findViewById(R.id.searchWidgetText);
-                    getContext().startActivity(SearchResultActivity.createIntent(getContext(), ActivityBankFactory.getInstance(getContext()).getFilterFactory().createTextFilter(textField.getText().toString()), getContext().getString(R.string.searchResultTitle)));
+                    String condition = textField.getText().toString().trim();
+                    if (condition.length() == 0) {
+                        Toast.makeText(getContext(), R.string.searchNoFiltersMessage, Toast.LENGTH_SHORT).show();
+                    } else {
+                        getContext().startActivity(SearchResultActivity.createIntent(getContext(), ActivityBankFactory.getInstance(getContext()).getFilterFactory().createTextFilter(condition), getContext().getString(R.string.searchResultTitle)));
+                    }
                 }
             });
         }

@@ -9,7 +9,7 @@ public class SimpleTextFilter extends SimpleFilter implements se.devscout.server
     private final String mCondition;
 
     public SimpleTextFilter(String condition) {
-        mCondition = condition;
+        mCondition = condition.trim();
     }
 
     @Override
