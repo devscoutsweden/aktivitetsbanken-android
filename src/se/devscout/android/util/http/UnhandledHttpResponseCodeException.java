@@ -1,6 +1,6 @@
 package se.devscout.android.util.http;
 
-public class UnhandledHttpResponseCodeException extends Throwable {
+public class UnhandledHttpResponseCodeException extends Exception {
     private int mResponseCode;
 
     public UnhandledHttpResponseCodeException(int responseCode) {

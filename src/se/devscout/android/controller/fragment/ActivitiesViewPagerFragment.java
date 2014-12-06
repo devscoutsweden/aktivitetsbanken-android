@@ -1,55 +1,27 @@
 package se.devscout.android.controller.fragment;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.view.*;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import se.devscout.android.R;
 import se.devscout.android.model.ObjectIdentifierBean;
 import se.devscout.android.util.ActivityBankFactory;
-import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.PreferencesUtil;
-import se.devscout.android.view.ViewPagerIndicator;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.model.ActivityKey;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActivitiesViewPagerFragment extends ActivityBankFragment implements ViewPager.OnPageChangeListener {
+public class ActivitiesViewPagerFragment extends PagerFragment {
 
-    protected ArrayList<ObjectIdentifierBean> mActivityKeys;
-    protected ArrayList<String> mActivityTitles;
-    protected int mSelectedIndex;
-
-    private ViewPager mViewPager;
-    private ViewPagerIndicator mViewPagerIndicator;
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            /*
-             * Restore fields from saved state, for example after the device has been rotated.
-             */
-            mActivityKeys = (ArrayList<ObjectIdentifierBean>) savedInstanceState.getSerializable("mActivityKeys");
-            mActivityTitles = (ArrayList<String>) savedInstanceState.getSerializable("mActivityTitles");
-            mSelectedIndex = savedInstanceState.getInt("mSelectedIndex");
-//            LogUtil.d(ActivitiesListFragment.class.getName(), "State (e.g. search result) has been restored.");
-        }
-
-        setHasOptionsMenu(true);
-
-        final View view = inflater.inflate(R.layout.view_pager, container, false);
-        mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
-        mViewPagerIndicator = (ViewPagerIndicator) view.findViewById(R.id.viewPagerIndicator);
-        mViewPagerIndicator.setVisibility(mActivityKeys.size() > 1 ? View.VISIBLE : View.GONE);
-        mViewPagerIndicator.setCount(mActivityKeys.size());
-        mViewPager.setOnPageChangeListener(this);
-        FragmentStatePagerAdapter pageAdapter = new FragmentStatePagerAdapter(getChildFragmentManager()) {
+    protected FragmentStatePagerAdapter createPagerAdapter() {
+        return new FragmentStatePagerAdapter(getChildFragmentManager()) {
             @Override
             public Fragment getItem(int i) {
-                ActivityKey key = mActivityKeys.get(i);
+                ActivityKey key = mKeys.get(i);
 //                prefetch(i);
                 ActivityFragment activityFragment = ActivityFragment.create(key);
                 return activityFragment;
@@ -60,13 +32,13 @@ public class ActivitiesViewPagerFragment extends ActivityBankFragment implements
                 BackgroundTasksHandlerThread handlerThread = ((SingleFragmentActivity) view.getRootView().getContext()).getBackgroundTasksHandlerThread();
                 ActivityBank activityBank = getActivityBank();
 
-                activityBank.readActivityAsync(mActivityKeys.get(index), null, handlerThread);
+                activityBank.readActivityAsync(mKeys.get(index), null, handlerThread);
                 for (int prefetchIndex = 0; prefetchIndex < 5; prefetchIndex++) {
                     if (index - prefetchIndex >= 0) {
-                        activityBank.readActivityAsync(mActivityKeys.get(index - prefetchIndex), null, handlerThread);
+                        activityBank.readActivityAsync(mKeys.get(index - prefetchIndex), null, handlerThread);
                     }
-                    if (index + prefetchIndex < mActivityKeys.size()) {
-                        activityBank.readActivityAsync(mActivityKeys.get(index + prefetchIndex), null, handlerThread);
+                    if (index + prefetchIndex < mKeys.size()) {
+                        activityBank.readActivityAsync(mKeys.get(index + prefetchIndex), null, handlerThread);
                     }
                 }
             }
@@ -74,14 +46,9 @@ public class ActivitiesViewPagerFragment extends ActivityBankFragment implements
 
             @Override
             public int getCount() {
-                return mActivityKeys.size();
+                return mKeys.size();
             }
         };
-        mViewPager.setAdapter(pageAdapter);
-        mViewPager.setCurrentItem(mSelectedIndex);
-        updateActivityTitle(mSelectedIndex);
-
-        return view;
     }
 
     @Override
@@ -119,7 +86,7 @@ public class ActivitiesViewPagerFragment extends ActivityBankFragment implements
     }
 
     protected ActivityKey getActivity(int index) {
-        return mActivityKeys.get(index);
+        return mKeys.get(index);
     }
 
     public static ActivitiesViewPagerFragment create(List<? extends ActivityKey> activities, ArrayList<String> titles, int selectedIndex) {
@@ -128,42 +95,10 @@ public class ActivitiesViewPagerFragment extends ActivityBankFragment implements
         for (ActivityKey key : activities) {
             activityKeys.add(new ObjectIdentifierBean(key.getId()));
         }
-        fragment.mActivityKeys = activityKeys;
-        fragment.mActivityTitles = titles;
+        fragment.mKeys = activityKeys;
+        fragment.mTitles = titles;
         fragment.mSelectedIndex = selectedIndex;
         return fragment;
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        /*
-         * Store fields into saved state, for example when the activity is destroyed after the device has been rotated.
-         */
-        LogUtil.d(ActivitiesListFragment.class.getName(), "Saving state");
-        outState.putSerializable("mActivityKeys", mActivityKeys);
-        outState.putSerializable("mActivityTitles", mActivityTitles);
-        outState.putInt("mSelectedIndex", mSelectedIndex);
-        LogUtil.d(ActivitiesListFragment.class.getName(), "State saved");
-    }
-
-    @Override
-    public void onPageScrolled(int i, float v, int i2) {
-    }
-
-    @Override
-    public void onPageSelected(int i) {
-        updateActivityTitle(i);
-        mSelectedIndex = i;
-        mViewPagerIndicator.setSelectedIndex(mSelectedIndex);
-        getActivity().invalidateOptionsMenu();
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int i) {
-    }
-
-    private void updateActivityTitle(int selectedActivityIndex) {
-        getActivity().setTitle(mActivityTitles.get(selectedActivityIndex));
-    }
 }

@@ -19,7 +19,7 @@ public class ContentLengthValidator implements ResponseHeadersValidator {
                 if (length < mMaximumLength) {
                     return;
                 } else {
-                    throw new HeaderException("Will not download files heavier than " + mMaximumLength + " bytes.");
+                    throw new ContentTooLongException("Will not download files heavier than " + mMaximumLength + " bytes.", length, mMaximumLength);
                 }
             }
         }

@@ -183,4 +183,7 @@
     <string name="clearImageCacheDone">Rensning klar.</string>
     <string name="clear_image_cache">Ta bort cachade bilder</string>
     <string name="show_usage_stats">Visa statistik...</string>
+    <string name="asyncImageTooLarge">Bilden har inte hämtats eftersom den är för stor.</string>
+    <string name="asyncImageDownloadAnyway">Hämta ändå</string>
+    <string name="asyncImageTooLargeDetails">Bilden är %1$d KB stor men inställningarna tillåter bara bilder under %2$d KB.</string><string name="asyncImageError">Oj, det gick inte att visa bilden.</string>
 </resources>

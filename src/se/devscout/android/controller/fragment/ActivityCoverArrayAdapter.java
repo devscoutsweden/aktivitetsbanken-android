@@ -14,6 +14,7 @@ import se.devscout.android.view.ActivityCoverView;
 
 import java.util.List;
 
+//TODO: Rename to something like AsyncImageArrayAdapter
 public class ActivityCoverArrayAdapter extends ArrayAdapter<ActivitiesListItem> {
 
     public ActivityCoverArrayAdapter(Context context, List<ActivitiesListItem> result) {
@@ -37,8 +38,13 @@ public class ActivityCoverArrayAdapter extends ArrayAdapter<ActivitiesListItem> 
             view = (ActivityCoverView) convertView;
         }
         ActivitiesListItem item = getItem(position);
-        view.init(item.getCoverMedia(), item.getName(), (SingleFragmentActivity) getContext());
+
+
+        int screenWidth = getContext().getResources().getDisplayMetrics().widthPixels;
+        view.init(item.getCoverMedia(), item.getName(), (SingleFragmentActivity) getContext(), screenWidth);
         view.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getContext().getResources().getDimensionPixelSize(R.dimen.thumbnail_height)));
         return view;
     }
+
+
 }

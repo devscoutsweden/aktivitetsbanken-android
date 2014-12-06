@@ -40,7 +40,12 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
     }
 
     public interface Listener {
-        void onDone(Object[] parameters, Object response, BackgroundTask task);
+        ListenerAction onDone(Object[] parameters, Object response, BackgroundTask task);
+    }
+
+    public enum ListenerAction {
+        KEEP,
+        REMOVE
     }
 
     public BackgroundTasksHandlerThread(Context context, Handler responseHandler) {
@@ -83,13 +88,17 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
     }
 
     private synchronized void queueTask(BackgroundTask task, Object... parameters) {
-        taskCount++;
-        mTaskParameters.put(taskCount, parameters);
-        if (mHandler == null) {
-            LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Handler not yet initialised");
-            mPendingTasks.put(taskCount, task);
+        if (!isClosed()) {
+            taskCount++;
+            mTaskParameters.put(taskCount, parameters);
+            if (mHandler == null) {
+                LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Handler not yet initialised");
+                mPendingTasks.put(taskCount, task);
+            } else {
+                mHandler.obtainMessage(task.ordinal(), taskCount).sendToTarget();
+            }
         } else {
-            mHandler.obtainMessage(task.ordinal(), taskCount).sendToTarget();
+            LogUtil.i(BackgroundTasksHandlerThread.class.getName(), "Will not queue " + task.name() + " since the handler has been closed.");
         }
     }
 
@@ -120,11 +129,16 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
         }
     }
 
-    private void fireOnDone(Object[] parameters, Object response, BackgroundTask task) {
+    private synchronized void fireOnDone(Object[] parameters, Object response, BackgroundTask task) {
 //        LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Number of listeners: " + mListeners.size());
         if (!isClosed()) {
-            for (Listener listener : mListeners) {
-                listener.onDone(parameters, response, task);
+
+            int size = mListeners.size();
+            for (int i = size - 1; i >= 0; i--) {
+                Listener listener = mListeners.get(i);
+                if (listener.onDone(parameters, response, task) == ListenerAction.REMOVE) {
+                    mListeners.remove(i);
+                }
             }
         }
     }

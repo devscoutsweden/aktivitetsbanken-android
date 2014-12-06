@@ -28,7 +28,7 @@ public abstract class TabsFragment extends ActivityBankFragment {
         StaticFragmentsPagerAdapter pageAdapter = createPagerAdapter(getChildFragmentManager());
         mViewPager.setAdapter(pageAdapter);
 
-        mSlidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
+        mSlidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.viewPagerSlidingTabs);
         mSlidingTabLayout.setViewPager(mViewPager);
         mSlidingTabLayout.setSelectedIndicatorColors(getResources().getColor(R.color.accentBlue));
         mSlidingTabLayout.setDividerColors(getResources().getColor(R.color.basicDark));

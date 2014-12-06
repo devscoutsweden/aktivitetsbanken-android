@@ -5,60 +5,73 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/activityCoverImage"
+        android:layout_gravity="center"
+        android:src="@android:drawable/ic_menu_gallery"
+        android:scaleType="center"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="0dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp" />
 
-        <ImageView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/activityCoverImage"
-            android:layout_gravity="center"
-            android:src="@android:drawable/ic_menu_gallery"
-            android:scaleType="center"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="0dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="0dp"
-            android:background="@color/basicVeryLight" />
-
-        <TextView
-            android:text="ABCåäögj"
-            android:id="@+id/activityCoverLabel"
-            android:layout_gravity="center_horizontal|bottom"
-            android:layout_alignLeft="@+id/activityCoverImage"
-            android:layout_alignBottom="@+id/activityCoverImage"
-            android:layout_toLeftOf="@+id/activityCoverFavoriteIcon"
-            style="@style/ImageOverlay_SingleTextLine"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignRight="@+id/activityCoverImage" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/activityCoverShareIcon"
-            android:layout_gravity="right|bottom"
-            android:src="@drawable/ic_action_share"
-            android:layout_alignRight="@+id/activityCoverImage"
-            android:layout_alignBottom="@+id/activityCoverImage"
-            style="@style/ImageOverlay_ImageButton" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/activityCoverFavoriteIcon"
-            android:layout_gravity="right|center_vertical"
-            android:src="@drawable/ic_action_favorite"
-            android:layout_toLeftOf="@+id/activityCoverShareIcon"
-            android:layout_alignTop="@+id/activityCoverShareIcon"
-            style="@style/ImageOverlay_ImageButton" />
-
-    </RelativeLayout>
-
-    <ProgressBar
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/activityCoverProgressBar"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:id="@+id/asyncImageProgressLayout">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/activityCoverProgressBar"
+            android:layout_gravity="center" />
+
+    </LinearLayout>
+
+    <TextView
+        android:text="ABCåäögj"
+        android:id="@+id/asyncImageOverlayLabel"
+        android:layout_gravity="center_horizontal|bottom"
+        style="@style/ImageOverlay_SingleTextLine"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:id="@+id/asyncImageErrorLayout">
+
+        <TextView
+            android:layout_width="@dimen/textColumnWidth"
+            android:layout_height="wrap_content"
+            android:text="@string/asyncImageError"
+            android:id="@+id/asyncImageErrorMessage"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal"
+            android:textSize="@dimen/mediumTextSize" />
+
+        <TextView
+            android:layout_width="@dimen/textColumnWidth"
+            android:layout_height="wrap_content"
+            android:text="@string/asyncImageTooLargeDetails"
+            android:id="@+id/asyncImageErrorDetails"
+            android:layout_gravity="center_horizontal"
+            android:textSize="@dimen/microTextSize"
+            android:gravity="center" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hämta ändå"
+            android:id="@+id/asyncImageErrorRetryButton"
+            android:layout_gravity="center_horizontal" />
+
+    </LinearLayout>
+
 </FrameLayout>

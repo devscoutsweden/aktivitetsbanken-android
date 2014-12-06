@@ -10,5 +10,5 @@
 
     <dimen name="defaultMargin">4dp</dimen>
     <dimen name="iconButtonMargin">8dp</dimen>
-    <dimen name="iconButtonSize">32dp</dimen>
+    <dimen name="iconButtonSize">32dp</dimen><dimen name="textColumnWidth">200dp</dimen>
 </resources>

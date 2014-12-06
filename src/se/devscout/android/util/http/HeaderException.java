@@ -1,6 +1,6 @@
 package se.devscout.android.util.http;
 
-public class HeaderException extends Throwable {
+public class HeaderException extends Exception {
     public HeaderException() {
     }
 

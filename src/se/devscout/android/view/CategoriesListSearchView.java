@@ -72,7 +72,7 @@ public class CategoriesListSearchView extends QuickSearchListView<CategoryListIt
     }
 
     @Override
-    public void onDone(Object[] parameters, Object response, BackgroundTask task) {
+    public BackgroundTasksHandlerThread.ListenerAction onDone(Object[] parameters, Object response, BackgroundTask task) {
         if (task == BackgroundTask.DISPLAY_IMAGE) {
             if (parameters[0] instanceof ImageView && parameters[1] instanceof URI && response instanceof Bitmap) {
                 ImageView imageView = (ImageView) parameters[0];
@@ -84,6 +84,7 @@ public class CategoriesListSearchView extends QuickSearchListView<CategoryListIt
                 }
             }
         }
+        return BackgroundTasksHandlerThread.ListenerAction.KEEP;
     }
 
     private class MySearchTask extends SearchTask {

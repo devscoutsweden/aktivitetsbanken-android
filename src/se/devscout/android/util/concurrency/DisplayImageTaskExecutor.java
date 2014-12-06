@@ -11,15 +11,15 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 class DisplayImageTaskExecutor extends ImageCacheTaskExecutor {
-    private List<URI> blockedURLs = Collections.synchronizedList(new ArrayList<URI>());
+    private Map<URI, Exception> blockedURLs = Collections.synchronizedMap(new HashMap<URI, Exception>());
 
     @Override
-    public Bitmap run(Object[] params, Context context) {
+    public Object run(Object[] params, Context context) {
         final URI uri = (URI) params[1];
         int maxFileSize = params.length > 2 && params[2] != null && params[2] instanceof Integer ? (Integer) params[2] : 10000;
         if (uri == null) {
@@ -27,36 +27,23 @@ class DisplayImageTaskExecutor extends ImageCacheTaskExecutor {
             return null;
         }
         File cacheFile = getCacheFile(uri, context);
-        Bitmap bitmap;
-        if (blockedURLs.contains(uri)) {
-            bitmap = getBitmapFromResource(context);
-            LogUtil.i(BackgroundTasksHandlerThread.class.getName(), "Because of earlier failure, downloading " + uri + " will not be reattempted.");
+        if (blockedURLs.containsKey(uri)) {
+            LogUtil.i(BackgroundTasksHandlerThread.class.getName(), "Because of earlier failure, downloading " + uri + " will not be reattempted. The earlier failure was caused by a " + blockedURLs.get(uri).getClass().getName() + ".");
+            return blockedURLs.get(uri);
         } else if (cacheFile.exists()) {
-            bitmap = getBitmapFromFile(cacheFile);
             LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Retrieved " + uri + " from cache.");
+            return getBitmapFromFile(cacheFile);
         } else {
             try {
-                bitmap = getBitmapFromURI(uri, true, context, maxFileSize);
+                Bitmap bitmap = getBitmapFromURI(uri, true, context, maxFileSize);
                 LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Downloaded image from " + uri);
-            } catch (HeaderException e) {
-                blockedURLs.add(uri);
-                bitmap = getBitmapFromResource(context);
+                return bitmap;
+            } catch (Exception e) {
+                blockedURLs.put(uri, e);
                 LogUtil.i(BackgroundTasksHandlerThread.class.getName(), "Could not (or would not) download " + uri, e);
-            } catch (IOException e) {
-                blockedURLs.add(uri);
-                bitmap = getBitmapFromResource(context);
-                LogUtil.e(BackgroundTasksHandlerThread.class.getName(), "Could not download " + uri, e);
-            } catch (UnauthorizedException e) {
-                blockedURLs.add(uri);
-                bitmap = getBitmapFromResource(context);
-                LogUtil.e(BackgroundTasksHandlerThread.class.getName(), "Could not download " + uri, e);
-            } catch (UnhandledHttpResponseCodeException e) {
-                blockedURLs.add(uri);
-                bitmap = getBitmapFromResource(context);
-                LogUtil.e(BackgroundTasksHandlerThread.class.getName(), "Could not download " + uri, e);
+                return e;
             }
         }
-        return bitmap;
     }
 
     private Bitmap getBitmapFromURI(URI uri, boolean storeInCache, Context context, int maxFileSize) throws IOException, UnauthorizedException, UnhandledHttpResponseCodeException, HeaderException {

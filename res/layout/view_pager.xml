@@ -13,7 +13,6 @@
         android:id="@+id/viewPagerIndicator"
         android:layout_weight="0"
         android:layout_margin="@dimen/iconButtonMargin"
-        devscout:color="@color/basicVeryDark"
         devscout:paddingDots="@dimen/microTextSize"
         devscout:count="10"
         devscout:selectedIndex="0"
@@ -21,7 +20,7 @@
 
     <!-- Tabs similar to those of Google Play (see http://developer.android.com/samples/SlidingTabsBasic/index.html) -->
     <com.example.android.common.view.SlidingTabLayout
-        android:id="@+id/sliding_tabs"
+        android:id="@+id/viewPagerSlidingTabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
