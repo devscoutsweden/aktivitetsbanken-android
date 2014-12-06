@@ -10,14 +10,24 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
 import se.devscout.android.view.ActivitiesListItem;
+import se.devscout.android.view.AsyncImageBean;
 import se.devscout.android.view.AsyncImageView;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class AsyncImageArrayAdapter extends ArrayAdapter<ActivitiesListItem> {
+public class AsyncImageArrayAdapter extends ArrayAdapter<AsyncImageBean> {
 
-    public AsyncImageArrayAdapter(Context context, List<ActivitiesListItem> result) {
+    public AsyncImageArrayAdapter(Context context, List<AsyncImageBean> result) {
         super(context, R.layout.simple_list_item_1, result);
+    }
+
+    public static ArrayAdapter fromList(List<ActivitiesListItem> result, Context context) {
+        List<AsyncImageBean> props = new ArrayList<AsyncImageBean>();
+        for (ActivitiesListItem item : result) {
+            props.add(new AsyncImageBean(item.getCoverMedia(), item.getName()));
+        }
+        return new AsyncImageArrayAdapter(context, props);
     }
 
     @Override
@@ -36,11 +46,11 @@ public class AsyncImageArrayAdapter extends ArrayAdapter<ActivitiesListItem> {
         } else if (convertView instanceof AsyncImageView) {
             view = (AsyncImageView) convertView;
         }
-        ActivitiesListItem item = getItem(position);
+        AsyncImageBean item = getItem(position);
 
 
         int screenWidth = getContext().getResources().getDisplayMetrics().widthPixels;
-        view.init(item.getCoverMedia(), item.getName(), (SingleFragmentActivity) getContext(), screenWidth);
+        view.init(item, (SingleFragmentActivity) getContext(), screenWidth);
         view.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getContext().getResources().getDimensionPixelSize(R.dimen.thumbnail_height)));
         return view;
     }

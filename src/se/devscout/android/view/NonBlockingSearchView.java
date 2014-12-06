@@ -83,7 +83,7 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
         mList = linearLayout;
     }
 
-    protected abstract ArrayAdapter<T> createAdapter(List<T> result);
+    protected abstract ArrayAdapter createAdapter(List<T> result);
 
     protected void sort(Comparator<T> sorter) {
         if (mList instanceof ListView) {
@@ -130,7 +130,7 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
             //TODO: Necessary? Remove?
             result = new ArrayList<T>();
         }
-        ArrayAdapter<T> adapter = createAdapter(result);
+        ArrayAdapter adapter = createAdapter(result);
 
         mList.setVisibility(adapter.isEmpty() ? View.GONE : View.VISIBLE);
         mEmptyView.setVisibility(adapter.isEmpty() ? View.VISIBLE : View.GONE);

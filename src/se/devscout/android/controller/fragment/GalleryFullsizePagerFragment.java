@@ -2,9 +2,9 @@ package se.devscout.android.controller.fragment;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import se.devscout.android.model.ActivityBean;
 import se.devscout.android.model.ObjectIdentifierBean;
-import se.devscout.android.view.ActivitiesListItem;
+import se.devscout.android.view.AsyncImageBean;
+import se.devscout.server.api.model.Media;
 import se.devscout.server.api.model.MediaKey;
 
 import java.util.ArrayList;
@@ -16,12 +16,9 @@ public class GalleryFullsizePagerFragment extends PagerFragment {
         return new FragmentStatePagerAdapter(getChildFragmentManager()) {
             @Override
             public Fragment getItem(int i) {
-                // TODO: Implement new POJO for holding data, rather than relying on this mock object.
                 MediaKey key = mKeys.get(i);
-                ActivityBean mock = new ActivityBean(null, 0L, 0L, 0L, false);
-//                mock.setName(mTitles != null && mTitles.get(i) != null ? mTitles.get(i) : "Image " + (i + 1));
-                mock.getMediaItems().add(getActivityBank().readMediaItem(key));
-                return AsyncImageFragment.create(new ActivitiesListItem(mock), null);
+                Media media = getActivityBank().readMediaItem(key);
+                return AsyncImageFragment.create(new AsyncImageBean(media, null), null);
             }
 
             @Override

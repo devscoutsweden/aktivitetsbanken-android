@@ -14,6 +14,7 @@ import se.devscout.android.controller.activity.SingleFragmentActivity;
 import se.devscout.android.model.ObjectIdentifierBean;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.ResourceUtil;
+import se.devscout.android.view.AsyncImageBean;
 import se.devscout.android.view.AsyncImageView;
 import se.devscout.android.view.SimpleDocumentLayout;
 import se.devscout.server.api.OnReadDoneCallback;
@@ -88,7 +89,7 @@ public class ActivityFragment extends ActivityBankFragment/* implements Backgrou
 
         if (activityProperties.getCoverMedia() != null) {
             int screenWidth = getActivity().getResources().getDisplayMetrics().widthPixels;
-            ((AsyncImageView) view.findViewById(R.id.activityCover)).init(activityProperties.getCoverMedia(), null, (SingleFragmentActivity) context, screenWidth);
+            ((AsyncImageView) view.findViewById(R.id.activityCover)).init(new AsyncImageBean(activityProperties.getCoverMedia(), null), (SingleFragmentActivity) context, screenWidth);
 
             TextView activityCoverMore = (TextView) view.findViewById(R.id.activityCoverMore);
             if (activityProperties.getMediaItems().size() > 1) {

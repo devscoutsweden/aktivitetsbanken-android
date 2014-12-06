@@ -16,7 +16,7 @@ import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.concurrency.BackgroundTask;
 import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
 import se.devscout.android.util.http.ContentTooLongException;
-import se.devscout.server.api.model.Media;
+import se.devscout.server.api.model.MediaProperties;
 
 import java.net.URI;
 
@@ -46,25 +46,25 @@ public class AsyncImageView extends FrameLayout {
     }
 
     public void init(SingleFragmentActivity activity) {
-        init(null, "Image", activity, -1, ImageView.ScaleType.CENTER_CROP);
+        init(null, activity, -1, ImageView.ScaleType.CENTER_CROP);
     }
 
-    public void init(Media coverMedia, String title, SingleFragmentActivity activity, int imageSize) {
-        init(coverMedia, title, activity, imageSize, ImageView.ScaleType.CENTER_CROP);
+    public void init(AsyncImageBean properties, SingleFragmentActivity activity, int imageSize) {
+        init(properties, activity, imageSize, ImageView.ScaleType.CENTER_CROP);
     }
 
-    public void init(Media coverMedia, String title, SingleFragmentActivity activity, int imageSize, ImageView.ScaleType imageScaleType) {
-        initImage(coverMedia, activity, imageSize, imageScaleType);
-        initOverlay(title);
+    public void init(AsyncImageBean properties, SingleFragmentActivity activity, int imageSize, ImageView.ScaleType imageScaleType) {
+        initImage(properties != null ? properties.getMedia() : null, activity, imageSize, imageScaleType);
+        initOverlay(properties != null ? properties.getName() : null);
     }
 
-    private void initImage(Media coverMedia, SingleFragmentActivity activity, int imageSize, ImageView.ScaleType imageScaleType) {
+    private void initImage(MediaProperties coverMedia, SingleFragmentActivity activity, int imageSize, ImageView.ScaleType imageScaleType) {
         findViewById(R.id.asyncImageErrorLayout).setVisibility(View.GONE);
         findViewById(R.id.asyncImageErrorRetryButton).setVisibility(View.GONE);
         ImageView asyncImageView = (ImageView) findViewById(R.id.asyncImageImageView);
         asyncImageView.setVisibility(View.GONE);
         if (coverMedia != null && imageSize > 0) {
-
+            // TODO: Remove dependency to ActivityBankFactory. Perhaps AsyncImageBean should have one (or more?) URIs and not an entire MediaProperties object?
             URI coverImageURI = ActivityBankFactory.getInstance(activity).getMediaItemURI(coverMedia, imageSize, imageSize);
             asyncImageView.setTag(R.id.imageViewUri, coverImageURI);
             asyncImageView.setScaleType(imageScaleType);
@@ -132,6 +132,7 @@ public class AsyncImageView extends FrameLayout {
         TextView textView = (TextView) findViewById(R.id.asyncImageOverlayLabel);
         if (title != null && title.length() > 0) {
             textView.setText(title);
+            textView.setVisibility(VISIBLE);
         } else {
             textView.setVisibility(GONE);
         }

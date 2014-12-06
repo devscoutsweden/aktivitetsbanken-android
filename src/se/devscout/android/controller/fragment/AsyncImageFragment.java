@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
 import se.devscout.android.util.LogUtil;
-import se.devscout.android.view.ActivitiesListItem;
+import se.devscout.android.view.AsyncImageBean;
 import se.devscout.android.view.AsyncImageView;
 
 //TODO: Rename to something like AsyncImageFragment
@@ -16,11 +16,11 @@ public class AsyncImageFragment extends ActivityBankFragment implements View.OnC
 
     public static interface OnClickListener {
 
-        void onImageClick(View view, ActivitiesListItem localActivity, Context ctx);
+        void onImageClick(View view, AsyncImageBean localActivity, Context ctx);
     }
 
     //TODO: Implement/use more generic data holder than ActivitiesListItem
-    private ActivitiesListItem mActivity;
+    private AsyncImageBean mAsyncImageBean;
     private int mSize;
 
     private OnClickListener mOnClickListener;
@@ -31,7 +31,7 @@ public class AsyncImageFragment extends ActivityBankFragment implements View.OnC
             /*
              * Restore fields from saved state, for example after the device has been rotated.
              */
-            mActivity = (ActivitiesListItem) savedInstanceState.getSerializable("mActivity");
+            mAsyncImageBean = (AsyncImageBean) savedInstanceState.getSerializable("mAsyncImageBean");
             mSize = savedInstanceState.getInt("mSize");
         } else {
             mSize = container.getContext().getResources().getDisplayMetrics().widthPixels;
@@ -39,8 +39,7 @@ public class AsyncImageFragment extends ActivityBankFragment implements View.OnC
         AsyncImageView view = new AsyncImageView(getActivity());
 
         view.init(
-                mActivity.getCoverMedia(),
-                mActivity.getName(),
+                mAsyncImageBean,
                 (SingleFragmentActivity) getActivity(),
                 mSize,
                 ImageView.ScaleType.FIT_CENTER);
@@ -59,7 +58,7 @@ public class AsyncImageFragment extends ActivityBankFragment implements View.OnC
          * Store fields into saved state, for example when the activity is destroyed after the device has been rotated.
          */
         LogUtil.d(ActivitiesListFragment.class.getName(), "Saving state");
-        outState.putSerializable("mActivity", mActivity);
+        outState.putSerializable("mAsyncImageBean", mAsyncImageBean);
         outState.putInt("mSize", mSize);
         LogUtil.d(ActivitiesListFragment.class.getName(), "State saved");
     }
@@ -67,13 +66,13 @@ public class AsyncImageFragment extends ActivityBankFragment implements View.OnC
     @Override
     public void onClick(View view) {
         if (mOnClickListener != null) {
-            mOnClickListener.onImageClick(view, mActivity, getActivity());
+            mOnClickListener.onImageClick(view, mAsyncImageBean, getActivity());
         }
     }
 
-    public static AsyncImageFragment create(ActivitiesListItem properties, OnClickListener onClickListener) {
+    public static AsyncImageFragment create(AsyncImageBean properties, OnClickListener onClickListener) {
         AsyncImageFragment fragment = new AsyncImageFragment();
-        fragment.mActivity = properties;
+        fragment.mAsyncImageBean = properties;
         fragment.mOnClickListener = onClickListener;
         return fragment;
     }
