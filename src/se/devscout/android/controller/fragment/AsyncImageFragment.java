@@ -9,10 +9,10 @@ import android.widget.ImageView;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.view.ActivitiesListItem;
-import se.devscout.android.view.ActivityCoverView;
+import se.devscout.android.view.AsyncImageView;
 
 //TODO: Rename to something like AsyncImageFragment
-public class ActivityCoverFragment extends ActivityBankFragment implements View.OnClickListener {
+public class AsyncImageFragment extends ActivityBankFragment implements View.OnClickListener {
 
     public static interface OnClickListener {
 
@@ -36,7 +36,7 @@ public class ActivityCoverFragment extends ActivityBankFragment implements View.
         } else {
             mSize = container.getContext().getResources().getDisplayMetrics().widthPixels;
         }
-        ActivityCoverView view = new ActivityCoverView(getActivity());
+        AsyncImageView view = new AsyncImageView(getActivity());
 
         view.init(
                 mActivity.getCoverMedia(),
@@ -71,8 +71,8 @@ public class ActivityCoverFragment extends ActivityBankFragment implements View.
         }
     }
 
-    public static ActivityCoverFragment create(ActivitiesListItem properties, OnClickListener onClickListener) {
-        ActivityCoverFragment fragment = new ActivityCoverFragment();
+    public static AsyncImageFragment create(ActivitiesListItem properties, OnClickListener onClickListener) {
+        AsyncImageFragment fragment = new AsyncImageFragment();
         fragment.mActivity = properties;
         fragment.mOnClickListener = onClickListener;
         return fragment;

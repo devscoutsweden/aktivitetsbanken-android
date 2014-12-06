@@ -22,7 +22,7 @@
             <view
                 android:layout_width="fill_parent"
                 android:layout_height="@android:dimen/thumbnail_height"
-                class="se.devscout.android.view.ActivityCoverView"
+                class="se.devscout.android.view.AsyncImageView"
                 android:id="@+id/activityCover">
 
                 <TextView

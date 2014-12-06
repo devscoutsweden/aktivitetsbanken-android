@@ -8,7 +8,7 @@
     <ImageView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/activityCoverImage"
+        android:id="@+id/asyncImageImageView"
         android:layout_gravity="center"
         android:src="@android:drawable/ic_menu_gallery"
         android:scaleType="center"
@@ -27,7 +27,7 @@
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/activityCoverProgressBar"
+            android:id="@+id/asyncImageProgressBar"
             android:layout_gravity="center" />
 
     </LinearLayout>

@@ -11,7 +11,7 @@ import se.devscout.android.model.ObjectIdentifierBean;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActivityGalleryActivity extends SingleFragmentActivity {
+public class GalleryThumbnailsActivity extends SingleFragmentActivity {
     private static final String INTENT_EXTRA_KEYS = "keys";
 
     @Override
@@ -39,7 +39,7 @@ public class ActivityGalleryActivity extends SingleFragmentActivity {
     }
 
     public static Intent createIntent(Context ctx, List<ObjectIdentifierBean> keys) {
-        Intent intent = new Intent(ctx, ActivityGalleryActivity.class);
+        Intent intent = new Intent(ctx, GalleryThumbnailsActivity.class);
         intent.putExtra(INTENT_EXTRA_KEYS, new ArrayList<ObjectIdentifierBean>(keys));
         return intent;
     }

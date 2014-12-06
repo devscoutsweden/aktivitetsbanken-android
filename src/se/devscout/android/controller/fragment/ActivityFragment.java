@@ -9,12 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import se.devscout.android.R;
-import se.devscout.android.controller.activity.ActivityGalleryActivity;
+import se.devscout.android.controller.activity.GalleryThumbnailsActivity;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
 import se.devscout.android.model.ObjectIdentifierBean;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.ResourceUtil;
-import se.devscout.android.view.ActivityCoverView;
+import se.devscout.android.view.AsyncImageView;
 import se.devscout.android.view.SimpleDocumentLayout;
 import se.devscout.server.api.OnReadDoneCallback;
 import se.devscout.server.api.model.Activity;
@@ -88,7 +88,7 @@ public class ActivityFragment extends ActivityBankFragment/* implements Backgrou
 
         if (activityProperties.getCoverMedia() != null) {
             int screenWidth = getActivity().getResources().getDisplayMetrics().widthPixels;
-            ((ActivityCoverView) view.findViewById(R.id.activityCover)).init(activityProperties.getCoverMedia(), null, (SingleFragmentActivity) context, screenWidth);
+            ((AsyncImageView) view.findViewById(R.id.activityCover)).init(activityProperties.getCoverMedia(), null, (SingleFragmentActivity) context, screenWidth);
 
             TextView activityCoverMore = (TextView) view.findViewById(R.id.activityCoverMore);
             if (activityProperties.getMediaItems().size() > 1) {
@@ -122,7 +122,7 @@ public class ActivityFragment extends ActivityBankFragment/* implements Backgrou
                     for (Media mediaItem : mediaItems) {
                         keys.add(new ObjectIdentifierBean(mediaItem));
                     }
-                    getActivity().startActivity(ActivityGalleryActivity.createIntent(getActivity(), keys));
+                    getActivity().startActivity(GalleryThumbnailsActivity.createIntent(getActivity(), keys));
                 }
             });
             for (Media media : activityProperties.getMediaItems()) {

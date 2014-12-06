@@ -20,22 +20,21 @@ import se.devscout.server.api.model.Media;
 
 import java.net.URI;
 
-//TODO: Rename to something like AsyncImageView
-public class ActivityCoverView extends FrameLayout {
+public class AsyncImageView extends FrameLayout {
 
-    public ActivityCoverView(Context context) {
+    public AsyncImageView(Context context) {
         super(context);
         inflate(context);
         init((SingleFragmentActivity) context);
     }
 
-    public ActivityCoverView(Context context, AttributeSet attrs) {
+    public AsyncImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         inflate(context);
         init((SingleFragmentActivity) context);
     }
 
-    public ActivityCoverView(Context context, AttributeSet attrs, int defStyle) {
+    public AsyncImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         inflate(context);
         init((SingleFragmentActivity) context);
@@ -43,8 +42,7 @@ public class ActivityCoverView extends FrameLayout {
 
     private void inflate(Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        //TODO: Rename to something like R.layout.async_image
-        inflater.inflate(R.layout.activity_cover, this, true);
+        inflater.inflate(R.layout.async_image, this, true);
     }
 
     public void init(SingleFragmentActivity activity) {
@@ -63,17 +61,17 @@ public class ActivityCoverView extends FrameLayout {
     private void initImage(Media coverMedia, SingleFragmentActivity activity, int imageSize, ImageView.ScaleType imageScaleType) {
         findViewById(R.id.asyncImageErrorLayout).setVisibility(View.GONE);
         findViewById(R.id.asyncImageErrorRetryButton).setVisibility(View.GONE);
-        ImageView activityCoverImage = (ImageView) findViewById(R.id.activityCoverImage);
-        activityCoverImage.setVisibility(View.GONE);
+        ImageView asyncImageView = (ImageView) findViewById(R.id.asyncImageImageView);
+        asyncImageView.setVisibility(View.GONE);
         if (coverMedia != null && imageSize > 0) {
 
             URI coverImageURI = ActivityBankFactory.getInstance(activity).getMediaItemURI(coverMedia, imageSize, imageSize);
-            activityCoverImage.setTag(R.id.imageViewUri, coverImageURI);
-            activityCoverImage.setScaleType(imageScaleType);
-            LogUtil.d(SingleFragmentActivity.class.getName(), coverImageURI + " should be loaded into " + activityCoverImage.toString());
+            asyncImageView.setTag(R.id.imageViewUri, coverImageURI);
+            asyncImageView.setScaleType(imageScaleType);
+            LogUtil.d(SingleFragmentActivity.class.getName(), coverImageURI + " should be loaded into " + asyncImageView.toString());
             int limitLarge = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getContext()).getString("server_download_limit_large", "50")) * 1000;
             activity.getBackgroundTasksHandlerThread().addListener(createTaskListener(coverImageURI));
-            activity.getBackgroundTasksHandlerThread().queueGetMediaResource(activityCoverImage, coverImageURI, limitLarge);
+            activity.getBackgroundTasksHandlerThread().queueGetMediaResource(asyncImageView, coverImageURI, limitLarge);
             activity.getBackgroundTasksHandlerThread().queueCleanCache();
 
             findViewById(R.id.asyncImageProgressLayout).setVisibility(View.VISIBLE);

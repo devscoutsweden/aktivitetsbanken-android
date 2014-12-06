@@ -10,7 +10,7 @@ import se.devscout.android.controller.activity.GalleryFullscreenActivity;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
 import se.devscout.android.model.ObjectIdentifierBean;
 import se.devscout.android.util.LogUtil;
-import se.devscout.android.view.ActivityCoverView;
+import se.devscout.android.view.AsyncImageView;
 import se.devscout.server.api.model.Media;
 import se.devscout.server.api.model.MediaKey;
 
@@ -57,9 +57,9 @@ public class GalleryThumbnailsFragment extends ActivityBankFragment {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 if (convertView == null) {
-                    convertView = new ActivityCoverView(parent.getContext());
+                    convertView = new AsyncImageView(parent.getContext());
                 }
-                ActivityCoverView view = (ActivityCoverView) convertView;
+                AsyncImageView view = (AsyncImageView) convertView;
 
                 Media media = getActivityBank().readMediaItem(getItem(position));
                 view.init(media, null, (SingleFragmentActivity) getActivity(), mSize, ImageView.ScaleType.CENTER_CROP);

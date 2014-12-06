@@ -21,7 +21,7 @@ public class GalleryFullsizePagerFragment extends PagerFragment {
                 ActivityBean mock = new ActivityBean(null, 0L, 0L, 0L, false);
 //                mock.setName(mTitles != null && mTitles.get(i) != null ? mTitles.get(i) : "Image " + (i + 1));
                 mock.getMediaItems().add(getActivityBank().readMediaItem(key));
-                return ActivityCoverFragment.create(new ActivitiesListItem(mock), null);
+                return AsyncImageFragment.create(new ActivitiesListItem(mock), null);
             }
 
             @Override

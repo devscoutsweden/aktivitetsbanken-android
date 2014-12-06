@@ -10,23 +10,22 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
 import se.devscout.android.view.ActivitiesListItem;
-import se.devscout.android.view.ActivityCoverView;
+import se.devscout.android.view.AsyncImageView;
 
 import java.util.List;
 
-//TODO: Rename to something like AsyncImageArrayAdapter
-public class ActivityCoverArrayAdapter extends ArrayAdapter<ActivitiesListItem> {
+public class AsyncImageArrayAdapter extends ArrayAdapter<ActivitiesListItem> {
 
-    public ActivityCoverArrayAdapter(Context context, List<ActivitiesListItem> result) {
+    public AsyncImageArrayAdapter(Context context, List<ActivitiesListItem> result) {
         super(context, R.layout.simple_list_item_1, result);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ActivityCoverView view = null;
+        AsyncImageView view = null;
         // TODO: Other getView should perhaps initialize components using a simiar if statement
         if (convertView == null) {
-            view = new ActivityCoverView(getContext());
+            view = new AsyncImageView(getContext());
             if (parent instanceof ListView) {
                 ListView listView = (ListView) parent;
                 listView.setDividerHeight(getContext().getResources().getDimensionPixelSize(se.devscout.android.R.dimen.defaultMargin));
@@ -34,8 +33,8 @@ public class ActivityCoverArrayAdapter extends ArrayAdapter<ActivitiesListItem> 
                 LinearLayout layout = (LinearLayout) parent;
                 layout.setDividerDrawable(getContext().getResources().getDrawable(se.devscout.android.R.drawable.list_item_padding));
             }
-        } else if (convertView instanceof ActivityCoverView) {
-            view = (ActivityCoverView) convertView;
+        } else if (convertView instanceof AsyncImageView) {
+            view = (AsyncImageView) convertView;
         }
         ActivitiesListItem item = getItem(position);
 
