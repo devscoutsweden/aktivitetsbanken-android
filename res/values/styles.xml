@@ -5,6 +5,7 @@
         <item name="android:windowBackground">@color/basicVeryLight</item>
         <item name="android:colorBackground">@color/basicVeryLight</item>
         <item name="android:textColor">@color/basicVeryDark</item>
+        <item name="color">@color/basicVeryDark</item>
     </style>
 
 
@@ -44,7 +45,14 @@
         <!--<item name="android:background">@drawable/gradient_label_background</item>-->
     </style>
 
-    <style name="PhotoGallery_Thumbnail">
+    <style name="PhotoGallery">
+        <item name="android:textColor">@color/basicLight</item>
+        <item name="color">@color/basicLight</item>
+        <item name="android:background">@color/basicVeryDark</item>
+        <item name="android:windowActionBarOverlay">true</item>
+    </style>
+
+    <style name="PhotoGallery_Thumbnail" parent="PhotoGallery">
         <item name="android:layout_width">@android:dimen/thumbnail_width</item>
         <item name="android:layout_height">@android:dimen/thumbnail_height</item>
         <item name="android:scaleType">centerCrop</item>

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import se.devscout.android.R;
+import se.devscout.android.controller.activity.ActivityGalleryActivity;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
 import se.devscout.android.model.ObjectIdentifierBean;
 import se.devscout.android.util.LogUtil;
@@ -21,6 +22,9 @@ import se.devscout.server.api.model.ActivityKey;
 import se.devscout.server.api.model.Media;
 import se.devscout.server.api.model.Reference;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Fragment for displaying (very) simple documents with headings, body paragraphs and images.
  */
@@ -28,7 +32,7 @@ public class ActivityFragment extends ActivityBankFragment/* implements Backgrou
 
     private ObjectIdentifierBean mActivityKey;
 
-    public void onRead(Activity activityProperties, View view) {
+    public void onRead(final Activity activityProperties, View view) {
         view.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 
         FragmentActivity context = getActivity();
@@ -83,7 +87,8 @@ public class ActivityFragment extends ActivityBankFragment/* implements Backgrou
         ResourceUtil resourceUtil = new ResourceUtil(context);
 
         if (activityProperties.getCoverMedia() != null) {
-            ((ActivityCoverView) view.findViewById(R.id.activityCover)).init(activityProperties.getCoverMedia(), null, (SingleFragmentActivity) context);
+            int screenWidth = getActivity().getResources().getDisplayMetrics().widthPixels;
+            ((ActivityCoverView) view.findViewById(R.id.activityCover)).init(activityProperties.getCoverMedia(), null, (SingleFragmentActivity) context, screenWidth);
 
             TextView activityCoverMore = (TextView) view.findViewById(R.id.activityCoverMore);
             if (activityProperties.getMediaItems().size() > 1) {
@@ -109,6 +114,17 @@ public class ActivityFragment extends ActivityBankFragment/* implements Backgrou
 
         if (!activityProperties.getMediaItems().isEmpty()) {
             linearLayout.addHeader(R.string.activity_tab_photos);
+            linearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    List<? extends Media> mediaItems = activityProperties.getMediaItems();
+                    ArrayList<ObjectIdentifierBean> keys = new ArrayList<ObjectIdentifierBean>();
+                    for (Media mediaItem : mediaItems) {
+                        keys.add(new ObjectIdentifierBean(mediaItem));
+                    }
+                    getActivity().startActivity(ActivityGalleryActivity.createIntent(getActivity(), keys));
+                }
+            });
             for (Media media : activityProperties.getMediaItems()) {
                 linearLayout.addBodyText(media.getURI().toString());
             }
@@ -158,7 +174,7 @@ public class ActivityFragment extends ActivityBankFragment/* implements Backgrou
                 ActivityFragment.this.onRead(object, view);
             }
         };
-        getActivityBank().readActivityAsync(mActivityKey, callback, ((SingleFragmentActivity) view.getRootView().getContext()).getBackgroundTasksHandlerThread());
+        getActivityBank().readActivityAsync(mActivityKey, callback, getBackgroundTasksHandlerThread(view));
     }
 
     @Override
