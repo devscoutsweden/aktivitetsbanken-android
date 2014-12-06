@@ -89,7 +89,19 @@ public class ActivityFragment extends ActivityBankFragment/* implements Backgrou
 
         if (activityProperties.getCoverMedia() != null) {
             int screenWidth = getActivity().getResources().getDisplayMetrics().widthPixels;
-            ((AsyncImageView) view.findViewById(R.id.activityCover)).init(new AsyncImageBean(activityProperties.getCoverMedia(), null), (SingleFragmentActivity) context, screenWidth);
+            AsyncImageView asyncImageView = (AsyncImageView) view.findViewById(R.id.activityCover);
+            asyncImageView.init(new AsyncImageBean(activityProperties.getCoverMedia(), null), (SingleFragmentActivity) context, screenWidth);
+            asyncImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    List<? extends Media> mediaItems = activityProperties.getMediaItems();
+                    ArrayList<ObjectIdentifierBean> keys = new ArrayList<ObjectIdentifierBean>();
+                    for (Media mediaItem : mediaItems) {
+                        keys.add(new ObjectIdentifierBean(mediaItem));
+                    }
+                    getActivity().startActivity(GalleryThumbnailsActivity.createIntent(getActivity(), keys));
+                }
+            });
 
             TextView activityCoverMore = (TextView) view.findViewById(R.id.activityCoverMore);
             if (activityProperties.getMediaItems().size() > 1) {
@@ -115,17 +127,6 @@ public class ActivityFragment extends ActivityBankFragment/* implements Backgrou
 
         if (!activityProperties.getMediaItems().isEmpty()) {
             linearLayout.addHeader(R.string.activity_tab_photos);
-            linearLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    List<? extends Media> mediaItems = activityProperties.getMediaItems();
-                    ArrayList<ObjectIdentifierBean> keys = new ArrayList<ObjectIdentifierBean>();
-                    for (Media mediaItem : mediaItems) {
-                        keys.add(new ObjectIdentifierBean(mediaItem));
-                    }
-                    getActivity().startActivity(GalleryThumbnailsActivity.createIntent(getActivity(), keys));
-                }
-            });
             for (Media media : activityProperties.getMediaItems()) {
                 linearLayout.addBodyText(media.getURI().toString());
             }
