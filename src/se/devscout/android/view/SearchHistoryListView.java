@@ -1,7 +1,6 @@
 package se.devscout.android.view;
 
 import android.content.Context;
-import android.widget.ImageView;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.SubtitleActivityFilterVisitor;
 import se.devscout.android.controller.fragment.TitleActivityFilterVisitor;
@@ -11,6 +10,7 @@ import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.model.SearchHistory;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,12 +21,17 @@ public class SearchHistoryListView extends QuickSearchListView<SearchHistoryList
     }
 
     @Override
+    protected URI getImageURI(SearchHistoryListItem item) {
+        return null;
+    }
+
+    @Override
     public SearchTask createSearchTask() {
         return new SearchHistorySearchTask();
     }
 
     @Override
-    protected int getImageResId(SearchHistoryListItem item, ImageView imageView) {
+    protected int getImageResId(SearchHistoryListItem item) {
         return R.drawable.ic_action_search;
     }
 

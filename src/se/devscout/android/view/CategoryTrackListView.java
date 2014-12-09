@@ -1,12 +1,12 @@
 package se.devscout.android.view;
 
 import android.content.Context;
-import android.widget.ImageView;
 import se.devscout.android.CategoryTrack;
 import se.devscout.android.R;
 import se.devscout.android.util.SimpleCategoryFilter;
 import se.devscout.server.api.ActivityFilter;
 
+import java.net.URI;
 import java.util.Arrays;
 
 public class CategoryTrackListView extends QuickSearchListView<CategoryTrack> {
@@ -16,7 +16,12 @@ public class CategoryTrackListView extends QuickSearchListView<CategoryTrack> {
     }
 
     @Override
-    protected int getImageResId(CategoryTrack item, ImageView imageView) {
+    protected URI getImageURI(CategoryTrack item) {
+        return null;
+    }
+
+    @Override
+    protected int getImageResId(CategoryTrack item) {
         return item.getLogoResId();
     }
 

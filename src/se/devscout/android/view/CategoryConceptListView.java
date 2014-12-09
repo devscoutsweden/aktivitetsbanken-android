@@ -1,12 +1,12 @@
 package se.devscout.android.view;
 
 import android.content.Context;
-import android.widget.ImageView;
 import se.devscout.android.CategoryConcept;
 import se.devscout.android.R;
 import se.devscout.android.util.SimpleCategoryFilter;
 import se.devscout.server.api.ActivityFilter;
 
+import java.net.URI;
 import java.util.Arrays;
 
 public class CategoryConceptListView extends QuickSearchListView<CategoryConcept> {
@@ -16,7 +16,12 @@ public class CategoryConceptListView extends QuickSearchListView<CategoryConcept
     }
 
     @Override
-    protected int getImageResId(CategoryConcept item, ImageView imageView) {
+    protected URI getImageURI(CategoryConcept item) {
+        return null;
+    }
+
+    @Override
+    protected int getImageResId(CategoryConcept item) {
         return item.getLogoResId();
     }
 
