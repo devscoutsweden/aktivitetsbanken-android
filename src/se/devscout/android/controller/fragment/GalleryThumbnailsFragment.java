@@ -15,6 +15,7 @@ import se.devscout.android.view.AsyncImageView;
 import se.devscout.server.api.model.Media;
 import se.devscout.server.api.model.MediaKey;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,11 +64,11 @@ public class GalleryThumbnailsFragment extends ActivityBankFragment {
                 AsyncImageView view = (AsyncImageView) convertView;
 
                 Media media = getActivityBank().readMediaItem(getItem(position));
-                view.init(
-                        new AsyncImageBean(media, null),
-                        (SingleFragmentActivity) getActivity(),
-                        mSize,
-                        ImageView.ScaleType.CENTER_CROP);
+                URI uri = getActivityBank().getMediaItemURI(media, mSize, mSize);
+                view.setImage(
+                        new AsyncImageBean(null, uri),
+                        ((SingleFragmentActivity) getActivity()).getBackgroundTasksHandlerThread());
+                view.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 view.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mSize));
 
                 return view;

@@ -11,7 +11,6 @@ import se.devscout.android.util.LogUtil;
 import se.devscout.android.view.AsyncImageBean;
 import se.devscout.android.view.AsyncImageView;
 
-//TODO: Rename to something like AsyncImageFragment
 public class AsyncImageFragment extends ActivityBankFragment implements View.OnClickListener {
 
     public static interface OnClickListener {
@@ -19,7 +18,6 @@ public class AsyncImageFragment extends ActivityBankFragment implements View.OnC
         void onImageClick(View view, AsyncImageBean localActivity, Context ctx);
     }
 
-    //TODO: Implement/use more generic data holder than ActivitiesListItem
     private AsyncImageBean mAsyncImageBean;
     private int mSize;
 
@@ -38,12 +36,10 @@ public class AsyncImageFragment extends ActivityBankFragment implements View.OnC
         }
         AsyncImageView view = new AsyncImageView(getActivity());
 
-        view.init(
+        view.setImage(
                 mAsyncImageBean,
-                (SingleFragmentActivity) getActivity(),
-                mSize,
-                ImageView.ScaleType.FIT_CENTER);
-
+                ((SingleFragmentActivity) getActivity()).getBackgroundTasksHandlerThread());
+        view.setScaleType(ImageView.ScaleType.FIT_CENTER);
         if (mOnClickListener != null) {
             view.setOnClickListener(this);
         }

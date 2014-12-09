@@ -9,9 +9,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.SearchResultActivity;
+import se.devscout.android.controller.activity.SingleFragmentActivity;
 import se.devscout.server.api.ActivityFilter;
 
 import java.io.Serializable;
+import java.net.URI;
 import java.util.List;
 
 public abstract class QuickSearchListView<T extends Serializable> extends NonBlockingSearchView<T> {
@@ -41,10 +43,17 @@ public abstract class QuickSearchListView<T extends Serializable> extends NonBlo
                 titleView.setText(getTitle(item));
                 TextView subtitleView = (TextView) convertView.findViewById(R.id.quickSearchListItemSubtitle);
                 subtitleView.setText(getSubtitle(item));
-                ImageView imageView = (ImageView) convertView.findViewById(R.id.quickSearchListItemImage);
-                int imageResId = getImageResId(item, imageView);
+                AsyncImageView imageView = (AsyncImageView) convertView.findViewById(R.id.quickSearchListItemImage);
+                int imageResId = getImageResId(item);
+                URI imageURI = getImageURI(item);
                 if (imageResId > 0) {
-                    imageView.setImageResource(imageResId);
+                    imageView.setImage(imageResId);
+                }
+                if (imageURI != null) {
+                    URI[] uris = {imageURI};
+//                        int limitSmall = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getContext()).getString("server_download_limit_small", "10")) * 1000;
+                    imageView.setImage(new AsyncImageBean(null, uris), ((SingleFragmentActivity) getContext()).getBackgroundTasksHandlerThread());
+                    imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 }
                 imageView.setVisibility(imageResId > 0 ? View.VISIBLE : View.INVISIBLE);
                 return convertView;
@@ -58,7 +67,9 @@ public abstract class QuickSearchListView<T extends Serializable> extends NonBlo
         getContext().startActivity(SearchResultActivity.createIntent(getContext(), createFilter(item), getSearchResultTitle(item)));
     }
 
-    protected abstract int getImageResId(T item, ImageView imageView);
+    protected abstract URI getImageURI(T item);
+
+    protected abstract int getImageResId(T item);
 
     protected abstract String getTitle(T option);
 

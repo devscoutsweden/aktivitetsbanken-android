@@ -34,13 +34,12 @@
         android:layout_alignLeft="@+id/quickSearchListItemTitle"
         android:layout_below="@+id/quickSearchListItemTitle" />
 
-    <ImageView
+    <se.devscout.android.view.AsyncThumbnailImageView
         android:layout_width="@dimen/uiBlockSize"
         android:layout_height="@dimen/uiBlockSize"
         android:id="@+id/quickSearchListItemImage"
         android:src="@drawable/launcher"
         android:baselineAlignBottom="false"
-        android:scaleType="fitCenter"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_margin="@dimen/defaultMargin" />
