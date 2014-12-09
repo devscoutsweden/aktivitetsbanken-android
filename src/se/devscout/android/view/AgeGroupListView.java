@@ -1,12 +1,12 @@
 package se.devscout.android.view;
 
 import android.content.Context;
-import android.widget.ImageView;
 import se.devscout.android.AgeGroup;
 import se.devscout.android.R;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.server.api.ActivityFilter;
 
+import java.net.URI;
 import java.util.Arrays;
 
 public class AgeGroupListView extends QuickSearchListView<AgeGroup> {
@@ -16,7 +16,12 @@ public class AgeGroupListView extends QuickSearchListView<AgeGroup> {
     }
 
     @Override
-    protected int getImageResId(AgeGroup item, ImageView imageView) {
+    protected URI getImageURI(AgeGroup item) {
+        return null;
+    }
+
+    @Override
+    protected int getImageResId(AgeGroup item) {
         return item.getLogoResId();
     }
 
