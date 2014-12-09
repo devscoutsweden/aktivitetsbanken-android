@@ -82,9 +82,9 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
         queueTask(BackgroundTask.CLEAN_CACHE);
     }
 
-    public void queueGetMediaResource(ImageView imageView, URI uri, int maxFileSize) {
-        LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Wants to display " + uri + " in an image view.");
-        queueTask(BackgroundTask.DISPLAY_IMAGE, imageView, uri, Integer.valueOf(maxFileSize));
+    public void queueGetMediaResource(ImageView imageView, URI[] uris, int maxFileSize) {
+        LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Wants to display one of " + uris + " in an image view.");
+        queueTask(BackgroundTask.DISPLAY_IMAGE, imageView, uris, Integer.valueOf(maxFileSize));
     }
 
     private synchronized void queueTask(BackgroundTask task, Object... parameters) {

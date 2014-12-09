@@ -1,16 +1,15 @@
 package se.devscout.android.view;
 
-import se.devscout.server.api.model.MediaProperties;
-
 import java.io.Serializable;
+import java.net.URI;
 
 public class AsyncImageBean implements Serializable {
     private String mName;
-    private MediaProperties mMedia;
+    private URI[] mURIs;
 
-    public AsyncImageBean(MediaProperties media, String name) {
-        mMedia = media;
+    public AsyncImageBean(String name, URI... uris) {
         mName = name;
+        setURIs(uris);
     }
 
     public String getName() {
@@ -21,11 +20,15 @@ public class AsyncImageBean implements Serializable {
         mName = name;
     }
 
-    public MediaProperties getMedia() {
-        return mMedia;
+    public URI[] getURIs() {
+        return mURIs;
     }
 
-    public void setMedia(MediaProperties media) {
-        mMedia = media;
+    public void setURIs(URI[] uris) {
+        if (uris != null && !(uris.length == 1 && uris[0] == null)) {
+            mURIs = uris;
+        } else {
+            mURIs = null;
+        }
     }
 }

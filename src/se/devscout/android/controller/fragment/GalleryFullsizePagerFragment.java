@@ -4,7 +4,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import se.devscout.android.model.ObjectIdentifierBean;
 import se.devscout.android.view.AsyncImageBean;
-import se.devscout.server.api.model.Media;
 import se.devscout.server.api.model.MediaKey;
 
 import java.util.ArrayList;
@@ -17,8 +16,7 @@ public class GalleryFullsizePagerFragment extends PagerFragment {
             @Override
             public Fragment getItem(int i) {
                 MediaKey key = mKeys.get(i);
-                Media media = getActivityBank().readMediaItem(key);
-                return AsyncImageFragment.create(new AsyncImageBean(media, null), null);
+                return AsyncImageFragment.create(new AsyncImageBean(null, getFullScreenMediaURIs(key)), null);
             }
 
             @Override

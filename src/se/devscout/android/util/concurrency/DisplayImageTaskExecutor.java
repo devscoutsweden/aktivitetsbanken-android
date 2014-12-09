@@ -20,29 +20,38 @@ class DisplayImageTaskExecutor extends ImageCacheTaskExecutor {
 
     @Override
     public Object run(Object[] params, Context context) {
-        final URI uri = (URI) params[1];
+        final URI[] uris = (URI[]) params[1];
         int maxFileSize = params.length > 2 && params[2] != null && params[2] instanceof Integer ? (Integer) params[2] : 10000;
-        if (uri == null) {
+        if (uris == null || uris.length == 0) {
             LogUtil.e(BackgroundTasksHandlerThread.class.getName(), "Nothing to do. No URI for object.");
             return null;
-        }
-        File cacheFile = getCacheFile(uri, context);
-        if (blockedURLs.containsKey(uri)) {
-            LogUtil.i(BackgroundTasksHandlerThread.class.getName(), "Because of earlier failure, downloading " + uri + " will not be reattempted. The earlier failure was caused by a " + blockedURLs.get(uri).getClass().getName() + ".");
-            return blockedURLs.get(uri);
-        } else if (cacheFile.exists()) {
-            LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Retrieved " + uri + " from cache.");
-            return getBitmapFromFile(cacheFile);
         } else {
-            try {
-                Bitmap bitmap = getBitmapFromURI(uri, true, context, maxFileSize);
-                LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Downloaded image from " + uri);
-                return bitmap;
-            } catch (Exception e) {
-                blockedURLs.put(uri, e);
-                LogUtil.i(BackgroundTasksHandlerThread.class.getName(), "Could not (or would not) download " + uri, e);
-                return e;
+            Exception lastException = null;
+            for (URI uri : uris) {
+                if (uri != null) {
+                    File cacheFile = getCacheFile(uri, context);
+                    if (blockedURLs.containsKey(uri)) {
+                        LogUtil.i(BackgroundTasksHandlerThread.class.getName(), "Because of earlier failure, downloading " + uri + " will not be reattempted. The earlier failure was caused by a " + blockedURLs.get(uri).getClass().getName() + ".");
+                        lastException = blockedURLs.get(uri);
+                    } else if (cacheFile.exists()) {
+                        LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Retrieved " + uri + " from cache.");
+                        return getBitmapFromFile(cacheFile);
+                    } else {
+                        try {
+                            Bitmap bitmap = getBitmapFromURI(uri, true, context, maxFileSize);
+                            LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Downloaded image from " + uri);
+                            return bitmap;
+                        } catch (Exception e) {
+                            blockedURLs.put(uri, e);
+                            LogUtil.i(BackgroundTasksHandlerThread.class.getName(), "Could not (or would not) download " + uri, e);
+                            lastException = e;
+                        }
+                    }
+                } else {
+                    LogUtil.e(BackgroundTasksHandlerThread.class.getName(), "Nothing to do. No URI specified.");
+                }
             }
+            return lastException;
         }
     }
 

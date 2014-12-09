@@ -90,7 +90,10 @@ public class ActivityFragment extends ActivityBankFragment/* implements Backgrou
         if (activityProperties.getCoverMedia() != null) {
             int screenWidth = getActivity().getResources().getDisplayMetrics().widthPixels;
             AsyncImageView asyncImageView = (AsyncImageView) view.findViewById(R.id.activityCover);
-            asyncImageView.init(new AsyncImageBean(activityProperties.getCoverMedia(), null), (SingleFragmentActivity) context, screenWidth);
+            AsyncImageBean asyncImageProps = new AsyncImageBean(
+                    null,
+                    getFullScreenMediaURIs(activityProperties.getCoverMedia()));
+            asyncImageView.setImage(asyncImageProps, ((SingleFragmentActivity) context).getBackgroundTasksHandlerThread());
             asyncImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
