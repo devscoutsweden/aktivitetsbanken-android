@@ -15,6 +15,7 @@ import se.devscout.android.controller.activity.SingleFragmentActivity;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.concurrency.BackgroundTask;
 import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
+import se.devscout.android.util.concurrency.DisplayImageTaskParam;
 import se.devscout.android.util.http.ContentTooLongException;
 
 import java.net.URI;
@@ -88,23 +89,21 @@ public class AsyncImageView extends FrameLayout {
     private BackgroundTasksHandlerThread.Listener createTaskListener(final URI[] requestedURIs) {
         return new BackgroundTasksHandlerThread.Listener() {
             @Override
-            public BackgroundTasksHandlerThread.ListenerAction onDone(Object[] parameters, Object response, BackgroundTask task) {
-                if (task == BackgroundTask.DISPLAY_IMAGE) {
-                    boolean isImageViewAndURIReturned = parameters[0] instanceof ImageView && parameters[1] instanceof URI[];
-                    if (isImageViewAndURIReturned) {
-                        ImageView imageView = (ImageView) parameters[0];
-                        URI[] eventURIs = (URI[]) parameters[1];
-                        if (Arrays.equals(eventURIs, (URI[]) imageView.getTag(R.id.imageViewUri))) {
-                            if (response instanceof Bitmap) {
-                                onBitmapResponse((Bitmap) response, imageView);
-                            } else if (response instanceof Exception) {
-                                onExceptionResponse((Exception) response, imageView);
-                            }
-                        } else {
-                            LogUtil.d(AsyncImageView.class.getName(), "Image has been loaded but the image view has been recycled and is now used for another image.");
+            public BackgroundTasksHandlerThread.ListenerAction onDone(Object parameter, Object response, BackgroundTask task) {
+                if (task == BackgroundTask.DISPLAY_IMAGE && parameter instanceof DisplayImageTaskParam) {
+                    DisplayImageTaskParam displayImageTaskParam = (DisplayImageTaskParam) parameter;
+                    ImageView imageView = displayImageTaskParam.getImageView();
+                    URI[] eventURIs = displayImageTaskParam.getURIs();
+                    if (Arrays.equals(eventURIs, (URI[]) imageView.getTag(R.id.imageViewUri))) {
+                        if (response instanceof Bitmap) {
+                            onBitmapResponse((Bitmap) response, imageView);
+                        } else if (response instanceof Exception) {
+                            onExceptionResponse((Exception) response, imageView);
                         }
-                        return Arrays.equals(requestedURIs, eventURIs) ? BackgroundTasksHandlerThread.ListenerAction.REMOVE : BackgroundTasksHandlerThread.ListenerAction.KEEP;
+                    } else {
+                        LogUtil.d(AsyncImageView.class.getName(), "Image has been loaded but the image view has been recycled and is now used for another image.");
                     }
+                    return Arrays.equals(requestedURIs, eventURIs) ? BackgroundTasksHandlerThread.ListenerAction.REMOVE : BackgroundTasksHandlerThread.ListenerAction.KEEP;
                 }
                 return BackgroundTasksHandlerThread.ListenerAction.KEEP;
             }

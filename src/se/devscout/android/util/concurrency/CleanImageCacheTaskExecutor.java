@@ -8,7 +8,7 @@ import java.io.FilenameFilter;
 import java.util.Arrays;
 import java.util.Comparator;
 
-public class CleanImageCacheTaskExecutor extends ImageCacheTaskExecutor {
+public class CleanImageCacheTaskExecutor extends ImageCacheTaskExecutor<Void, Void> {
 
     private static final int MINIMUM_TIME_BETWEEN_CLEANUP = 5 * 60 * 1000; // 5 minutes
     private static final Comparator<File> SORT_NEWEST_FIRST = new Comparator<File>() {
@@ -33,7 +33,7 @@ public class CleanImageCacheTaskExecutor extends ImageCacheTaskExecutor {
     }
 
     @Override
-    public Object run(Object[] params, Context context) {
+    public Void run(Void param, Context context) {
         if (System.currentTimeMillis() - lastRun < minimumTimeBetweenCleanup) {
             LogUtil.d(CleanImageCacheTaskExecutor.class.getName(), "Will not purge image cache since it has been less than one minute since the last clean-up.");
             return null;

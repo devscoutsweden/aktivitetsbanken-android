@@ -1,7 +1,6 @@
 package se.devscout.android.util.concurrency;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import se.devscout.android.model.repo.remote.RemoteActivityRepoImpl;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.http.UnauthorizedException;
@@ -9,9 +8,9 @@ import se.devscout.android.util.http.UnhandledHttpResponseCodeException;
 
 import java.io.IOException;
 
-class SetFavouritesTaskExecutor implements BackgroundTasksHandlerThread.BackgroundTaskExecutor {
+class SetFavouritesTaskExecutor implements BackgroundTasksHandlerThread.BackgroundTaskExecutor<Void, Void> {
     @Override
-    public Bitmap run(Object[] params, Context context) {
+    public Void run(Void param, Context context) {
         try {
             RemoteActivityRepoImpl.getInstance(context).sendSetFavouritesRequest();
         } catch (IOException e) {

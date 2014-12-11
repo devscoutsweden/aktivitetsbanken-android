@@ -63,8 +63,8 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         mContext = ctx;
         mBackgroundTasksListener = new BackgroundTasksHandlerThread.Listener() {
             @Override
-            public BackgroundTasksHandlerThread.ListenerAction onDone(Object[] parameters, Object response, BackgroundTask task) {
-                if (task == BackgroundTask.READ_ACTIVITY) {
+            public BackgroundTasksHandlerThread.ListenerAction onDone(Object parameter, Object response, BackgroundTask task) {
+                if (task == BackgroundTask.READ_ACTIVITY && response instanceof List) {
                     List<ActivityBean> activities = (List<ActivityBean>) response;
                     LogUtil.d(RemoteActivityRepoImpl.class.getName(), activities.size() + " activities have been read.");
                     for (Activity activity : activities) {

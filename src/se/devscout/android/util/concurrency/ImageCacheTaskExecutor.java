@@ -13,7 +13,7 @@ import java.net.URI;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public abstract class ImageCacheTaskExecutor implements BackgroundTasksHandlerThread.BackgroundTaskExecutor {
+public abstract class ImageCacheTaskExecutor<R, P> implements BackgroundTasksHandlerThread.BackgroundTaskExecutor<R, P> {
     protected static final String IMAGE_CACHE_FILENAME_PREFIX = "image-cache-";
 
     protected File getCacheFile(URI uri, Context context) {

@@ -15,13 +15,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-class DisplayImageTaskExecutor extends ImageCacheTaskExecutor {
+class DisplayImageTaskExecutor extends ImageCacheTaskExecutor<Object, DisplayImageTaskParam> {
     private Map<URI, Exception> blockedURLs = Collections.synchronizedMap(new HashMap<URI, Exception>());
 
     @Override
-    public Object run(Object[] params, Context context) {
-        final URI[] uris = (URI[]) params[1];
-        int maxFileSize = params.length > 2 && params[2] != null && params[2] instanceof Integer ? (Integer) params[2] : 10000;
+    public Object run(DisplayImageTaskParam param, Context context) {
+        final URI[] uris = param.getURIs();
+        int maxFileSize = param.getMaxFileSize() > 0 ? param.getMaxFileSize() : 10000;
         if (uris == null || uris.length == 0) {
             LogUtil.e(BackgroundTasksHandlerThread.class.getName(), "Nothing to do. No URI for object.");
             return null;

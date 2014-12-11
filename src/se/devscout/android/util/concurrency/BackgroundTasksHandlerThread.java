@@ -16,8 +16,8 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
     private int taskCount;
     private List<Listener> mListeners = new ArrayList<Listener>();
 
-    public static interface BackgroundTaskExecutor {
-        Object run(Object[] params, Context context);
+    public static interface BackgroundTaskExecutor<R, P> {
+        R run(P param, Context context);
     }
 
 
@@ -40,7 +40,7 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
     }
 
     public interface Listener {
-        ListenerAction onDone(Object[] parameters, Object response, BackgroundTask task);
+        ListenerAction onDone(Object parameter, Object response, BackgroundTask task);
     }
 
     public enum ListenerAction {
@@ -66,10 +66,10 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
         }
     }
 
-    private Map<Integer, Object[]> mTaskParameters = Collections.synchronizedMap(new HashMap<Integer, Object[]>());
+    private Map<Integer, Object> mTaskParameters = Collections.synchronizedMap(new HashMap<Integer, Object>());
 
     public void queueSetFavourites() {
-        queueTask(BackgroundTask.SET_FAVOURITES);
+        queueTask(BackgroundTask.SET_FAVOURITES, null);
     }
 
     public synchronized void queueReadActivity(final ActivityKey activityKey, final RemoteActivityRepoImpl remoteActivityRepo) {
@@ -79,18 +79,18 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
     }
 
     public void queueCleanCache() {
-        queueTask(BackgroundTask.CLEAN_CACHE);
+        queueTask(BackgroundTask.CLEAN_CACHE, null);
     }
 
     public void queueGetMediaResource(ImageView imageView, URI[] uris, int maxFileSize) {
         LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Wants to display one of " + uris + " in an image view.");
-        queueTask(BackgroundTask.DISPLAY_IMAGE, imageView, uris, Integer.valueOf(maxFileSize));
+        queueTask(BackgroundTask.DISPLAY_IMAGE, new DisplayImageTaskParam(imageView, Integer.valueOf(maxFileSize), uris));
     }
 
-    private synchronized void queueTask(BackgroundTask task, Object... parameters) {
+    private synchronized void queueTask(BackgroundTask task, Object parameter) {
         if (!isClosed()) {
             taskCount++;
-            mTaskParameters.put(taskCount, parameters);
+            mTaskParameters.put(taskCount, parameter);
             if (mHandler == null) {
                 LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Handler not yet initialised");
                 mPendingTasks.put(taskCount, task);
@@ -129,7 +129,7 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
         }
     }
 
-    private synchronized void fireOnDone(Object[] parameters, Object response, BackgroundTask task) {
+    private synchronized void fireOnDone(Object parameters, Object response, BackgroundTask task) {
 //        LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Number of listeners: " + mListeners.size());
         if (!isClosed()) {
 
@@ -147,7 +147,7 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
 
         @Override
         public void handleMessage(final Message msg) {
-            final Object[] parameters;
+            final Object parameters;
             Object obj = msg.obj;
             final BackgroundTask task = BackgroundTask.values()[msg.what];
 //            LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Background task " + obj + ": " + task.name() + " STARTED");
