@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import se.devscout.android.R;
+import se.devscout.android.controller.activity.SingleFragmentActivity;
 import se.devscout.android.util.DialogUtil;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.PreferencesUtil;
@@ -96,6 +97,13 @@ public class StartWidgetFragment extends ActivityBankFragment implements Activit
         getActivityBank().addListener(this);
 
         final View view = inflater.inflate(R.layout.start, container, false);
+
+        view.findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((SingleFragmentActivity)getActivity()).signInWithGplus();
+            }
+        });
 
         loadSelectedWidgets(inflater, view);
 

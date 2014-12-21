@@ -13,10 +13,7 @@ import se.devscout.android.controller.fragment.TitleActivityFilterVisitor;
 import se.devscout.android.model.*;
 import se.devscout.android.model.repo.sql.LocalObjectRefreshness;
 import se.devscout.android.model.repo.sql.SQLiteActivityRepo;
-import se.devscout.android.util.InstallationProperties;
-import se.devscout.android.util.LogUtil;
-import se.devscout.android.util.PreferencesUtil;
-import se.devscout.android.util.StopWatch;
+import se.devscout.android.util.*;
 import se.devscout.android.util.concurrency.BackgroundTask;
 import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
 import se.devscout.android.util.http.*;
@@ -42,6 +39,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     private static final String HTTP_HEADER_X_ANDROID_APP_INSTALLATION_ID = "X-AndroidAppInstallationId";
     private static final SimpleDateFormat API_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'");
     private static final String HTTP_HEADER_ACCEPT_ENCODING = "Accept-Encoding";
+    private static final String HTTP_HEADER_API_KEY = "X-ScoutAPI-APIKey";
     private static RemoteActivityRepoImpl ourInstance;
     private final Context mContext;
 
@@ -49,6 +47,8 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     private BackgroundTasksHandlerThread.Listener mBackgroundTasksListener;
     private List<ObjectIdentifierBean> mActivitiesWhichAreOld = new ArrayList<ObjectIdentifierBean>();
     private List<CategoryBean> mCachedCategories;
+    private String authToken;
+    private String authType;
 
 
     public static RemoteActivityRepoImpl getInstance(Context ctx) {
@@ -165,6 +165,34 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public boolean isLoggedIn() {
+        return authToken != null && authType != null;
+    }
+
+    @Override
+    public void logOut() {
+        authType = null;
+        authToken = null;
+    }
+
+    @Override
+    public void logIn(IdentityProvider provider, String data) {
+        switch (provider) {
+            case GOOGLE:
+            case APIKEY:
+                setAuthData(provider, data);
+                break;
+            default:
+                throw new UnsupportedOperationException("Does not support identity provider " + provider);
+        }
+    }
+
+    private void setAuthData(IdentityProvider provider, String data) {
+        authToken = data;
+        authType = provider.name().toLowerCase();
     }
 
     @Override
@@ -730,30 +758,30 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
             return readUrl(urlSpec, body, method);
         } catch (UnauthorizedException e) {
             LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Server said that user is unauthorized");
-            if (getAPIKey() == null) {
-                // User is unauthorized and has no API key, so the first this to try is to create an API key!
-                LogUtil.i(RemoteActivityRepoImpl.class.getName(), "Server said that user is unauthorized and there is no API key assigned to the app. Try to create one.");
-                synchronized (this) {
-                    /*
-                     * Double-check condition in case multiple "search threads"
-                     * try to send unauthorized requests at the same time. Both
-                     * thread will eventually enter the synchronized block but
-                     * the second one will exit immediately since the first
-                     * thread (presumably) created an API key and stored it.
-                     */
-                    if (getAPIKey() == null) {
-                        if (createAnonymousAPIUser()) {
-                            LogUtil.i(RemoteActivityRepoImpl.class.getName(), "API " + getAPIKey() + " key has been created.");
-                        } else {
-                            LogUtil.i(RemoteActivityRepoImpl.class.getName(), "Could not create API key");
-                        }
-                    }
-                }
-                if (getAPIKey() != null) {
-                    LogUtil.d(RemoteActivityRepoImpl.class.getName(), "API key (" + getAPIKey() + ") exists and request will be resent.");
-                    return readUrl(urlSpec, body, method);
-                }
-            }
+//            if (getAPIKey() == null) {
+//                // User is unauthorized and has no API key, so the first this to try is to create an API key!
+//                LogUtil.i(RemoteActivityRepoImpl.class.getName(), "Server said that user is unauthorized and there is no API key assigned to the app. Try to create one.");
+//                synchronized (this) {
+//                    /*
+//                     * Double-check condition in case multiple "search threads"
+//                     * try to send unauthorized requests at the same time. Both
+//                     * thread will eventually enter the synchronized block but
+//                     * the second one will exit immediately since the first
+//                     * thread (presumably) created an API key and stored it.
+//                     */
+//                    if (getAPIKey() == null) {
+//                        if (createAnonymousAPIUser()) {
+//                            LogUtil.i(RemoteActivityRepoImpl.class.getName(), "API " + getAPIKey() + " key has been created.");
+//                        } else {
+//                            LogUtil.i(RemoteActivityRepoImpl.class.getName(), "Could not create API key");
+//                        }
+//                    }
+//                }
+//                if (getAPIKey() != null) {
+//                    LogUtil.d(RemoteActivityRepoImpl.class.getName(), "API key (" + getAPIKey() + ") exists and request will be resent.");
+//                    return readUrl(urlSpec, body, method);
+//                }
+//            }
             throw e;
         }
     }
@@ -766,12 +794,11 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         request.setHeader(HTTP_HEADER_X_ANDROID_APP_INSTALLATION_ID, installationId);
         request.setHeader(HTTP_HEADER_ACCEPT_ENCODING, HttpRequest.HEADER_CONTENT_ENCODING_GZIP);
 
-        String apiKey = getAPIKey();
-        if (apiKey != null) {
-            request.setHeader(HTTP_HEADER_AUTHORIZATION, "Token token=\"" + apiKey + "\"");
+        if (authToken != null) {
+            request.setHeader(HTTP_HEADER_AUTHORIZATION, "Token token=\"" + authToken + "\", type=\""+authType+"\"");
         }
 
-        LogUtil.d(HttpRequest.class.getName(), "Sending request to " + url.toExternalForm() + " (API key: " + apiKey + ")");
+        LogUtil.d(HttpRequest.class.getName(), "Sending request to " + url.toExternalForm() + " (auth. type: " + authType + ", auth. token: " + authToken + ")");
 
         if (body != null) {
             request.setHeader(HTTP_HEADER_CONTENT_TYPE, "application/json; charset=" + DEFAULT_REQUEST_BODY_ENCODING);
@@ -779,13 +806,29 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
 
         RequestBodyStreamHandler requestHandler = new StringRequestBodyStreamHandler(body, Charset.forName(DEFAULT_REQUEST_BODY_ENCODING));
         ResponseStreamHandler<byte[]> responseHandler = new ByteArrayResponseStreamHandler();
-        HttpResponse<byte[]> response = request.run(responseHandler, requestHandler);
+        HttpResponse<byte[]> response = null;
+        try {
+            response = request.run(responseHandler, requestHandler, new ResponseHeadersValidator() {
+                @Override
+                public void validate(Map<String, List<String>> headers) throws HeaderException {
+                    for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
+                        if (!entry.getValue().isEmpty() && HTTP_HEADER_API_KEY.equals(entry.getKey())) {
+                            setAuthData(IdentityProvider.APIKEY, entry.getValue().get(0));
+                        }
+                    }
+                }
+            });
+        } catch (HeaderException e) {
+            // Not possible since above ResponseHeadersValidator never throws such HeaderException
+        }
         return response.getBody();
     }
 
+/*
     private String getAPIKey() {
         return PreferencesUtil.getInstance(mContext).getCurrentUser() != null ? mDatabaseHelper.readUser(PreferencesUtil.getInstance(mContext).getCurrentUser()).getAPIKey() : null;
     }
+*/
 
     public OnReadDoneCallback<Activity> invokeActivityReadCallback(Activity activity) {
         synchronized (mActivityReadRequestCallbacks) {

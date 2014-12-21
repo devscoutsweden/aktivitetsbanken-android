@@ -5,23 +5,6 @@
     android:layout_height="fill_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
-
-
-        android:divider="@null"
-        android:dividerHeight="10dp"
-        android:listSelector="@android:color/transparent"
-        android:cacheColorHint="@android:color/transparent"
-        android:headerDividersEnabled="true"
-        android:footerDividersEnabled="true"
-
-
-        android:id="@+id/startList"
-        android:clickable="true" />
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -30,9 +13,22 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:baselineAligned="false"
-            android:id="@+id/start_widgets_container"></LinearLayout>
+            android:layout_height="fill_parent">
+
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/sign_in_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:id="@+id/start_widgets_container">
+
+            </LinearLayout>
+        </LinearLayout>
     </ScrollView>
 
 </FrameLayout>
