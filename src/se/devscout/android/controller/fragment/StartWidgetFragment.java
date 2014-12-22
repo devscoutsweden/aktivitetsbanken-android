@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import se.devscout.android.R;
-import se.devscout.android.controller.activity.SingleFragmentActivity;
 import se.devscout.android.util.DialogUtil;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.PreferencesUtil;
@@ -37,7 +36,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.util.*;
-
+//TODO: It might be cleaner to create an AbstractActivityBankListener instead of implementing ActivityBankListener
 public class StartWidgetFragment extends ActivityBankFragment implements ActivityBankListener {
 
     private static final String PREFS_KEY_WIDGET_IDS = "homeWidgets";
@@ -65,6 +64,14 @@ public class StartWidgetFragment extends ActivityBankFragment implements Activit
         synchronized (this) {
             mRefreshResultOnResume = true;
         }
+    }
+
+    @Override
+    public void onLogIn() {
+    }
+
+    @Override
+    public void onLogOut() {
     }
 
     @Override
@@ -98,12 +105,14 @@ public class StartWidgetFragment extends ActivityBankFragment implements Activit
 
         final View view = inflater.inflate(R.layout.start, container, false);
 
+/*
         view.findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ((SingleFragmentActivity)getActivity()).signInWithGplus();
             }
         });
+*/
 
         loadSelectedWidgets(inflater, view);
 

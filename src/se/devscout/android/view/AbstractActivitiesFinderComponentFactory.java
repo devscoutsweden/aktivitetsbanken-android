@@ -31,6 +31,7 @@ public abstract class AbstractActivitiesFinderComponentFactory implements Serial
             }
         });
         ACTIVITIES_FINDERS.add(new WelcomeMessageWidgetSpecification(R.string.welcomeWidgetTitle, R.drawable.ic_drawer));
+        ACTIVITIES_FINDERS.add(new LogInWidgetSpecification(R.string.welcomeWidgetTitle, R.drawable.ic_drawer));
         ACTIVITIES_FINDERS.add(new SearchActivitiesFinderComponentFactory(R.string.startTabSearch, R.drawable.ic_drawer));
         ACTIVITIES_FINDERS.add(new SpontaneousActivitiesFinderComponentFactory(R.string.startTabSpontaneousActivity, R.drawable.ic_drawer));
         ACTIVITIES_FINDERS.add(new FavouriteActivitiesFinderComponentFactory(R.string.startTabFavourites, R.drawable.ic_action_important));

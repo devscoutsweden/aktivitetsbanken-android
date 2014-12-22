@@ -13,7 +13,7 @@ import se.devscout.server.api.model.SearchHistory;
 import se.devscout.server.api.model.UserKey;
 
 import java.util.List;
-
+//TODO: It might be cleaner to create an AbstractActivityBankListener instead of implementing ActivityBankListener
 public class SearchHistoryListFragment extends QuickSearchListFragment<SearchHistoryListItem, SearchHistoryListView> implements ActivityBankListener {
 
     private boolean mRefreshResultOnResume = false;
@@ -59,5 +59,13 @@ public class SearchHistoryListFragment extends QuickSearchListFragment<SearchHis
 
     @Override
     public void onFavouriteChange(ActivityKey activityKey, UserKey userKey, boolean isFavouriteNow) {
+    }
+
+    @Override
+    public void onLogIn() {
+    }
+
+    @Override
+    public void onLogOut() {
     }
 }

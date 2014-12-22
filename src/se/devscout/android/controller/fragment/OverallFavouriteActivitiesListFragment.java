@@ -10,7 +10,7 @@ import se.devscout.server.api.ActivityBankListener;
 import se.devscout.server.api.model.ActivityKey;
 import se.devscout.server.api.model.SearchHistory;
 import se.devscout.server.api.model.UserKey;
-
+//TODO: It might be cleaner to create an AbstractActivityBankListener instead of implementing ActivityBankListener
 public class OverallFavouriteActivitiesListFragment extends ActivitiesListFragment implements ActivityBankListener {
 
     private boolean mRefreshResultOnResume = false;
@@ -64,6 +64,14 @@ public class OverallFavouriteActivitiesListFragment extends ActivitiesListFragme
         synchronized (this) {
             mRefreshResultOnResume = true;
         }
+    }
+
+    @Override
+    public void onLogIn() {
+    }
+
+    @Override
+    public void onLogOut() {
     }
 
     public static OverallFavouriteActivitiesListFragment create() {

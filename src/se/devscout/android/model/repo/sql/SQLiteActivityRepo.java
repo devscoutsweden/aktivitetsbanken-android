@@ -200,6 +200,18 @@ public class SQLiteActivityRepo implements ActivityBank {
         }
     }
 
+    protected void fireLoggedIn() {
+        for (ActivityBankListener listener : mListeners) {
+            listener.onLogIn();
+        }
+    }
+
+    protected void fireLoggedOut() {
+        for (ActivityBankListener listener : mListeners) {
+            listener.onLogOut();
+        }
+    }
+
     public void resetDatabase(boolean addTestData) {
         mDatabaseHelper.dropDatabase(addTestData);
     }

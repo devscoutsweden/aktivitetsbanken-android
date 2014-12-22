@@ -13,4 +13,12 @@ public abstract class AbstractActivityBankListener implements ActivityBankListen
     @Override
     public void onFavouriteChange(ActivityKey activityKey, UserKey userKey, boolean isFavouriteNow) {
     }
+
+    @Override
+    public void onLogIn() {
+    }
+
+    @Override
+    public void onLogOut() {
+    }
 }
