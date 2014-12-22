@@ -40,6 +40,10 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     private static final SimpleDateFormat API_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'");
     private static final String HTTP_HEADER_ACCEPT_ENCODING = "Accept-Encoding";
     private static final String HTTP_HEADER_API_KEY = "X-ScoutAPI-APIKey";
+
+    private static final String API_TOKEN_TYPE_API_KEY = "apikey";
+    private static final String API_TOKEN_TYPE_GOOGLE = "google";
+
     private static RemoteActivityRepoImpl ourInstance;
     private final Context mContext;
 
@@ -47,8 +51,9 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     private BackgroundTasksHandlerThread.Listener mBackgroundTasksListener;
     private List<ObjectIdentifierBean> mActivitiesWhichAreOld = new ArrayList<ObjectIdentifierBean>();
     private List<CategoryBean> mCachedCategories;
-    private String authToken;
-    private String authType;
+    //    private String authToken;
+//    private String authType;
+    private HashMap<Long, Credentials> mCredentialsMap = new HashMap<Long, Credentials>();
 
 
     public static RemoteActivityRepoImpl getInstance(Context ctx) {
@@ -169,30 +174,60 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
 
     @Override
     public boolean isLoggedIn() {
-        return authToken != null && authType != null;
+        return mCredentialsMap.containsKey(getCurrentUserId());
     }
 
     @Override
     public void logOut() {
-        authType = null;
-        authToken = null;
+        mCredentialsMap.remove(getCurrentUserId());
+        fireLoggedOut();
     }
 
     @Override
     public void logIn(IdentityProvider provider, String data) {
         switch (provider) {
             case GOOGLE:
-            case APIKEY:
-                setAuthData(provider, data);
+                mCredentialsMap.put(
+                        getCurrentUserId(),
+                        new Credentials(data, API_TOKEN_TYPE_GOOGLE));
+
+                /*
+                 * Requesting the user profile is actually just a way for for the server to "redeem"
+                 * the Google id token before it expires (in case the user starts the app and the app
+                 * acquires an id token but then does not make API requests for a long time).
+                 *
+                 * The server will return the user's API key in the response headers. The user, after
+                 * the Google id token has been verified, will be created if not create before.
+                 */
+                // TODO: Is it necessary to make a "dummy request" in order to exchange id token for API key? Is the above scenario realistic?
+                AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+                    {
+                        LogUtil.initExceptionLogging(mContext);
+                    }
+
+                    @Override
+                    protected Void doInBackground(Void... voids) {
+                        try {
+                            String uri = "http://" + getRemoteHost() + "/api/v1/users/profile";
+                            readUrl(uri, null, HttpMethod.GET);
+                        } catch (IOException e) {
+                            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server", e);
+                        } catch (UnauthorizedException e) {
+                            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server", e);
+                        } catch (UnhandledHttpResponseCodeException e) {
+                            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server", e);
+                        } catch (Throwable e) {
+                            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server due to unexpected problem.", e);
+                        }
+                        return null;
+                    }
+                };
+                task.execute();
                 break;
             default:
                 throw new UnsupportedOperationException("Does not support identity provider " + provider);
         }
-    }
-
-    private void setAuthData(IdentityProvider provider, String data) {
-        authToken = data;
-        authType = provider.name().toLowerCase();
+        fireLoggedIn();
     }
 
     @Override
@@ -794,11 +829,14 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         request.setHeader(HTTP_HEADER_X_ANDROID_APP_INSTALLATION_ID, installationId);
         request.setHeader(HTTP_HEADER_ACCEPT_ENCODING, HttpRequest.HEADER_CONTENT_ENCODING_GZIP);
 
-        if (authToken != null) {
-            request.setHeader(HTTP_HEADER_AUTHORIZATION, "Token token=\"" + authToken + "\", type=\""+authType+"\"");
+        Credentials credentials = mCredentialsMap.get(getCurrentUserId());
+        if (credentials != null) {
+            String authHeaderValue = "Token token=\"" + credentials.getToken() + "\", type=\"" + credentials.getType() + "\"";
+            request.setHeader(HTTP_HEADER_AUTHORIZATION, authHeaderValue);
+            LogUtil.d(HttpRequest.class.getName(), "Header " + HTTP_HEADER_AUTHORIZATION + ": " + authHeaderValue);
         }
 
-        LogUtil.d(HttpRequest.class.getName(), "Sending request to " + url.toExternalForm() + " (auth. type: " + authType + ", auth. token: " + authToken + ")");
+        LogUtil.d(HttpRequest.class.getName(), "Sending request to " + url.toExternalForm());
 
         if (body != null) {
             request.setHeader(HTTP_HEADER_CONTENT_TYPE, "application/json; charset=" + DEFAULT_REQUEST_BODY_ENCODING);
@@ -813,7 +851,9 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
                 public void validate(Map<String, List<String>> headers) throws HeaderException {
                     for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
                         if (!entry.getValue().isEmpty() && HTTP_HEADER_API_KEY.equals(entry.getKey())) {
-                            setAuthData(IdentityProvider.APIKEY, entry.getValue().get(0));
+                            mCredentialsMap.put(
+                                    getCurrentUserId(),
+                                    new Credentials(entry.getValue().get(0), API_TOKEN_TYPE_API_KEY));
                         }
                     }
                 }
@@ -822,6 +862,10 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
             // Not possible since above ResponseHeadersValidator never throws such HeaderException
         }
         return response.getBody();
+    }
+
+    private Long getCurrentUserId() {
+        return PreferencesUtil.getInstance(mContext).getCurrentUser().getId();
     }
 
 /*
