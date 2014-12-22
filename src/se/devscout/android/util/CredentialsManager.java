@@ -1,6 +1,7 @@
 package se.devscout.android.util;
 
 import android.accounts.AccountManager;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -11,6 +12,8 @@ import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
+import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -25,6 +28,7 @@ import java.io.IOException;
 public class CredentialsManager implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final int RC_SIGN_IN = 0;
     private static final int RC_CHOOSE_ACCOUNT = 1000;
+    private static final int REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR = 1001;
     private static final String WEB_APP_CLIENT_ID = "551713736410-q55omfobgs9j8ia4ae3r7sbi20vcvt49.apps.googleusercontent.com";
 
     private final SingleFragmentActivity mActivity;
@@ -102,34 +106,58 @@ public class CredentialsManager implements GoogleApiClient.ConnectionCallbacks, 
             if (resultCode == FragmentActivity.RESULT_OK) {
                 final String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
                 if (accountName != null) {
-                    requestGoogleIDToken(accountName);
                     mGoogleAccountName = accountName;
                     getPreferences().edit().putString("mGoogleAccountName", mGoogleAccountName).commit();
+                    requestGoogleIDToken();
                 } else {
                     startChooseAccountActivity();
                 }
             } else if (resultCode == FragmentActivity.RESULT_CANCELED) {
                 Toast.makeText(mActivity, R.string.pick_account, Toast.LENGTH_SHORT).show();
             }
+        } else if (requestCode == REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR) {
+            requestGoogleIDToken();
         }
-
     }
 
-    private void requestGoogleIDToken(final String accountName) {
+    private void requestGoogleIDToken() {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
                 try {
                     String scope = "audience:server:client_id:" + WEB_APP_CLIENT_ID;
-                    String token = GoogleAuthUtil.getToken(mActivity, accountName, scope);
+                    String token = GoogleAuthUtil.getToken(mActivity, mGoogleAccountName, scope);
                     if (token != null) {
                         IdentityProvider provider = IdentityProvider.GOOGLE;
                         ActivityBankFactory.getInstance(mActivity).logIn(provider, token);
                     }
                 } catch (IOException e) {
                     LogUtil.e(SingleFragmentActivity.class.getName(), "Could not get Google ID token", e);
-                } catch (GoogleAuthException e) {
-                    LogUtil.e(SingleFragmentActivity.class.getName(), "Could not get Google ID token", e);
+                } catch (final GoogleAuthException e) {
+                    mActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (e instanceof GooglePlayServicesAvailabilityException) {
+                                GooglePlayServicesAvailabilityException exception = (GooglePlayServicesAvailabilityException) e;
+                                // The Google Play services APK is old, disabled, or not present.
+                                // Show a dialog created by Google Play services that allows
+                                // the user to update the APK
+                                int statusCode = exception.getConnectionStatusCode();
+                                Dialog dialog = GooglePlayServicesUtil.getErrorDialog(statusCode,
+                                        mActivity,
+                                        REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR);
+                                dialog.show();
+                            } else if (e instanceof UserRecoverableAuthException) {
+                                UserRecoverableAuthException exception = (UserRecoverableAuthException) e;
+                                // Unable to authenticate, such as when the user has not yet granted
+                                // the app access to the account, but the user can fix this.
+                                // Forward the user to an activity in Google Play services.
+                                Intent intent = exception.getIntent();
+                                mActivity.startActivityForResult(intent, REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR);
+                            }
+                            LogUtil.e(SingleFragmentActivity.class.getName(), "Could not get Google ID token", e);
+                        }
+                    });
                 }
                 return null;
             }
@@ -159,7 +187,7 @@ public class CredentialsManager implements GoogleApiClient.ConnectionCallbacks, 
             if (mGoogleAccountName == null) {
                 startChooseAccountActivity();
             } else {
-                requestGoogleIDToken(mGoogleAccountName);
+                requestGoogleIDToken();
             }
         }
     }
