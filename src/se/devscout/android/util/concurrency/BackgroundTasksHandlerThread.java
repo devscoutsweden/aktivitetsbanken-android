@@ -68,10 +68,6 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
 
     private Map<Integer, Object> mTaskParameters = Collections.synchronizedMap(new HashMap<Integer, Object>());
 
-    public void queueSetFavourites() {
-        queueTask(BackgroundTask.SET_FAVOURITES, null);
-    }
-
     public synchronized void queueReadActivity(final ActivityKey activityKey, final RemoteActivityRepoImpl remoteActivityRepo) {
         remoteActivityRepo.addPendingActivityReadRequests(activityKey);
 

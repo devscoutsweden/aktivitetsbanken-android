@@ -369,7 +369,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         };
     }
 
-    public void sendSetFavouritesRequest() throws IOException, UnauthorizedException, UnhandledHttpResponseCodeException {
+    private void sendSetFavouritesRequest() throws IOException, UnauthorizedException, UnhandledHttpResponseCodeException {
         List<ActivityBean> favourites = super.findActivity(getFilterFactory().createIsUserFavouriteFilter(PreferencesUtil.getInstance(mContext).getCurrentUser()));
 //        Set<ActivityKey> favourites = mDatabaseHelper.getFavourites(PreferencesUtil.getInstance(mContext).getCurrentUser());
         JSONArray jsonArray = new JSONArray();
