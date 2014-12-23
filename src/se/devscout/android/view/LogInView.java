@@ -43,7 +43,7 @@ public class LogInView extends LinearLayout implements ActivityBankListener {
     private void init(final Context context, boolean isListContentHeight) {
         LinearLayout view = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.log_in_toast, this, true);
 
-        SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
+        SignInButton signInButton = (SignInButton) findViewById(R.id.auth_google_sign_in_button);
         signInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,8 +73,8 @@ public class LogInView extends LinearLayout implements ActivityBankListener {
     }
 
     private void refresh(State state) {
-        findViewById(R.id.auth_log_out_container).setVisibility(state == State.LOGGED_OUT || state == State.WORKING ? GONE : VISIBLE);
-        findViewById(R.id.auth_log_in_container).setVisibility(state == State.LOGGED_IN || state == State.WORKING ? GONE : VISIBLE);
+        findViewById(R.id.auth_logged_in_container).setVisibility(state == State.LOGGED_OUT || state == State.WORKING ? GONE : VISIBLE);
+        findViewById(R.id.auth_logged_out_container).setVisibility(state == State.LOGGED_IN || state == State.WORKING ? GONE : VISIBLE);
         findViewById(R.id.auth_progress_container).setVisibility(state == State.WORKING ? VISIBLE : GONE);
     }
 

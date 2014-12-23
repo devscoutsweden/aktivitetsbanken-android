@@ -9,19 +9,19 @@
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/auth_log_in_container"
+        android:id="@+id/auth_logged_out_container"
         android:layout_gravity="center_horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/auth_log_in_promo"
+            android:text="@string/auth_logged_out_promo"
             android:width="@dimen/textColumnWidth"
             android:gravity="center_horizontal"
             android:layout_gravity="center_horizontal" />
 
         <com.google.android.gms.common.SignInButton
-            android:id="@+id/sign_in_button"
+            android:id="@+id/auth_google_sign_in_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal" />
@@ -43,13 +43,13 @@
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/auth_log_out_container"
+        android:id="@+id/auth_logged_in_container"
         android:layout_gravity="center_horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Du är inloggad som %1$s."
+            android:text="@string/auth_logged_in_promo"
             android:id="@+id/textView"
             android:layout_gravity="center_horizontal" />
 
