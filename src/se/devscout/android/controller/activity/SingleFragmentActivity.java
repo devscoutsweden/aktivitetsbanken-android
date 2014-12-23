@@ -87,14 +87,14 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
         if (mActivityBackAsyncExceptionListener == null) {
             mActivityBackAsyncExceptionListener = new AbstractActivityBankListener() {
                 @Override
-                public void onAsyncException(Exception e) {
+                public void onAsyncException(final Exception e) {
                     if (e instanceof UnauthorizedException) {
 //                    UnauthorizedException exception = (UnauthorizedException) e;
 
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(SingleFragmentActivity.this, "Kunde inte spara eftersom du inte är inloggad.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(SingleFragmentActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                             }
                         });
                     }

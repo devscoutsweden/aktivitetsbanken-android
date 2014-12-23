@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import se.devscout.android.R;
 import se.devscout.android.controller.fragment.TitleActivityFilterVisitor;
 import se.devscout.android.model.*;
 import se.devscout.android.model.repo.sql.LocalObjectRefreshness;
@@ -358,7 +359,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
                 } catch (IOException e) {
                     LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server", e);
                 } catch (UnauthorizedException e) {
-                    fireAsyncException(e);
+                    fireAsyncException(new UnauthorizedException(mContext.getString(R.string.repo_unauthorized_could_not_save_favourites), e));
                     LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server", e);
                 } catch (UnhandledHttpResponseCodeException e) {
                     LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server", e);

@@ -189,4 +189,7 @@
     <string name="pick_account">Tyvärr, men du måste välja ett konto för att
         kunna logga in
     </string>
+    <string name="repo_unauthorized_could_not_save_favourites">Kunde inte spara
+        eftersom du inte är inloggad.
+    </string>
 </resources>
