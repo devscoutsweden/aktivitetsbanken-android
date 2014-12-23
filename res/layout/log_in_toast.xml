@@ -1,34 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_vertical|center_horizontal"
-    android:id="@+id/log_in_toast_root">
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical|center_horizontal">
 
-    <TextView
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="För att logga in i Aktivitetsbanken använder du ditt vanliga Google-konto."
-        android:id="@+id/textView"
-        android:width="@dimen/textColumnWidth"
-        android:gravity="center_horizontal" />
+        android:id="@+id/auth_log_in_container"
+        android:layout_gravity="center_horizontal">
 
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/sign_in_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/auth_log_in_promo"
+            android:width="@dimen/textColumnWidth"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center_horizontal" />
 
-    <Button
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_in_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Logga ut"
-        android:id="@+id/auth_log_out_button" />
+        android:id="@+id/auth_progress_container"
+        android:layout_gravity="center_horizontal">
 
-    <Button
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Fråga inte igen"
-        android:id="@+id/button" />
+        android:id="@+id/auth_log_out_container"
+        android:layout_gravity="center_horizontal">
 
-</LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Du är inloggad som %1$s."
+            android:id="@+id/textView"
+            android:layout_gravity="center_horizontal" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Logga ut"
+            android:id="@+id/auth_log_out_button"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+
+</FrameLayout>

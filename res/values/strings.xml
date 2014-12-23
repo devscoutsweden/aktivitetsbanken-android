@@ -192,4 +192,8 @@
     <string name="repo_unauthorized_could_not_save_favourites">Kunde inte spara
         eftersom du inte är inloggad.
     </string>
+    <string name="auth_log_out">Logga ut</string>
+    <string name="auth_log_in_promo">För att logga in i Aktivitetsbanken
+        använder du ditt vanliga Google-konto.
+    </string>
 </resources>

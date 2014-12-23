@@ -15,8 +15,16 @@ import se.devscout.server.api.ActivityBankListener;
 import se.devscout.server.api.model.ActivityKey;
 import se.devscout.server.api.model.SearchHistory;
 import se.devscout.server.api.model.UserKey;
+
 //TODO: It might be cleaner to create an AbstractActivityBankListener instead of implementing ActivityBankListener
 public class LogInView extends LinearLayout implements ActivityBankListener {
+
+    private enum State {
+        LOGGED_IN,
+        LOGGED_OUT,
+        WORKING
+    }
+
     public LogInView(Context context, boolean isListContentHeight) {
         super(context);
         init(context, isListContentHeight);
@@ -35,40 +43,39 @@ public class LogInView extends LinearLayout implements ActivityBankListener {
     private void init(final Context context, boolean isListContentHeight) {
         LinearLayout view = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.log_in_toast, this, true);
 
-        refresh(context, ActivityBankFactory.getInstance(getContext()).isLoggedIn());
+        SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
+        signInButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (context instanceof SingleFragmentActivity) {
+                    SingleFragmentActivity activity = (SingleFragmentActivity) context;
+                    refresh(State.WORKING);
+                    activity.signInWithGplus();
+                }
+            }
+        });
 
-//        ActivityBankFactory.getInstance(getContext()).addListener(this);
-
-        setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, isListContentHeight ? ViewGroup.LayoutParams.WRAP_CONTENT : LayoutParams.MATCH_PARENT));
-    }
-
-    private void refresh(final Context context, boolean loggedIn) {
         Button logOutButton = (Button) findViewById(R.id.auth_log_out_button);
-        logOutButton.setVisibility(loggedIn ? VISIBLE : GONE);
         logOutButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (context instanceof SingleFragmentActivity) {
                     SingleFragmentActivity activity = (SingleFragmentActivity) context;
+                    refresh(State.WORKING);
                     activity.signOutFromGplus();
                 }
             }
         });
-        SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
-        signInButton.setVisibility(loggedIn ? GONE : VISIBLE);
-        if (loggedIn) {
 
-        } else {
-            signInButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (context instanceof SingleFragmentActivity) {
-                        SingleFragmentActivity activity = (SingleFragmentActivity) context;
-                        activity.signInWithGplus();
-                    }
-                }
-            });
-        }
+        refresh(ActivityBankFactory.getInstance(getContext()).isLoggedIn() ? State.LOGGED_IN : State.LOGGED_OUT);
+
+        setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, isListContentHeight ? ViewGroup.LayoutParams.WRAP_CONTENT : LayoutParams.MATCH_PARENT));
+    }
+
+    private void refresh(State state) {
+        findViewById(R.id.auth_log_out_container).setVisibility(state == State.LOGGED_OUT || state == State.WORKING ? GONE : VISIBLE);
+        findViewById(R.id.auth_log_in_container).setVisibility(state == State.LOGGED_IN || state == State.WORKING ? GONE : VISIBLE);
+        findViewById(R.id.auth_progress_container).setVisibility(state == State.WORKING ? VISIBLE : GONE);
     }
 
     @Override
@@ -113,7 +120,7 @@ public class LogInView extends LinearLayout implements ActivityBankListener {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    refresh(getContext(), true);
+                    refresh(State.LOGGED_IN);
                 }
             });
         }
@@ -126,7 +133,7 @@ public class LogInView extends LinearLayout implements ActivityBankListener {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    refresh(getContext(), false);
+                    refresh(State.LOGGED_OUT);
                 }
             });
         }
