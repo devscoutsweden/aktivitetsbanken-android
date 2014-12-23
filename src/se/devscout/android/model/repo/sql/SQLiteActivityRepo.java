@@ -149,7 +149,9 @@ public class SQLiteActivityRepo implements ActivityBank {
 
     @Override
     public void addListener(ActivityBankListener listener) {
-        mListeners.add(listener);
+        if (!mListeners.contains(listener)) {
+            mListeners.add(listener);
+        }
     }
 
     @Override
@@ -209,6 +211,12 @@ public class SQLiteActivityRepo implements ActivityBank {
     protected void fireLoggedOut() {
         for (ActivityBankListener listener : mListeners) {
             listener.onLogOut();
+        }
+    }
+
+    protected void fireAsyncException(Exception e) {
+        for (ActivityBankListener listener : mListeners) {
+            listener.onAsyncException(e);
         }
     }
 

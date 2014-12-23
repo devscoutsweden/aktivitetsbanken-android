@@ -75,6 +75,10 @@ public class StartWidgetFragment extends ActivityBankFragment implements Activit
     }
 
     @Override
+    public void onAsyncException(Exception e) {
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
 

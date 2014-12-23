@@ -74,6 +74,10 @@ public class FavouriteActivitiesListFragment extends ActivitiesListFragment impl
     public void onLogOut() {
     }
 
+    @Override
+    public void onAsyncException(Exception e) {
+    }
+
     public static FavouriteActivitiesListFragment create() {
         return new FavouriteActivitiesListFragment();
     }

@@ -358,6 +358,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
                 } catch (IOException e) {
                     LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server", e);
                 } catch (UnauthorizedException e) {
+                    fireAsyncException(e);
                     LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server", e);
                 } catch (UnhandledHttpResponseCodeException e) {
                     LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server", e);

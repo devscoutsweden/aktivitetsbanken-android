@@ -12,4 +12,6 @@ public interface ActivityBankListener {
     void onLogIn();
 
     void onLogOut();
+
+    void onAsyncException(Exception e);
 }

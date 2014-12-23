@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.drawer.*;
 import se.devscout.android.controller.fragment.AbstractActivityBankListener;
@@ -21,6 +22,7 @@ import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.CredentialsManager;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
+import se.devscout.android.util.http.UnauthorizedException;
 import se.devscout.android.view.AbstractActivitiesFinderComponentFactory;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.model.SearchHistory;
@@ -36,6 +38,7 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
     private AbstractActivityBankListener mActivityBankListener;
 
     private CredentialsManager mCredentialsManager;
+    private AbstractActivityBankListener mActivityBackAsyncExceptionListener;
 
     protected SingleFragmentActivity() {
         LogUtil.initExceptionLogging(this);
@@ -69,6 +72,38 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mActivityBackAsyncExceptionListener != null) {
+            getActivityBank().removeListener(mActivityBackAsyncExceptionListener);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (mActivityBackAsyncExceptionListener == null) {
+            mActivityBackAsyncExceptionListener = new AbstractActivityBankListener() {
+                @Override
+                public void onAsyncException(Exception e) {
+                    if (e instanceof UnauthorizedException) {
+//                    UnauthorizedException exception = (UnauthorizedException) e;
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(SingleFragmentActivity.this, "Kunde inte spara eftersom du inte är inloggad.", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                }
+            };
+        }
+        getActivityBank().addListener(mActivityBackAsyncExceptionListener);
+    }
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_drawer);
@@ -95,7 +130,7 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
         mDrawerList = (ListView) findViewById(R.id.start_drawer_list);
 //        mContentFrame = (FrameLayout) findViewById(R.id.start_content_frame);
 
-        mDrawerListAdapter = new DrawerListAdapter(this, getSupportFragmentManager(), R.id.start_content_frame);
+        mDrawerListAdapter = new DrawerListAdapter(this);
         mDrawerListAdapter.add(new HeaderDrawerItem(getString(R.string.drawer_start_header)));
         for (AbstractActivitiesFinderComponentFactory finder : AbstractActivitiesFinderComponentFactory.getActivitiesFinders()) {
             if (finder.isFragmentCreator()) {
@@ -285,5 +320,9 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
 
     public void signInWithGplus() {
         mCredentialsManager.signInWithGplus();
+    }
+
+    public void signOutFromGplus() {
+        mCredentialsManager.logOut();
     }
 }
