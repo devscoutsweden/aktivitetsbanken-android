@@ -2,7 +2,6 @@ package se.devscout.android.controller.activity.drawer;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,13 +33,8 @@ public class DrawerListAdapter extends BaseAdapter {
     private HeaderDrawerItem mSearchHistoryHeaderDrawerItem;
     private ActivityBank mActivityBank;
 
-    private FragmentManager mFragmentManager;
-    private int mFragmentContainerId;
-
-    public DrawerListAdapter(Context context, FragmentManager fragmentManager, int fragmentContainerId) {
+    public DrawerListAdapter(Context context) {
         this(context, new ArrayList<DrawerItem>());
-        mFragmentContainerId = fragmentContainerId;
-        mFragmentManager = fragmentManager;
     }
 
     public DrawerListAdapter(Context context, List<DrawerItem> drawerItems) {
