@@ -232,7 +232,11 @@ public class CredentialsManager implements GoogleApiClient.ConnectionCallbacks, 
     public void signInWithGplus() {
         if (!mGoogleApiClient.isConnecting()) {
             mSignInClicked = true;
-            resolveSignInError();
+            if (mConnectionResult == null) {
+                mGoogleApiClient.connect();
+            } else {
+                resolveSignInError();
+            }
         }
     }
 
@@ -254,5 +258,16 @@ public class CredentialsManager implements GoogleApiClient.ConnectionCallbacks, 
 
     public boolean isAuthenticationCompleted() {
         return ActivityBankFactory.getInstance(mActivity).isLoggedIn();
+    }
+
+    public void logOut() {
+        ActivityBankFactory.getInstance(mActivity).logOut();
+        if (mGoogleApiClient != null) {
+            mGoogleAccountName = null;
+            getPreferences().edit().putString("mGoogleAccountName", mGoogleAccountName).commit();
+            Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
+            mGoogleApiClient.disconnect();
+//            mGoogleApiClient.connect();
+        }
     }
 }

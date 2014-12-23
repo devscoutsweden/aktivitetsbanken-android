@@ -22,6 +22,12 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Logga ut"
+        android:id="@+id/auth_log_out_button" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Fråga inte igen"
         android:id="@+id/button" />
 
