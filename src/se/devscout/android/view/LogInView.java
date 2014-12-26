@@ -46,7 +46,7 @@ public class LogInView extends LinearLayout implements ActivityBankListener {
     }
 
     private void init(final Context context, boolean isListContentHeight) {
-        LinearLayout view = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.log_in_toast, this, true);
+        LinearLayout view = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.authentication, this, true);
 
         SignInButton signInButton = (SignInButton) findViewById(R.id.auth_google_sign_in_button);
         signInButton.setOnClickListener(new OnClickListener() {

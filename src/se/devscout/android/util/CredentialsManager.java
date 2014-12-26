@@ -61,7 +61,7 @@ public class CredentialsManager implements GoogleApiClient.ConnectionCallbacks, 
 
 //            LayoutInflater inflater = LayoutInflater.from(mActivity);
 //            LinearLayout ll = new LinearLayout(mActivity);
-//            View view = inflater.inflate(R.layout.log_in_toast, ll, true);
+//            View view = inflater.inflate(R.layout.authentication, ll, true);
 //            SignInButton signInButton = (SignInButton) view.findViewById(R.id.sign_in_button);
 
 //            showLoginButtonToast();
