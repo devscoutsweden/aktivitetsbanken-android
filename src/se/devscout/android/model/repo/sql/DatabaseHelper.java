@@ -284,15 +284,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private long createUser(UserProperties properties, SQLiteDatabase database) {
-        ContentValues userValues = new ContentValues();
-        userValues.put(Database.user.server_id, properties.getServerId());
-        userValues.put(Database.user.server_revision_id, properties.getServerRevisionId());
-        userValues.put(Database.user.display_name, properties.getDisplayName());
-        userValues.put(Database.user.api_key, properties.getAPIKey());
-//        userValues.put(Database.user.email_verified, properties.isEmailAddressVerified());
-//        userValues.put(Database.user.password_algorithm, properties.getPasswordHashAlgorithm());
-//        userValues.put(Database.user.password_hash, "Testdata");
-        return database.insertOrThrow(Database.user.T, null, userValues);
+        return database.insertOrThrow(Database.user.T, null, createContentValues(properties));
     }
 
     public long createActivity(ActivityProperties properties) {
@@ -942,4 +934,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return mCacheUser.get(key.getId());
     }
 
+    public boolean updateUser(UserKey key, UserProperties properties) {
+        ContentValues values = createContentValues(properties);
+
+        if (getDb().update(Database.user.T, values, Database.user.id + "=" + key.getId(), null) != 1) {
+            logInfo("Could not update user " + key.getId());
+            return false;
+        }
+
+        return true;
+    }
+
+    private ContentValues createContentValues(UserProperties properties) {
+        ContentValues values = new ContentValues();
+        if (properties.getServerId() > 0) {
+            values.put(Database.user.server_id, properties.getServerId());
+        }
+        if (properties.getServerRevisionId() > 0) {
+            values.put(Database.user.server_revision_id, properties.getServerRevisionId());
+        }
+        if (properties.getDisplayName() != null) {
+            values.put(Database.user.display_name, properties.getDisplayName());
+        }
+        if (properties.getAPIKey() != null) {
+            values.put(Database.user.api_key, properties.getAPIKey());
+        }
+        return values;
+    }
 }

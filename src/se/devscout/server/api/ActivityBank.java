@@ -54,11 +54,15 @@ public interface ActivityBank {
 
     boolean createAnonymousAPIUser();
 
+    void updateUser(UserKey key, UserProperties properties) throws UnauthorizedException;
+
+    User readUser(UserKey key);
+
     Media readMediaItem(MediaKey key);
 
     URI getMediaItemURI(MediaProperties mediaProperties, int width, int height);
 
-    void logIn(IdentityProvider provider, String data);
+    void logIn(IdentityProvider provider, String data, UserProperties userProperties);
 
     void logOut();
 

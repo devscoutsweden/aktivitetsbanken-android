@@ -166,6 +166,16 @@ public class SQLiteActivityRepo implements ActivityBank {
     }
 
     @Override
+    public void updateUser(UserKey key, UserProperties properties) throws UnauthorizedException {
+        mDatabaseHelper.updateUser(key, properties);
+    }
+
+    @Override
+    public User readUser(UserKey key) {
+        return mDatabaseHelper.readUser(key);
+    }
+
+    @Override
     public Media readMediaItem(MediaKey key) {
         return mDatabaseHelper.readMedia(key);
     }
@@ -176,7 +186,7 @@ public class SQLiteActivityRepo implements ActivityBank {
     }
 
     @Override
-    public void logIn(IdentityProvider provider, String data) {
+    public void logIn(IdentityProvider provider, String data, UserProperties userProperties) {
         //No need to authenticate user. Do nothing.
     }
 

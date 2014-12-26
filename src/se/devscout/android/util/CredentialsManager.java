@@ -19,8 +19,10 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
+import com.google.android.gms.plus.model.people.Person;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
+import se.devscout.android.model.UserPropertiesBean;
 import se.devscout.android.view.LogInView;
 
 import java.io.IOException;
@@ -128,8 +130,16 @@ public class CredentialsManager implements GoogleApiClient.ConnectionCallbacks, 
                     String scope = "audience:server:client_id:" + WEB_APP_CLIENT_ID;
                     String token = GoogleAuthUtil.getToken(mActivity, mGoogleAccountName, scope);
                     if (token != null) {
+                        Person person = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
+                        UserPropertiesBean userInfo = null;
+                        if (person != null) {
+                            userInfo = new UserPropertiesBean();
+                            userInfo.setDisplayName(person.getDisplayName());
+                            userInfo.setName(CredentialsManager.this.mGoogleAccountName);
+                        }
+
                         IdentityProvider provider = IdentityProvider.GOOGLE;
-                        ActivityBankFactory.getInstance(mActivity).logIn(provider, token);
+                        ActivityBankFactory.getInstance(mActivity).logIn(provider, token, userInfo);
                     }
                 } catch (IOException e) {
                     LogUtil.e(SingleFragmentActivity.class.getName(), "Could not get Google ID token", e);
@@ -169,21 +179,6 @@ public class CredentialsManager implements GoogleApiClient.ConnectionCallbacks, 
         if (!isAuthenticationCompleted()) {
             mSignInClicked = false;
             // TODO: use the Plus.PeopleApi.getCurrentPerson to updated user profile when exchanging Google id token for API key?
-/*
-            Person person = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
-            if (person != null) {
-                String displayName = person.getDisplayName();
-                String language = person.getLanguage();
-                String id = person.getId();
-                String url = person.getImage() != null ? person.getImage().getUrl() : "";
-                LogUtil.i(SingleFragmentActivity.class.getName(), "" +
-                        "Google+ Profile Information:" +
-                        "\nDisplay Name: " + displayName +
-                        "\nLanguage:     " + language +
-                        "\nId:           " + id +
-                        "\nImage URL:    " + url);
-            }
-*/
             if (mGoogleAccountName == null) {
                 startChooseAccountActivity();
             } else {

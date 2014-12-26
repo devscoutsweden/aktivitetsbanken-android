@@ -91,6 +91,12 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     }
 
     @Override
+    public User readUser(UserKey key) {
+        //TODO: implement/overload/fix this method. Low priority.
+        return super.readUser(key);
+    }
+
+    @Override
     public Activity createActivity(ActivityProperties properties) {
         //TODO: implement/overload/fix this method. Low priority.
         return super.createActivity(properties);
@@ -126,6 +132,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         super.deleteSearchHistory(itemsToKeep);
     }
 
+/*
     @Override
     public boolean createAnonymousAPIUser() {
         try {
@@ -158,6 +165,27 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
             return false;
         }
     }
+*/
+
+    @Override
+    public void updateUser(UserKey key, UserProperties properties) throws UnauthorizedException {
+        super.updateUser(key, properties);
+        try {
+            String uri = "http://" + getRemoteHost() + "/api/v1/users/profile";
+
+            JSONObject body = new JSONObject();
+            body.put("display_name", properties.getDisplayName());
+            body.put("email", properties.getName());
+
+            readUrlAsBytes(uri, body.toString(), HttpMethod.PUT);
+        } catch (JSONException e) {
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not update user information because of an unhandled problem.", e);
+        } catch (IOException e) {
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not update user information because of an unhandled problem.", e);
+        } catch (UnhandledHttpResponseCodeException e) {
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not update user information because of an unhandled problem.", e);
+        }
+    }
 
     @Override
     public URI getMediaItemURI(MediaProperties mediaProperties, int width, int height) {
@@ -185,45 +213,36 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
     }
 
     @Override
-    public void logIn(IdentityProvider provider, String data) {
+    public void logIn(IdentityProvider provider, String data, final UserProperties userProperties) {
         switch (provider) {
             case GOOGLE:
                 mCredentialsMap.put(
                         getCurrentUserId(),
                         new Credentials(data, API_TOKEN_TYPE_GOOGLE));
 
-                /*
-                 * Requesting the user profile is actually just a way for for the server to "redeem"
-                 * the Google id token before it expires (in case the user starts the app and the app
-                 * acquires an id token but then does not make API requests for a long time).
-                 *
-                 * The server will return the user's API key in the response headers. The user, after
-                 * the Google id token has been verified, will be created if not create before.
-                 */
-                // TODO: Is it necessary to make a "dummy request" in order to exchange id token for API key? Is the above scenario realistic?
-                AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-                    {
-                        LogUtil.initExceptionLogging(mContext);
+                if (userProperties != null) {
+                    /*
+                     * Updating the user profile will do three things:
+                     *
+                     * 1. it validates the Google id token (supplied in the
+                     *    Authorization header from the mCredentialsMap object)
+                     *
+                     * 2. it creates a new user (and API key) if the Google id
+                     *    token translates to a Google user id which has not
+                     *    previously been encountered by the system
+                     *
+                     * 3. it sets the display name of said user.
+                     *
+                     * The server will return the user's API key in the
+                     * response headers. The user, after the Google id token has
+                     * been verified, will be created if not create before.
+                     */
+                    try {
+                        updateUser(PreferencesUtil.getInstance(mContext).getCurrentUser(), userProperties);
+                    } catch (UnauthorizedException e) {
+                        LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not provide user information to server", e);
                     }
-
-                    @Override
-                    protected Void doInBackground(Void... voids) {
-                        try {
-                            String uri = "http://" + getRemoteHost() + "/api/v1/users/profile";
-                            readUrl(uri, null, HttpMethod.GET);
-                        } catch (IOException e) {
-                            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server", e);
-                        } catch (UnauthorizedException e) {
-                            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server", e);
-                        } catch (UnhandledHttpResponseCodeException e) {
-                            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server", e);
-                        } catch (Throwable e) {
-                            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server due to unexpected problem.", e);
-                        }
-                        return null;
-                    }
-                };
-                task.execute();
+                }
                 break;
             default:
                 throw new UnsupportedOperationException("Does not support identity provider " + provider);
