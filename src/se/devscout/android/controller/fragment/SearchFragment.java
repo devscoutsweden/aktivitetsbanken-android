@@ -78,7 +78,7 @@ public class SearchFragment extends ActivityBankFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View searchView = inflater.inflate(R.layout.search_activity, container, false);
+        final View searchView = inflater.inflate(R.layout.search, container, false);
 
         anyTimeRange = new TimeRange(0, Integer.MAX_VALUE, getString(R.string.searchTimeOptionAny));
         mTimeRanges = new TimeRange[]{

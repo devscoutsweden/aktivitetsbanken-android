@@ -80,7 +80,7 @@ public class DrawerListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         if (getItemViewType(position) == TYPE_HEADER) {
             if (convertView == null) {
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.drawer_header, null);
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.drawer_list_header, null);
                 convertView.setEnabled(false);
                 convertView.setOnClickListener(null);
             }

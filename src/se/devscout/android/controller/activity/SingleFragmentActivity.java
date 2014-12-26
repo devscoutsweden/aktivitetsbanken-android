@@ -106,7 +106,7 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.start_drawer);
+        setContentView(R.layout.single_fragment_activity);
 
         if (!getActivityBank().isLoggedIn()) {
             mCredentialsManager = new CredentialsManager(this);

@@ -39,7 +39,7 @@ public class SimpleDocumentLayout extends LinearLayout {
     }
 
     public SimpleDocumentLayout addHeader(int headerResId) {
-        TextView textView = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.document_headertextview, this, false);
+        TextView textView = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.simple_document_headertextview, this, false);
         textView.setText(headerResId);
         textView.setTypeface(ScoutTypeFace.getInstance(getContext()).getMedium());
         addView(textView);
@@ -66,7 +66,7 @@ public class SimpleDocumentLayout extends LinearLayout {
     }
 
     public SimpleDocumentLayout addBodyText(String text) {
-        TextView textView = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.document_bodytext, this, false);
+        TextView textView = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.simple_document_bodytext, this, false);
         StringBuilder sb = new StringBuilder();
         String[] parts = text.split("\\s*\\n(\\s*\\n)+\\s*");
         for (String part : parts) {
