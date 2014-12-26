@@ -1,5 +1,6 @@
 package se.devscout.android.view;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -7,13 +8,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import com.google.android.gms.common.SignInButton;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
 import se.devscout.android.util.ActivityBankFactory;
+import se.devscout.android.util.PreferencesUtil;
+import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.ActivityBankListener;
 import se.devscout.server.api.model.ActivityKey;
 import se.devscout.server.api.model.SearchHistory;
+import se.devscout.server.api.model.User;
 import se.devscout.server.api.model.UserKey;
 
 //TODO: It might be cleaner to create an AbstractActivityBankListener instead of implementing ActivityBankListener
@@ -67,6 +72,22 @@ public class LogInView extends LinearLayout implements ActivityBankListener {
             }
         });
 
+        Button smarterButton = (Button) findViewById(R.id.auth_logged_in_smarter_button);
+        smarterButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AlertDialog.Builder(context).setMessage(R.string.auth_logged_smarter_text).show();
+            }
+        });
+
+        Button betterButton = (Button) findViewById(R.id.auth_logged_out_better_button);
+        betterButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AlertDialog.Builder(context).setMessage(R.string.auth_logged_better_text).show();
+            }
+        });
+
         refresh(ActivityBankFactory.getInstance(getContext()).isLoggedIn() ? State.LOGGED_IN : State.LOGGED_OUT);
 
         setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, isListContentHeight ? ViewGroup.LayoutParams.WRAP_CONTENT : LayoutParams.MATCH_PARENT));
@@ -76,6 +97,16 @@ public class LogInView extends LinearLayout implements ActivityBankListener {
         findViewById(R.id.auth_logged_in_container).setVisibility(state == State.LOGGED_OUT || state == State.WORKING ? GONE : VISIBLE);
         findViewById(R.id.auth_logged_out_container).setVisibility(state == State.LOGGED_IN || state == State.WORKING ? GONE : VISIBLE);
         findViewById(R.id.auth_progress_container).setVisibility(state == State.WORKING ? VISIBLE : GONE);
+
+        switch (state) {
+            case LOGGED_IN:
+                TextView loggedInMessage = (TextView) findViewById(R.id.auth_logged_in_text);
+                ActivityBank activityBank = ActivityBankFactory.getInstance(getContext());
+                User user = activityBank.readUser(PreferencesUtil.getInstance(getContext()).getCurrentUser());
+                String name = user.getDisplayName() != null ? user.getDisplayName() : user.getName();
+                loggedInMessage.setText(getContext().getString(R.string.auth_logged_in_promo, name));
+                break;
+        }
     }
 
     @Override

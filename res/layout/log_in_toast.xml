@@ -20,6 +20,13 @@
             android:gravity="center_horizontal"
             android:layout_gravity="center_horizontal" />
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/auth_logged_out_better"
+            android:id="@+id/auth_logged_out_better_button"
+            android:layout_gravity="center_horizontal" />
+
         <com.google.android.gms.common.SignInButton
             android:id="@+id/auth_google_sign_in_button"
             android:layout_width="wrap_content"
@@ -50,7 +57,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/auth_logged_in_promo"
-            android:id="@+id/textView"
+            android:id="@+id/auth_logged_in_text"
+            android:layout_gravity="center_horizontal" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/auth_logged_in_smarter"
+            android:id="@+id/auth_logged_in_smarter_button"
             android:layout_gravity="center_horizontal" />
 
         <Button
