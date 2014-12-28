@@ -1,7 +1,8 @@
-package se.devscout.android.util;
+package se.devscout.android.util.auth;
 
 import android.content.Intent;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
+import se.devscout.android.util.IdentityProvider;
 import se.devscout.server.api.model.UserProperties;
 
 import java.util.ArrayList;

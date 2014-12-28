@@ -1,4 +1,4 @@
-package se.devscout.android.util;
+package se.devscout.android.util.auth;
 
 import android.accounts.AccountManager;
 import android.app.Dialog;
@@ -23,10 +23,12 @@ import com.google.android.gms.plus.model.people.Person;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
 import se.devscout.android.model.UserPropertiesBean;
+import se.devscout.android.util.IdentityProvider;
+import se.devscout.android.util.LogUtil;
 
 import java.io.IOException;
 
-public class GoogleAuthenticationStrategy implements AuthenticationStrategy, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+class GoogleAuthenticationStrategy implements AuthenticationStrategy, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final int RC_SIGN_IN = 0;
     private static final int RC_CHOOSE_ACCOUNT = 1000;
     private static final int REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR = 1001;
@@ -42,7 +44,7 @@ public class GoogleAuthenticationStrategy implements AuthenticationStrategy, Goo
     //    private Callback mCallback;
 
 
-    public GoogleAuthenticationStrategy(CredentialsManager credentialsManager, SingleFragmentActivity activity) {
+    GoogleAuthenticationStrategy(CredentialsManager credentialsManager, SingleFragmentActivity activity) {
         mActivity = activity;
         mGoogleAccountName = getPreferences().getString("mGoogleAccountName", null);
         mCredentialsManager = credentialsManager;

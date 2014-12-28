@@ -15,6 +15,7 @@ import se.devscout.android.model.*;
 import se.devscout.android.model.repo.sql.LocalObjectRefreshness;
 import se.devscout.android.model.repo.sql.SQLiteActivityRepo;
 import se.devscout.android.util.*;
+import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.android.util.concurrency.BackgroundTask;
 import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
 import se.devscout.android.util.http.*;

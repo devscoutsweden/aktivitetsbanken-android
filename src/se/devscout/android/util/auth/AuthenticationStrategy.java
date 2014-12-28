@@ -1,4 +1,4 @@
-package se.devscout.android.util;
+package se.devscout.android.util.auth;
 
 import android.content.Intent;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
