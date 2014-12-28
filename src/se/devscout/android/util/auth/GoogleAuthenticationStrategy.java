@@ -150,7 +150,7 @@ class GoogleAuthenticationStrategy implements AuthenticationStrategy, GoogleApiC
 
     @Override
     public void onConnected(Bundle bundle) {
-        if (!CredentialsManager.getInstance().getState().isLoggedIn()) {
+        if (!CredentialsManager.getInstance(mActivity).getState().isLoggedIn()) {
             mSignInClicked = false;
             if (mGoogleAccountName == null) {
                 startChooseAccountActivity();

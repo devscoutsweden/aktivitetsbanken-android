@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import se.devscout.android.R;
 import se.devscout.android.model.ObjectIdentifierBean;
 import se.devscout.android.util.ActivityBankFactory;
-import se.devscout.android.util.PreferencesUtil;
+import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.model.ActivityKey;
 
@@ -61,7 +61,7 @@ public class ActivitiesViewPagerFragment extends PagerFragment {
     private void initFavouriteMenuItem(Menu menu) {
         MenuItem item = menu.findItem(R.id.activityMenuFavourite);
         ActivityKey activityKey = getActivity(mSelectedIndex);
-        Boolean isFavourite = ActivityBankFactory.getInstance(getActivity()).isFavourite(activityKey, PreferencesUtil.getInstance(getActivity()).getCurrentUser());
+        Boolean isFavourite = ActivityBankFactory.getInstance(getActivity()).isFavourite(activityKey, CredentialsManager.getInstance(getActivity()).getCurrentUser());
         if (isFavourite != null) {
             item.setIcon(isFavourite ? R.drawable.ic_action_important : R.drawable.ic_action_not_important);
         } else {
@@ -74,11 +74,11 @@ public class ActivitiesViewPagerFragment extends PagerFragment {
         if (item.getItemId() == R.id.activityMenuFavourite) {
             ActivityBank activityBank = ActivityBankFactory.getInstance(getActivity());
             ActivityKey activityKey = getActivity(mSelectedIndex);
-            boolean favourite = activityBank.isFavourite(activityKey, PreferencesUtil.getInstance(getActivity()).getCurrentUser());
+            boolean favourite = activityBank.isFavourite(activityKey, CredentialsManager.getInstance(getActivity()).getCurrentUser());
             if (favourite) {
-                activityBank.unsetFavourite(activityKey, PreferencesUtil.getInstance(getActivity()).getCurrentUser());
+                activityBank.unsetFavourite(activityKey, CredentialsManager.getInstance(getActivity()).getCurrentUser());
             } else {
-                activityBank.setFavourite(activityKey, PreferencesUtil.getInstance(getActivity()).getCurrentUser());
+                activityBank.setFavourite(activityKey, CredentialsManager.getInstance(getActivity()).getCurrentUser());
             }
             item.setIcon(!favourite ? R.drawable.ic_action_important : R.drawable.ic_action_not_important);
         }

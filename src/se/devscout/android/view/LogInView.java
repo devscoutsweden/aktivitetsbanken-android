@@ -16,7 +16,6 @@ import se.devscout.android.R;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.IdentityProvider;
-import se.devscout.android.util.PreferencesUtil;
 import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.model.User;
@@ -62,7 +61,7 @@ public class LogInView extends LinearLayout implements CredentialsManager.Listen
             public void onClick(View view) {
                 if (context instanceof SingleFragmentActivity) {
                     SingleFragmentActivity activity = (SingleFragmentActivity) context;
-                    CredentialsManager.getInstance().logInUsingGoogle(activity);
+                    CredentialsManager.getInstance(activity).logInUsingGoogle(activity);
 //                    refresh(CredentialsManager.State.WORKING);
 //                    activity.signIn();
                 }
@@ -75,7 +74,7 @@ public class LogInView extends LinearLayout implements CredentialsManager.Listen
             public void onClick(View view) {
                 if (context instanceof SingleFragmentActivity) {
                     SingleFragmentActivity activity = (SingleFragmentActivity) context;
-                    CredentialsManager.getInstance().logOut();
+                    CredentialsManager.getInstance(activity).logOut();
 //                    refresh(State.WORKING);
 //                    activity.signOutFromGplus();
                 }
@@ -98,7 +97,7 @@ public class LogInView extends LinearLayout implements CredentialsManager.Listen
             }
         });
 
-        refresh(CredentialsManager.getInstance().getState());
+        refresh(CredentialsManager.getInstance(context).getState());
 
         setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, isListContentHeight ? ViewGroup.LayoutParams.WRAP_CONTENT : LayoutParams.MATCH_PARENT));
     }
@@ -112,7 +111,7 @@ public class LogInView extends LinearLayout implements CredentialsManager.Listen
             case LOGGED_IN:
                 TextView loggedInMessage = (TextView) findViewById(R.id.auth_logged_in_text);
                 ActivityBank activityBank = ActivityBankFactory.getInstance(getContext());
-                User user = activityBank.readUser(PreferencesUtil.getInstance(getContext()).getCurrentUser());
+                User user = activityBank.readUser(CredentialsManager.getInstance(getContext()).getCurrentUser());
                 String name = user.getDisplayName() != null ? user.getDisplayName() : user.getName();
                 loggedInMessage.setText(getContext().getString(R.string.auth_logged_in_promo, name));
                 break;
@@ -121,13 +120,13 @@ public class LogInView extends LinearLayout implements CredentialsManager.Listen
 
     @Override
     protected void onAttachedToWindow() {
-        CredentialsManager.getInstance().addListener(this);
+        CredentialsManager.getInstance(getContext()).addListener(this);
         super.onAttachedToWindow();
     }
 
     @Override
     protected void onDetachedFromWindow() {
-        CredentialsManager.getInstance().removeListener(this);
+        CredentialsManager.getInstance(getContext()).removeListener(this);
         super.onDetachedFromWindow();
     }
 

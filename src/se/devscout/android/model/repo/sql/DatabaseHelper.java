@@ -15,7 +15,7 @@ import se.devscout.android.model.repo.sql.cache.CategoryIdCache;
 import se.devscout.android.model.repo.sql.cache.MediaIdCache;
 import se.devscout.android.model.repo.sql.cache.ReferenceIdCache;
 import se.devscout.android.util.LogUtil;
-import se.devscout.android.util.PreferencesUtil;
+import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.activityfilter.AndFilter;
 import se.devscout.server.api.activityfilter.OrFilter;
@@ -125,7 +125,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
             String apiKey = PreferenceManager.getDefaultSharedPreferences(mContext).getString("api_key", null);
             long anonymousUserId = createUser(new UserPropertiesBean("Anonymous", apiKey, 0L, 0L, false), db);
-            PreferencesUtil.getInstance(mContext).setCurrentUser(new ObjectIdentifierBean(anonymousUserId));
+            CredentialsManager.getInstance(mContext).setCurrentUser(new ObjectIdentifierBean(anonymousUserId));
 
             db.setTransactionSuccessful();
             logInfo("Done initialising database.");

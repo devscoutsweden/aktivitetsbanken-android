@@ -1,8 +1,16 @@
 package se.devscout.android.util.auth;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
+import se.devscout.android.model.ObjectIdentifierBean;
 import se.devscout.android.util.IdentityProvider;
+import se.devscout.android.util.LogUtil;
+import se.devscout.server.api.ActivityBank;
+import se.devscout.server.api.model.UserKey;
 import se.devscout.server.api.model.UserProperties;
 
 import java.util.ArrayList;
@@ -16,7 +24,12 @@ import java.util.List;
 public class CredentialsManager {
 
     private static CredentialsManager instance = null;
+    private final SharedPreferences mPreferences;
     private State mState = State.LOGGED_OUT;
+
+    public CredentialsManager(Context context) {
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+    }
 
     public State getState() {
         return mState;
@@ -27,11 +40,11 @@ public class CredentialsManager {
         fireAuthenticationStatusChange(state);
     }
 
-    public static CredentialsManager getInstance() {
+    public static CredentialsManager getInstance(Context context) {
         if (instance == null) {
             synchronized (CredentialsManager.class) {
                 if (instance == null) {
-                    instance = new CredentialsManager();
+                    instance = new CredentialsManager(context);
                 }
             }
         }
@@ -133,9 +146,35 @@ public class CredentialsManager {
             listener.onAuthenticationStatusChange(state);
         }
     }
+
     private void fireAuthenticated(IdentityProvider provider, String data, UserProperties userProperties) {
         for (Listener listener : mListeners) {
             listener.onAuthenticated(provider, data, userProperties);
         }
+    }
+
+    public synchronized UserKey getCurrentUser() {
+        if (mPreferences.contains("current_user_id")) {
+            long currentUserId = mPreferences.getLong("current_user_id", 0);
+            LogUtil.d(CredentialsManager.class.getName(), "Getting current_user_id = " + currentUserId);
+            return new ObjectIdentifierBean(currentUserId);
+        } else {
+            /*
+             * This happens when the app is started for the first time.
+             *
+             * The database has not yet been created and the current_user_id has
+             * not been set. Return the value which we know that the first
+             * created user will have, namely the first primary value generated
+             * for any SQLite table (=1).
+             */
+            Long defaultUserId = ActivityBank.DEFAULT_USER_ID;
+            LogUtil.d(CredentialsManager.class.getName(), "Getting current_user_id = " + defaultUserId + " (fallback)");
+            return new ObjectIdentifierBean(defaultUserId);
+        }
+    }
+
+    public synchronized void setCurrentUser(UserKey userKey) {
+        boolean commit = mPreferences.edit().putLong("current_user_id", userKey.getId()).commit();
+        Log.i(CredentialsManager.class.getName(), "Setting current_user_id = " + userKey.getId() + " (success: " + commit + ")");
     }
 }

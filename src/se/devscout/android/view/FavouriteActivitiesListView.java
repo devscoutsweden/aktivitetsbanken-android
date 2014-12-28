@@ -5,7 +5,7 @@ import se.devscout.android.R;
 import se.devscout.android.controller.fragment.ActivityBankFragment;
 import se.devscout.android.controller.fragment.AsyncImageArrayAdapter;
 import se.devscout.android.util.ActivityBankFactory;
-import se.devscout.android.util.PreferencesUtil;
+import se.devscout.android.util.auth.CredentialsManager;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class FavouriteActivitiesListView extends ActivitiesListView {
         super(context.getActivity(),
                 R.string.favouritesEmptyHeader,
                 R.string.favouritesEmptyMessage,
-                ActivityBankFactory.getInstance(context.getActivity()).getFilterFactory().createIsUserFavouriteFilter(PreferencesUtil.getInstance(context.getActivity()).getCurrentUser()),
+                ActivityBankFactory.getInstance(context.getActivity()).getFilterFactory().createIsUserFavouriteFilter(CredentialsManager.getInstance(context.getActivity()).getCurrentUser()),
                 sortOrder,
                 isListContentHeight);
     }

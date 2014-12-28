@@ -59,13 +59,13 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
     @Override
     protected void onStop() {
         super.onStop();
-        CredentialsManager.getInstance().onActivityStop(this);
+        CredentialsManager.getInstance(this).onActivityStop(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        CredentialsManager.getInstance().onActivityStart(this);
+        CredentialsManager.getInstance(this).onActivityStart(this);
     }
 
     @Override
@@ -309,7 +309,7 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        CredentialsManager.getInstance().onActivityResult(requestCode, resultCode, data, this);
+        CredentialsManager.getInstance(this).onActivityResult(requestCode, resultCode, data, this);
     }
 
 /*

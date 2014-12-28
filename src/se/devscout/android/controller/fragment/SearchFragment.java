@@ -14,7 +14,7 @@ import se.devscout.android.model.CategoryBean;
 import se.devscout.android.model.IntegerRange;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.LogUtil;
-import se.devscout.android.util.PreferencesUtil;
+import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.android.util.http.UnauthorizedException;
 import se.devscout.server.api.ActivityFilterFactory;
 import se.devscout.server.api.ActivityFilterFactoryException;
@@ -183,7 +183,7 @@ public class SearchFragment extends ActivityBankFragment {
             private void initFavouritesOnlyFilter(se.devscout.server.api.activityfilter.AndFilter filter, ActivityFilterFactory mFilterFactory) throws ActivityFilterFactoryException {
                 CheckBox searchFavouritesOnlyCheckbox = (CheckBox) searchView.findViewById(R.id.searchFavouritesOnly);
                 if (searchFavouritesOnlyCheckbox.isChecked()) {
-                    filter.getFilters().add(mFilterFactory.createIsUserFavouriteFilter(PreferencesUtil.getInstance(getActivity()).getCurrentUser()));
+                    filter.getFilters().add(mFilterFactory.createIsUserFavouriteFilter(CredentialsManager.getInstance(getActivity()).getCurrentUser()));
                 }
             }
 

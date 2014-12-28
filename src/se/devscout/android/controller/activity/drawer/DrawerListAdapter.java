@@ -11,7 +11,7 @@ import android.widget.TextView;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.TitleActivityFilterVisitor;
 import se.devscout.android.util.LogUtil;
-import se.devscout.android.util.PreferencesUtil;
+import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.model.SearchHistory;
 
@@ -123,7 +123,7 @@ public class DrawerListAdapter extends BaseAdapter {
             protected Collection<? extends SearchHistory> doInBackground(Void... voids) {
                 try {
                     LogUtil.d(DrawerListAdapter.class.getName(), "Start of doInBackground");
-                    Collection<? extends SearchHistory> list = activityBank.readSearchHistory(SEARCH_HISTORY_ITEM_COUNT + 1, PreferencesUtil.getInstance(mContext).getCurrentUser());
+                    Collection<? extends SearchHistory> list = activityBank.readSearchHistory(SEARCH_HISTORY_ITEM_COUNT + 1, CredentialsManager.getInstance(mContext).getCurrentUser());
                     LogUtil.d(DrawerListAdapter.class.getName(), "End of doInBackground");
                     return list;
                 } catch (Throwable e) {

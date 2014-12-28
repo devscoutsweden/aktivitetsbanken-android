@@ -14,7 +14,10 @@ import se.devscout.android.controller.fragment.TitleActivityFilterVisitor;
 import se.devscout.android.model.*;
 import se.devscout.android.model.repo.sql.LocalObjectRefreshness;
 import se.devscout.android.model.repo.sql.SQLiteActivityRepo;
-import se.devscout.android.util.*;
+import se.devscout.android.util.IdentityProvider;
+import se.devscout.android.util.InstallationProperties;
+import se.devscout.android.util.LogUtil;
+import se.devscout.android.util.StopWatch;
 import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.android.util.concurrency.BackgroundTask;
 import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
@@ -85,7 +88,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
                 return BackgroundTasksHandlerThread.ListenerAction.KEEP;
             }
         };
-        CredentialsManager.getInstance().addListener(this);
+        CredentialsManager.getInstance(mContext).addListener(this);
     }
 
     private String getRemoteHost() {
@@ -244,7 +247,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
                      * been verified, will be created if not create before.
                      */
                     try {
-                        updateUser(PreferencesUtil.getInstance(mContext).getCurrentUser(), userProperties);
+                        updateUser(CredentialsManager.getInstance(mContext).getCurrentUser(), userProperties);
                     } catch (UnauthorizedException e) {
                         LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not provide user information to server", e);
                     }
@@ -396,7 +399,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     }
 
     private void sendSetFavouritesRequest() throws IOException, UnauthorizedException, UnhandledHttpResponseCodeException {
-        List<ActivityBean> favourites = super.findActivity(getFilterFactory().createIsUserFavouriteFilter(PreferencesUtil.getInstance(mContext).getCurrentUser()));
+        List<ActivityBean> favourites = super.findActivity(getFilterFactory().createIsUserFavouriteFilter(CredentialsManager.getInstance(mContext).getCurrentUser()));
 //        Set<ActivityKey> favourites = mDatabaseHelper.getFavourites(PreferencesUtil.getInstance(mContext).getCurrentUser());
         JSONArray jsonArray = new JSONArray();
         for (ActivityBean key : favourites) {
@@ -891,7 +894,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     }
 
     private Long getCurrentUserId() {
-        return PreferencesUtil.getInstance(mContext).getCurrentUser().getId();
+        return CredentialsManager.getInstance(mContext).getCurrentUser().getId();
     }
 
 /*
