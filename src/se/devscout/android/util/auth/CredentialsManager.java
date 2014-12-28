@@ -23,6 +23,7 @@ import java.util.List;
  */
 public class CredentialsManager {
 
+    private static final String CURRENT_USER_ID = "current_user_id";
     private static CredentialsManager instance = null;
     private final SharedPreferences mPreferences;
     private State mState = State.LOGGED_OUT;
@@ -154,9 +155,9 @@ public class CredentialsManager {
     }
 
     public synchronized UserKey getCurrentUser() {
-        if (mPreferences.contains("current_user_id")) {
-            long currentUserId = mPreferences.getLong("current_user_id", 0);
-            LogUtil.d(CredentialsManager.class.getName(), "Getting current_user_id = " + currentUserId);
+        if (mPreferences.contains(CURRENT_USER_ID)) {
+            long currentUserId = mPreferences.getLong(CURRENT_USER_ID, 0);
+            LogUtil.d(CredentialsManager.class.getName(), "Getting " + CURRENT_USER_ID + " = " + currentUserId);
             return new ObjectIdentifierBean(currentUserId);
         } else {
             /*
@@ -168,13 +169,13 @@ public class CredentialsManager {
              * for any SQLite table (=1).
              */
             Long defaultUserId = ActivityBank.DEFAULT_USER_ID;
-            LogUtil.d(CredentialsManager.class.getName(), "Getting current_user_id = " + defaultUserId + " (fallback)");
+            LogUtil.d(CredentialsManager.class.getName(), "Getting " + CURRENT_USER_ID + " = " + defaultUserId + " (fallback)");
             return new ObjectIdentifierBean(defaultUserId);
         }
     }
 
     public synchronized void setCurrentUser(UserKey userKey) {
-        boolean commit = mPreferences.edit().putLong("current_user_id", userKey.getId()).commit();
-        Log.i(CredentialsManager.class.getName(), "Setting current_user_id = " + userKey.getId() + " (success: " + commit + ")");
+        boolean commit = mPreferences.edit().putLong(CURRENT_USER_ID, userKey.getId()).commit();
+        Log.i(CredentialsManager.class.getName(), "Setting " + CURRENT_USER_ID + " = " + userKey.getId() + " (success: " + commit + ")");
     }
 }
