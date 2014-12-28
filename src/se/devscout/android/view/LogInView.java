@@ -2,6 +2,8 @@ package se.devscout.android.view;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,21 +15,27 @@ import com.google.android.gms.common.SignInButton;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
 import se.devscout.android.util.ActivityBankFactory;
+import se.devscout.android.util.CredentialsManager;
+import se.devscout.android.util.IdentityProvider;
 import se.devscout.android.util.PreferencesUtil;
 import se.devscout.server.api.ActivityBank;
-import se.devscout.server.api.ActivityBankListener;
-import se.devscout.server.api.model.ActivityKey;
-import se.devscout.server.api.model.SearchHistory;
 import se.devscout.server.api.model.User;
-import se.devscout.server.api.model.UserKey;
+import se.devscout.server.api.model.UserProperties;
 
-//TODO: It might be cleaner to create an AbstractActivityBankListener instead of implementing ActivityBankListener
-public class LogInView extends LinearLayout implements ActivityBankListener {
+public class LogInView extends LinearLayout implements CredentialsManager.Listener {
 
-    private enum State {
-        LOGGED_IN,
-        LOGGED_OUT,
-        WORKING
+    @Override
+    public void onAuthenticationStatusChange(final CredentialsManager.State currentState) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                refresh(currentState);
+            }
+        });
+    }
+
+    @Override
+    public void onAuthenticated(IdentityProvider provider, String data, UserProperties userProperties) {
     }
 
     public LogInView(Context context, boolean isListContentHeight) {
@@ -54,8 +62,9 @@ public class LogInView extends LinearLayout implements ActivityBankListener {
             public void onClick(View view) {
                 if (context instanceof SingleFragmentActivity) {
                     SingleFragmentActivity activity = (SingleFragmentActivity) context;
-                    refresh(State.WORKING);
-                    activity.signInWithGplus();
+                    CredentialsManager.getInstance().logInUsingGoogle(activity);
+//                    refresh(CredentialsManager.State.WORKING);
+//                    activity.signIn();
                 }
             }
         });
@@ -66,8 +75,9 @@ public class LogInView extends LinearLayout implements ActivityBankListener {
             public void onClick(View view) {
                 if (context instanceof SingleFragmentActivity) {
                     SingleFragmentActivity activity = (SingleFragmentActivity) context;
-                    refresh(State.WORKING);
-                    activity.signOutFromGplus();
+                    CredentialsManager.getInstance().logOut();
+//                    refresh(State.WORKING);
+//                    activity.signOutFromGplus();
                 }
             }
         });
@@ -88,15 +98,15 @@ public class LogInView extends LinearLayout implements ActivityBankListener {
             }
         });
 
-        refresh(ActivityBankFactory.getInstance(getContext()).isLoggedIn() ? State.LOGGED_IN : State.LOGGED_OUT);
+        refresh(CredentialsManager.getInstance().getState());
 
         setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, isListContentHeight ? ViewGroup.LayoutParams.WRAP_CONTENT : LayoutParams.MATCH_PARENT));
     }
 
-    private void refresh(State state) {
-        findViewById(R.id.auth_logged_in_container).setVisibility(state == State.LOGGED_OUT || state == State.WORKING ? GONE : VISIBLE);
-        findViewById(R.id.auth_logged_out_container).setVisibility(state == State.LOGGED_IN || state == State.WORKING ? GONE : VISIBLE);
-        findViewById(R.id.auth_progress_container).setVisibility(state == State.WORKING ? VISIBLE : GONE);
+    private void refresh(CredentialsManager.State state) {
+        findViewById(R.id.auth_logged_in_container).setVisibility(state.isLoggedIn() && !state.isWorking() ? VISIBLE : GONE);
+        findViewById(R.id.auth_logged_out_container).setVisibility(!state.isLoggedIn() && !state.isWorking() ? VISIBLE : GONE);
+        findViewById(R.id.auth_progress_container).setVisibility(state.isWorking() ? VISIBLE : GONE);
 
         switch (state) {
             case LOGGED_IN:
@@ -111,14 +121,14 @@ public class LogInView extends LinearLayout implements ActivityBankListener {
 
     @Override
     protected void onAttachedToWindow() {
-        ActivityBankFactory.getInstance(getContext()).addListener(this);
-        super.onAttachedToWindow();    //To change body of overridden methods use File | Settings | File Templates.
+        CredentialsManager.getInstance().addListener(this);
+        super.onAttachedToWindow();
     }
 
     @Override
     protected void onDetachedFromWindow() {
-        ActivityBankFactory.getInstance(getContext()).removeListener(this);
-        super.onDetachedFromWindow();    //To change body of overridden methods use File | Settings | File Templates.
+        CredentialsManager.getInstance().removeListener(this);
+        super.onDetachedFromWindow();
     }
 
 /*
@@ -135,42 +145,4 @@ public class LogInView extends LinearLayout implements ActivityBankListener {
         super.onRestoreInstanceState(state);
     }
 */
-
-    @Override
-    public void onSearchHistoryItemAdded(SearchHistory searchHistory) {
-    }
-
-    @Override
-    public void onFavouriteChange(ActivityKey activityKey, UserKey userKey, boolean isFavouriteNow) {
-    }
-
-    @Override
-    public void onLogIn() {
-        if (getContext() instanceof SingleFragmentActivity) {
-            SingleFragmentActivity activity = (SingleFragmentActivity) getContext();
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    refresh(State.LOGGED_IN);
-                }
-            });
-        }
-    }
-
-    @Override
-    public void onLogOut() {
-        if (getContext() instanceof SingleFragmentActivity) {
-            SingleFragmentActivity activity = (SingleFragmentActivity) getContext();
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    refresh(State.LOGGED_OUT);
-                }
-            });
-        }
-    }
-
-    @Override
-    public void onAsyncException(Exception e) {
-    }
 }

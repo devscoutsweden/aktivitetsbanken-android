@@ -15,14 +15,6 @@ public abstract class AbstractActivityBankListener implements ActivityBankListen
     }
 
     @Override
-    public void onLogIn() {
-    }
-
-    @Override
-    public void onLogOut() {
-    }
-
-    @Override
     public void onAsyncException(Exception e) {
     }
 }

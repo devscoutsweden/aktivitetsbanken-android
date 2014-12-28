@@ -5,7 +5,6 @@ import se.devscout.android.model.ActivityBean;
 import se.devscout.android.model.CategoryBean;
 import se.devscout.android.model.ReferenceBean;
 import se.devscout.android.model.SearchHistoryBean;
-import se.devscout.android.util.IdentityProvider;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.SimpleFilter;
 import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
@@ -185,21 +184,6 @@ public class SQLiteActivityRepo implements ActivityBank {
         return mediaProperties.getURI();
     }
 
-    @Override
-    public void logIn(IdentityProvider provider, String data, UserProperties userProperties) {
-        //No need to authenticate user. Do nothing.
-    }
-
-    @Override
-    public void logOut() {
-        //User cannot log in, to logging out is a no-brainer.
-    }
-
-    @Override
-    public boolean isLoggedIn() {
-        return true;
-    }
-
     private void fireSearchHistoryItemAdded(SearchHistory searchHistoryItem) {
         for (ActivityBankListener listener : mListeners) {
             listener.onSearchHistoryItemAdded(searchHistoryItem);
@@ -212,6 +196,7 @@ public class SQLiteActivityRepo implements ActivityBank {
         }
     }
 
+/*
     protected void fireLoggedIn() {
         for (ActivityBankListener listener : mListeners) {
             listener.onLogIn();
@@ -223,6 +208,7 @@ public class SQLiteActivityRepo implements ActivityBank {
             listener.onLogOut();
         }
     }
+*/
 
     protected void fireAsyncException(Exception e) {
         for (ActivityBankListener listener : mListeners) {

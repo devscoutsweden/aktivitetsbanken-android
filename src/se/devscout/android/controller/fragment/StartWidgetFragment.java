@@ -67,14 +67,6 @@ public class StartWidgetFragment extends ActivityBankFragment implements Activit
     }
 
     @Override
-    public void onLogIn() {
-    }
-
-    @Override
-    public void onLogOut() {
-    }
-
-    @Override
     public void onAsyncException(Exception e) {
     }
 
@@ -113,7 +105,7 @@ public class StartWidgetFragment extends ActivityBankFragment implements Activit
         view.findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((SingleFragmentActivity)getActivity()).signInWithGplus();
+                ((SingleFragmentActivity)getActivity()).signIn();
             }
         });
 */

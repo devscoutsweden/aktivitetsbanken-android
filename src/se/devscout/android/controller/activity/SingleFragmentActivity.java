@@ -37,7 +37,7 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
     private DrawerListAdapter mDrawerListAdapter;
     private AbstractActivityBankListener mActivityBankListener;
 
-    private CredentialsManager mCredentialsManager;
+//    private CredentialsManager mCredentialsManager;
     private AbstractActivityBankListener mActivityBackAsyncExceptionListener;
 
     protected SingleFragmentActivity() {
@@ -59,17 +59,13 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
     @Override
     protected void onStop() {
         super.onStop();
-        if (mCredentialsManager != null) {
-            mCredentialsManager.onActivityStop();
-        }
+        CredentialsManager.getInstance().onActivityStop(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (mCredentialsManager != null) {
-            mCredentialsManager.onActivityStart();
-        }
+        CredentialsManager.getInstance().onActivityStart(this);
     }
 
     @Override
@@ -108,20 +104,20 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_fragment_activity);
 
-        if (!getActivityBank().isLoggedIn()) {
-            mCredentialsManager = new CredentialsManager(this);
-        }
+//        if (!CredentialsManager.getInstance().getState().isLoggedIn()) {
+//            mCredentialsManager = new CredentialsManager();
+//        }
 
-        if (mCredentialsManager != null) {
-            mCredentialsManager.onActivityCreate(savedInstanceState);
-        }
+//        if (mCredentialsManager != null) {
+//            mCredentialsManager.onActivityCreate(this);
+//        }
 
 /*
         SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                signInWithGplus();
+                signIn();
             }
         });
 */
@@ -313,11 +309,10 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (mCredentialsManager != null) {
-            mCredentialsManager.onActivityResult(requestCode, resultCode, data);
-        }
+        CredentialsManager.getInstance().onActivityResult(requestCode, resultCode, data, this);
     }
 
+/*
     public void signInWithGplus() {
         mCredentialsManager.signInWithGplus();
     }
@@ -325,4 +320,5 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
     public void signOutFromGplus() {
         mCredentialsManager.logOut();
     }
+*/
 }

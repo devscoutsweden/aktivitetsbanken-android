@@ -33,7 +33,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
+public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements CredentialsManager.Listener {
     private static final String DEFAULT_REQUEST_BODY_ENCODING = "utf-8";
     private static final String HTTP_HEADER_AUTHORIZATION = "Authorization";
     private static final String HTTP_HEADER_CONTENT_TYPE = "Content-Type";
@@ -84,6 +84,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
                 return BackgroundTasksHandlerThread.ListenerAction.KEEP;
             }
         };
+        CredentialsManager.getInstance().addListener(this);
     }
 
     private String getRemoteHost() {
@@ -201,19 +202,23 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
         }
     }
 
+//    @Override
+//    public boolean isLoggedIn() {
+//        return mCredentialsMap.containsKey(getCurrentUserId());
+//    }
+
+//    @Override
+//    public void logOut() {
+//        mCredentialsMap.remove(getCurrentUserId());
+//        fireLoggedOut();
+//    }
+
     @Override
-    public boolean isLoggedIn() {
-        return mCredentialsMap.containsKey(getCurrentUserId());
+    public void onAuthenticationStatusChange(CredentialsManager.State currentState) {
     }
 
     @Override
-    public void logOut() {
-        mCredentialsMap.remove(getCurrentUserId());
-        fireLoggedOut();
-    }
-
-    @Override
-    public void logIn(IdentityProvider provider, String data, final UserProperties userProperties) {
+    public void onAuthenticated(IdentityProvider provider, String data, UserProperties userProperties) {
         switch (provider) {
             case GOOGLE:
                 mCredentialsMap.put(
@@ -247,7 +252,6 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo {
             default:
                 throw new UnsupportedOperationException("Does not support identity provider " + provider);
         }
-        fireLoggedIn();
     }
 
     @Override

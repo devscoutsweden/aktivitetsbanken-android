@@ -67,14 +67,6 @@ public class FavouriteActivitiesListFragment extends ActivitiesListFragment impl
     }
 
     @Override
-    public void onLogIn() {
-    }
-
-    @Override
-    public void onLogOut() {
-    }
-
-    @Override
     public void onAsyncException(Exception e) {
     }
 

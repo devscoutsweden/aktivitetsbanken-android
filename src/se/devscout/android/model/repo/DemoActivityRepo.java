@@ -2,7 +2,6 @@ package se.devscout.android.model.repo;
 
 import android.content.Context;
 import se.devscout.android.model.ActivityBean;
-import se.devscout.android.util.IdentityProvider;
 import se.devscout.android.util.PrimitiveActivityFilterFactory;
 import se.devscout.android.util.SimpleFilter;
 import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
@@ -164,20 +163,5 @@ public class DemoActivityRepo implements ActivityBank {
     @Override
     public URI getMediaItemURI(MediaProperties mediaProperties, int width, int height) {
         throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void logIn(IdentityProvider provider, String data, UserProperties userProperties) {
-        //No need to authenticate user. Do nothing.
-    }
-
-    @Override
-    public void logOut() {
-        //No need to have authenticated user. Do nothing.
-    }
-
-    @Override
-    public boolean isLoggedIn() {
-        return true;
     }
 }

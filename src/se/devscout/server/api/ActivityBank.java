@@ -1,6 +1,5 @@
 package se.devscout.server.api;
 
-import se.devscout.android.util.IdentityProvider;
 import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
 import se.devscout.android.util.http.UnauthorizedException;
 import se.devscout.server.api.model.*;
@@ -61,10 +60,4 @@ public interface ActivityBank {
     Media readMediaItem(MediaKey key);
 
     URI getMediaItemURI(MediaProperties mediaProperties, int width, int height);
-
-    void logIn(IdentityProvider provider, String data, UserProperties userProperties);
-
-    void logOut();
-
-    boolean isLoggedIn();
 }

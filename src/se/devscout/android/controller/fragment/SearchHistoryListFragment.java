@@ -62,14 +62,6 @@ public class SearchHistoryListFragment extends QuickSearchListFragment<SearchHis
     }
 
     @Override
-    public void onLogIn() {
-    }
-
-    @Override
-    public void onLogOut() {
-    }
-
-    @Override
     public void onAsyncException(Exception e) {
     }
 }
