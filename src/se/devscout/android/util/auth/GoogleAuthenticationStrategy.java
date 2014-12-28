@@ -41,7 +41,6 @@ class GoogleAuthenticationStrategy implements AuthenticationStrategy, GoogleApiC
     private boolean mIntentInProgress;
     private ConnectionResult mConnectionResult;
     private boolean mSignInClicked;
-    //    private Callback mCallback;
 
 
     GoogleAuthenticationStrategy(CredentialsManager credentialsManager, SingleFragmentActivity activity) {
@@ -59,8 +58,6 @@ class GoogleAuthenticationStrategy implements AuthenticationStrategy, GoogleApiC
                     .addScope(Plus.SCOPE_PLUS_PROFILE)
                     .build();
         }
-
-//        mGoogleApiClient.connect();
 
         if (!mGoogleApiClient.isConnecting()) {
             mSignInClicked = true;
@@ -145,8 +142,7 @@ class GoogleAuthenticationStrategy implements AuthenticationStrategy, GoogleApiC
 
             if (mSignInClicked) {
                 // The user has already clicked 'sign-in' so we attempt to
-                // resolve all
-                // errors until the user is signed in, or they cancel.
+                // resolve all errors until the user is signed in, or they cancel.
                 resolveSignInError();
             }
         }
@@ -243,7 +239,6 @@ class GoogleAuthenticationStrategy implements AuthenticationStrategy, GoogleApiC
         if (mConnectionResult.hasResolution()) {
             try {
                 mIntentInProgress = true;
-//                startIntentSenderForResult(mConnectionResult.getResolution().getIntentSender(), RC_SIGN_IN, null, 0, 0, 0);
                 mConnectionResult.startResolutionForResult(mActivity, RC_SIGN_IN);
             } catch (IntentSender.SendIntentException e) {
                 mIntentInProgress = false;

@@ -8,6 +8,11 @@ import se.devscout.server.api.model.UserProperties;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Singleton for keeping track of user authentication, meaning that it is in
+ * charge of knowing whether or not a user is signed in. It also "manages" the
+ * authentication process using an AuthenticationStrategy.
+ */
 public class CredentialsManager {
 
     private static CredentialsManager instance = null;
@@ -100,26 +105,11 @@ public class CredentialsManager {
         }
     }
 
-/*
-    public void onActivityCreate(SingleFragmentActivity activity) {
-        if (!isAuthenticationCompleted()) {
-            mGoogleContext = new GoogleContext(activity);
-        }
-    }
-*/
-
     public void onActivityResult(int requestCode, int resultCode, Intent data, SingleFragmentActivity activity) {
         if (mAuthStrategy != null) {
             mAuthStrategy.onActivityResult(requestCode, resultCode, data, activity);
         }
     }
-
-
-/*
-    public boolean isAuthenticationCompleted() {
-        return ActivityBankFactory.getInstance(mActivity).isLoggedIn();
-    }
-*/
 
     public void logOut() {
         if (mAuthStrategy != null) {
