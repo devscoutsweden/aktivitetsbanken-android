@@ -69,13 +69,6 @@
         android:id="@+id/auth_logged_in_container"
         android:layout_gravity="center_horizontal">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/auth_log_out"
-            android:id="@+id/auth_log_out_button"
-            android:layout_gravity="center_horizontal" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -106,6 +99,13 @@
             style="@style/ExpandCollapseToggleButton"
             android:id="@+id/auth_logged_in_smarter_button"
             android:layout_margin="@dimen/iconButtonMargin" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/auth_log_out"
+            android:id="@+id/auth_log_out_button"
+            android:layout_gravity="center_horizontal" />
 
     </LinearLayout>
 
