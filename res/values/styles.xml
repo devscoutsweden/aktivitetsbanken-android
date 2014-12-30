@@ -120,5 +120,12 @@
         <item name="android:layout_gravity">center_horizontal</item>
     </style>
 
-
+    <style name="ExpandCollapseToggleButton">
+        <item name="android:button">@drawable/expand_collapse_toggle_button</item>
+        <item name="android:paddingLeft">@dimen/iconButtonSize</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/accentBlue</item>
+    </style>
 </resources>

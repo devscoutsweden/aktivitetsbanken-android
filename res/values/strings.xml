@@ -189,21 +189,26 @@
     <string name="pick_account">Tyvärr, men du måste välja ett konto för att kunna logga in.</string>
     <string name="repo_unauthorized_could_not_save_favourites">Kunde inte spara eftersom du inte är inloggad.</string>
     <string name="auth_log_out">Logga ut</string>
-    <string name="auth_logged_out_promo">Logga in med Google+ för att göra appen bättre för dig och andra.</string>
+    <string name="auth_logged_out_promo">Logga in för att göra appen bättre för dig och andra.</string>
+    <string name="auth_logged_out_better">Bättre? Hur då?</string>
+    <string name="auth_logged_out_better_text">När du är inloggad kan du till exempel:\n
+        - favorit-markera\n
+        - betygsätta aktiviteter\n
+        - göra listor med aktiviteter\n
+        - skapa egna aktiviteter\n
+        \nOm vi hjälps åt att betygsätta,
+        kommentera och förbättra så
+        blir det enklare för alla
+        att hitta nya, bra och
+        roliga aktiviteter.
+    </string>
     <string name="auth_logged_in_promo">Hej, %1$s. Eftersom du är inloggad kan du göra en massa smarta grejer.</string>
-    <string name="auth_logged_out_better_how">Bättre? Hur då?</string>
-    <string name="auth_logged_in_smarter">Smartare? Hur då?</string>
-    <string name="auth_logged_smarter_text">Du kan till exempel:\n
-        - favorit-markera och betygsätta aktiviteter\n
+    <string name="auth_logged_in_smarter">Smarta grejer?</string>
+    <string name="auth_logged_in_smarter_text">Du kan till exempel:\n
+        - favorit-markera\n
+        - betygsätta aktiviteter\n
         - göra listor med aktiviteter\n
         - skapa egna aktiviteter
     </string>
-    <string name="auth_logged_better_text">När du är inloggade kan du till exempel:\n
-        - favorit-markera och betygsätta aktiviteter\n
-        - göra listor med aktiviteter\n
-        - skapa egna aktiviteter\n
-        \n
-        Om vi hjälps åt att betygsätta, kommentera och förbättra så blir det enklare för alla att hitta nya, bra och roliga aktiviteter.
-    </string>
-    <string name="auth_logged_out_better">Bättre? Hur då?</string>
+    <string name="auth_ok_i_got_it">Ok, jag fattar</string>
 </resources>

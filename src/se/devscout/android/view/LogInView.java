@@ -1,6 +1,5 @@
 package se.devscout.android.view;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
@@ -9,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.google.android.gms.common.SignInButton;
@@ -62,8 +62,6 @@ public class LogInView extends LinearLayout implements CredentialsManager.Listen
                 if (context instanceof SingleFragmentActivity) {
                     SingleFragmentActivity activity = (SingleFragmentActivity) context;
                     CredentialsManager.getInstance(activity).logInUsingGoogle(activity);
-//                    refresh(CredentialsManager.State.WORKING);
-//                    activity.signIn();
                 }
             }
         });
@@ -75,27 +73,19 @@ public class LogInView extends LinearLayout implements CredentialsManager.Listen
                 if (context instanceof SingleFragmentActivity) {
                     SingleFragmentActivity activity = (SingleFragmentActivity) context;
                     CredentialsManager.getInstance(activity).logOut();
-//                    refresh(State.WORKING);
-//                    activity.signOutFromGplus();
                 }
             }
         });
 
-        Button smarterButton = (Button) findViewById(R.id.auth_logged_in_smarter_button);
-        smarterButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new AlertDialog.Builder(context).setMessage(R.string.auth_logged_smarter_text).show();
-            }
-        });
+        int width = getResources().getDimensionPixelSize(R.dimen.textColumnWidth);
 
-        Button betterButton = (Button) findViewById(R.id.auth_logged_out_better_button);
-        betterButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new AlertDialog.Builder(context).setMessage(R.string.auth_logged_better_text).show();
-            }
-        });
+        CompoundButton smarterButton = (CompoundButton) findViewById(R.id.auth_logged_in_smarter_button);
+        smarterButton.setOnCheckedChangeListener(new AnimatedToggleSiblingViewListener(width));
+        smarterButton.setChecked(false);
+
+        final CompoundButton betterButton = (CompoundButton) findViewById(R.id.auth_logged_out_better_button);
+        betterButton.setOnCheckedChangeListener(new AnimatedToggleSiblingViewListener(width));
+        betterButton.setChecked(false);
 
         refresh(CredentialsManager.getInstance(context).getState());
 
@@ -129,19 +119,4 @@ public class LogInView extends LinearLayout implements CredentialsManager.Listen
         CredentialsManager.getInstance(getContext()).removeListener(this);
         super.onDetachedFromWindow();
     }
-
-/*
-    @Override
-    protected Parcelable onSaveInstanceState() {
-        ActivityBankFactory.getInstance(getContext()).removeListener(this);
-        return super.onSaveInstanceState();
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Parcelable state) {
-        ActivityBankFactory.getInstance(getContext()).addListener(this);
-        refresh(getContext(), ActivityBankFactory.getInstance(getContext()).isLoggedIn());
-        super.onRestoreInstanceState(state);
-    }
-*/
 }
