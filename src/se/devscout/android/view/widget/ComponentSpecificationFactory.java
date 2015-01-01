@@ -1,9 +1,7 @@
-package se.devscout.android.view;
+package se.devscout.android.view.widget;
 
 import android.content.Context;
-import se.devscout.android.controller.fragment.CrashReporterWidgetComponentFactory;
 import se.devscout.android.util.LogUtil;
-import se.devscout.android.view.widget.*;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -7,15 +7,12 @@ import android.view.ViewGroup;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.ActivityBankFragment;
 import se.devscout.android.controller.fragment.FeaturedActivitiesListFragment;
-import se.devscout.android.view.AbstractActivitiesFinderComponentFactory;
 import se.devscout.android.view.FeaturedActivitiesListView;
-import se.devscout.android.view.TabComponentFactory;
-import se.devscout.android.view.WidgetComponentFactory;
 
 public class FeaturedActivitiesFinderComponentFactory extends AbstractActivitiesFinderComponentFactory  implements TabComponentFactory, WidgetComponentFactory {
 
     public FeaturedActivitiesFinderComponentFactory(String name) {
-        super(name, R.drawable.ic_action_good, R.string.startTabFeatured, false, true, true);
+        super(name, R.string.startTabFeatured, R.drawable.ic_action_good, true);
     }
 
     @Override

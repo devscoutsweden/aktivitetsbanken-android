@@ -1,4 +1,4 @@
-package se.devscout.android.view;
+package se.devscout.android.view.widget;
 
 import android.support.v4.app.Fragment;
 

@@ -1,4 +1,4 @@
-package se.devscout.android.controller.fragment;
+package se.devscout.android.view.widget;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -13,9 +13,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import se.devscout.android.R;
+import se.devscout.android.controller.fragment.ActivityBankFragment;
+import se.devscout.android.controller.fragment.StartWidgetFragment;
 import se.devscout.android.util.LogUtil;
-import se.devscout.android.view.AbstractActivitiesFinderComponentFactory;
-import se.devscout.android.view.WidgetComponentFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -29,7 +29,7 @@ public class CrashReporterWidgetComponentFactory extends AbstractActivitiesFinde
     private final Map<String, File> mMap;
 
     public CrashReporterWidgetComponentFactory(File[] crashReportFiles, String name) {
-        super(name, R.drawable.ic_action_bad, R.string.crashReportWidgetTitle);
+        super(name, R.string.crashReportWidgetTitle, R.drawable.ic_action_bad);
         Arrays.sort(crashReportFiles, new Comparator<File>() {
             @Override
             public int compare(File file, File file2) {

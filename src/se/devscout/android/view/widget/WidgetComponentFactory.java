@@ -1,4 +1,4 @@
-package se.devscout.android.view;
+package se.devscout.android.view.widget;
 
 import android.view.LayoutInflater;
 import android.view.View;

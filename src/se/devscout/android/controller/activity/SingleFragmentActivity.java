@@ -23,8 +23,8 @@ import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
 import se.devscout.android.util.http.UnauthorizedException;
-import se.devscout.android.view.ComponentSpecificationFactory;
-import se.devscout.android.view.TabComponentFactory;
+import se.devscout.android.view.widget.ComponentSpecificationFactory;
+import se.devscout.android.view.widget.TabComponentFactory;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.model.SearchHistory;
 

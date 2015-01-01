@@ -9,8 +9,8 @@ import android.view.*;
 import se.devscout.android.R;
 import se.devscout.android.util.DialogUtil;
 import se.devscout.android.util.PreferencesUtil;
-import se.devscout.android.view.ComponentSpecificationFactory;
-import se.devscout.android.view.TabComponentFactory;
+import se.devscout.android.view.widget.ComponentSpecificationFactory;
+import se.devscout.android.view.widget.TabComponentFactory;
 
 import java.util.*;
 
