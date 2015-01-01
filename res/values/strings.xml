@@ -211,4 +211,5 @@
         - skapa egna aktiviteter
     </string>
     <string name="auth_ok_i_got_it">Ok, jag fattar</string>
+    <string name="auth_widget_title">In- och utloggning</string>
 </resources>

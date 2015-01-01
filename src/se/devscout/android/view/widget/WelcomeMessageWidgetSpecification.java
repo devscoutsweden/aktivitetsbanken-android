@@ -7,11 +7,12 @@ import android.widget.TextView;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.ActivityBankFragment;
 import se.devscout.android.view.AbstractActivitiesFinderComponentFactory;
+import se.devscout.android.view.WidgetComponentFactory;
 
-public class WelcomeMessageWidgetSpecification extends AbstractActivitiesFinderComponentFactory {
+public class WelcomeMessageWidgetSpecification extends AbstractActivitiesFinderComponentFactory implements WidgetComponentFactory {
 
-    public WelcomeMessageWidgetSpecification(int nameResId, int iconResId) {
-        super(iconResId, nameResId, true, false);
+    public WelcomeMessageWidgetSpecification(String name) {
+        super(name, R.drawable.ic_drawer, R.string.welcomeWidgetTitle, true, false);
     }
 
     @Override

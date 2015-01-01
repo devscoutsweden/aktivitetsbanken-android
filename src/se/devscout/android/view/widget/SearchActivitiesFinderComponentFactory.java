@@ -15,10 +15,11 @@ import se.devscout.android.controller.fragment.ActivityBankFragment;
 import se.devscout.android.controller.fragment.SearchFragment;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.view.AbstractActivitiesFinderComponentFactory;
+import se.devscout.android.view.WidgetComponentFactory;
 
-public class SearchActivitiesFinderComponentFactory extends AbstractActivitiesFinderComponentFactory {
-    public SearchActivitiesFinderComponentFactory(int nameResId, int iconResId) {
-        super(iconResId, nameResId, true, false);
+public class SearchActivitiesFinderComponentFactory extends AbstractActivitiesFinderComponentFactory implements WidgetComponentFactory {
+    public SearchActivitiesFinderComponentFactory(String name) {
+        super(name, R.drawable.ic_drawer, R.string.startTabSearch, true, false);
     }
 
     @Override

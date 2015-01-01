@@ -9,10 +9,12 @@ import se.devscout.android.controller.fragment.ActivityBankFragment;
 import se.devscout.android.controller.fragment.CategoriesListFragment;
 import se.devscout.android.view.AbstractActivitiesFinderComponentFactory;
 import se.devscout.android.view.CategoriesListSearchView;
+import se.devscout.android.view.TabComponentFactory;
+import se.devscout.android.view.WidgetComponentFactory;
 
-public class ByCategoryActivitiesFinderComponentFactory extends AbstractActivitiesFinderComponentFactory {
-    public ByCategoryActivitiesFinderComponentFactory(int nameResId, int iconResId) {
-        super(iconResId, nameResId, true, false, false);
+public class ByCategoryActivitiesFinderComponentFactory extends AbstractActivitiesFinderComponentFactory implements WidgetComponentFactory, TabComponentFactory {
+    public ByCategoryActivitiesFinderComponentFactory(String name) {
+        super(name, R.drawable.ic_action_labels, R.string.startTabCategories, true, false, false);
     }
 
     @Override

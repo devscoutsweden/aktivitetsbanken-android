@@ -23,7 +23,8 @@ import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
 import se.devscout.android.util.http.UnauthorizedException;
-import se.devscout.android.view.AbstractActivitiesFinderComponentFactory;
+import se.devscout.android.view.ComponentSpecificationFactory;
+import se.devscout.android.view.TabComponentFactory;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.model.SearchHistory;
 
@@ -128,10 +129,8 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
 
         mDrawerListAdapter = new DrawerListAdapter(this);
         mDrawerListAdapter.add(new HeaderDrawerItem(getString(R.string.drawer_start_header)));
-        for (AbstractActivitiesFinderComponentFactory finder : AbstractActivitiesFinderComponentFactory.getActivitiesFinders()) {
-            if (finder.isFragmentCreator()) {
-                mDrawerListAdapter.add(createFragmentCreatorDrawerItem(finder));
-            }
+        for (TabComponentFactory finder : ComponentSpecificationFactory.getInstance(this).getTabFactories()) {
+            mDrawerListAdapter.add(createFragmentCreatorDrawerItem(finder));
         }
 
         mDrawerListAdapter.addSearchHistory(getString(R.string.drawer_search_history_header), getActivityBank());
@@ -213,7 +212,7 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
     }
 */
 
-    private FragmentCreatorDrawerItem createFragmentCreatorDrawerItem(AbstractActivitiesFinderComponentFactory finder) {
+    private FragmentCreatorDrawerItem createFragmentCreatorDrawerItem(TabComponentFactory finder) {
         int titleResId = finder.getTitleResId();
         String title = titleResId > 0 ? getString(titleResId) : "";
         int iconResId = finder.getIconResId();

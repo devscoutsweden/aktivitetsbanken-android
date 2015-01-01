@@ -9,16 +9,19 @@ import android.view.*;
 import se.devscout.android.R;
 import se.devscout.android.util.DialogUtil;
 import se.devscout.android.util.PreferencesUtil;
-import se.devscout.android.view.AbstractActivitiesFinderComponentFactory;
+import se.devscout.android.view.ComponentSpecificationFactory;
+import se.devscout.android.view.TabComponentFactory;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class StartTabsFragment extends TabsFragment {
 
     private static final String PREFS_KEY_TAB_IDS = "tabs";
+    private static final List<String> DEFAULT_TABS = Arrays.asList(
+            ComponentSpecificationFactory.START,
+            ComponentSpecificationFactory.ACTIVITIES_BY_CATEGORY,
+            ComponentSpecificationFactory.SEARCH_ACTIVITIES,
+            ComponentSpecificationFactory.FAVOURITE_ACTIVITIES);
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,25 +50,19 @@ public class StartTabsFragment extends TabsFragment {
     protected StaticFragmentsPagerAdapter createPagerAdapter(FragmentManager fragmentManager) {
         StaticFragmentsPagerAdapter pagerAdapter = new StaticFragmentsPagerAdapter(fragmentManager, getActivity());
 
-
-        List<String> widgetIds = PreferencesUtil.getStringList(getPreferences(), PREFS_KEY_TAB_IDS, null);
-        for (AbstractActivitiesFinderComponentFactory finder : AbstractActivitiesFinderComponentFactory.getActivitiesFinders()) {
-            if (finder.isFragmentCreator()) {
-                if ((widgetIds != null && widgetIds.contains(finder.getId())) || (widgetIds == null && finder.isDefaultFragment())) {
-                    pagerAdapter.addTab(finder.getTitleResId(), finder.getIconResId(), finder.createFragment());
-                }
-            }
+        for (TabComponentFactory finder : getTabFactories(true).values()) {
+            pagerAdapter.addTab(finder.getTitleResId(), finder.getIconResId(), finder.createFragment());
         }
         return pagerAdapter;
     }
 
     private Dialog createWidgetSelectionDialog() {
-        final Map<String, AbstractActivitiesFinderComponentFactory> allWidgets = getAllTabs(false);
-        Map<String, AbstractActivitiesFinderComponentFactory> selectedWidgets = getAllTabs(true);
+        final Map<String, TabComponentFactory> allWidgets = getTabFactories(false);
+        Map<String, TabComponentFactory> selectedWidgets = getTabFactories(true);
 
         LinkedHashMap<String, Boolean> options = new LinkedHashMap<String, Boolean>();
 
-        for (Map.Entry<String, AbstractActivitiesFinderComponentFactory> entry : allWidgets.entrySet()) {
+        for (Map.Entry<String, TabComponentFactory> entry : allWidgets.entrySet()) {
             String title = entry.getKey();
             boolean selected = selectedWidgets.keySet().contains(title);
             options.put(title, selected);
@@ -104,14 +101,21 @@ public class StartTabsFragment extends TabsFragment {
         });
     }
 
-    private Map<String, AbstractActivitiesFinderComponentFactory> getAllTabs(boolean onlySelected) {
-        final Map<String, AbstractActivitiesFinderComponentFactory> allTabs = new LinkedHashMap<String, AbstractActivitiesFinderComponentFactory>();
-        List<String> tabIds = PreferencesUtil.getStringList(getPreferences(), PREFS_KEY_TAB_IDS, null);
-        for (AbstractActivitiesFinderComponentFactory finder : AbstractActivitiesFinderComponentFactory.getActivitiesFinders()) {
-            if (finder.isFragmentCreator()) {
-                if (!onlySelected || ((tabIds != null && tabIds.contains(finder.getId())) || (tabIds == null && finder.isDefaultFragment()))) {
-                    allTabs.put(getString(finder.getTitleResId()), finder);
-                }
+    private Map<String, TabComponentFactory> getTabFactories(boolean onlySelected) {
+
+        List<String> tabIds = PreferencesUtil.getStringList(getPreferences(), PREFS_KEY_TAB_IDS, DEFAULT_TABS);
+        Map<String, TabComponentFactory> factories = getTabFactories(onlySelected ? tabIds : null);
+        if (factories.isEmpty() && !tabIds.isEmpty()) {
+            return getTabFactories(DEFAULT_TABS);
+        }
+        return factories;
+    }
+
+    private Map<String, TabComponentFactory> getTabFactories(List<String> tabIds) {
+        final Map<String, TabComponentFactory> allTabs = new LinkedHashMap<String, TabComponentFactory>();
+        for (TabComponentFactory factory : ComponentSpecificationFactory.getInstance(getActivity()).getTabFactories()) {
+            if (tabIds == null || tabIds.contains(factory.getId())) {
+                allTabs.put(getString(factory.getTitleResId()), factory);
             }
         }
         return allTabs;

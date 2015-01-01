@@ -4,14 +4,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import se.devscout.android.R;
 import se.devscout.android.controller.fragment.ActivityBankFragment;
 import se.devscout.android.controller.fragment.OverallFavouriteActivitiesListFragment;
 import se.devscout.android.view.AbstractActivitiesFinderComponentFactory;
 import se.devscout.android.view.OverallFavouriteActivitiesListView;
+import se.devscout.android.view.TabComponentFactory;
+import se.devscout.android.view.WidgetComponentFactory;
 
-public class OverallFavouriteActivitiesFinderComponentFactory extends AbstractActivitiesFinderComponentFactory {
-    public OverallFavouriteActivitiesFinderComponentFactory(int nameResId, int iconResId) {
-        super(iconResId, nameResId, false, true, true);
+public class OverallFavouriteActivitiesFinderComponentFactory extends AbstractActivitiesFinderComponentFactory  implements TabComponentFactory, WidgetComponentFactory {
+    public OverallFavouriteActivitiesFinderComponentFactory(String name) {
+        super(name, R.drawable.ic_action_important, R.string.startTabOverallFavourites, false, true, true);
     }
 
     @Override
