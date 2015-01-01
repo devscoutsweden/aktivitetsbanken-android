@@ -1,4 +1,4 @@
-package se.devscout.android.view;
+package se.devscout.android.view.widget;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import se.devscout.android.R;
-import se.devscout.android.view.widget.FragmentListener;
+import se.devscout.android.view.ActivitiesListView;
 
 public class WidgetView extends RelativeLayout implements FragmentListener {
     private int mTitleTextId;
