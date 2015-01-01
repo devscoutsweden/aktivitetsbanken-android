@@ -111,7 +111,7 @@ public class CrashReporterWidgetComponentFactory extends AbstractActivitiesFinde
                         try {
                             reader = new FileReader(crashReportFile);
                             BufferedReader bufReader = new BufferedReader(reader);
-                            String line = null;
+                            String line;
                             while ((line = bufReader.readLine()) != null) {
                                 msg.append(line);
                                 msg.append('\n');
