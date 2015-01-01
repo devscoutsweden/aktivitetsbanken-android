@@ -16,7 +16,7 @@ import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.PreferencesUtil;
 import se.devscout.android.view.ActivitiesListView;
 import se.devscout.android.view.WidgetView;
-import se.devscout.android.view.widget.ComponentSpecificationFactory;
+import se.devscout.android.view.widget.ComponentFactoryRepo;
 import se.devscout.android.view.widget.CrashReporterWidgetComponentFactory;
 import se.devscout.android.view.widget.FragmentListener;
 import se.devscout.android.view.widget.WidgetComponentFactory;
@@ -29,14 +29,14 @@ import java.io.File;
 import java.util.*;
 
 //TODO: It might be cleaner to create an AbstractActivityBankListener instead of implementing ActivityBankListener
-public class StartWidgetFragment extends ActivityBankFragment implements ActivityBankListener {
+public class HomeWidgetFragment extends ActivityBankFragment implements ActivityBankListener {
 
     private static final String PREFS_KEY_WIDGET_IDS = "homeWidgets";
     private static final List<String> DEFAULT_WIDGETS = Arrays.asList(
-            ComponentSpecificationFactory.WELCOME,
-            ComponentSpecificationFactory.SEARCH,
-            ComponentSpecificationFactory.AUTHENTICATION,
-            ComponentSpecificationFactory.FEATURED_ACTIVITIES);
+            ComponentFactoryRepo.WELCOME_MESSAGE,
+            ComponentFactoryRepo.EXTENDED_SEARCH_ACTIVITIES,
+            ComponentFactoryRepo.AUTHENTICATION,
+            ComponentFactoryRepo.FEATURED_ACTIVITIES);
 
     private boolean mRefreshResultOnResume = false;
 
@@ -71,7 +71,7 @@ public class StartWidgetFragment extends ActivityBankFragment implements Activit
     public void onResume() {
         super.onResume();
 
-        final LinearLayout ll = (LinearLayout) getView().findViewById(R.id.start_widgets_container);
+        final LinearLayout ll = (LinearLayout) getView().findViewById(R.id.home_widgets_container);
         for (int i = 0; i < ll.getChildCount(); i++) {
             View view = ll.getChildAt(i);
 
@@ -96,16 +96,7 @@ public class StartWidgetFragment extends ActivityBankFragment implements Activit
         }
         getActivityBank().addListener(this);
 
-        final View view = inflater.inflate(R.layout.start, container, false);
-
-/*
-        view.findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((SingleFragmentActivity)getActivity()).signIn();
-            }
-        });
-*/
+        final View view = inflater.inflate(R.layout.home, container, false);
 
         loadSelectedWidgets(inflater, view);
 
@@ -151,7 +142,7 @@ public class StartWidgetFragment extends ActivityBankFragment implements Activit
     }
 
     private void loadSelectedWidgets(final LayoutInflater inflater, final View view) {
-        LinearLayout ll = (LinearLayout) view.findViewById(R.id.start_widgets_container);
+        LinearLayout ll = (LinearLayout) view.findViewById(R.id.home_widgets_container);
         int id = 12345;
         ll.removeAllViews();
         Map<String, WidgetComponentFactory> widgets = getWidgetFactories(true);
@@ -195,7 +186,7 @@ public class StartWidgetFragment extends ActivityBankFragment implements Activit
 
     private Map<String, WidgetComponentFactory> getWidgetFactories(List<String> widgetIds) {
         final Map<String, WidgetComponentFactory> allWidgets = new LinkedHashMap<String, WidgetComponentFactory>();
-        for (WidgetComponentFactory finder : ComponentSpecificationFactory.getInstance(getActivity()).getWidgetFactories()) {
+        for (WidgetComponentFactory finder : ComponentFactoryRepo.getInstance(getActivity()).getWidgetFactories()) {
             if (widgetIds == null || widgetIds.contains(finder.getId())) {
                 allWidgets.put(getString(finder.getTitleResId()), finder);
             }
@@ -203,8 +194,8 @@ public class StartWidgetFragment extends ActivityBankFragment implements Activit
         return allWidgets;
     }
 
-    public static StartWidgetFragment create() {
-        StartWidgetFragment fragment = new StartWidgetFragment();
+    public static HomeWidgetFragment create() {
+        HomeWidgetFragment fragment = new HomeWidgetFragment();
         return fragment;
     }
 

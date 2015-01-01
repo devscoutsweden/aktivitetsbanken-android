@@ -9,8 +9,8 @@ import se.devscout.android.controller.fragment.ActivityBankFragment;
 import se.devscout.android.controller.fragment.OverallFavouriteActivitiesListFragment;
 import se.devscout.android.view.OverallFavouriteActivitiesListView;
 
-public class OverallFavouriteActivitiesFinderComponentFactory extends AbstractActivitiesFinderComponentFactory  implements TabComponentFactory, WidgetComponentFactory {
-    public OverallFavouriteActivitiesFinderComponentFactory(String name) {
+public class OverallFavouriteActivitiesComponentFactory extends AbstractComponentFactory implements TabComponentFactory, WidgetComponentFactory {
+    public OverallFavouriteActivitiesComponentFactory(String name) {
         super(name, R.string.startTabOverallFavourites, R.drawable.ic_action_important, true);
     }
 

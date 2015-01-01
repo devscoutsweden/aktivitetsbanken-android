@@ -5,16 +5,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.ActivityBankFragment;
-import se.devscout.android.view.LogInView;
+import se.devscout.android.view.AuthenticationView;
 
-public class LogInWidgetSpecification extends AbstractActivitiesFinderComponentFactory implements WidgetComponentFactory {
+public class AuthenticationComponentFactory extends AbstractComponentFactory implements WidgetComponentFactory {
 
-    public LogInWidgetSpecification(String name) {
+    public AuthenticationComponentFactory(String name) {
         super(name, R.string.auth_widget_title, R.drawable.ic_drawer, false);
     }
 
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container, ActivityBankFragment activityBankFragment) {
-        return new LogInView(activityBankFragment.getActivity(), true);
+        return new AuthenticationView(activityBankFragment.getActivity(), true);
     }
 }

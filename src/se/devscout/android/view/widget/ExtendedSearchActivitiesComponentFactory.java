@@ -4,8 +4,8 @@ import android.support.v4.app.Fragment;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.SearchFragment;
 
-class SearchTabActivitiesFinderComponentFactory extends AbstractActivitiesFinderComponentFactory  implements TabComponentFactory{
-    public SearchTabActivitiesFinderComponentFactory(String name) {
+class ExtendedSearchActivitiesComponentFactory extends AbstractComponentFactory implements TabComponentFactory{
+    public ExtendedSearchActivitiesComponentFactory(String name) {
         super(name, R.string.startTabSearch, R.drawable.ic_action_search);
     }
 

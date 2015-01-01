@@ -9,9 +9,9 @@ import se.devscout.android.controller.fragment.ActivityBankFragment;
 import se.devscout.android.controller.fragment.FeaturedActivitiesListFragment;
 import se.devscout.android.view.FeaturedActivitiesListView;
 
-public class FeaturedActivitiesFinderComponentFactory extends AbstractActivitiesFinderComponentFactory  implements TabComponentFactory, WidgetComponentFactory {
+public class FeaturedActivitiesComponentFactory extends AbstractComponentFactory implements TabComponentFactory, WidgetComponentFactory {
 
-    public FeaturedActivitiesFinderComponentFactory(String name) {
+    public FeaturedActivitiesComponentFactory(String name) {
         super(name, R.string.startTabFeatured, R.drawable.ic_action_good, true);
     }
 

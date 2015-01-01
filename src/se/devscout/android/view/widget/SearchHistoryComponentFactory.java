@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.SearchHistoryListFragment;
 
-class SearchHistoryComponentFactory extends AbstractActivitiesFinderComponentFactory  implements TabComponentFactory{
+class SearchHistoryComponentFactory extends AbstractComponentFactory implements TabComponentFactory{
 
     public SearchHistoryComponentFactory(String name) {
         super(name, R.string.drawer_search_history_header, R.drawable.ic_action_time);

@@ -2,7 +2,7 @@ package se.devscout.android.view.widget;
 
 import java.io.Serializable;
 
-abstract class AbstractActivitiesFinderComponentFactory implements Serializable {
+abstract class AbstractComponentFactory implements Serializable {
 
     private final String mUniqueName;
 
@@ -14,11 +14,11 @@ abstract class AbstractActivitiesFinderComponentFactory implements Serializable 
     private final int mIconResId;
     private final boolean mWidgetTitleImportant;
 
-    AbstractActivitiesFinderComponentFactory(String uniqueName, int nameResId, int iconResId) {
+    AbstractComponentFactory(String uniqueName, int nameResId, int iconResId) {
         this(uniqueName, nameResId, iconResId, false);
     }
 
-    AbstractActivitiesFinderComponentFactory(String uniqueName, int nameResId, int iconResId, boolean widgetTitleImportant) {
+    AbstractComponentFactory(String uniqueName, int nameResId, int iconResId, boolean widgetTitleImportant) {
         mUniqueName = uniqueName;
         mIconResId = iconResId;
         mNameResId = nameResId;

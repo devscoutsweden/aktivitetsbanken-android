@@ -15,8 +15,8 @@ import se.devscout.android.controller.fragment.ActivityBankFragment;
 import se.devscout.android.controller.fragment.SearchFragment;
 import se.devscout.android.util.ActivityBankFactory;
 
-public class SearchActivitiesFinderComponentFactory extends AbstractActivitiesFinderComponentFactory implements WidgetComponentFactory {
-    public SearchActivitiesFinderComponentFactory(String name) {
+public class SimpleSearchActivitiesComponentFactory extends AbstractComponentFactory implements WidgetComponentFactory {
+    public SimpleSearchActivitiesComponentFactory(String name) {
         super(name, R.string.startTabSearch, R.drawable.ic_drawer, false);
     }
 

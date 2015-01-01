@@ -7,9 +7,9 @@ import android.widget.TextView;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.ActivityBankFragment;
 
-public class WelcomeMessageWidgetSpecification extends AbstractActivitiesFinderComponentFactory implements WidgetComponentFactory {
+public class WelcomeMessageComponentFactory extends AbstractComponentFactory implements WidgetComponentFactory {
 
-    public WelcomeMessageWidgetSpecification(String name) {
+    public WelcomeMessageComponentFactory(String name) {
         super(name, R.string.welcomeWidgetTitle, R.drawable.ic_drawer, false);
     }
 

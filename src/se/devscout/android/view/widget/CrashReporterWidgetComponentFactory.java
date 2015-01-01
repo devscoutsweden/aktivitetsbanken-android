@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.ActivityBankFragment;
-import se.devscout.android.controller.fragment.StartWidgetFragment;
+import se.devscout.android.controller.fragment.HomeWidgetFragment;
 import se.devscout.android.util.LogUtil;
 
 import java.io.BufferedReader;
@@ -25,7 +25,7 @@ import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.util.*;
 
-public class CrashReporterWidgetComponentFactory extends AbstractActivitiesFinderComponentFactory implements WidgetComponentFactory {
+public class CrashReporterWidgetComponentFactory extends AbstractComponentFactory implements WidgetComponentFactory {
     private final Map<String, File> mMap;
 
     public CrashReporterWidgetComponentFactory(File[] crashReportFiles, String name) {
@@ -117,13 +117,13 @@ public class CrashReporterWidgetComponentFactory extends AbstractActivitiesFinde
                                 msg.append('\n');
                             }
                         } catch (IOException e) {
-                            LogUtil.e(StartWidgetFragment.class.getName(), "Could not read crash report reader", e);
+                            LogUtil.e(HomeWidgetFragment.class.getName(), "Could not read crash report reader", e);
                         } finally {
                             if (reader != null) {
                                 try {
                                     reader.close();
                                 } catch (IOException e) {
-                                    LogUtil.e(StartWidgetFragment.class.getName(), "Could not close crash report reader", e);
+                                    LogUtil.e(HomeWidgetFragment.class.getName(), "Could not close crash report reader", e);
                                 }
                             }
                         }

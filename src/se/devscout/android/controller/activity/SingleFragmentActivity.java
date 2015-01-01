@@ -23,7 +23,7 @@ import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
 import se.devscout.android.util.http.UnauthorizedException;
-import se.devscout.android.view.widget.ComponentSpecificationFactory;
+import se.devscout.android.view.widget.ComponentFactoryRepo;
 import se.devscout.android.view.widget.TabComponentFactory;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.model.SearchHistory;
@@ -129,7 +129,7 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
 
         mDrawerListAdapter = new DrawerListAdapter(this);
         mDrawerListAdapter.add(new HeaderDrawerItem(getString(R.string.drawer_start_header)));
-        for (TabComponentFactory finder : ComponentSpecificationFactory.getInstance(this).getTabFactories()) {
+        for (TabComponentFactory finder : ComponentFactoryRepo.getInstance(this).getTabFactories()) {
             mDrawerListAdapter.add(createFragmentCreatorDrawerItem(finder));
         }
 

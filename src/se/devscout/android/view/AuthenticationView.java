@@ -21,7 +21,7 @@ import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.model.User;
 import se.devscout.server.api.model.UserProperties;
 
-public class LogInView extends LinearLayout implements CredentialsManager.Listener {
+public class AuthenticationView extends LinearLayout implements CredentialsManager.Listener {
 
     @Override
     public void onAuthenticationStatusChange(final CredentialsManager.State currentState) {
@@ -37,17 +37,17 @@ public class LogInView extends LinearLayout implements CredentialsManager.Listen
     public void onAuthenticated(IdentityProvider provider, String data, UserProperties userProperties) {
     }
 
-    public LogInView(Context context, boolean isListContentHeight) {
+    public AuthenticationView(Context context, boolean isListContentHeight) {
         super(context);
         init(context, isListContentHeight);
     }
 
-    public LogInView(Context context, AttributeSet attrs, boolean isListContentHeight) {
+    public AuthenticationView(Context context, AttributeSet attrs, boolean isListContentHeight) {
         super(context, attrs);
         init(context, isListContentHeight);
     }
 
-    public LogInView(Context context, AttributeSet attrs, int defStyle, boolean isListContentHeight) {
+    public AuthenticationView(Context context, AttributeSet attrs, int defStyle, boolean isListContentHeight) {
         super(context, attrs, defStyle);
         init(context, isListContentHeight);
     }

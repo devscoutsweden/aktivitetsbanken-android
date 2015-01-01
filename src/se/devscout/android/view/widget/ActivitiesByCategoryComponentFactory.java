@@ -9,8 +9,8 @@ import se.devscout.android.controller.fragment.ActivityBankFragment;
 import se.devscout.android.controller.fragment.CategoriesListFragment;
 import se.devscout.android.view.CategoriesListSearchView;
 
-public class ByCategoryActivitiesFinderComponentFactory extends AbstractActivitiesFinderComponentFactory implements WidgetComponentFactory, TabComponentFactory {
-    public ByCategoryActivitiesFinderComponentFactory(String name) {
+public class ActivitiesByCategoryComponentFactory extends AbstractComponentFactory implements WidgetComponentFactory, TabComponentFactory {
+    public ActivitiesByCategoryComponentFactory(String name) {
         super(name, R.string.startTabCategories, R.drawable.ic_action_labels, false);
     }
 

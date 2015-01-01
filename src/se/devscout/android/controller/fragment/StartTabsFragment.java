@@ -9,7 +9,7 @@ import android.view.*;
 import se.devscout.android.R;
 import se.devscout.android.util.DialogUtil;
 import se.devscout.android.util.PreferencesUtil;
-import se.devscout.android.view.widget.ComponentSpecificationFactory;
+import se.devscout.android.view.widget.ComponentFactoryRepo;
 import se.devscout.android.view.widget.TabComponentFactory;
 
 import java.util.*;
@@ -18,10 +18,10 @@ public class StartTabsFragment extends TabsFragment {
 
     private static final String PREFS_KEY_TAB_IDS = "tabs";
     private static final List<String> DEFAULT_TABS = Arrays.asList(
-            ComponentSpecificationFactory.START,
-            ComponentSpecificationFactory.ACTIVITIES_BY_CATEGORY,
-            ComponentSpecificationFactory.SEARCH_ACTIVITIES,
-            ComponentSpecificationFactory.FAVOURITE_ACTIVITIES);
+            ComponentFactoryRepo.HOME,
+            ComponentFactoryRepo.ACTIVITIES_BY_CATEGORY,
+            ComponentFactoryRepo.SIMPLE_SEARCH_ACTIVITIES,
+            ComponentFactoryRepo.FAVOURITE_ACTIVITIES);
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -113,7 +113,7 @@ public class StartTabsFragment extends TabsFragment {
 
     private Map<String, TabComponentFactory> getTabFactories(List<String> tabIds) {
         final Map<String, TabComponentFactory> allTabs = new LinkedHashMap<String, TabComponentFactory>();
-        for (TabComponentFactory factory : ComponentSpecificationFactory.getInstance(getActivity()).getTabFactories()) {
+        for (TabComponentFactory factory : ComponentFactoryRepo.getInstance(getActivity()).getTabFactories()) {
             if (tabIds == null || tabIds.contains(factory.getId())) {
                 allTabs.put(getString(factory.getTitleResId()), factory);
             }
