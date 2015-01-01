@@ -12,12 +12,10 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import se.devscout.android.R;
 import se.devscout.android.util.DialogUtil;
-import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.PreferencesUtil;
 import se.devscout.android.view.ActivitiesListView;
 import se.devscout.android.view.WidgetView;
 import se.devscout.android.view.widget.ComponentFactoryRepo;
-import se.devscout.android.view.widget.CrashReporterWidgetComponentFactory;
 import se.devscout.android.view.widget.FragmentListener;
 import se.devscout.android.view.widget.WidgetComponentFactory;
 import se.devscout.server.api.ActivityBankListener;
@@ -25,7 +23,6 @@ import se.devscout.server.api.model.ActivityKey;
 import se.devscout.server.api.model.SearchHistory;
 import se.devscout.server.api.model.UserKey;
 
-import java.io.File;
 import java.util.*;
 
 //TODO: It might be cleaner to create an AbstractActivityBankListener instead of implementing ActivityBankListener
@@ -36,7 +33,8 @@ public class HomeWidgetFragment extends ActivityBankFragment implements Activity
             ComponentFactoryRepo.WELCOME_MESSAGE,
             ComponentFactoryRepo.EXTENDED_SEARCH_ACTIVITIES,
             ComponentFactoryRepo.AUTHENTICATION,
-            ComponentFactoryRepo.FEATURED_ACTIVITIES);
+            ComponentFactoryRepo.FEATURED_ACTIVITIES,
+            ComponentFactoryRepo.CRASH_REPORTER);
 
     private boolean mRefreshResultOnResume = false;
 
@@ -146,10 +144,6 @@ public class HomeWidgetFragment extends ActivityBankFragment implements Activity
         int id = 12345;
         ll.removeAllViews();
         Map<String, WidgetComponentFactory> widgets = getWidgetFactories(true);
-        final File[] crashReportFiles = LogUtil.getCrashReportFiles(getActivity());
-        if (crashReportFiles.length > 0) {
-            widgets.put(getString(R.string.crashReportWidgetTitle), new CrashReporterWidgetComponentFactory(crashReportFiles, "CrashReporter"));
-        }
         for (WidgetComponentFactory finder : widgets.values()) {
             WidgetView widget = new WidgetView(getActivity(), finder.isWidgetTitleImportant() ? finder.getTitleResId() : 0);
             widget.setId(id++);
