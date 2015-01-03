@@ -19,7 +19,7 @@
         android:focusableInTouchMode="true" />
 
     <!-- Tabs similar to those of Google Play (see http://developer.android.com/samples/SlidingTabsBasic/index.html) -->
-    <com.example.android.common.view.SlidingTabLayout
+    <se.devscout.android.view.SlidingTabLayout
         android:id="@+id/viewPagerSlidingTabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
