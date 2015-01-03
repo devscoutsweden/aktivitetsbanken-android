@@ -9,12 +9,11 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
-import se.devscout.android.util.ActivityBankFactory;
+import se.devscout.android.util.ResourceUtil;
 import se.devscout.android.view.ActivitiesListItem;
 import se.devscout.android.view.AsyncImageBean;
 import se.devscout.android.view.AsyncImageView;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,11 +23,10 @@ public class AsyncImageArrayAdapter extends ArrayAdapter<AsyncImageBean> {
         super(context, R.layout.simple_list_item_1, result);
     }
 
-    public static ArrayAdapter fromList(List<ActivitiesListItem> result, Context context, int imageSize) {
+    public static ArrayAdapter fromList(List<ActivitiesListItem> result, Context context) {
         List<AsyncImageBean> props = new ArrayList<AsyncImageBean>();
         for (ActivitiesListItem item : result) {
-            URI uri = ActivityBankFactory.getInstance(context).getMediaItemURI(item.getCoverMedia(), imageSize, imageSize);
-            props.add(new AsyncImageBean(item.getName(), uri));
+            props.add(new AsyncImageBean(item.getName(), ResourceUtil.getFullScreenMediaURIs(item.getCoverMedia(), context)));
         }
         return new AsyncImageArrayAdapter(context, props);
     }
