@@ -20,7 +20,7 @@ public class StartTabsFragment extends TabsFragment {
     private static final List<String> DEFAULT_TABS = Arrays.asList(
             ComponentFactoryRepo.HOME,
             ComponentFactoryRepo.ACTIVITIES_BY_CATEGORY,
-            ComponentFactoryRepo.SIMPLE_SEARCH_ACTIVITIES,
+            ComponentFactoryRepo.EXTENDED_SEARCH_ACTIVITIES,
             ComponentFactoryRepo.FAVOURITE_ACTIVITIES);
 
     @Override

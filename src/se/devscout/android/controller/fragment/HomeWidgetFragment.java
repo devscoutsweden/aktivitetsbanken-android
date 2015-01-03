@@ -31,8 +31,9 @@ public class HomeWidgetFragment extends ActivityBankFragment implements Activity
     private static final String PREFS_KEY_WIDGET_IDS = "homeWidgets";
     private static final List<String> DEFAULT_WIDGETS = Arrays.asList(
             ComponentFactoryRepo.WELCOME_MESSAGE,
-            ComponentFactoryRepo.EXTENDED_SEARCH_ACTIVITIES,
+            ComponentFactoryRepo.SIMPLE_SEARCH_ACTIVITIES,
             ComponentFactoryRepo.AUTHENTICATION,
+            ComponentFactoryRepo.OVERALL_FAVOURITE_ACTIVITIES,
             ComponentFactoryRepo.FEATURED_ACTIVITIES,
             ComponentFactoryRepo.CRASH_REPORTER);
 
