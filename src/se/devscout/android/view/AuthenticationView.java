@@ -72,7 +72,7 @@ public class AuthenticationView extends LinearLayout implements CredentialsManag
             public void onClick(View view) {
                 if (context instanceof SingleFragmentActivity) {
                     SingleFragmentActivity activity = (SingleFragmentActivity) context;
-                    CredentialsManager.getInstance(activity).logOut();
+                    CredentialsManager.getInstance(activity).logOut(false);
                 }
             }
         });

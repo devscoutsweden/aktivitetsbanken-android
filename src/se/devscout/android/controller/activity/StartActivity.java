@@ -14,6 +14,7 @@ import se.devscout.android.controller.fragment.StartTabsFragment;
 import se.devscout.android.model.repo.sql.SQLiteActivityRepo;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.UsageLogUtil;
+import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.android.util.concurrency.CleanImageCacheTaskExecutor;
 
 public class StartActivity extends SingleFragmentActivity {
@@ -65,6 +66,14 @@ public class StartActivity extends SingleFragmentActivity {
                 }).create();
                 dialog.show();
                 LogUtil.i(StartActivity.class.getName(), "Database has been reset.");
+                break;
+            case R.id.menuStartLogOutAndRevokeAccess:
+                CredentialsManager cm = CredentialsManager.getInstance(this);
+                if (cm.getState().isLoggedIn()) {
+                    cm.logOut(true);
+                } else {
+                    Toast.makeText(this, R.string.auth_cannot_revoke_since_not_logged_in, Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
         return super.onMenuItemSelected(featureId, item);

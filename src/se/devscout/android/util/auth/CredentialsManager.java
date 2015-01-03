@@ -67,11 +67,15 @@ public class CredentialsManager {
 
     private void logIn(AuthenticationStrategy strategy) {
         if (mAuthStrategy != null) {
-            mAuthStrategy.startLogOut();
+            mAuthStrategy.startLogOut(false);
         }
         mAuthStrategy = strategy;
         setState(State.LOGGING_IN);
         strategy.startLogIn();
+    }
+
+    public void onLogInCancelled() {
+        setState(State.LOGGED_OUT);
     }
 
     public interface Listener {
@@ -125,10 +129,10 @@ public class CredentialsManager {
         }
     }
 
-    public void logOut() {
+    public void logOut(boolean revokeAccess) {
         if (mAuthStrategy != null) {
             setState(State.LOGGING_OUT);
-            mAuthStrategy.startLogOut();
+            mAuthStrategy.startLogOut(revokeAccess);
         }
     }
 

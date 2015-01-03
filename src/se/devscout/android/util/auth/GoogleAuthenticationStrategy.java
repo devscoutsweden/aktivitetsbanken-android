@@ -18,6 +18,8 @@ import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
 import se.devscout.android.R;
@@ -70,8 +72,42 @@ class GoogleAuthenticationStrategy implements AuthenticationStrategy, GoogleApiC
     }
 
     @Override
-    public void startLogOut() {
-        signOut();
+    public void startLogOut(boolean revokeAccess) {
+        if (mGoogleApiClient != null) {
+            mGoogleAccountName = null;
+            getPreferences().edit().putString("mGoogleAccountName", mGoogleAccountName).commit();
+            if (mGoogleApiClient.isConnected()) {
+                Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
+                if (revokeAccess) {
+                    Plus.AccountApi.revokeAccessAndDisconnect(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
+                        @Override
+                        public void onResult(Status status) {
+                            mCredentialsManager.onLogOutDone();
+                            if (mGoogleApiClient.isConnected()) {
+                                // Since the name "revokeAccessAndDisconnect"
+                                // includes the word "Disconnect", one would
+                                // think that explicitly invoking disconnect()
+                                // would be redundant, but for some reason
+                                // isConnected() seems to return true even after
+                                // revokeAccessAndDisconnect has invoked the
+                                // callback. So it seems like a good idea to
+                                // explicitly call disconnect() just be air on
+                                // the safe side.
+                                mGoogleApiClient.disconnect();
+                            }
+                            // TODO: In the onResult callback, you can respond to the event and trigger any appropriate logic in your app or your back-end code. For more information, see the deletion rules in the developer policies. More on https://developers.google.com/+/policies#personal-information. We probably need to clear the user's e-mail address and name (which we got from their Google profile) from the server's database).
+                        }
+                    });
+                } else {
+                    mGoogleApiClient.disconnect();
+                    mCredentialsManager.onLogOutDone();
+                }
+            } else {
+                mCredentialsManager.onLogOutDone();
+            }
+        } else {
+            mCredentialsManager.onLogOutDone();
+        }
     }
 
     @Override
@@ -89,17 +125,19 @@ class GoogleAuthenticationStrategy implements AuthenticationStrategy, GoogleApiC
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent
-            data, SingleFragmentActivity activity) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data, SingleFragmentActivity activity) {
         if (requestCode == RC_SIGN_IN) {
             if (resultCode != FragmentActivity.RESULT_OK) {
                 mSignInClicked = false;
             }
-
             mIntentInProgress = false;
-
-            if (!mGoogleApiClient.isConnecting()) {
-                mGoogleApiClient.connect();
+            if (resultCode == FragmentActivity.RESULT_OK) {
+                if (!mGoogleApiClient.isConnecting()) {
+                    mGoogleApiClient.connect();
+                }
+            } else if (resultCode == FragmentActivity.RESULT_CANCELED) {
+                mCredentialsManager.onLogInCancelled();
+                Toast.makeText(mActivity, R.string.must_authorize_app, Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == RC_CHOOSE_ACCOUNT) {
             if (resultCode == FragmentActivity.RESULT_OK) {
@@ -112,6 +150,7 @@ class GoogleAuthenticationStrategy implements AuthenticationStrategy, GoogleApiC
                     startChooseAccountActivity();
                 }
             } else if (resultCode == FragmentActivity.RESULT_CANCELED) {
+                mCredentialsManager.onLogInCancelled();
                 Toast.makeText(mActivity, R.string.pick_account, Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR) {
@@ -157,20 +196,6 @@ class GoogleAuthenticationStrategy implements AuthenticationStrategy, GoogleApiC
             } else {
                 requestGoogleIDToken(mActivity);
             }
-        }
-    }
-
-    private void signOut() {
-        if (mGoogleApiClient != null) {
-            mGoogleAccountName = null;
-            getPreferences().edit().putString("mGoogleAccountName", mGoogleAccountName).commit();
-            if (mGoogleApiClient.isConnected()) {
-                Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
-                mGoogleApiClient.disconnect();
-//            mGoogleApiClient.connect();
-            }
-
-            mCredentialsManager.onLogOutDone();
         }
     }
 

@@ -212,4 +212,11 @@
     </string>
     <string name="auth_ok_i_got_it">Ok, jag fattar</string>
     <string name="auth_widget_title">In- och utloggning</string>
+    <string name="log_out_and_revoke_access">Logga ut och ta bort koppling till
+        G+
+    </string>
+    <string name="must_authorize_app">Du måste ge appen behörighet för att kunna logga in.</string>
+    <string name="auth_cannot_revoke_since_not_logged_in">Kan inte logga ut
+        eftersom du inte är inloggad
+    </string>
 </resources>

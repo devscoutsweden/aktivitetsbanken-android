@@ -14,7 +14,7 @@ public interface AuthenticationStrategy {
 
     void startLogIn();
 
-    void startLogOut();
+    void startLogOut(boolean revokeAccess);
 
     void onActivityStop(SingleFragmentActivity activity);
 

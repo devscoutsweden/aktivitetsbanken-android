@@ -20,4 +20,8 @@
         android:id="@+id/menuStartShowUsageStats"
         android:title="@string/show_usage_stats"
         android:icon="@drawable/ic_action_sort_by_size" />
+
+    <item
+        android:id="@+id/menuStartLogOutAndRevokeAccess"
+        android:title="@string/log_out_and_revoke_access"/>
 </menu>
