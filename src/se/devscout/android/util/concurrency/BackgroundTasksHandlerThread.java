@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
+import android.text.TextUtils;
 import android.widget.ImageView;
 import se.devscout.android.model.repo.remote.RemoteActivityRepoImpl;
 import se.devscout.android.util.LogUtil;
@@ -79,7 +80,7 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
     }
 
     public void queueGetMediaResource(ImageView imageView, URI[] uris, int maxFileSize) {
-        LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Wants to display one of " + uris + " in an image view.");
+        LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Wants to display one of " + TextUtils.join(", ", uris) + " in an image view.");
         queueTask(BackgroundTask.DISPLAY_IMAGE, new DisplayImageTaskParam(imageView, Integer.valueOf(maxFileSize), uris));
     }
 
