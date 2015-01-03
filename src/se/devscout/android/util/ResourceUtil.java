@@ -6,14 +6,13 @@ import android.util.DisplayMetrics;
 import se.devscout.server.api.model.Media;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ResourceUtil {
 
-    private Context mContext;
-
-    public ResourceUtil(Context context) {
-        mContext = context;
-    }
+    private static final List<String> IMAGE_MIME_TYPES = Arrays.asList("image/jpeg", "image/png");
 
     public static URI[] getFullScreenMediaURIs(Media media, Context context) {
         if (media != null) {
@@ -34,14 +33,13 @@ public class ResourceUtil {
         }
     }
 
-    public int toResourceId(URI uri) {
-        if ("app-drawable".equals(uri.getScheme())) {
-            int identifier = mContext.getResources().getIdentifier(uri.getSchemeSpecificPart(), "drawable", mContext.getPackageName());
-            if (identifier > 0) {
-                return identifier;
+    public static List<Media> getImageMediaItems(List<? extends Media> mediaItems) {
+        List<Media> keys = new ArrayList<Media>();
+        for (Media mediaItem : mediaItems) {
+            if (IMAGE_MIME_TYPES.contains(mediaItem.getMimeType())) {
+                keys.add(mediaItem);
             }
         }
-        // Return default icon
-        return R.drawable.ic_menu_gallery;
+        return keys;
     }
 }

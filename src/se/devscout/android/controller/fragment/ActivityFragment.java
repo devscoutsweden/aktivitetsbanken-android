@@ -23,7 +23,6 @@ import se.devscout.server.api.model.ActivityKey;
 import se.devscout.server.api.model.Media;
 import se.devscout.server.api.model.Reference;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -85,10 +84,10 @@ public class ActivityFragment extends ActivityBankFragment/* implements Backgrou
         }
         ((TextView) view.findViewById(R.id.activityFactCategories)).setVisibility(isCategoriesSet ? View.VISIBLE : View.GONE);
 
-        ResourceUtil resourceUtil = new ResourceUtil(context);
-
         if (activityProperties.getCoverMedia() != null) {
-            int screenWidth = getActivity().getResources().getDisplayMetrics().widthPixels;
+            List<? extends Media> mediaItems = activityProperties.getMediaItems();
+            final List<Media> keys = ResourceUtil.getImageMediaItems(mediaItems);
+
             AsyncImageView asyncImageView = (AsyncImageView) view.findViewById(R.id.activityCover);
             AsyncImageBean asyncImageProps = new AsyncImageBean(
                     null,
@@ -97,18 +96,14 @@ public class ActivityFragment extends ActivityBankFragment/* implements Backgrou
             asyncImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    List<? extends Media> mediaItems = activityProperties.getMediaItems();
-                    ArrayList<ObjectIdentifierBean> keys = new ArrayList<ObjectIdentifierBean>();
-                    for (Media mediaItem : mediaItems) {
-                        keys.add(new ObjectIdentifierBean(mediaItem));
-                    }
                     getActivity().startActivity(GalleryThumbnailsActivity.createIntent(getActivity(), keys));
                 }
+
             });
 
             TextView activityCoverMore = (TextView) view.findViewById(R.id.activityCoverMore);
-            if (activityProperties.getMediaItems().size() > 1) {
-                activityCoverMore.setText("" + (activityProperties.getMediaItems().size() - 1) + "+");
+            if (keys.size() > 1) {
+                activityCoverMore.setText("" + (keys.size() - 1) + "+");
                 activityCoverMore.setVisibility(View.VISIBLE);
             } else {
                 activityCoverMore.setVisibility(View.GONE);

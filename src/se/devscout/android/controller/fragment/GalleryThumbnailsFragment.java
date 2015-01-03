@@ -22,7 +22,7 @@ import java.util.List;
 public class GalleryThumbnailsFragment extends ActivityBankFragment {
     private GridView mGridView;
 
-    protected ArrayList<ObjectIdentifierBean> mActivityKeys;
+    protected ArrayList<ObjectIdentifierBean> mMediaItemKeys;
     private int mSize;
 
     @Override
@@ -31,7 +31,7 @@ public class GalleryThumbnailsFragment extends ActivityBankFragment {
             /*
              * Restore fields from saved state, for example after the device has been rotated.
              */
-            mActivityKeys = (ArrayList<ObjectIdentifierBean>) savedInstanceState.getSerializable("mActivityKeys");
+            mMediaItemKeys = (ArrayList<ObjectIdentifierBean>) savedInstanceState.getSerializable("mMediaItemKeys");
             mSize = savedInstanceState.getInt("mSize");
         } else {
             mSize = container.getContext().getResources().getDimensionPixelSize(android.R.dimen.thumbnail_height);
@@ -42,7 +42,7 @@ public class GalleryThumbnailsFragment extends ActivityBankFragment {
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                getActivity().startActivity(GalleryFullscreenActivity.createIntent(getActivity(), mActivityKeys, null, i));
+                getActivity().startActivity(GalleryFullscreenActivity.createIntent(getActivity(), mMediaItemKeys, null, i));
             }
         });
 
@@ -55,7 +55,7 @@ public class GalleryThumbnailsFragment extends ActivityBankFragment {
         if (getActivity() == null || mGridView == null) {
             return;
         }
-        ArrayAdapter<ObjectIdentifierBean> adapter = new ArrayAdapter<ObjectIdentifierBean>(getActivity(), android.R.layout.simple_gallery_item, mActivityKeys) {
+        ArrayAdapter<ObjectIdentifierBean> adapter = new ArrayAdapter<ObjectIdentifierBean>(getActivity(), android.R.layout.simple_gallery_item, mMediaItemKeys) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 if (convertView == null) {
@@ -84,18 +84,18 @@ public class GalleryThumbnailsFragment extends ActivityBankFragment {
          * Store fields into saved state, for example when the activity is destroyed after the device has been rotated.
          */
         LogUtil.d(ActivitiesListFragment.class.getName(), "Saving state");
-        outState.putSerializable("mActivityKeys", mActivityKeys);
+        outState.putSerializable("mMediaItemKeys", mMediaItemKeys);
         outState.putInt("mSize", mSize);
         LogUtil.d(ActivitiesListFragment.class.getName(), "State saved");
     }
 
-    public static GalleryThumbnailsFragment create(List<? extends MediaKey> activities) {
+    public static GalleryThumbnailsFragment create(List<? extends MediaKey> mediaKeys) {
         GalleryThumbnailsFragment fragment = new GalleryThumbnailsFragment();
-        ArrayList<ObjectIdentifierBean> activityKeys = new ArrayList<ObjectIdentifierBean>();
-        for (MediaKey key : activities) {
-            activityKeys.add(new ObjectIdentifierBean(key.getId()));
+        ArrayList<ObjectIdentifierBean> keys = new ArrayList<ObjectIdentifierBean>();
+        for (MediaKey key : mediaKeys) {
+            keys.add(new ObjectIdentifierBean(key.getId()));
         }
-        fragment.mActivityKeys = activityKeys;
+        fragment.mMediaItemKeys = keys;
         return fragment;
     }
 }

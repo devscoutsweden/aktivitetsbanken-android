@@ -1,15 +1,14 @@
 package se.devscout.android.model;
 
+import se.devscout.android.util.ResourceUtil;
 import se.devscout.server.api.model.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 public class ActivityPropertiesBean extends ServerObjectPropertiesBean implements ActivityProperties, Serializable {
-    private static final List<String> IMAGE_MIME_TYPES = Arrays.asList("image/jpeg", "image/png");
     private UserKey mOwner;
     private Integer mFavouritesCount;
 
@@ -156,10 +155,9 @@ public class ActivityPropertiesBean extends ServerObjectPropertiesBean implement
     @Override
     public Media getCoverMedia() {
         if (mMediaItems != null) {
-            for (Media media : mMediaItems) {
-                if (IMAGE_MIME_TYPES.contains(media.getMimeType())) {
-                    return media;
-                }
+            List<Media> imageMediaItems = ResourceUtil.getImageMediaItems(mMediaItems);
+            if (imageMediaItems.size() > 0) {
+                return imageMediaItems.get(0);
             }
         }
         return null;
