@@ -37,7 +37,7 @@
         <item name="android:paddingLeft">@dimen/iconButtonMargin</item>
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
-        <item name="android:textSize">@dimen/mediumTextSize</item>
+        <item name="android:textSize">@dimen/extraLargeTextSize</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textColor">#ffff</item>
         <item name="android:background">#5000</item>
@@ -60,21 +60,23 @@
 
     <style name="Document_TextItem">
         <item name="android:layout_margin">0dp</item>
-        <item name="android:padding">@dimen/iconButtonMargin</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:paddingLeft">@dimen/defaultMargin</item>
+        <item name="android:paddingRight">@dimen/defaultMargin</item>
         <item name="android:background">@color/basicVeryLight</item>
         <item name="android:textColor">@color/basicVeryDark</item>
     </style>
 
     <style name="Document_Header" parent="Document_TextItem">
-        <item name="android:textSize">@dimen/extraLargeTextSize</item>
-        <item name="android:paddingTop">@dimen/smallTextSize</item>
-        <!--<item name="android:textColor">@color/accentBlue</item>-->
-        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/Document_Header_TextSize</item>
+        <item name="android:paddingTop">@dimen/Document_Header_PaddingTop</item>
+        <item name="android:textStyle">normal</item>
     </style>
 
     <style name="Document_Paragraph" parent="Document_TextItem">
-        <item name="android:textSize">@dimen/smallTextSize</item>
-        <item name="android:lineSpacingMultiplier">1.25</item>
+        <item name="android:textSize">@dimen/Document_Paragraph_TextSize</item>
+        <item name="android:paddingTop">@dimen/Document_Paragraph_PaddingTop</item>
+        <item name="android:lineSpacingExtra">@dimen/Document_Paragraph_LineSpacingExtra</item>
     </style>
 
     <style name="ToggleTest" parent="android:Widget.CompoundButton.CheckBox">

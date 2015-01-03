@@ -3,6 +3,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape xmlns:android="http://schemas.android.com/apk/res/android">
+            <solid android:color="@android:color/transparent"/>
             <size android:height="@dimen/defaultMargin" android:width="0dp" />
         </shape>
     </item>

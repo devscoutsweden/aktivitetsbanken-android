@@ -10,5 +10,12 @@
 
     <dimen name="defaultMargin">4dp</dimen>
     <dimen name="iconButtonMargin">8dp</dimen>
-    <dimen name="iconButtonSize">32dp</dimen><dimen name="textColumnWidth">200dp</dimen>
+    <dimen name="iconButtonSize">32dp</dimen>
+    <dimen name="textColumnWidth">200dp</dimen>
+
+    <dimen name="Document_Paragraph_PaddingTop">0sp</dimen>
+    <dimen name="Document_Paragraph_TextSize">14sp</dimen>
+    <dimen name="Document_Paragraph_LineSpacingExtra">4sp</dimen>
+    <dimen name="Document_Header_PaddingTop">11sp</dimen> <!-- 31+11 = 42 = 3*14 -->
+    <dimen name="Document_Header_TextSize">31sp</dimen>
 </resources>

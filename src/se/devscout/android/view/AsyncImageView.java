@@ -13,6 +13,7 @@ import android.widget.TextView;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
 import se.devscout.android.util.LogUtil;
+import se.devscout.android.util.ScoutTypeFace;
 import se.devscout.android.util.concurrency.BackgroundTask;
 import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
 import se.devscout.android.util.concurrency.DisplayImageTaskParam;
@@ -79,6 +80,7 @@ public class AsyncImageView extends FrameLayout {
         String title = properties != null ? properties.getName() : null;
         TextView textView = (TextView) findViewById(R.id.asyncImageOverlayLabel);
         if (title != null && title.length() > 0) {
+            textView.setTypeface(ScoutTypeFace.getInstance(getContext()).getLight());
             textView.setText(title);
             textView.setVisibility(VISIBLE);
         } else {
@@ -99,6 +101,8 @@ public class AsyncImageView extends FrameLayout {
                             onBitmapResponse((Bitmap) response, imageView);
                         } else if (response instanceof Exception) {
                             onExceptionResponse((Exception) response, imageView);
+                        } else {
+                            LogUtil.e(AsyncImageView.class.getName(), "Response is neither Bitmap nor Exception");
                         }
                     } else {
                         LogUtil.d(AsyncImageView.class.getName(), "Image has been loaded but the image view has been recycled and is now used for another image.");
