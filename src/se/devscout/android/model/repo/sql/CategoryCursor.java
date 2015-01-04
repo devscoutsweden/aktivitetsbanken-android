@@ -37,6 +37,7 @@ public class CategoryCursor extends BaseCursorWrapper {
                 getId(),
                 getInt(getColumnIndex(Database.category.server_id)),
                 getInt(getColumnIndex(Database.category.server_revision_id)),
-                new ObjectIdentifierBean(getLong(getColumnIndex(Database.category.icon_media_id))));
+                new ObjectIdentifierBean(getLong(getColumnIndex(Database.category.icon_media_id))),
+                isNull(getColumnIndex(Database.category.activities_count)) ? null : getInt(getColumnIndex(Database.category.activities_count)));
     }
 }

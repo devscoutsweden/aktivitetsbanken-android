@@ -9,8 +9,8 @@ public class CategoryBean extends CategoryPropertiesBean implements Category, Se
     public static long debugCounter;
     private Long mId;
 
-    public CategoryBean(String group, String name, Long id, long serverId, long serverRevisionId, MediaKey iconMediaKey) {
-        super(group, name, serverId, serverRevisionId, false, iconMediaKey);
+    public CategoryBean(String group, String name, Long id, long serverId, long serverRevisionId, MediaKey iconMediaKey, Integer mActivitiesCount) {
+        super(group, name, serverId, serverRevisionId, false, iconMediaKey, mActivitiesCount);
         mId = id;
     }
 

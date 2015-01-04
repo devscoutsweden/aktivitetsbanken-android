@@ -92,7 +92,7 @@ public class SearchFragment extends ActivityBankFragment {
 
         final Spinner spinner = initTimeDropDown(searchView);
 
-        anyCategory = new CategoryBean(null, getString(R.string.searchCategoryOptionAny), 0L, 0L, 0L, null);
+        anyCategory = new CategoryBean(null, getString(R.string.searchCategoryOptionAny), 0L, 0L, 0L, null, null);
         final Spinner categoryDropDown = initCategoryDropDown(searchView);
 
         initAdditionalCheckboxLabel(searchView, R.id.searchAgeAdventurerLogo, R.id.searchAgeAdventurer);

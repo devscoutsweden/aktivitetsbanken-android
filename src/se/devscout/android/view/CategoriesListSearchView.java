@@ -48,7 +48,7 @@ public class CategoriesListSearchView extends QuickSearchListView<CategoryListIt
 
     @Override
     protected String getSubtitle(CategoryListItem option) {
-        return option.getGroup();
+        return getResources().getQuantityString(R.plurals.searchResultSubtitleCategoryTrack, option.getActivitiesCount(), option.getActivitiesCount());
     }
 
     @Override
@@ -67,7 +67,9 @@ public class CategoriesListSearchView extends QuickSearchListView<CategoryListIt
             List<? extends Category> categories = ActivityBankFactory.getInstance(getContext()).readCategories();
             List<CategoryListItem> result = new ArrayList<CategoryListItem>();
             for (Category category : categories) {
-                result.add(new CategoryListItem(category));
+                if (category.getActivitiesCount() == null || category.getActivitiesCount() != 0) {
+                    result.add(new CategoryListItem(category));
+                }
             }
             return result;
         }

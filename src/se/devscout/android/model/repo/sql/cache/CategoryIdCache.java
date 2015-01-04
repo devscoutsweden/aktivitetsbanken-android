@@ -7,16 +7,16 @@ import se.devscout.server.api.model.CategoryProperties;
 
 public class CategoryIdCache extends ServerObjectIdCache<CategoryBean, CategoryProperties> {
     public CategoryIdCache(DatabaseHelper databaseHelper) {
-        super(databaseHelper, Database.category.T, Database.category.id, Database.category.server_id, Database.category.server_revision_id);
+        super(databaseHelper, Database.category.T, Database.category.id, Database.category.server_id, Database.category.server_revision_id, Database.category.activities_count);
     }
 
     @Override
     protected CategoryBean createObject(long id, CategoryProperties properties) {
-        return new CategoryBean(properties.getGroup(), properties.getName(), id, properties.getServerId(), properties.getServerRevisionId(), properties.getIconMediaKey());
+        return new CategoryBean(properties.getGroup(), properties.getName(), id, properties.getServerId(), properties.getServerRevisionId(), properties.getIconMediaKey(), properties.getActivitiesCount());
     }
 
     @Override
     protected IdCacheEntry createIdCacheEntry(CategoryBean entry) {
-        return new IdCacheEntry(entry.getId(), entry.getServerId(), new long[]{entry.getServerRevisionId()});
+        return new IdCacheEntry(entry.getId(), entry.getServerId(), new long[]{entry.getServerRevisionId(), entry.getActivitiesCount() != null ? entry.getActivitiesCount() : -1});
     }
 }

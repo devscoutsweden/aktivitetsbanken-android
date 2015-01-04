@@ -16,14 +16,15 @@
         android:layout_alignTop="@+id/quickSearchListItemImage"
         android:paddingLeft="@dimen/defaultMargin"
         android:paddingTop="@dimen/defaultMargin"
-        android:paddingRight="@dimen/defaultMargin" />
+        android:paddingRight="@dimen/defaultMargin"
+        android:textColor="@color/basicVeryDark" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Text"
         android:id="@+id/quickSearchListItemSubtitle"
-        android:textColor="@android:color/secondary_text_light"
+        android:textColor="@color/basicDark"
         android:paddingLeft="@dimen/defaultMargin"
         android:paddingRight="@dimen/defaultMargin"
         android:paddingBottom="@dimen/defaultMargin"

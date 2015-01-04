@@ -643,7 +643,8 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
                 0L,
                 obj.getInt("id"),
                 getServerRevisionId(obj),
-                iconMediaKey);
+                iconMediaKey,
+                obj.getInt("activities_count") >= 0 ? obj.getInt("activities_count") : null);
         cat.setPublishable(false);
         return cat;
     }

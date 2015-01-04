@@ -62,4 +62,9 @@ public enum ScoutCategoryTrack implements CategoryProperties {
     public MediaKey getIconMediaKey() {
         return null;
     }
+
+    @Override
+    public Integer getActivitiesCount() {
+        return null;
+    }
 }

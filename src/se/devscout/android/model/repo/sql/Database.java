@@ -24,6 +24,7 @@ public class Database {
         public final static String status = "status";
         public final static String server_revision_id = "server_revision_id";
         public final static String icon_media_id = "icon_media_id";
+        public final static String activities_count = "activities_count";
     }
 
     public static class media {

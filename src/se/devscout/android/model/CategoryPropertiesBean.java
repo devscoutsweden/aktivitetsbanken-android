@@ -9,12 +9,14 @@ public class CategoryPropertiesBean extends ServerObjectPropertiesBean implement
     private String mName;
     private String mGroup;
     private MediaKey mIconMediaKey;
+    private Integer mActivitiesCount;
 
-    public CategoryPropertiesBean(String group, String name, long serverId, long serverRevisionId, boolean publishable, MediaKey iconMediaKey) {
+    public CategoryPropertiesBean(String group, String name, long serverId, long serverRevisionId, boolean publishable, MediaKey iconMediaKey, Integer activitiesCount) {
         super(publishable, serverId, serverRevisionId);
         mGroup = group;
         mName = name;
         mIconMediaKey = iconMediaKey;
+        mActivitiesCount = activitiesCount;
     }
 
     @Override
@@ -32,6 +34,11 @@ public class CategoryPropertiesBean extends ServerObjectPropertiesBean implement
         return mIconMediaKey;
     }
 
+    @Override
+    public Integer getActivitiesCount() {
+        return mActivitiesCount;
+    }
+
     void setName(String name) {
         mName = name;
     }
@@ -45,4 +52,7 @@ public class CategoryPropertiesBean extends ServerObjectPropertiesBean implement
         return /*(mGroup != null && mGroup.length() > 0 ? mGroup + " " : "") + */mName;
     }
 
+    public void setActivitiesCount(Integer activitiesCount) {
+        mActivitiesCount = activitiesCount;
+    }
 }

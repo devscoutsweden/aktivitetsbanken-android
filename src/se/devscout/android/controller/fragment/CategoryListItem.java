@@ -5,6 +5,6 @@ import se.devscout.server.api.model.Category;
 
 public class CategoryListItem extends CategoryPropertiesBean {
     public CategoryListItem(Category category) {
-        super(category.getGroup(), category.getName(), category.getServerId(), category.getServerRevisionId(), false, category.getIconMediaKey());
+        super(category.getGroup(), category.getName(), category.getServerId(), category.getServerRevisionId(), false, category.getIconMediaKey(), category.getActivitiesCount());
     }
 }

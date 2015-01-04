@@ -53,6 +53,10 @@
     <string name="startTabFeatured">Utvalda</string>
     <string name="searchResultTitle">Sökresultat</string>
     <string name="searchResultTitleCategoryTrack">Målspår %1$s</string>
+    <plurals name="searchResultSubtitleCategoryTrack">
+        <item quantity="one">En aktivitet</item>
+        <item quantity="other">%d aktiviteter</item>
+    </plurals>
     <string name="searchResultTitleCategoryConcept">Upplägg %1$s</string>
     <string name="searchResultTitleAgeGroup">För %1$s</string>
     <string name="startIntroText">Utvalda aktiviterer syns här nedan. Använd flikarna här ovanför för att hitta andra

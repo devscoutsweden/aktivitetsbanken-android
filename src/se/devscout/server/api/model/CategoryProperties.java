@@ -8,4 +8,6 @@ public interface CategoryProperties extends ServerObjectProperties{
     String getGroup();
 
     MediaKey getIconMediaKey();
+
+    Integer getActivitiesCount();
 }

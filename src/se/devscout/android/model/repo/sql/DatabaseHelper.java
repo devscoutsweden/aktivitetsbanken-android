@@ -99,7 +99,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static int[] DATABASE_MIGRATION_SCRIPTS = {
             R.raw.db_migrate_0_create_server_database,
-            R.raw.db_migrate_1_category_icon
+            R.raw.db_migrate_1_category_icon,
+            R.raw.db_migrate_2_category_usage_count
     };
 
     public DatabaseHelper(Context context) {
@@ -557,6 +558,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             values.put(Database.category.icon_media_id, properties.getIconMediaKey().getId());
         } else {
             values.putNull(Database.category.icon_media_id);
+        }
+        if (properties.getActivitiesCount() != null) {
+            values.put(Database.category.activities_count, properties.getActivitiesCount());
+        } else {
+            values.putNull(Database.category.activities_count);
         }
         return values;
     }
