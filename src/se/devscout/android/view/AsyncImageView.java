@@ -11,7 +11,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import se.devscout.android.R;
-import se.devscout.android.controller.activity.SingleFragmentActivity;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.ScoutTypeFace;
 import se.devscout.android.util.concurrency.BackgroundTask;
@@ -27,19 +26,19 @@ public class AsyncImageView extends FrameLayout {
     public AsyncImageView(Context context) {
         super(context);
         inflate(context);
-        init(((SingleFragmentActivity) context).getBackgroundTasksHandlerThread());
+        init();
     }
 
     public AsyncImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         inflate(context);
-        init(((SingleFragmentActivity) context).getBackgroundTasksHandlerThread());
+        init();
     }
 
     public AsyncImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         inflate(context);
-        init(((SingleFragmentActivity) context).getBackgroundTasksHandlerThread());
+        init();
     }
 
     protected void inflate(Context context) {
@@ -47,8 +46,8 @@ public class AsyncImageView extends FrameLayout {
         inflater.inflate(R.layout.async_image, this, true);
     }
 
-    public void init(BackgroundTasksHandlerThread backgroundTasksThread) {
-        setImage(null, backgroundTasksThread);
+    public void init() {
+        setImage(null, null);
         setScaleType(ImageView.ScaleType.CENTER_CROP);
     }
 
