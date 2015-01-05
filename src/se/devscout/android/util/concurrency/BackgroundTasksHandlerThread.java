@@ -84,6 +84,10 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
         queueTask(BackgroundTask.DISPLAY_IMAGE, new DisplayImageTaskParam(imageView, Integer.valueOf(maxFileSize), uris));
     }
 
+    public void queueUpdateFavouriteStatus(ActivityKey activityKey, boolean setToFavourite) {
+        queueTask(BackgroundTask.UPDATE_FAVOURITE_STATUS, new UpdateFavouriteStatusParam(activityKey, setToFavourite));
+    }
+
     private synchronized void queueTask(BackgroundTask task, Object parameter) {
         if (!isClosed()) {
             taskCount++;

@@ -108,13 +108,13 @@ public class SQLiteActivityRepo implements ActivityBank {
     }
 
     @Override
-    public void setFavourite(ActivityKey activityKey, UserKey userKey) {
+    public void setFavourite(ActivityKey activityKey, UserKey userKey) throws UnauthorizedException {
         mDatabaseHelper.setFavourite(activityKey, userKey);
         fireFavouriteChange(activityKey, userKey, true);
     }
 
     @Override
-    public void unsetFavourite(ActivityKey activityKey, UserKey userKey) {
+    public void unsetFavourite(ActivityKey activityKey, UserKey userKey) throws UnauthorizedException {
         mDatabaseHelper.unsetFavourite(activityKey, userKey);
         fireFavouriteChange(activityKey, userKey, false);
     }

@@ -5,17 +5,22 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 import se.devscout.android.R;
 import se.devscout.android.model.ObjectIdentifierBean;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.auth.CredentialsManager;
+import se.devscout.android.util.concurrency.BackgroundTask;
+import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
+import se.devscout.android.util.concurrency.UpdateFavouriteStatusParam;
+import se.devscout.android.util.http.UnauthorizedException;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.model.ActivityKey;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActivitiesViewPagerFragment extends PagerFragment {
+public class ActivitiesViewPagerFragment extends PagerFragment implements BackgroundTasksHandlerThread.Listener {
 
     protected FragmentStatePagerAdapter createPagerAdapter() {
         return new FragmentStatePagerAdapter(getChildFragmentManager()) {
@@ -75,12 +80,8 @@ public class ActivitiesViewPagerFragment extends PagerFragment {
             ActivityBank activityBank = ActivityBankFactory.getInstance(getActivity());
             ActivityKey activityKey = getActivity(mSelectedIndex);
             boolean favourite = activityBank.isFavourite(activityKey, CredentialsManager.getInstance(getActivity()).getCurrentUser());
-            if (favourite) {
-                activityBank.unsetFavourite(activityKey, CredentialsManager.getInstance(getActivity()).getCurrentUser());
-            } else {
-                activityBank.setFavourite(activityKey, CredentialsManager.getInstance(getActivity()).getCurrentUser());
-            }
-            item.setIcon(!favourite ? R.drawable.ic_action_important : R.drawable.ic_action_not_important);
+            getBackgroundTasksHandlerThread(getActivity()).queueUpdateFavouriteStatus(activityKey, !favourite);
+            item.setActionView(R.layout.menu_item_progress); // This will change the menu item to a progress bar, which will be shown until the command completes and the menu is invalidated (and subsequently recreated).
         }
         return super.onOptionsItemSelected(item);
     }
@@ -101,4 +102,25 @@ public class ActivitiesViewPagerFragment extends PagerFragment {
         return fragment;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        getBackgroundTasksHandlerThread(getActivity()).addListener(this);
+    }
+
+    @Override
+    public void onStop() {
+        getBackgroundTasksHandlerThread(getActivity()).removeListener(this);
+        super.onStop();
+    }
+
+    @Override
+    public BackgroundTasksHandlerThread.ListenerAction onDone(Object parameter, Object response, BackgroundTask task) {
+        if (parameter instanceof UpdateFavouriteStatusParam && response instanceof UnauthorizedException) {
+            UnauthorizedException e = (UnauthorizedException) response;
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+        getActivity().invalidateOptionsMenu();
+        return BackgroundTasksHandlerThread.ListenerAction.KEEP;
+    }
 }

@@ -18,6 +18,12 @@ public enum BackgroundTask {
         BackgroundTasksHandlerThread.BackgroundTaskExecutor createExecutor() {
             return new ReadActivitiesTaskExecutor();
         }
+    },
+    UPDATE_FAVOURITE_STATUS {
+        @Override
+        BackgroundTasksHandlerThread.BackgroundTaskExecutor createExecutor() {
+            return new UpdateFavouriteStatusTaskExecutor();
+        }
     };
 
     abstract BackgroundTasksHandlerThread.BackgroundTaskExecutor createExecutor();

@@ -2,14 +2,12 @@ package se.devscout.android.model.repo.remote;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import se.devscout.android.R;
 import se.devscout.android.controller.fragment.TitleActivityFilterVisitor;
 import se.devscout.android.model.*;
 import se.devscout.android.model.repo.sql.LocalObjectRefreshness;
@@ -356,58 +354,39 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     }
 
     @Override
-    public void setFavourite(ActivityKey activityKey, UserKey userKey) {
+    public void setFavourite(ActivityKey activityKey, UserKey userKey) throws UnauthorizedException {
         ActivityKey key = fixActivityKey(activityKey);
         if (key != null) {
             super.setFavourite(key, userKey);
-            createSendSetFavouritesTask().execute();
+            sendPutFavouritesRequest();
         }
     }
 
     @Override
-    public void unsetFavourite(ActivityKey activityKey, UserKey userKey) {
+    public void unsetFavourite(ActivityKey activityKey, UserKey userKey) throws UnauthorizedException {
         ActivityKey key = fixActivityKey(activityKey);
         if (key != null) {
             super.unsetFavourite(key, userKey);
-            createSendSetFavouritesTask().execute();
+            sendPutFavouritesRequest();
         }
     }
 
-    private AsyncTask<Void, Void, Void> createSendSetFavouritesTask() {
-        return new AsyncTask<Void, Void, Void>() {
-            {
-                LogUtil.initExceptionLogging(mContext);
-            }
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                try {
-                    sendSetFavouritesRequest();
-                } catch (IOException e) {
-                    LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server", e);
-                } catch (UnauthorizedException e) {
-                    fireAsyncException(new UnauthorizedException(mContext.getString(R.string.repo_unauthorized_could_not_save_favourites), e));
-                    LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server", e);
-                } catch (UnhandledHttpResponseCodeException e) {
-                    LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server", e);
-                } catch (Throwable e) {
-                    LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server due to unexpected problem.", e);
-                }
-                return null;
-            }
-        };
-    }
-
-    private void sendSetFavouritesRequest() throws IOException, UnauthorizedException, UnhandledHttpResponseCodeException {
-        List<ActivityBean> favourites = super.findActivity(getFilterFactory().createIsUserFavouriteFilter(CredentialsManager.getInstance(mContext).getCurrentUser()));
+    private void sendPutFavouritesRequest() throws UnauthorizedException {
+        try {
+            List<ActivityBean> favourites = super.findActivity(getFilterFactory().createIsUserFavouriteFilter(CredentialsManager.getInstance(mContext).getCurrentUser()));
 //        Set<ActivityKey> favourites = mDatabaseHelper.getFavourites(PreferencesUtil.getInstance(mContext).getCurrentUser());
-        JSONArray jsonArray = new JSONArray();
-        for (ActivityBean key : favourites) {
-            jsonArray.put(key.getServerId());
-        }
-        String uri = "http://" + getRemoteHost() + "/api/v1/favourites";
+            JSONArray jsonArray = new JSONArray();
+            for (ActivityBean key : favourites) {
+                jsonArray.put(key.getServerId());
+            }
+            String uri = "http://" + getRemoteHost() + "/api/v1/favourites";
 
-        readUrlAsBytes(uri, new JSONObject(Collections.singletonMap("id", jsonArray)).toString(), HttpMethod.PUT);
+            readUrlAsBytes(uri, new JSONObject(Collections.singletonMap("id", jsonArray)).toString(), HttpMethod.PUT);
+        } catch (IOException e) {
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server", e);
+        } catch (UnhandledHttpResponseCodeException e) {
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server", e);
+        }
     }
 
     @Override

@@ -35,9 +35,9 @@ public interface ActivityBank {
 
     Category readCategoryFull(CategoryKey key);
 
-    void setFavourite(ActivityKey activityKey, UserKey userKey);
+    void setFavourite(ActivityKey activityKey, UserKey userKey) throws UnauthorizedException;
 
-    void unsetFavourite(ActivityKey activityKey, UserKey userKey);
+    void unsetFavourite(ActivityKey activityKey, UserKey userKey) throws UnauthorizedException;
 
     Boolean isFavourite(ActivityKey activityKey, UserKey userKey);
 
