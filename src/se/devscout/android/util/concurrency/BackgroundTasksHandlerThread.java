@@ -6,7 +6,6 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.text.TextUtils;
 import android.widget.ImageView;
-import se.devscout.android.model.repo.remote.RemoteActivityRepoImpl;
 import se.devscout.android.util.LogUtil;
 import se.devscout.server.api.model.ActivityKey;
 
@@ -16,6 +15,15 @@ import java.util.*;
 public class BackgroundTasksHandlerThread extends HandlerThread {
     private int taskCount;
     private List<Listener> mListeners = new ArrayList<Listener>();
+    private final List<ActivityKey> mPendingActivityReadRequests = new ArrayList<ActivityKey>();
+
+    private final ReadActivitiesTaskParam mReadActivitiesTaskParam = new ReadActivitiesTaskParam() {
+        @Override
+        public ActivityKey[] getKeys() {
+            // Return current list of activities which have not already been fetched from the API
+            return getPendingActivityReadRequests();
+        }
+    };
 
     public static interface BackgroundTaskExecutor<R, P> {
         R run(P param, Context context);
@@ -31,12 +39,12 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
     }
 
     private Handler mHandler;
-    private Handler mResponseHandler;
-    private Context mContext;
+    private final Handler mResponseHandler;
+    private final Context mContext;
 
-    private Map<Integer, BackgroundTask> mPendingTasks = new LinkedHashMap<Integer, BackgroundTask>();
+    private final Map<Integer, BackgroundTask> mPendingTasks = new LinkedHashMap<Integer, BackgroundTask>();
 
-    public void postReponse(Runnable runnable) {
+    void postResponse(Runnable runnable) {
         mResponseHandler.post(runnable);
     }
 
@@ -69,10 +77,25 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
 
     private Map<Integer, Object> mTaskParameters = Collections.synchronizedMap(new HashMap<Integer, Object>());
 
-    public synchronized void queueReadActivity(final ActivityKey activityKey, final RemoteActivityRepoImpl remoteActivityRepo) {
-        remoteActivityRepo.addPendingActivityReadRequests(activityKey);
+    public synchronized void queueReadActivity(final ActivityKey activityKey) {
+        addPendingActivityReadRequests(activityKey);
 
-        queueTask(BackgroundTask.READ_ACTIVITY, remoteActivityRepo);
+        queueTask(BackgroundTask.READ_ACTIVITY, mReadActivitiesTaskParam);
+    }
+
+    ActivityKey[] getPendingActivityReadRequests() {
+        synchronized (mPendingActivityReadRequests) {
+            ActivityKey[] keys = mPendingActivityReadRequests.toArray(new ActivityKey[mPendingActivityReadRequests.size()]);
+            mPendingActivityReadRequests.clear();
+            return keys;
+        }
+    }
+
+    void addPendingActivityReadRequests(ActivityKey activityKey) {
+        synchronized (mPendingActivityReadRequests) {
+            mPendingActivityReadRequests.remove(activityKey);
+            mPendingActivityReadRequests.add(0, activityKey);
+        }
     }
 
     public void queueCleanCache() {
@@ -81,7 +104,7 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
 
     public void queueGetMediaResource(ImageView imageView, URI[] uris, int maxFileSize) {
         LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Wants to display one of " + TextUtils.join(", ", uris) + " in an image view.");
-        queueTask(BackgroundTask.DISPLAY_IMAGE, new DisplayImageTaskParam(imageView, Integer.valueOf(maxFileSize), uris));
+        queueTask(BackgroundTask.DISPLAY_IMAGE, new DisplayImageTaskParam(imageView, maxFileSize, uris));
     }
 
     public void queueUpdateFavouriteStatus(ActivityKey activityKey, boolean setToFavourite) {
@@ -161,7 +184,7 @@ public class BackgroundTasksHandlerThread extends HandlerThread {
             synchronized (BackgroundTasksHandlerThread.this) {
                 if (!isClosed()) {
                     mTaskParameters.remove(obj);
-                    postReponse(new Runnable() {
+                    postResponse(new Runnable() {
                         @Override
                         public void run() {
 //                    LogUtil.d(BackgroundTasksHandlerThread.class.getName(), "Background task postResponse/fireOnDone");

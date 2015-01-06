@@ -14,21 +14,19 @@ import se.devscout.android.controller.activity.SingleFragmentActivity;
 import se.devscout.android.model.ObjectIdentifierBean;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.ResourceUtil;
+import se.devscout.android.util.concurrency.BackgroundTask;
+import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
 import se.devscout.android.view.AsyncImageBean;
 import se.devscout.android.view.AsyncImageView;
 import se.devscout.android.view.SimpleDocumentLayout;
-import se.devscout.server.api.OnReadDoneCallback;
-import se.devscout.server.api.model.Activity;
-import se.devscout.server.api.model.ActivityKey;
-import se.devscout.server.api.model.Media;
-import se.devscout.server.api.model.Reference;
+import se.devscout.server.api.model.*;
 
 import java.util.List;
 
 /**
  * Fragment for displaying (very) simple documents with headings, body paragraphs and images.
  */
-public class ActivityFragment extends ActivityBankFragment/* implements BackgroundTasksHandlerThread.Listener */ {
+public class ActivityFragment extends ActivityBankFragment implements BackgroundTasksHandlerThread.Listener/* implements BackgroundTasksHandlerThread.Listener */ {
 
     private ObjectIdentifierBean mActivityKey;
 
@@ -140,8 +138,16 @@ public class ActivityFragment extends ActivityBankFragment/* implements Backgrou
         view.findViewById(R.id.progressBar).setVisibility(View.GONE);
     }
 
-    private static interface Item {
-        void append(SimpleDocumentLayout layout, LayoutInflater inflater);
+    @Override
+    public BackgroundTasksHandlerThread.ListenerAction onDone(Object parameter, Object response, BackgroundTask task) {
+        if (response instanceof ActivityList) {
+            ActivityList activities = (ActivityList) response;
+            Activity activity = activities.get(mActivityKey);
+            if (activity != null) {
+                onRead(activity, getView());
+            }
+        }
+        return BackgroundTasksHandlerThread.ListenerAction.KEEP;
     }
 
     @Override
@@ -167,14 +173,19 @@ public class ActivityFragment extends ActivityBankFragment/* implements Backgrou
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
 
-        OnReadDoneCallback<Activity> callback = new OnReadDoneCallback<Activity>() {
-            @Override
-            public void onRead(Activity object) {
-                ActivityFragment.this.onRead(object, view);
-            }
-        };
-        getActivityBank().readActivityAsync(mActivityKey, callback, getBackgroundTasksHandlerThread(view));
+    @Override
+    public void onStart() {
+        super.onStart();
+        getBackgroundTasksHandlerThread(getActivity()).addListener(this);
+        getBackgroundTasksHandlerThread(getActivity()).queueReadActivity(mActivityKey);
+    }
+
+    @Override
+    public void onStop() {
+        getBackgroundTasksHandlerThread(getActivity()).removeListener(this);
+        super.onStop();
     }
 
     @Override

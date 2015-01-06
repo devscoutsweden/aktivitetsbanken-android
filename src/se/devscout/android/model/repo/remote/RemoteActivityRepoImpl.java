@@ -17,12 +17,9 @@ import se.devscout.android.util.InstallationProperties;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.StopWatch;
 import se.devscout.android.util.auth.CredentialsManager;
-import se.devscout.android.util.concurrency.BackgroundTask;
-import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
 import se.devscout.android.util.http.*;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.ActivityFilterFactory;
-import se.devscout.server.api.OnReadDoneCallback;
 import se.devscout.server.api.URIBuilderActivityFilterVisitor;
 import se.devscout.server.api.model.*;
 
@@ -50,12 +47,8 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     private static RemoteActivityRepoImpl ourInstance;
     private final Context mContext;
 
-    private Map<Long, OnReadDoneCallback<Activity>> mActivityReadRequestCallbacks = new HashMap<Long, OnReadDoneCallback<Activity>>();
-    private BackgroundTasksHandlerThread.Listener mBackgroundTasksListener;
     private List<ObjectIdentifierBean> mActivitiesWhichAreOld = new ArrayList<ObjectIdentifierBean>();
     private List<CategoryBean> mCachedCategories;
-    //    private String authToken;
-//    private String authType;
     private HashMap<Long, Credentials> mCredentialsMap = new HashMap<Long, Credentials>();
 
 
@@ -69,23 +62,6 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     public RemoteActivityRepoImpl(Context ctx) {
         super(ctx);
         mContext = ctx;
-        mBackgroundTasksListener = new BackgroundTasksHandlerThread.Listener() {
-            @Override
-            public BackgroundTasksHandlerThread.ListenerAction onDone(Object parameter, Object response, BackgroundTask task) {
-                if (task == BackgroundTask.READ_ACTIVITY && response instanceof List) {
-                    List<ActivityBean> activities = (List<ActivityBean>) response;
-                    LogUtil.d(RemoteActivityRepoImpl.class.getName(), activities.size() + " activities have been read.");
-                    for (Activity activity : activities) {
-                        OnReadDoneCallback<Activity> callback = invokeActivityReadCallback(activity);
-                        if (callback != null) {
-                            LogUtil.d(RemoteActivityRepoImpl.class.getName(), "Invoking callback for " + activity.toString());
-                            callback.onRead(activity);
-                        }
-                    }
-                }
-                return BackgroundTasksHandlerThread.ListenerAction.KEEP;
-            }
-        };
         CredentialsManager.getInstance(mContext).addListener(this);
     }
 
@@ -276,37 +252,13 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     }
 
     @Override
-    public void readActivityAsync(ActivityKey key, OnReadDoneCallback callback, BackgroundTasksHandlerThread tasksHandlerThread) {
-        //TODO: implement/overload/fix this method. High priority.
-
-        if (key.getId() < 0) {
-            long id = mDatabaseHelper.getLocalIdByServerId(new ActivityPropertiesBean(false, -key.getId(), 0, null));
-            boolean isUptodateInDatabase = !mActivitiesWhichAreOld.contains(new ObjectIdentifierBean(id));
-            if (id != -1 && isUptodateInDatabase) {
-                LogUtil.i(RemoteActivityRepoImpl.class.getName(), "Activity with serverId = " + -key.getId() + " was initially not cached locally but it is now cached.");
-                super.readActivityAsync(new ObjectIdentifierBean(id), callback, tasksHandlerThread);
-            } else {
-                synchronized (mActivityReadRequestCallbacks) {
-                    mActivityReadRequestCallbacks.put(key.getId(), callback);
-                }
-
-                // addListener enforces that the listener is only added once
-                tasksHandlerThread.addListener(mBackgroundTasksListener);
-                tasksHandlerThread.queueReadActivity(new ObjectIdentifierBean(key.getId()), this);
-            }
-        } else {
-            super.readActivityAsync(key, callback, tasksHandlerThread);
-        }
-    }
-
-    @Override
     public Category readCategoryFull(CategoryKey key) {
         //TODO: implement/overload/fix this method. High priority.
         return super.readCategoryFull(key);
     }
 
     @Override
-    public List<ActivityBean> readActivities(ActivityKey... keys) throws UnauthorizedException {
+    public ActivityList readActivities(ActivityKey... keys) throws UnauthorizedException {
         //TODO: implement/overload/fix this method. High priority.
         List<ServerObjectIdentifierBean> missing = new ArrayList<ServerObjectIdentifierBean>();
         List<ActivityKey> existing = new ArrayList<ActivityKey>();
@@ -327,15 +279,18 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
 
         LogUtil.d(RemoteActivityRepoImpl.class.getName(), "readActivities: missing=" + TextUtils.join(",", missing) + " existing=" + TextUtils.join(",", existing));
 
-        List<ActivityBean> result = new ArrayList<ActivityBean>();
-        List<ActivityBean> activities1 = super.readActivities(existing.toArray(new ActivityKey[existing.size()]));
-        result.addAll(activities1);
+        ActivityList result = new NegativeIdFixActivityList();
+
+        ActivityList existingActivities = super.readActivities(existing.toArray(new ActivityKey[existing.size()]));
+        result.addAll(existingActivities);
+
         if (!missing.isEmpty()) {
             LogUtil.i(RemoteActivityRepoImpl.class.getName(), "Requesting data for these server-only activities: " + TextUtils.join(",", missing));
             ServerObjectIdentifier[] identifiers = new ServerObjectIdentifier[missing.size()];
             RemoveServerObjectIdentifiersFilter condition = new RemoveServerObjectIdentifiersFilter(missing.toArray(identifiers));
-            List<ActivityBean> activities = findActivities(condition, null);
-            result.addAll(activities);
+
+            List<ActivityBean> missingActivities = findActivities(condition, null);
+            result.addAll(missingActivities);
         }
 
         return result;
@@ -623,7 +578,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
                 obj.getInt("id"),
                 getServerRevisionId(obj),
                 iconMediaKey,
-                obj.getInt("activities_count") >= 0 ? obj.getInt("activities_count") : null);
+                obj.has("activities_count") && obj.getInt("activities_count") >= 0 ? obj.getInt("activities_count") : null);
         cat.setPublishable(false);
         return cat;
     }
@@ -883,34 +838,14 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     }
 */
 
-    public OnReadDoneCallback<Activity> invokeActivityReadCallback(Activity activity) {
-        synchronized (mActivityReadRequestCallbacks) {
-            OnReadDoneCallback<Activity> callback = mActivityReadRequestCallbacks.get(activity.getId());
-            if (callback != null) {
-                mActivityReadRequestCallbacks.remove(activity.getId());
-                return callback;
-            } else {
-                callback = mActivityReadRequestCallbacks.get(-activity.getServerId());
-                mActivityReadRequestCallbacks.remove(-activity.getServerId());
-                return callback;
+    private class NegativeIdFixActivityList extends ActivityList {
+        @Override
+        public Activity get(ActivityKey activityKey) {
+            if (activityKey.getId() < 0) {
+                long id = mDatabaseHelper.getLocalIdByServerId(new ActivityPropertiesBean(false, -activityKey.getId(), 0, null));
+                activityKey = new ObjectIdentifierBean(id);
             }
-        }
-    }
-
-    private List<ActivityKey> mPendingActivityReadRequests = new ArrayList<ActivityKey>();
-
-    public ActivityKey[] getPendingActivityReadRequests() {
-        synchronized (mPendingActivityReadRequests) {
-            ActivityKey[] keys = mPendingActivityReadRequests.toArray(new ActivityKey[mPendingActivityReadRequests.size()]);
-            mPendingActivityReadRequests.clear();
-            return keys;
-        }
-    }
-
-    public void addPendingActivityReadRequests(ActivityKey activityKey) {
-        synchronized (mPendingActivityReadRequests) {
-            mPendingActivityReadRequests.remove(activityKey);
-            mPendingActivityReadRequests.add(0, activityKey);
+            return super.get(activityKey);
         }
     }
 

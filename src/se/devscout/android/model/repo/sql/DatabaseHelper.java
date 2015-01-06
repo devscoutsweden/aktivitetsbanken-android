@@ -64,8 +64,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         super.onOpen(db);
     }
 
-    public List<ActivityBean> readActivities(ActivityKey... keys) {
-        List<ActivityBean> res = new ArrayList<ActivityBean>();
+    public ActivityList readActivities(ActivityKey... keys) {
+        ActivityList res = new ActivityList();
         List<ActivityKey> missing = new ArrayList<ActivityKey>();
         for (ActivityKey key : keys) {
             if (!mCacheActivity.containsKey(key.getId())) {

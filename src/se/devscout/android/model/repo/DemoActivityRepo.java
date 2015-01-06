@@ -4,9 +4,11 @@ import android.content.Context;
 import se.devscout.android.model.ActivityBean;
 import se.devscout.android.util.PrimitiveActivityFilterFactory;
 import se.devscout.android.util.SimpleFilter;
-import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
 import se.devscout.android.util.http.UnauthorizedException;
-import se.devscout.server.api.*;
+import se.devscout.server.api.ActivityBank;
+import se.devscout.server.api.ActivityBankListener;
+import se.devscout.server.api.ActivityFilter;
+import se.devscout.server.api.ActivityFilterFactory;
 import se.devscout.server.api.model.*;
 
 import java.net.URI;
@@ -57,16 +59,7 @@ public class DemoActivityRepo implements ActivityBank {
     }
 
     @Override
-    public void readActivityAsync(ActivityKey key, OnReadDoneCallback<Activity> callback, BackgroundTasksHandlerThread tasksHandlerThread) {
-        for (ActivityBean activity : mActivities) {
-            if (key.getId().equals(activity.getId())) {
-                callback.onRead(activity);
-            }
-        }
-    }
-
-    @Override
-    public List<ActivityBean> readActivities(ActivityKey... keys) {
+    public ActivityList readActivities(ActivityKey... keys) {
         throw new UnsupportedOperationException();
     }
 
