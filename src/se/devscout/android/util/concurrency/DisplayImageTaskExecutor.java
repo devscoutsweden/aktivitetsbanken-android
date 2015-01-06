@@ -3,7 +3,6 @@ package se.devscout.android.util.concurrency;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import se.devscout.android.R;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.http.*;
 
@@ -16,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 class DisplayImageTaskExecutor extends ImageCacheTaskExecutor<Object, DisplayImageTaskParam> {
-    private Map<URI, Exception> blockedURLs = Collections.synchronizedMap(new HashMap<URI, Exception>());
+    private final Map<URI, Exception> blockedURLs = Collections.synchronizedMap(new HashMap<URI, Exception>());
 
     @Override
     public Object run(DisplayImageTaskParam param, Context context) {
@@ -69,12 +68,6 @@ class DisplayImageTaskExecutor extends ImageCacheTaskExecutor<Object, DisplayIma
         if (storeInCache) {
             storeFile(getCacheFile(uri, context), data);
         }
-        return bitmap;
-    }
-
-    private Bitmap getBitmapFromResource(Context context) {
-        Bitmap bitmap;
-        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_action_picture);
         return bitmap;
     }
 

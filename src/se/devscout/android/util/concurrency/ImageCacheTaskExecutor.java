@@ -13,21 +13,21 @@ import java.net.URI;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public abstract class ImageCacheTaskExecutor<R, P> implements BackgroundTasksHandlerThread.BackgroundTaskExecutor<R, P> {
-    protected static final String IMAGE_CACHE_FILENAME_PREFIX = "image-cache-";
+abstract class ImageCacheTaskExecutor<R, P> implements BackgroundTasksHandlerThread.BackgroundTaskExecutor<R, P> {
+    static final String IMAGE_CACHE_FILENAME_PREFIX = "image-cache-";
 
-    protected File getCacheFile(URI uri, Context context) {
+    File getCacheFile(URI uri, Context context) {
         return new File(context.getCacheDir(), IMAGE_CACHE_FILENAME_PREFIX + md5(uri.toString()));
     }
 
-    protected Bitmap getBitmapFromFile(File file) {
+    Bitmap getBitmapFromFile(File file) {
         Bitmap bitmap;
         bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
         file.setLastModified(System.currentTimeMillis());
         return bitmap;
     }
 
-    protected void storeFile(File cacheFile, byte[] data) throws IOException {
+    void storeFile(File cacheFile, byte[] data) throws IOException {
         BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(cacheFile));
         bos.write(data);
         bos.close();
@@ -37,7 +37,7 @@ public abstract class ImageCacheTaskExecutor<R, P> implements BackgroundTasksHan
     /**
      * http://stackoverflow.com/a/4846511
      */
-    public final String md5(final String s) {
+    final String md5(final String s) {
         final String MD5 = "MD5";
         try {
             // Create MD5 Hash

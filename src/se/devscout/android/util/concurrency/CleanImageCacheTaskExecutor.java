@@ -20,8 +20,8 @@ public class CleanImageCacheTaskExecutor extends ImageCacheTaskExecutor<Void, Vo
     private static long lastRun = 0;
 
     private static final int CACHE_SIZE_LIMIT = 500 * 1000; // 500 KB
-    private int minimumTimeBetweenCleanup;
-    private int cacheSizeLimit;
+    private final int minimumTimeBetweenCleanup;
+    private final int cacheSizeLimit;
 
     public CleanImageCacheTaskExecutor() {
         this(CACHE_SIZE_LIMIT, MINIMUM_TIME_BETWEEN_CLEANUP);

@@ -3,8 +3,8 @@ package se.devscout.android.util.concurrency;
 import se.devscout.server.api.model.ActivityKey;
 
 public class UpdateFavouriteStatusParam {
-    private ActivityKey mActivityKey;
-    private boolean mToBeSetAsFavourite;
+    private final ActivityKey mActivityKey;
+    private final boolean mToBeSetAsFavourite;
 
     public UpdateFavouriteStatusParam(ActivityKey activityKey, boolean toBeSetAsFavourite) {
         mActivityKey = activityKey;
