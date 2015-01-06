@@ -8,9 +8,11 @@ import java.util.ArrayList;
  */
 public class ActivityList extends ArrayList<Activity> {
     public Activity get(ActivityKey activityKey) {
-        for (Activity activity : this) {
-            if (activity.getId().equals(activityKey.getId())) {
-                return activity;
+        if (activityKey != null) {
+            for (Activity activity : this) {
+                if (activity.getId().equals(activityKey.getId())) {
+                    return activity;
+                }
             }
         }
         return null;

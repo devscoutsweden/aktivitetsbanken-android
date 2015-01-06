@@ -6,10 +6,10 @@ import se.devscout.server.api.URIBuilderActivityFilterVisitor;
 import se.devscout.server.api.activityfilter.ServerObjectIdentifiersFilter;
 import se.devscout.server.api.model.ServerObjectIdentifier;
 
-public class RemoveServerObjectIdentifiersFilter implements ServerObjectIdentifiersFilter {
+public class RemoteServerObjectIdentifiersFilter implements ServerObjectIdentifiersFilter {
     private ServerObjectIdentifier[] mIds;
 
-    public RemoveServerObjectIdentifiersFilter(ServerObjectIdentifier[] ids) {
+    public RemoteServerObjectIdentifiersFilter(ServerObjectIdentifier[] ids) {
         mIds = ids;
     }
 

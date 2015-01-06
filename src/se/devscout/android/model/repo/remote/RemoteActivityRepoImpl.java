@@ -49,6 +49,9 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
 
     private List<ObjectIdentifierBean> mActivitiesWhichAreOld = new ArrayList<ObjectIdentifierBean>();
     private List<CategoryBean> mCachedCategories;
+    //    private String authToken;
+//    private String authType;
+    //TODO: Use synchronized map since onAuthenticated is called from AsyncTask!?
     private HashMap<Long, Credentials> mCredentialsMap = new HashMap<Long, Credentials>();
 
 
@@ -221,7 +224,8 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
                      * been verified, will be created if not create before.
                      */
                     try {
-                        updateUser(CredentialsManager.getInstance(mContext).getCurrentUser(), userProperties);
+                        updateUser(getCurrentUser(), userProperties);
+                        synchronizeFavourites();
                     } catch (UnauthorizedException e) {
                         LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not provide user information to server", e);
                     }
@@ -230,6 +234,58 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
             default:
                 throw new UnsupportedOperationException("Does not support identity provider " + provider);
         }
+    }
+
+    /**
+     * 1. Get local ids of favourite activities stored in app database.
+     * 2. Get server ids of favourite activities stored server-side.
+     * 3. Read activities from server which are favourites but have not yet been cached/stored in app database.
+     * 4. Make sure all server-side favourites are also marked as favourites in app database.
+     * 5. Send complete list of favourites to server.
+     */
+    private void synchronizeFavourites() throws UnauthorizedException {
+
+        //
+        // Determine which server-side favourites have NOT been cached locally
+        //
+        List<ServerObjectIdentifierBean> serverFavouritesMissingInDatabase = new ArrayList<ServerObjectIdentifierBean>();
+        try {
+            String uri = "http://" + getRemoteHost() + "/api/v1/favourites";
+            JSONArray favouriteActivityKeysStoredRemotely = getJSONArray(uri, null);
+            for (int i = 0; i < favouriteActivityKeysStoredRemotely.length(); i++) {
+                long remoteId = favouriteActivityKeysStoredRemotely.getLong(i);
+                long id = mDatabaseHelper.getLocalIdByServerId(new ActivityPropertiesBean(false, remoteId, 0, null));
+                if (id == -1) {
+                    serverFavouritesMissingInDatabase.add(new ServerObjectIdentifierBean(remoteId));
+                }
+            }
+        } catch (IOException e) {
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not retrieve user's list of favourites from server. Aborting synchronizeFavourites().", e);
+            return;
+        } catch (JSONException e) {
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not retrieve user's list of favourites from server. Aborting synchronizeFavourites().", e);
+            return;
+        } catch (UnhandledHttpResponseCodeException e) {
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not retrieve user's list of favourites from server. Aborting synchronizeFavourites().", e);
+            return;
+        }
+
+        //
+        // Fetch/cache all missing activities. Then mark them as favourites in the local database.
+        //
+
+        if (!serverFavouritesMissingInDatabase.isEmpty()) {
+            RemoteServerObjectIdentifiersFilter condition = new RemoteServerObjectIdentifiersFilter(serverFavouritesMissingInDatabase.toArray(new ServerObjectIdentifier[serverFavouritesMissingInDatabase.size()]));
+            List<ActivityBean> missingActivities = findActivities(condition, null);
+            for (ActivityBean missingActivity : missingActivities) {
+                super.setFavourite(missingActivity, getCurrentUser());
+            }
+        }
+
+        //
+        // Send all favourites to server. At this point, this will be all the server-side favourites combined with all client-side favourites.
+        //
+        sendPutFavouritesRequest();
     }
 
     @Override
@@ -244,6 +300,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
             if (id != -1) {
                 return new ObjectIdentifierBean(id);
             } else {
+                LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not determine local id based on remote id " + id);
                 return null;
             }
         } else {
@@ -287,7 +344,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         if (!missing.isEmpty()) {
             LogUtil.i(RemoteActivityRepoImpl.class.getName(), "Requesting data for these server-only activities: " + TextUtils.join(",", missing));
             ServerObjectIdentifier[] identifiers = new ServerObjectIdentifier[missing.size()];
-            RemoveServerObjectIdentifiersFilter condition = new RemoveServerObjectIdentifiersFilter(missing.toArray(identifiers));
+            RemoteServerObjectIdentifiersFilter condition = new RemoteServerObjectIdentifiersFilter(missing.toArray(identifiers));
 
             List<ActivityBean> missingActivities = findActivities(condition, null);
             result.addAll(missingActivities);
@@ -328,7 +385,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
 
     private void sendPutFavouritesRequest() throws UnauthorizedException {
         try {
-            List<ActivityBean> favourites = super.findActivity(getFilterFactory().createIsUserFavouriteFilter(CredentialsManager.getInstance(mContext).getCurrentUser()));
+            List<ActivityBean> favourites = super.findActivity(getFilterFactory().createIsUserFavouriteFilter(getCurrentUser()));
 //        Set<ActivityKey> favourites = mDatabaseHelper.getFavourites(PreferencesUtil.getInstance(mContext).getCurrentUser());
             JSONArray jsonArray = new JSONArray();
             for (ActivityBean key : favourites) {
@@ -829,7 +886,11 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     }
 
     private Long getCurrentUserId() {
-        return CredentialsManager.getInstance(mContext).getCurrentUser().getId();
+        return getCurrentUser().getId();
+    }
+
+    private UserKey getCurrentUser() {
+        return CredentialsManager.getInstance(mContext).getCurrentUser();
     }
 
 /*
@@ -841,11 +902,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     private class NegativeIdFixActivityList extends ActivityList {
         @Override
         public Activity get(ActivityKey activityKey) {
-            if (activityKey.getId() < 0) {
-                long id = mDatabaseHelper.getLocalIdByServerId(new ActivityPropertiesBean(false, -activityKey.getId(), 0, null));
-                activityKey = new ObjectIdentifierBean(id);
-            }
-            return super.get(activityKey);
+            return super.get(fixActivityKey(activityKey));
         }
     }
 

@@ -804,7 +804,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(Database.favourite_activity.user_id, user.getId());
         values.put(Database.favourite_activity.activity_id, activity.getId());
-        getDb().insert(Database.favourite_activity.T, null, values);
+        getDb().insertWithOnConflict(Database.favourite_activity.T, null, values, SQLiteDatabase.CONFLICT_IGNORE);
     }
 
     public void unsetFavourite(ActivityKey activity, UserKey user) {
