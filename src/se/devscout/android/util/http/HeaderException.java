@@ -8,11 +8,11 @@ public class HeaderException extends Exception {
         super(detailMessage);
     }
 
-    public HeaderException(String detailMessage, Throwable throwable) {
+    HeaderException(String detailMessage, Throwable throwable) {
         super(detailMessage, throwable);
     }
 
-    public HeaderException(Throwable throwable) {
+    HeaderException(Throwable throwable) {
         super(throwable);
     }
 }

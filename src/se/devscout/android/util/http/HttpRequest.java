@@ -21,7 +21,7 @@ public class HttpRequest {
     private static final int READ_TIMEOUT = 4000;
     private final URL mUrl;
     private final HttpMethod mMethod;
-    private Map<String, String> mHeaders = new HashMap<String, String>();
+    private final Map<String, String> mHeaders = new HashMap<String, String>();
 
     public HttpRequest(URL url, HttpMethod method) {
         mUrl = url;

@@ -36,7 +36,7 @@ public class CredentialsManager {
         return mState;
     }
 
-    public void setState(State state) {
+    void setState(State state) {
         mState = state;
         fireAuthenticationStatusChange(state);
     }
@@ -84,9 +84,9 @@ public class CredentialsManager {
         void onAuthenticated(IdentityProvider provider, String data, UserProperties userProperties);
     }
 
-    private List<Listener> mListeners = new ArrayList<Listener>();
+    private final List<Listener> mListeners = new ArrayList<Listener>();
 
-    AuthenticationStrategy mAuthStrategy;
+    private AuthenticationStrategy mAuthStrategy;
 
     public static enum State {
         LOGGED_IN(true, false),
@@ -94,8 +94,8 @@ public class CredentialsManager {
         LOGGED_OUT(false, false),
         LOGGING_IN(false, true);
 
-        private boolean working;
-        private boolean loggedIn;
+        private final boolean working;
+        private final boolean loggedIn;
 
         private State(boolean loggedIn, boolean working) {
             this.loggedIn = loggedIn;
@@ -113,19 +113,19 @@ public class CredentialsManager {
 
     public void onActivityStop(SingleFragmentActivity activity) {
         if (mAuthStrategy != null) {
-            mAuthStrategy.onActivityStop(activity);
+            mAuthStrategy.onActivityStop();
         }
     }
 
     public void onActivityStart(SingleFragmentActivity activity) {
         if (mAuthStrategy != null) {
-            mAuthStrategy.onActivityStart(activity);
+            mAuthStrategy.onActivityStart();
         }
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data, SingleFragmentActivity activity) {
         if (mAuthStrategy != null) {
-            mAuthStrategy.onActivityResult(requestCode, resultCode, data, activity);
+            mAuthStrategy.onActivityResult(requestCode, resultCode, data);
         }
     }
 

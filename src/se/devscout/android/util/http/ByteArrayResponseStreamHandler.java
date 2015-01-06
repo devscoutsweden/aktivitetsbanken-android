@@ -12,7 +12,7 @@ public class ByteArrayResponseStreamHandler implements ResponseStreamHandler<byt
     public byte[] read(InputStream in) throws IOException {
         StopWatch stopWatch = new StopWatch("Reading stream");
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        int bytesRead = 0;
+        int bytesRead;
         byte[] buffer = new byte[1024];
         int length = 0;
         while ((bytesRead = in.read(buffer)) > 0) {

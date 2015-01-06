@@ -7,7 +7,7 @@ import se.devscout.android.controller.activity.FragmentCreatorActivity;
 
 public abstract class ExecutableDrawerItem extends DefaultDrawerItem implements FragmentCreator {
 
-    public ExecutableDrawerItem(String title, int iconResIdesId) {
+    ExecutableDrawerItem(String title, int iconResIdesId) {
         super(title, iconResIdesId);
     }
 
@@ -21,7 +21,7 @@ public abstract class ExecutableDrawerItem extends DefaultDrawerItem implements 
         ctx.startActivity(intent);
     }
 
-    protected String getActivityTitle() {
+    String getActivityTitle() {
         return getTitle();
     }
 

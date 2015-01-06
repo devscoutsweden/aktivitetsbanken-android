@@ -38,7 +38,7 @@ class GoogleAuthenticationStrategy implements AuthenticationStrategy, GoogleApiC
     private final CredentialsManager mCredentialsManager;
 
     private String mGoogleAccountName;
-    private SingleFragmentActivity mActivity;
+    private final SingleFragmentActivity mActivity;
     private GoogleApiClient mGoogleApiClient;
     private boolean mIntentInProgress;
     private ConnectionResult mConnectionResult;
@@ -111,7 +111,7 @@ class GoogleAuthenticationStrategy implements AuthenticationStrategy, GoogleApiC
     }
 
     @Override
-    public void onActivityStop(SingleFragmentActivity activity) {
+    public void onActivityStop() {
         if (mGoogleApiClient != null) {
             if (mGoogleApiClient.isConnected()) {
                 mGoogleApiClient.disconnect();
@@ -121,11 +121,11 @@ class GoogleAuthenticationStrategy implements AuthenticationStrategy, GoogleApiC
     }
 
     @Override
-    public void onActivityStart(SingleFragmentActivity activity) {
+    public void onActivityStart() {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data, SingleFragmentActivity activity) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RC_SIGN_IN) {
             if (resultCode != FragmentActivity.RESULT_OK) {
                 mSignInClicked = false;

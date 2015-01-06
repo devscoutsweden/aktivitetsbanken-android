@@ -20,7 +20,7 @@ public class InstallationProperties {
     private static InstallationProperties instance;
 
     private Properties mProperties;
-    private File mPropertiesFile;
+    private final File mPropertiesFile;
 
     private InstallationProperties(Context context) throws IOException {
         mPropertiesFile = new File(context.getFilesDir(), FILE_NAME);

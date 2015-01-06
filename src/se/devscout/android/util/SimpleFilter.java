@@ -11,7 +11,7 @@ public abstract class SimpleFilter implements ActivityFilter {
     }
 */
 
-    public static SimpleFilter fromActivityFilter(ActivityFilter activityFilter) {
+    public static SimpleFilter fromActivityFilter() {
         return null;
     }
 }

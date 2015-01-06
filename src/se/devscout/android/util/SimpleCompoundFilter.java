@@ -5,10 +5,10 @@ import se.devscout.server.api.ActivityFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public abstract class SimpleCompoundFilter extends SimpleFilter {
-    protected final ArrayList<ActivityFilter> mFilters;
+abstract class SimpleCompoundFilter extends SimpleFilter {
+    final ArrayList<ActivityFilter> mFilters;
 
-    public SimpleCompoundFilter() {
+    SimpleCompoundFilter() {
         this(new ArrayList<ActivityFilter>());
     }
 

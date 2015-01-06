@@ -3,10 +3,10 @@ package se.devscout.android.util;
 import se.devscout.server.api.model.Range;
 
 public abstract class SimpleRangeFilter extends SimpleFilter {
-    protected final Integer mMin;
-    protected final Integer mMax;
+    private final Integer mMin;
+    private final Integer mMax;
 
-    public SimpleRangeFilter(Range<Integer> range) {
+    SimpleRangeFilter(Range<Integer> range) {
         mMin = range.getMin();
         mMax = range.getMax();
     }
@@ -29,7 +29,7 @@ public abstract class SimpleRangeFilter extends SimpleFilter {
     }
 
     //TODO: Needs unit tests
-    public boolean isFullyWithin(Range<Integer> candidate) {
+    boolean isFullyWithin(Range<Integer> candidate) {
         boolean startsAfter = mMin <= candidate.getMin();
         boolean endsBefore = mMax >= candidate.getMax();
         boolean match = startsAfter && endsBefore;

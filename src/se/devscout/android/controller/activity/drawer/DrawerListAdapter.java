@@ -27,9 +27,9 @@ public class DrawerListAdapter extends BaseAdapter {
     private static final int SEARCH_HISTORY_ITEM_COUNT = 3;
     private final TitleActivityFilterVisitor SEARCH_HISTORY_ITEM_TITLE_VISITOR;
 
-    private List<DrawerItem> mDrawerItems;
+    private final List<DrawerItem> mDrawerItems;
     private List<DrawerItem> mSearchHistoryDrawerItems;
-    private Context mContext;
+    private final Context mContext;
     private HeaderDrawerItem mSearchHistoryHeaderDrawerItem;
     private ActivityBank mActivityBank;
 
@@ -37,16 +37,14 @@ public class DrawerListAdapter extends BaseAdapter {
         this(context, new ArrayList<DrawerItem>());
     }
 
-    public DrawerListAdapter(Context context, List<DrawerItem> drawerItems) {
+    private DrawerListAdapter(Context context, List<DrawerItem> drawerItems) {
         mContext = context;
         mDrawerItems = drawerItems;
         SEARCH_HISTORY_ITEM_TITLE_VISITOR = new TitleActivityFilterVisitor(context);
     }
 
     public void add(DrawerItem... items) {
-        for (DrawerItem item : items) {
-            mDrawerItems.add(item);
-        }
+        Collections.addAll(mDrawerItems, items);
         notifyDataSetChanged();
     }
 

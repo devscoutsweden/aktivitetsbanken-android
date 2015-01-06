@@ -1,8 +1,8 @@
 package se.devscout.android.util.http;
 
 public class ContentTooLongException extends HeaderException {
-    private long length;
-    private long maxLength;
+    private final long length;
+    private final long maxLength;
 
     public ContentTooLongException(long length, long maxLength) {
         this.length = length;

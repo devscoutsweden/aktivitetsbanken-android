@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class ContentLengthValidator implements ResponseHeadersValidator {
 
-    private int mMaximumLength;
+    private final int mMaximumLength;
 
     public ContentLengthValidator(int maximumLength) {
         mMaximumLength = maximumLength;

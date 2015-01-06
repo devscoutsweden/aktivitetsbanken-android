@@ -6,8 +6,8 @@ import java.util.Locale;
 
 public class StopWatch {
     private static class Event {
-        long timeStamp;
-        String label;
+        final long timeStamp;
+        final String label;
 
         private Event(String label, long timeStamp) {
             this.label = label;
@@ -15,7 +15,7 @@ public class StopWatch {
         }
     }
 
-    private List<Event> mEvents = new ArrayList<Event>();
+    private final List<Event> mEvents = new ArrayList<Event>();
 
     public StopWatch(String name) {
         logEvent("Starting stopwatch " + name);

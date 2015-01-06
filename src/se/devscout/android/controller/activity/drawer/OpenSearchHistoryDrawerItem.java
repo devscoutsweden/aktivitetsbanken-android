@@ -6,7 +6,7 @@ import se.devscout.android.controller.fragment.SearchHistoryListFragment;
 
 class OpenSearchHistoryDrawerItem extends ExecutableDrawerItem {
 
-    private String mActivityTitle;
+    private final String mActivityTitle;
 
     public OpenSearchHistoryDrawerItem(String title, String activityTitle) {
         super(title, R.drawable.ic_action_overflow);

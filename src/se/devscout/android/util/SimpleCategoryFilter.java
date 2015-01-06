@@ -12,7 +12,7 @@ import se.devscout.server.api.model.Category;
 public class SimpleCategoryFilter extends SimpleFilter implements se.devscout.server.api.activityfilter.CategoryFilter {
     private final String name;
     private final String group;
-    private long serverId;
+    private final long serverId;
 
     public SimpleCategoryFilter(String group, String name, long serverId) {
         this.group = group;

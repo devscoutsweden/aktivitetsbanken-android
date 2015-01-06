@@ -23,7 +23,7 @@ public class LogUtil {
     private static final int MILLISECONDS_IN_DAY = 24 * 60 * 60 * 1000;
     private static LogUtil instance = null;
 
-    private LogRecord[] mRecordsRecord = new LogRecord[MAX_ENTRIES_PER_FILE];
+    private final LogRecord[] mRecordsRecord = new LogRecord[MAX_ENTRIES_PER_FILE];
 
     private int pointer = 0;
 
@@ -88,7 +88,7 @@ public class LogUtil {
         writer.println();
     }
 
-    public static File[] getCrashReportFiles(File filesDir) {
+    private static File[] getCrashReportFiles(File filesDir) {
         return filesDir.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File file, String s) {
@@ -127,14 +127,14 @@ public class LogUtil {
 
     }
 
-    public synchronized static LogUtil getInstance() {
+    private synchronized static LogUtil getInstance() {
         if (instance == null) {
             instance = new LogUtil();
         }
         return instance;
     }
 
-    public void initUncaughtExceptionHandler(Context ctx) {
+    void initUncaughtExceptionHandler(Context ctx) {
         Thread.UncaughtExceptionHandler handler = Thread.getDefaultUncaughtExceptionHandler();
         if (handler == null || !(handler instanceof ExceptionHandler)) {
             Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(handler, ctx));

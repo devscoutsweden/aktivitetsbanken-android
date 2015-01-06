@@ -9,7 +9,7 @@ import java.nio.charset.Charset;
 
 public class StringRequestBodyStreamHandler implements RequestBodyStreamHandler {
     private final String mBody;
-    private Charset mCharset;
+    private final Charset mCharset;
 
     public StringRequestBodyStreamHandler(String body, Charset charset) {
         mBody = body;

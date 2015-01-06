@@ -33,7 +33,7 @@ public class DemoActivityRepo implements ActivityBank {
 
     @Override
     public List<ActivityBean> findActivity(ActivityFilter condition) {
-        SimpleFilter simpleFilter = SimpleFilter.fromActivityFilter(condition);
+        SimpleFilter simpleFilter = SimpleFilter.fromActivityFilter();
         ArrayList<ActivityBean> res = new ArrayList<ActivityBean>();
         for (ActivityBean activity : mActivities) {
             if (simpleFilter.matches(activity)) {

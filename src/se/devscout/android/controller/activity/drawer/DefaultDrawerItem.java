@@ -1,14 +1,14 @@
 package se.devscout.android.controller.activity.drawer;
 
 public abstract class DefaultDrawerItem implements DrawerItem {
-    private String mTitle;
-    protected int mIconResId;
+    private final String mTitle;
+    private final int mIconResId;
 
-    public DefaultDrawerItem(String title) {
+    DefaultDrawerItem(String title) {
         this(title, 0);
     }
 
-    public DefaultDrawerItem(String title, int iconResId) {
+    DefaultDrawerItem(String title, int iconResId) {
         mTitle = title;
         mIconResId = iconResId;
     }
