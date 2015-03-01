@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import se.devscout.android.model.repo.sql.SQLRandomActivitiesFilter;
 import se.devscout.android.util.LogUtil;
 import se.devscout.server.api.ActivityFilter;
+import se.devscout.server.api.AverageRatingFilter;
 import se.devscout.server.api.URIBuilderActivityFilterVisitor;
 import se.devscout.server.api.activityfilter.*;
 
@@ -102,6 +103,12 @@ public class ApiV1Visitor implements URIBuilderActivityFilterVisitor {
     @Override
     public Uri visit(OverallFavouriteActivitiesFilter filter) {
         mUriBuilder.appendQueryParameter("favourites", String.valueOf(filter.getNumberOfActivities()));
+        return mUriBuilder.build();
+    }
+
+    @Override
+    public Uri visit(AverageRatingFilter filter) {
+        mUriBuilder.appendQueryParameter("ratings_average_min", String.valueOf(filter.getLimit()));
         return mUriBuilder.build();
     }
 }

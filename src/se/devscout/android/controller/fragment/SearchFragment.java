@@ -59,6 +59,7 @@ public class SearchFragment extends ActivityBankFragment {
         editor.putBoolean("searchAgeTracker", ((CheckBox) view.findViewById(R.id.searchAgeTracker)).isChecked());
         editor.putBoolean("featuredOnlyCheckbox", ((CheckBox) view.findViewById(R.id.searchFeaturedOnly)).isChecked());
         editor.putBoolean("searchFavouritesOnlyCheckbox", ((CheckBox) view.findViewById(R.id.searchFavouritesOnly)).isChecked());
+        editor.putBoolean("searchTopRatedOnlyCheckbox", ((CheckBox) view.findViewById(R.id.searchTopRatedOnly)).isChecked());
 
         editor.commit();
     }
@@ -74,6 +75,7 @@ public class SearchFragment extends ActivityBankFragment {
         ((CheckBox) view.findViewById(R.id.searchAgeTracker)).setChecked(getPreferences().getBoolean("searchAgeTracker", false));
         ((CheckBox) view.findViewById(R.id.searchFeaturedOnly)).setChecked(getPreferences().getBoolean("featuredOnlyCheckbox", false));
         ((CheckBox) view.findViewById(R.id.searchFavouritesOnly)).setChecked(getPreferences().getBoolean("searchFavouritesOnlyCheckbox", false));
+        ((CheckBox) view.findViewById(R.id.searchTopRatedOnly)).setChecked(getPreferences().getBoolean("searchTopRatedOnlyCheckbox", false));
     }
 
     @Override
@@ -116,6 +118,8 @@ public class SearchFragment extends ActivityBankFragment {
                     initFeaturedOnlyFilter(filter, mFilterFactory);
 
                     initFavouritesOnlyFilter(filter, mFilterFactory);
+
+                    initTopRatedOnlyFilter(filter, mFilterFactory);
 
                     initTextFilter(filter, mFilterFactory);
 
@@ -184,6 +188,13 @@ public class SearchFragment extends ActivityBankFragment {
                 CheckBox searchFavouritesOnlyCheckbox = (CheckBox) searchView.findViewById(R.id.searchFavouritesOnly);
                 if (searchFavouritesOnlyCheckbox.isChecked()) {
                     filter.getFilters().add(mFilterFactory.createIsUserFavouriteFilter(CredentialsManager.getInstance(getActivity()).getCurrentUser()));
+                }
+            }
+
+            private void initTopRatedOnlyFilter(se.devscout.server.api.activityfilter.AndFilter filter, ActivityFilterFactory mFilterFactory) throws ActivityFilterFactoryException {
+                CheckBox searchTopRatedOnlyCheckbox = (CheckBox) searchView.findViewById(R.id.searchTopRatedOnly);
+                if (searchTopRatedOnlyCheckbox.isChecked()) {
+                    filter.getFilters().add(mFilterFactory.createAverageRatingFilter(4.0));
                 }
             }
 

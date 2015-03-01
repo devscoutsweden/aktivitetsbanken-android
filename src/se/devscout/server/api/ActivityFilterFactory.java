@@ -28,4 +28,6 @@ public interface ActivityFilterFactory {
     ServerObjectIdentifiersFilter createServerObjectIdentifierFilter(ServerObjectIdentifier identifier);
 
     OverallFavouriteActivitiesFilter createOverallFavouriteActivitiesFilter(int numberOfActivities);
+
+    AverageRatingFilter createAverageRatingFilter(double limit);
 }

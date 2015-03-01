@@ -27,4 +27,6 @@ public interface BaseActivityFilterVisitor<T> {
     T visit(ServerObjectIdentifiersFilter filter);
 
     T visit(OverallFavouriteActivitiesFilter filter);
+
+    T visit(AverageRatingFilter filter);
 }

@@ -2,6 +2,7 @@ package se.devscout.android.util;
 
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.ActivityFilterFactory;
+import se.devscout.server.api.AverageRatingFilter;
 import se.devscout.server.api.activityfilter.IsUserFavouriteFilter;
 import se.devscout.server.api.activityfilter.OverallFavouriteActivitiesFilter;
 import se.devscout.server.api.activityfilter.RandomActivitiesFilter;
@@ -79,6 +80,11 @@ public class PrimitiveActivityFilterFactory implements ActivityFilterFactory {
     @Override
     public OverallFavouriteActivitiesFilter createOverallFavouriteActivitiesFilter(int numberOfActivities) {
         throw new UnsupportedOperationException("Returing overall favourite activities is not implemented.");
+    }
+
+    @Override
+    public AverageRatingFilter createAverageRatingFilter(double limit) {
+        throw new UnsupportedOperationException("Returning activities by average rating is not implemented.");
     }
 
 }

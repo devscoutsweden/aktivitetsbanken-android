@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import se.devscout.android.model.repo.sql.SQLRandomActivitiesFilter;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.ActivityFilterVisitor;
+import se.devscout.server.api.AverageRatingFilter;
 import se.devscout.server.api.activityfilter.*;
 
 class EqualsFilterVisitor implements ActivityFilterVisitor {
@@ -78,5 +79,10 @@ class EqualsFilterVisitor implements ActivityFilterVisitor {
     @Override
     public String visit(OverallFavouriteActivitiesFilter filter) {
         return "overallfavourite" + filter.getNumberOfActivities();
+    }
+
+    @Override
+    public String visit(AverageRatingFilter filter) {
+        return "averagerating" + filter.getLimit();
     }
 }
