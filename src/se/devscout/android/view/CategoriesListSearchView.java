@@ -48,7 +48,12 @@ public class CategoriesListSearchView extends QuickSearchListView<CategoryListIt
 
     @Override
     protected String getSubtitle(CategoryListItem option) {
-        return getResources().getQuantityString(R.plurals.searchResultSubtitleCategoryTrack, option.getActivitiesCount(), option.getActivitiesCount());
+        if (option.getActivitiesCount() != null) {
+            return getResources().getQuantityString(R.plurals.searchResultSubtitleCategoryTrack, option.getActivitiesCount(), option.getActivitiesCount());
+        } else {
+            // This can happen if the network connection times out and the SQLite database contains no information in the activities_count column.
+            return null;
+        }
     }
 
     @Override
