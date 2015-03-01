@@ -114,6 +114,11 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         super.deleteSearchHistory(itemsToKeep);
     }
 
+    @Override
+    public Rating readRating(ActivityKey activityKey, UserKey userKey) {
+        return super.readRating(fixActivityKey(activityKey), userKey);
+    }
+
 /*
     @Override
     public boolean createAnonymousAPIUser() {
@@ -226,6 +231,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
                     try {
                         updateUser(getCurrentUser(), userProperties);
                         synchronizeFavourites();
+                        synchronizeRatings();
                     } catch (UnauthorizedException e) {
                         LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not provide user information to server", e);
                     }
@@ -233,6 +239,50 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
                 break;
             default:
                 throw new UnsupportedOperationException("Does not support identity provider " + provider);
+        }
+    }
+
+    private void synchronizeRatings() throws UnauthorizedException {
+        // Get all ratings for current user from local database
+        List<Rating> ratings = mDatabaseHelper.readRatings(getCurrentUser());
+        ActivityKey[] ratedActivitiesKeys = new ActivityKey[ratings.size()];
+        int i = 0;
+        for (Rating rating : ratings) {
+            ratedActivitiesKeys[i++] = new ObjectIdentifierBean(rating.getActivityId());
+        }
+
+        // Build list of each locally rated activity's corresponding server id.
+        ActivityList ratedActivities = mDatabaseHelper.readActivities(ratedActivitiesKeys);
+        HashMap<Long, Long> serverIds = new HashMap<Long, Long>();
+        for (Activity ratedActivity : ratedActivities) {
+            serverIds.put(ratedActivity.getId(), ratedActivity.getServerId());
+        }
+
+        // Iterate over user's ratings in app
+        for (Rating rating : ratings) {
+            String uri = "http://" + getRemoteHost() + "/api/v1/activities/" + serverIds.get(rating.getActivityId()) + "/rating";
+            try {
+                switch (rating.getStatus()) {
+                    case NO_CHANGE:
+                        break;
+                    case CHANGED:
+                        // Update server-side rating and the set local status to NO_CHANGE.
+                        readUrlAsBytes(uri, new JSONObject(Collections.singletonMap("rating", rating.getRating())).toString(), HttpMethod.POST);
+                        mDatabaseHelper.setRating(new ObjectIdentifierBean(rating.getActivityId()), getCurrentUser(), new RatingPropertiesBean(rating.getRating(), RatingStatus.NO_CHANGE));
+                        break;
+                    case REMOVED:
+                        // Rating was marked as removed (scheduled for deletion). Remove it from the server and then remove it from the app.
+                        readUrlAsBytes(uri, null, HttpMethod.DELETE);
+                        mDatabaseHelper.removeRating(new ObjectIdentifierBean(rating.getActivityId()), getCurrentUser());
+                        break;
+                }
+            } catch (IOException e) {
+                LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not update server-side rating for activity " + rating.getActivityId(), e);
+                return;
+            } catch (UnhandledHttpResponseCodeException e) {
+                LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not update server-side rating for activity " + rating.getActivityId() + " because of server-side error.", e);
+                return;
+            }
         }
     }
 
@@ -438,6 +488,8 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
             for (String attrName : attrNames) {
                 builder.appendQueryParameter("attrs[]", attrName);
             }
+            builder.appendQueryParameter("attrs[]", "favourite_count");
+            builder.appendQueryParameter("attrs[]", "ratings_average");
             uri2 = builder.build();
         }
         StopWatch stopWatch = new StopWatch("findActivity " + condition.toString(new TitleActivityFilterVisitor(mContext)));
@@ -449,7 +501,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
             ArrayList<ActivityBean> result = new ArrayList<ActivityBean>();
             stopWatch.logEvent("Parsed JSON");
             for (JSONObject obj : getJSONArrayAsList(array)) {
-                ActivityBean act = getActivityBean(obj);
+                ServerActivityBean act = getActivityBean(obj);
 
                 if (attrNames == null) {
                     processServerObject(act);
@@ -491,7 +543,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         }
     }
 
-    private void processServerObject(ActivityBean act) {
+    private void processServerObject(ServerActivityBean act) {
         //TODO: refactor into separate method for updating database.
         LocalObjectRefreshness localFreshness = mDatabaseHelper.getLocalFreshness(act);
         switch (localFreshness) {
@@ -511,6 +563,62 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
                 act.setId(mDatabaseHelper.getLocalIdByServerId(act));
                 break;
         }
+
+        ObjectIdentifierBean activityKey = new ObjectIdentifierBean(act.getId());
+        processServerObjectRating(activityKey, act);
+    }
+
+    private void processServerObjectRating(ObjectIdentifierBean localActivityKey, ServerActivityBean serverActivity) {
+        Rating appRating = mDatabaseHelper.readRating(localActivityKey, getCurrentUser());
+        Double serverRating = serverActivity.getMyRating();
+        if (appRating == null) {
+            // No rating stored locally.
+            if (serverRating != null) {
+                // Server-side rating exists. Save same rating locally.
+                mDatabaseHelper.setRating(localActivityKey, getCurrentUser(), new RatingPropertiesBean(serverRating.intValue(), RatingStatus.NO_CHANGE));
+            }
+        } else {
+            switch (appRating.getStatus()) {
+                case CHANGED:
+                    if (serverRating != null && appRating != null) {
+                        if (serverRating.intValue() != appRating.getRating()) {
+                            // TODO: Update server-side rating with app's rating
+                        } else {
+                            // Rating has been changed to the same value by both the app and some other client. Reset status of app's rating.
+                            mDatabaseHelper.setRating(localActivityKey, getCurrentUser(), new RatingPropertiesBean(serverRating.intValue(), RatingStatus.NO_CHANGE));
+                        }
+                    } else {
+                        // Server-side rating is null => other client has removed rating and user has changed rating in app. App wins?
+                    }
+                    break;
+                case NO_CHANGE:
+                    if (serverRating != null && appRating != null) {
+                        if (serverRating.intValue() != appRating.getRating()) {
+                            // Rating has not been changed in the app since the last syncronization but it has changed on the server. Update the app's rating to the server's rating.
+                            mDatabaseHelper.setRating(localActivityKey, getCurrentUser(), new RatingPropertiesBean(serverRating.intValue(), RatingStatus.NO_CHANGE));
+                        } else {
+                            // App and server has same value for rating, and it has not been changed.
+                        }
+                    } else {
+                        // Server-side rating is null, but the app has a rating. Does this mean that the rating has been removed by another client? Then the rating should (probably?) be removed in the app's database.
+                    }
+                    break;
+                case REMOVED:
+                    if (serverRating == null) {
+                        // Rating "unset" in app and missing on server. Remove rating entry in app's database. No need to remove anything on server since it is already remove there!
+                        mDatabaseHelper.removeRating(localActivityKey, getCurrentUser());
+                    } else {
+                        // Rating exists on server but, by specification, in this case the app "wins" and the rating should (upon next syncronization) be removed from the server.
+                    }
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public void unsetRating(ActivityKey activityKey, UserKey userKey) {
+        Rating currentRating = readRating(activityKey, userKey);
+        mDatabaseHelper.setRating(activityKey, userKey, new RatingPropertiesBean(currentRating.getRating(), RatingStatus.REMOVED));
     }
 
     private void processServerObject(CategoryBean category) {
@@ -650,9 +758,9 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         }
     }
 
-    private ActivityBean getActivityBean(JSONObject obj) throws JSONException {
+    private ServerActivityBean getActivityBean(JSONObject obj) throws JSONException {
         ObjectIdentifierBean ownerId = null;//new ObjectIdentifierBean(mDatabaseHelper.getOrCreateUser(new UserPropertiesBean(null, null, obj.getLong("owner_id"), UNKNOWN_SERVER_REVISION_ID, false)));
-        ActivityBean act = new ActivityBean(ownerId,
+        ServerActivityBean act = new ServerActivityBean(ownerId,
                 0L,
                 obj.getInt("id"),
                 getServerRevisionId(obj),
@@ -700,7 +808,9 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         act.setMaterial(obj.optString("descr_material", null));
         act.setPreparation(obj.optString("descr_prepare", null));
         act.setDateCreated(getDate(obj, "created_at"));
-        act.setFavouritesCount(obj.has("favourite_count") ? obj.getInt("favourite_count") : null);
+        act.setFavouritesCount(obj.has("favourite_count") && !obj.isNull("favourite_count") ? obj.getInt("favourite_count") : null);
+        act.setRatingAverage(obj.has("ratings_average") && !obj.isNull("ratings_average") ? obj.getDouble("ratings_average") : null);
+        act.setMyRating(obj.has("my_rating") && !obj.isNull("my_rating") ? obj.getDouble("my_rating") : null);
 //        act.addRevisions(act);
         return act;
     }
@@ -934,6 +1044,5 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         db.endTransaction();
     }
 */
-
 
 }
