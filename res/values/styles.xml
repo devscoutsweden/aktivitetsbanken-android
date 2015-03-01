@@ -130,4 +130,10 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/accentBlue</item>
     </style>
+
+    <style name="ActivityRatingBar" parent="@android:style/Widget.RatingBar">>
+        <item name="android:progressDrawable">@drawable/activity_rating_bar</item>
+        <item name="android:minHeight">@dimen/uiBlockSize</item>
+        <item name="android:maxHeight">@dimen/uiBlockSize</item>
+    </style>
 </resources>
