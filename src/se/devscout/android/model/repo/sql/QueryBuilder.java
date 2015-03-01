@@ -1,8 +1,13 @@
 package se.devscout.android.model.repo.sql;
 
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import se.devscout.android.model.IntegerRange;
+import se.devscout.android.util.auth.CredentialsManager;
+import se.devscout.server.api.AverageRatingFilter;
+import se.devscout.server.api.activityfilter.CategoryFilter;
+import se.devscout.server.api.activityfilter.OverallFavouriteActivitiesFilter;
 import se.devscout.server.api.model.ActivityKey;
 import se.devscout.server.api.model.Range;
 import se.devscout.server.api.model.UserKey;
@@ -13,6 +18,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class QueryBuilder {
+    private final Context mContext;
+
     private List<String> mWhere = new ArrayList<String>();
     private List<String> mWhereConditions = new ArrayList<String>();
     private List<String> mSelect = new ArrayList<String>();
@@ -20,7 +27,10 @@ public class QueryBuilder {
     private StringBuilder mFrom = new StringBuilder();
     private int mLimitResultLength = 0;
 
-    public QueryBuilder() {
+    public QueryBuilder(Context context) {
+
+        mContext = context;
+
         mSelect.add("a." + Database.activity.owner_id);
         mSelect.add("a." + Database.activity.id);
         mSelect.add("a." + Database.activity.server_id);
@@ -44,9 +54,9 @@ public class QueryBuilder {
         mSelect.add("a." + Database.activity.featured);
         mSelect.add("a." + Database.activity.favourite_count);
         mSelect.add("a." + Database.activity.rating_average);
-        mFrom.append("   " + Database.activity.T + " a "/* +
-                "   inner join " + Database.activity_data.T + " admax on a." + Database.activity.id + " = admax." + Database.activity_data.activity_id + " " +
-                "   inner join " + Database.activity_data.T + " ad on a." + Database.activity.id + " = ad." + Database.activity_data.activity_id + " "*/);
+
+        mFrom.append(Database.activity.T + " a ");
+
         mOrderBy = Arrays.asList("a." + Database.activity.id);
     }
 
@@ -123,5 +133,64 @@ public class QueryBuilder {
     public void addRandomlySelectedRows(int numberOfActivities) {
         mOrderBy = Collections.singletonList("RANDOM()");
         mLimitResultLength = numberOfActivities;
+    }
+
+    public void addWhereCategory(CategoryFilter filter) {
+        addWhere("" +
+                "exists(" +
+                "   select " +
+                "       activity_id " +
+                "   from " +
+                "       " + Database.activity_data_category.T + " adc " +
+                "       inner join " +
+                "       " + Database.category.T + " c " +
+                "       on " +
+                "       adc." + Database.activity_data_category.activity_data_id + " = a." + Database.activity.id +
+                "       and" +
+                "       adc." + Database.activity_data_category.category_id + " = c." + Database.category.id +
+                "   where " +
+                "       c." + Database.category.group_name + " = ?" +
+                "       and" +
+                "       c." + Database.category.name + " = ?" +
+                ")",
+                filter.getGroup(),
+                filter.getName());
+    }
+
+    /**
+     * The activities which have been marked as favourites by the most users (as reported by server API).
+     */
+    public void addWhereOverallFavourites(OverallFavouriteActivitiesFilter filter) {
+        addWhere("" +
+                "a." + Database.activity.id + " in " +
+                "(" +
+                "   select " + Database.activity.id +
+                "   from " + Database.activity.T +
+                "   order by " + Database.activity.favourite_count + " desc " +
+                "   limit " + filter.getNumberOfActivities() +
+                ")");
+    }
+
+    /**
+     * Activities where the average rating of other users (as reported by the server API) is high enough OR
+     * activities where the current user has set a high enough rating.
+     */
+    public void addWhereAverageRating(AverageRatingFilter filter) {
+        mSelect.add("r." + Database.rating.rating);
+        mFrom.append("" +
+                "   left join " +
+                "   " + Database.rating.T + " r " +
+                "   on " +
+                "   (" +
+                "   r." + Database.rating.activity_id + " = a." + Database.activity.id + " " +
+                "   and " +
+                "   r." + Database.rating.user_id + " = " + CredentialsManager.getInstance(mContext).getCurrentUser().getId() +
+                "   )");
+        mWhere.add("" +
+                "(" +
+                "   a." + Database.activity.rating_average + " >= " + String.valueOf(filter.getLimit()) +
+                "   or " +
+                "   r." + Database.rating.rating + " >= " + String.valueOf(filter.getLimit()) +
+                ")");
     }
 }

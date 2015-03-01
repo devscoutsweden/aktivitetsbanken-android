@@ -1,17 +1,12 @@
 package se.devscout.android.model;
 
 import android.text.TextUtils;
-import se.devscout.android.model.repo.sql.SQLRandomActivitiesFilter;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.ActivityFilterVisitor;
 import se.devscout.server.api.AverageRatingFilter;
 import se.devscout.server.api.activityfilter.*;
 
 class EqualsFilterVisitor implements ActivityFilterVisitor {
-    @Override
-    public String visit(OrFilter filter) {
-        return visitCompound(filter, '|');
-    }
 
     @Override
     public String visit(AndFilter filter) {
@@ -25,7 +20,7 @@ class EqualsFilterVisitor implements ActivityFilterVisitor {
             if (sb.length() > 1) {
                 sb.append(separator);
             }
-            sb.append(subFilter.toString(this));
+            sb.append(subFilter.visit(this));
         }
         sb.append(')');
         return sb.toString();
@@ -67,7 +62,7 @@ class EqualsFilterVisitor implements ActivityFilterVisitor {
     }
 
     @Override
-    public String visit(SQLRandomActivitiesFilter filter) {
+    public String visit(RandomActivitiesFilter filter) {
         return "random" + filter.getNumberOfActivities();
     }
 

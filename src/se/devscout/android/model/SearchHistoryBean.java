@@ -30,7 +30,7 @@ public class SearchHistoryBean extends SearchHistoryPropertiesBean implements Se
 
         ActivityFilter thisDataFilter = getData().getFilter();
         ActivityFilter thatDataFilter = that.getData().getFilter();
-        if (thisDataFilter != null ? !thisDataFilter.toString(EQUALS_FILTER_VISITOR).equals(thatDataFilter.toString(EQUALS_FILTER_VISITOR)) : thatDataFilter != null)
+        if (thisDataFilter != null ? !thisDataFilter.visit(EQUALS_FILTER_VISITOR).equals(thatDataFilter.visit(EQUALS_FILTER_VISITOR)) : thatDataFilter != null)
             return false;
 
         return true;
@@ -39,7 +39,7 @@ public class SearchHistoryBean extends SearchHistoryPropertiesBean implements Se
     @Override
     public int hashCode() {
         SearchHistoryData data = getData();
-        return data != null && data.getFilter() != null ? data.getFilter().toString(EQUALS_FILTER_VISITOR).hashCode() : 0;
+        return data != null && data.getFilter() != null ? data.getFilter().visit(EQUALS_FILTER_VISITOR).hashCode() : 0;
     }
 
 }

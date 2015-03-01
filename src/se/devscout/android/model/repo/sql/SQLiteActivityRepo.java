@@ -3,7 +3,7 @@ package se.devscout.android.model.repo.sql;
 import android.content.Context;
 import se.devscout.android.model.*;
 import se.devscout.android.util.LogUtil;
-import se.devscout.android.util.SimpleFilter;
+import se.devscout.android.util.PrimitiveActivityFilterFactory;
 import se.devscout.android.util.http.UnauthorizedException;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.ActivityBankListener;
@@ -35,16 +35,7 @@ public class SQLiteActivityRepo implements ActivityBank {
 
     @Override
     public List<ActivityBean> findActivity(ActivityFilter condition) throws UnauthorizedException {
-        ArrayList<ActivityBean> res = new ArrayList<ActivityBean>();
-        for (ActivityBean activity : mDatabaseHelper.readActivities(condition)) {
-            if (condition instanceof SimpleFilter) {
-                SimpleFilter simpleFilter = (SimpleFilter) condition;
-                if (simpleFilter.matches(activity)) {
-                    res.add(activity);
-                }
-            }
-        }
-        return res;
+        return new ArrayList<ActivityBean>(mDatabaseHelper.readActivities(condition));
     }
 
     @Override
@@ -69,7 +60,7 @@ public class SQLiteActivityRepo implements ActivityBank {
 
     @Override
     public ActivityFilterFactory getFilterFactory() {
-        return new SQLActivityFilterFactory();
+        return new PrimitiveActivityFilterFactory();
     }
 
     @Override

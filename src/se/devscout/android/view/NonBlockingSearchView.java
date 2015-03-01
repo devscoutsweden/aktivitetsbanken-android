@@ -318,7 +318,12 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
 //
 //                        factory.createAnonymousUser(callback, NonBlockingSearchView.this.getContext());
 //                    } else {
-                    LogUtil.d(NonBlockingSearchView.class.getName(), "Something went wrong when searching since the result was 'null'. The result will be set to an empty list.");
+                    if (result.mThrowable != null) {
+                        LogUtil.e(NonBlockingSearchView.class.getName(), "Something went wrong when searching (an exception was thrown). The result will be set to an empty list.", result.mThrowable);
+                        Toast.makeText(getContext(), result.mThrowable.getMessage(), Toast.LENGTH_LONG).show();
+                    } else {
+                        LogUtil.d(NonBlockingSearchView.class.getName(), "Something went wrong when searching since the result was 'null'. The result will be set to an empty list.");
+                    }
 //                    }
                     setResult(Collections.<T>emptyList());
                 }

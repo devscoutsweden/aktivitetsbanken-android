@@ -1,11 +1,8 @@
 package se.devscout.server.api;
 
-import se.devscout.android.model.repo.sql.SQLRandomActivitiesFilter;
 import se.devscout.server.api.activityfilter.*;
 
 public interface BaseActivityFilterVisitor<T> {
-    T visit(OrFilter filter);
-
     T visit(AndFilter filter);
 
     T visit(CategoryFilter filter);
@@ -22,7 +19,7 @@ public interface BaseActivityFilterVisitor<T> {
 
     T visit(ActivityKeysFilter filter);
 
-    T visit(SQLRandomActivitiesFilter filter);
+    T visit(RandomActivitiesFilter filter);
 
     T visit(ServerObjectIdentifiersFilter filter);
 

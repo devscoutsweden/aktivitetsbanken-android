@@ -1,26 +1,14 @@
 package se.devscout.android.util;
 
-import android.net.Uri;
-import se.devscout.server.api.ActivityFilterVisitor;
-import se.devscout.server.api.URIBuilderActivityFilterVisitor;
-import se.devscout.server.api.model.ActivityProperties;
+import se.devscout.server.api.BaseActivityFilterVisitor;
+import se.devscout.server.api.activityfilter.IsFeaturedFilter;
 
 /**
  * Tests if activity is marked a Featured.
  */
-public class SimpleIsFeaturedFilter extends SimpleFilter implements se.devscout.server.api.activityfilter.IsFeaturedFilter {
+public class SimpleIsFeaturedFilter implements IsFeaturedFilter {
     @Override
-    public boolean matches(ActivityProperties properties) {
-        return properties.isFeatured();
-    }
-
-    @Override
-    public String toString(ActivityFilterVisitor visitor) {
-        return visitor.visit(this);
-    }
-
-    @Override
-    public Uri toAPIRequest(URIBuilderActivityFilterVisitor visitor) {
+    public <T> T visit(BaseActivityFilterVisitor<T> visitor) {
         return visitor.visit(this);
     }
 }

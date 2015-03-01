@@ -37,12 +37,12 @@ public class SearchHistoryListView extends QuickSearchListView<SearchHistoryList
 
     @Override
     protected String getTitle(SearchHistoryListItem option) {
-        return option.getFilter().toString(new TitleActivityFilterVisitor(getContext()));
+        return option.getFilter().visit(new TitleActivityFilterVisitor(getContext()));
     }
 
     @Override
     protected String getSubtitle(SearchHistoryListItem option) {
-        return option.getFilter().toString(new SubtitleActivityFilterVisitor(getContext()));
+        return option.getFilter().visit(new SubtitleActivityFilterVisitor(getContext()));
     }
 
     @Override
@@ -52,7 +52,7 @@ public class SearchHistoryListView extends QuickSearchListView<SearchHistoryList
 
     @Override
     protected String getSearchResultTitle(SearchHistoryListItem option) {
-        return option.getFilter().toString(new TitleActivityFilterVisitor(getContext()));
+        return option.getFilter().visit(new TitleActivityFilterVisitor(getContext()));
     }
 
     private class SearchHistorySearchTask extends SearchTask {

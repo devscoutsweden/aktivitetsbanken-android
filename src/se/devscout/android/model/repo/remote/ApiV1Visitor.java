@@ -2,7 +2,6 @@ package se.devscout.android.model.repo.remote;
 
 import android.net.Uri;
 import android.text.TextUtils;
-import se.devscout.android.model.repo.sql.SQLRandomActivitiesFilter;
 import se.devscout.android.util.LogUtil;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.AverageRatingFilter;
@@ -19,18 +18,13 @@ public class ApiV1Visitor implements URIBuilderActivityFilterVisitor {
     }
 
     @Override
-    public Uri visit(OrFilter filter) {
-        return visitCompound(filter);
-    }
-
-    @Override
     public Uri visit(AndFilter filter) {
         return visitCompound(filter);
     }
 
     private Uri visitCompound(CompoundFilter filter) {
         for (ActivityFilter subFilter : filter.getFilters()) {
-            subFilter.toAPIRequest(this);
+            subFilter.visit(this);
         }
         return mUriBuilder.build();
     }
@@ -89,7 +83,7 @@ public class ApiV1Visitor implements URIBuilderActivityFilterVisitor {
     }
 
     @Override
-    public Uri visit(SQLRandomActivitiesFilter filter) {
+    public Uri visit(RandomActivitiesFilter filter) {
         mUriBuilder.appendQueryParameter("random", String.valueOf(filter.getNumberOfActivities()));
         return mUriBuilder.build();
     }

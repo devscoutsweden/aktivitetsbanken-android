@@ -19,7 +19,6 @@ import se.devscout.android.util.StopWatch;
 import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.android.util.http.*;
 import se.devscout.server.api.ActivityFilter;
-import se.devscout.server.api.ActivityFilterFactory;
 import se.devscout.server.api.URIBuilderActivityFilterVisitor;
 import se.devscout.server.api.model.*;
 
@@ -478,7 +477,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         URIBuilderActivityFilterVisitor visitor = new ApiV1Visitor(getRemoteHost());
         Uri uri2 = null;
         try {
-            uri2 = condition.toAPIRequest(visitor);
+            uri2 = condition.visit(visitor);
         } catch (UnsupportedOperationException e) {
             LogUtil.e(RemoteActivityRepoImpl.class.getName(), "App does not think API can handle the search query. Delegate search to database and pray that the database supports the query!");
             return super.findActivity(condition);
@@ -492,7 +491,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
             builder.appendQueryParameter("attrs[]", "ratings_average");
             uri2 = builder.build();
         }
-        StopWatch stopWatch = new StopWatch("findActivity " + condition.toString(new TitleActivityFilterVisitor(mContext)));
+        StopWatch stopWatch = new StopWatch("findActivity " + condition.visit(new TitleActivityFilterVisitor(mContext)));
         String uri = uri2.toString();
         try {
             stopWatch.logEvent("Preparing request");
@@ -833,11 +832,6 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
                 0L,
                 new URI(jsonObject.getString("uri")),
                 jsonObject.getString("description"));
-    }
-
-    @Override
-    public ActivityFilterFactory getFilterFactory() {
-        return new ApiV1ActivityFilterFactory();
     }
 
     private Date getDate(JSONObject obj, String fieldName) {

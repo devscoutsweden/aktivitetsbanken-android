@@ -146,7 +146,7 @@ public class DrawerListAdapter extends BaseAdapter {
 //                        searchHistoryItems = searchHistoryItems.subList(0, SEARCH_HISTORY_ITEM_COUNT);
 //                    }
                     for (SearchHistory item : searchHistoryItems) {
-                        String title = item.getData().getFilter().toString(SEARCH_HISTORY_ITEM_TITLE_VISITOR);
+                        String title = item.getData().getFilter().visit(SEARCH_HISTORY_ITEM_TITLE_VISITOR);
                         if (title.length() > 1) {
                             title = Character.toUpperCase(title.charAt(0)) + title.substring(1);
                         }

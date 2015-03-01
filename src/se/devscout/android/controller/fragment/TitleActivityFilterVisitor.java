@@ -3,7 +3,6 @@ package se.devscout.android.controller.fragment;
 import android.content.Context;
 import android.text.TextUtils;
 import se.devscout.android.R;
-import se.devscout.android.model.repo.sql.SQLRandomActivitiesFilter;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.ActivityFilterVisitor;
 import se.devscout.server.api.AverageRatingFilter;
@@ -17,11 +16,6 @@ public class TitleActivityFilterVisitor implements ActivityFilterVisitor {
     }
 
     @Override
-    public String visit(OrFilter filter) {
-        return visitCompound(filter, mContext.getString(R.string.title_filter_visitor_or));
-    }
-
-    @Override
     public String visit(AndFilter filter) {
         return visitCompound(filter, mContext.getString(R.string.title_filter_visitor_and));
     }
@@ -32,7 +26,7 @@ public class TitleActivityFilterVisitor implements ActivityFilterVisitor {
             if (sb.length() > 0) {
                 sb.append(separator);
             }
-            sb.append(subFilter.toString(this));
+            sb.append(subFilter.visit(this));
         }
         return sb.toString();
     }
@@ -85,7 +79,7 @@ public class TitleActivityFilterVisitor implements ActivityFilterVisitor {
     }
 
     @Override
-    public String visit(SQLRandomActivitiesFilter filter) {
+    public String visit(RandomActivitiesFilter filter) {
         return mContext.getString(R.string.title_filter_visitor_random, filter.getNumberOfActivities());
     }
 

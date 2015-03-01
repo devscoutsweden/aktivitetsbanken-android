@@ -2,7 +2,9 @@ package se.devscout.android.util;
 
 import se.devscout.server.api.model.Range;
 
-public abstract class SimpleRangeFilter extends SimpleFilter {
+import java.io.Serializable;
+
+public abstract class SimpleRangeFilter implements Serializable {
     private final Integer mMin;
     private final Integer mMax;
 

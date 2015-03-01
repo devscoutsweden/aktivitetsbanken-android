@@ -18,6 +18,7 @@ import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.android.util.http.UnauthorizedException;
 import se.devscout.server.api.ActivityFilterFactory;
 import se.devscout.server.api.ActivityFilterFactoryException;
+import se.devscout.server.api.activityfilter.AndFilter;
 import se.devscout.server.api.model.Category;
 
 import java.util.List;
@@ -113,7 +114,7 @@ public class SearchFragment extends ActivityBankFragment {
             public void onClick(View view) {
                 try {
                     ActivityFilterFactory mFilterFactory = getActivityBank().getFilterFactory();
-                    se.devscout.server.api.activityfilter.AndFilter filter = mFilterFactory.createAndFilter();
+                    AndFilter filter = mFilterFactory.createAndFilter();
 
                     initFeaturedOnlyFilter(filter, mFilterFactory);
 

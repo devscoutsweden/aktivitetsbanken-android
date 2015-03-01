@@ -5,7 +5,7 @@ import se.devscout.server.api.ActivityFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-abstract class SimpleCompoundFilter extends SimpleFilter {
+abstract class SimpleCompoundFilter implements ActivityFilter {
     final ArrayList<ActivityFilter> mFilters;
 
     SimpleCompoundFilter() {

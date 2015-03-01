@@ -15,10 +15,9 @@ import se.devscout.android.model.repo.sql.cache.CategoryIdCache;
 import se.devscout.android.model.repo.sql.cache.MediaIdCache;
 import se.devscout.android.model.repo.sql.cache.ReferenceIdCache;
 import se.devscout.android.util.LogUtil;
+import se.devscout.android.util.SimpleActivityKeysFilter;
 import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.server.api.ActivityFilter;
-import se.devscout.server.api.activityfilter.AndFilter;
-import se.devscout.server.api.activityfilter.OrFilter;
 import se.devscout.server.api.model.*;
 
 import java.io.ByteArrayOutputStream;
@@ -73,7 +72,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
         }
         if (!missing.isEmpty()) {
-            readActivities(new SQLKeysFilter(missing.toArray(new ActivityKey[missing.size()])));
+            readActivities(new SimpleActivityKeysFilter(missing.toArray(new ActivityKey[missing.size()])));
         }
         for (ActivityKey key : keys) {
             res.add(mCacheActivity.get(key.getId()));
@@ -608,8 +607,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public List<? extends ActivityBean> readActivities(ActivityFilter filter) {
-        QueryBuilder queryBuilder = new QueryBuilder();
-        applyFilter(queryBuilder, filter);
+        QueryBuilder queryBuilder = new QueryBuilder(mContext);
+
+        filter.visit(new SQLActivityFilterVisitor(queryBuilder));
+
         ArrayList<ActivityBean> activities = new ArrayList<ActivityBean>();
         Map<Long, ActivityBean> map = new HashMap<Long, ActivityBean>();
         ActivityDataCursor cursor = queryBuilder.query(getDb());
@@ -631,27 +632,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         initActivitiesReferences(map);
 
         return activities;
-    }
-
-    private void applyFilter(QueryBuilder queryBuilder, ActivityFilter filter) {
-        if (filter instanceof AndFilter) {
-            AndFilter andFilter = (AndFilter) filter;
-            for (ActivityFilter activityFilter : andFilter.getFilters()) {
-                applyFilter(queryBuilder, activityFilter);
-            }
-        } else if (filter instanceof OrFilter) {
-            OrFilter orFilter = (OrFilter) filter;
-            for (ActivityFilter activityFilter : orFilter.getFilters()) {
-                applyFilter(queryBuilder, activityFilter);
-            }
-        } else if (filter instanceof SQLActivityFilter) {
-            ((SQLActivityFilter) filter).applyFilter(queryBuilder);
-        } else {
-//            IllegalArgumentException exception = new IllegalArgumentException("applyFilter does not support " + filter.getClass().getName());
-//            logError(exception, "Unsupported filter");
-//            throw exception;
-            logInfo("applyFilter cannot use " + filter.getClass().getName());
-        }
     }
 
     public List<CategoryBean> readCategories() {

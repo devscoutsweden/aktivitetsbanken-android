@@ -6,9 +6,7 @@ import se.devscout.server.api.AverageRatingFilter;
 import se.devscout.server.api.activityfilter.IsUserFavouriteFilter;
 import se.devscout.server.api.activityfilter.OverallFavouriteActivitiesFilter;
 import se.devscout.server.api.activityfilter.RandomActivitiesFilter;
-import se.devscout.server.api.activityfilter.ServerObjectIdentifiersFilter;
 import se.devscout.server.api.model.Range;
-import se.devscout.server.api.model.ServerObjectIdentifier;
 import se.devscout.server.api.model.UserKey;
 
 public class PrimitiveActivityFilterFactory implements ActivityFilterFactory {
@@ -29,21 +27,9 @@ public class PrimitiveActivityFilterFactory implements ActivityFilterFactory {
         return res;
     }
 
-    @Override
-    public SimpleOrFilter createOrFilter(ActivityFilter... filters) {
-        SimpleOrFilter res = new SimpleOrFilter();
-        fillCompoundFilter(res, filters);
-        return res;
-    }
-
     private void fillCompoundFilter(SimpleCompoundFilter res, ActivityFilter[] filters) {
         for (ActivityFilter filter : filters) {
-            if (filter instanceof SimpleFilter) {
-                SimpleFilter simpleFilter = (SimpleFilter) filter;
-                res.getFilters().add(simpleFilter);
-            } else {
-                throw new IllegalArgumentException("Filter must be " + SimpleFilter.class.getSimpleName() + " object.");
-            }
+            res.getFilters().add(filter);
         }
     }
 
@@ -64,27 +50,22 @@ public class PrimitiveActivityFilterFactory implements ActivityFilterFactory {
 
     @Override
     public IsUserFavouriteFilter createIsUserFavouriteFilter(UserKey userKey) {
-        throw new UnsupportedOperationException("Searching for favourites is not implemented.");
+        return new SimpleIsUserFavouriteFilter(userKey);
     }
 
     @Override
     public RandomActivitiesFilter createRandomActivitiesFilter(int numberOfActivities) {
-        throw new UnsupportedOperationException("Returing random activities is not implemented.");
+        return new SimpleRandomActivitiesFilter(numberOfActivities);
     }
 
     @Override
-    public ServerObjectIdentifiersFilter createServerObjectIdentifierFilter(ServerObjectIdentifier identifier) {
-        return null;
-    }
-
-    @Override
-    public OverallFavouriteActivitiesFilter createOverallFavouriteActivitiesFilter(int numberOfActivities) {
-        throw new UnsupportedOperationException("Returing overall favourite activities is not implemented.");
+    public OverallFavouriteActivitiesFilter createOverallFavouriteActivitiesFilter(final int numberOfActivities) {
+        return new SimpleOverallFavouriteActivitiesFilter(numberOfActivities);
     }
 
     @Override
     public AverageRatingFilter createAverageRatingFilter(double limit) {
-        throw new UnsupportedOperationException("Returning activities by average rating is not implemented.");
+        return new SimpleAverageRatingFilter(limit);
     }
 
 }

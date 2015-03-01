@@ -1,15 +1,13 @@
 package se.devscout.android.util;
 
-import android.net.Uri;
-import se.devscout.server.api.ActivityFilterVisitor;
-import se.devscout.server.api.URIBuilderActivityFilterVisitor;
-import se.devscout.server.api.model.ActivityProperties;
+import se.devscout.server.api.BaseActivityFilterVisitor;
+import se.devscout.server.api.activityfilter.CategoryFilter;
 import se.devscout.server.api.model.Category;
 
 /**
  * Tests if activity is assigned to a certain category.
  */
-public class SimpleCategoryFilter extends SimpleFilter implements se.devscout.server.api.activityfilter.CategoryFilter {
+public class SimpleCategoryFilter implements CategoryFilter {
     private final String name;
     private final String group;
     private final long serverId;
@@ -30,17 +28,6 @@ public class SimpleCategoryFilter extends SimpleFilter implements se.devscout.se
         return name;
     }
 
-    @Override
-    public boolean matches(ActivityProperties properties) {
-//        ActivityRevision revision = ActivityUtil.getLatestActivityRevision(properties);
-        for (Category category : properties.getCategories()) {
-            if (matches(category)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private boolean matches(Category candidate) {
         boolean isGroupCorrect = group == null
                 ?
@@ -56,12 +43,7 @@ public class SimpleCategoryFilter extends SimpleFilter implements se.devscout.se
     }
 
     @Override
-    public String toString(ActivityFilterVisitor visitor) {
-        return visitor.visit(this);
-    }
-
-    @Override
-    public Uri toAPIRequest(URIBuilderActivityFilterVisitor visitor) {
+    public <T> T visit(BaseActivityFilterVisitor<T> visitor) {
         return visitor.visit(this);
     }
 
