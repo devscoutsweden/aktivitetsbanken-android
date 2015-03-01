@@ -3,6 +3,7 @@ package se.devscout.android.model.repo.remote;
 import android.net.Uri;
 import android.text.TextUtils;
 import se.devscout.android.model.repo.sql.SQLRandomActivitiesFilter;
+import se.devscout.android.util.LogUtil;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.URIBuilderActivityFilterVisitor;
 import se.devscout.server.api.activityfilter.*;
@@ -41,7 +42,11 @@ public class ApiV1Visitor implements URIBuilderActivityFilterVisitor {
 
     @Override
     public Uri visit(IsUserFavouriteFilter filter) {
-        throw new UnsupportedOperationException();
+        if (filter.getUserKey() != null) {
+            LogUtil.i(ApiV1Visitor.class.getName(), "Cannot handle specific users. UserKey should be null.");
+        }
+        mUriBuilder.appendQueryParameter("my_favourites", "true");
+        return mUriBuilder.build();
     }
 
     @Override

@@ -2,25 +2,13 @@ package se.devscout.android.controller.fragment;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.widget.Toast;
-import se.devscout.android.R;
 import se.devscout.android.model.ObjectIdentifierBean;
-import se.devscout.android.util.ActivityBankFactory;
-import se.devscout.android.util.auth.CredentialsManager;
-import se.devscout.android.util.concurrency.BackgroundTask;
-import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
-import se.devscout.android.util.concurrency.UpdateFavouriteStatusParam;
-import se.devscout.android.util.http.UnauthorizedException;
-import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.model.ActivityKey;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActivitiesViewPagerFragment extends PagerFragment implements BackgroundTasksHandlerThread.Listener {
+public class ActivitiesViewPagerFragment extends PagerFragment /*implements BackgroundTasksHandlerThread.Listener*/ {
 
     protected FragmentStatePagerAdapter createPagerAdapter() {
         return new FragmentStatePagerAdapter(getChildFragmentManager()) {
@@ -56,13 +44,16 @@ public class ActivitiesViewPagerFragment extends PagerFragment implements Backgr
         };
     }
 
+/*
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.activity, menu);
         initFavouriteMenuItem(menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
+*/
 
+/*
     private void initFavouriteMenuItem(Menu menu) {
         MenuItem item = menu.findItem(R.id.activityMenuFavourite);
         ActivityKey activityKey = getActivity(mSelectedIndex);
@@ -73,7 +64,9 @@ public class ActivitiesViewPagerFragment extends PagerFragment implements Backgr
             item.setVisible(false);
         }
     }
+*/
 
+/*
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.activityMenuFavourite) {
@@ -85,6 +78,7 @@ public class ActivitiesViewPagerFragment extends PagerFragment implements Backgr
         }
         return super.onOptionsItemSelected(item);
     }
+*/
 
     protected ActivityKey getActivity(int index) {
         return mKeys.get(index);
@@ -102,18 +96,23 @@ public class ActivitiesViewPagerFragment extends PagerFragment implements Backgr
         return fragment;
     }
 
+/*
     @Override
     public void onStart() {
         super.onStart();
         getBackgroundTasksHandlerThread(getActivity()).addListener(this);
     }
+*/
 
+/*
     @Override
     public void onStop() {
         getBackgroundTasksHandlerThread(getActivity()).removeListener(this);
         super.onStop();
     }
+*/
 
+/*
     @Override
     public BackgroundTasksHandlerThread.ListenerAction onDone(Object parameter, Object response, BackgroundTask task) {
         if (parameter instanceof UpdateFavouriteStatusParam && response instanceof UnauthorizedException) {
@@ -123,4 +122,5 @@ public class ActivitiesViewPagerFragment extends PagerFragment implements Backgr
         getActivity().invalidateOptionsMenu();
         return BackgroundTasksHandlerThread.ListenerAction.KEEP;
     }
+*/
 }
