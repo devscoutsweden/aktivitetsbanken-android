@@ -1,10 +1,7 @@
 package se.devscout.android.model.repo.sql;
 
 import android.content.Context;
-import se.devscout.android.model.ActivityBean;
-import se.devscout.android.model.CategoryBean;
-import se.devscout.android.model.ReferenceBean;
-import se.devscout.android.model.SearchHistoryBean;
+import se.devscout.android.model.*;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.SimpleFilter;
 import se.devscout.android.util.http.UnauthorizedException;
@@ -78,7 +75,7 @@ public class SQLiteActivityRepo implements ActivityBank {
     @Override
     public Reference createReference(ActivityKey key, ReferenceProperties properties) {
         long id = mDatabaseHelper.createReference(properties);
-        return new ReferenceBean(id,properties.getServerId(), properties.getServerRevisionId(), properties.getURI(), null);
+        return new ReferenceBean(id, properties.getServerId(), properties.getServerRevisionId(), properties.getURI(), null);
     }
 
     @Override
@@ -176,6 +173,21 @@ public class SQLiteActivityRepo implements ActivityBank {
     @Override
     public URI getMediaItemURI(MediaProperties mediaProperties, int width, int height) {
         return mediaProperties.getURI();
+    }
+
+    @Override
+    public Rating readRating(ActivityKey activityKey, UserKey userKey) {
+        return mDatabaseHelper.readRating(activityKey, userKey);
+    }
+
+    @Override
+    public void setRating(ActivityKey activityKey, UserKey userKey, int rating) {
+        mDatabaseHelper.setRating(activityKey, userKey, new RatingPropertiesBean(rating, RatingStatus.CHANGED));
+    }
+
+    @Override
+    public void unsetRating(ActivityKey activityKey, UserKey userKey) {
+        mDatabaseHelper.removeRating(activityKey, userKey);
     }
 
     private void fireSearchHistoryItemAdded(SearchHistory searchHistoryItem) {

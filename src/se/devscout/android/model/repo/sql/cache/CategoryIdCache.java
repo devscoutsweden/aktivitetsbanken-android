@@ -17,6 +17,6 @@ public class CategoryIdCache extends ServerObjectIdCache<CategoryBean, CategoryP
 
     @Override
     protected IdCacheEntry createIdCacheEntry(CategoryBean entry) {
-        return new IdCacheEntry(entry.getId(), entry.getServerId(), new long[]{entry.getServerRevisionId(), entry.getActivitiesCount() != null ? entry.getActivitiesCount() : -1});
+        return new IdCacheEntry(entry.getId(), entry.getServerId(), new double[]{entry.getServerRevisionId(), entry.getActivitiesCount() != null ? entry.getActivitiesCount() : -1});
     }
 }

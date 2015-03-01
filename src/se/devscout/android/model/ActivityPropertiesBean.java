@@ -11,6 +11,7 @@ import java.util.List;
 public class ActivityPropertiesBean extends ServerObjectPropertiesBean implements ActivityProperties, Serializable {
     private UserKey mOwner;
     private Integer mFavouritesCount;
+    private Double mRatingAverage;
 
     public ActivityPropertiesBean(boolean publishable, long serverId, long serverRevisionId, UserKey owner) {
         super(publishable, serverId, serverRevisionId);
@@ -169,6 +170,11 @@ public class ActivityPropertiesBean extends ServerObjectPropertiesBean implement
     }
 
     @Override
+    public Double getRatingAverage() {
+        return mRatingAverage;
+    }
+
+    @Override
     public String toString() {
         return mName;
     }
@@ -200,5 +206,9 @@ public class ActivityPropertiesBean extends ServerObjectPropertiesBean implement
 
     public void setFavouritesCount(Integer favouritesCount) {
         mFavouritesCount = favouritesCount;
+    }
+
+    public void setRatingAverage(Double ratingAverage) {
+        mRatingAverage = ratingAverage;
     }
 }

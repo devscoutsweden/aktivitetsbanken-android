@@ -7,17 +7,18 @@ import se.devscout.server.api.model.ActivityProperties;
 
 public class ActivityIdCache extends ServerObjectIdCache<ActivityBean, ActivityProperties> {
     public ActivityIdCache(DatabaseHelper databaseHelper) {
-        super(databaseHelper, Database.activity.T, Database.activity.id, Database.activity.server_id, Database.activity.server_revision_id, Database.activity.favourite_count);
+        super(databaseHelper, Database.activity.T, Database.activity.id, Database.activity.server_id, Database.activity.server_revision_id, Database.activity.favourite_count, Database.activity.rating_average);
     }
 
     @Override
     protected IdCacheEntry createIdCacheEntry(ActivityBean entry) {
-        return new IdCacheEntry(entry.getId(), entry.getServerId(), new long[]{entry.getServerRevisionId(), entry.getFavouritesCount() != null ? entry.getFavouritesCount().longValue() : 0});
+        return new IdCacheEntry(entry.getId(), entry.getServerId(), new double[]{entry.getServerRevisionId(), entry.getFavouritesCount() != null ? entry.getFavouritesCount().doubleValue() : 0, entry.getRatingAverage() != null ? entry.getRatingAverage().doubleValue() : 0});
     }
 
     public void addEntry(long id, ActivityProperties properties) {
         ActivityBean activityBean = new ActivityBean(null, id, properties.getServerId(), properties.getServerRevisionId(), false);
         activityBean.setFavouritesCount(properties.getFavouritesCount());
+        activityBean.setRatingAverage(properties.getRatingAverage());
         addEntry(activityBean);
     }
 
@@ -25,6 +26,7 @@ public class ActivityIdCache extends ServerObjectIdCache<ActivityBean, ActivityP
     protected ActivityBean createObject(long id, ActivityProperties properties) {
         ActivityBean activityBean = new ActivityBean(null, id, properties.getServerId(), properties.getServerRevisionId(), false);
         activityBean.setFavouritesCount(properties.getFavouritesCount());
+        activityBean.setRatingAverage(properties.getRatingAverage());
         return activityBean;
     }
 }

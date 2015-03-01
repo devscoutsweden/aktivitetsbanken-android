@@ -12,7 +12,7 @@ public class ReferenceIdCache extends ServerObjectIdCache<ReferenceBean, Referen
 
     @Override
     protected IdCacheEntry createIdCacheEntry(ReferenceBean entry) {
-        return new IdCacheEntry(entry.getId(), entry.getServerId(), new long[]{entry.getServerRevisionId()});
+        return new IdCacheEntry(entry.getId(), entry.getServerId(), new double[]{entry.getServerRevisionId()});
     }
 
     @Override

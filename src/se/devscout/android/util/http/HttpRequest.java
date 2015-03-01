@@ -18,7 +18,7 @@ public class HttpRequest {
     private static final String HEADER_CONTENT_ENCODING = "Content-Encoding";
     public static final String HEADER_CONTENT_ENCODING_GZIP = "gzip";
     private static final int CONNECT_TIMEOUT = 5000;
-    private static final int READ_TIMEOUT = 4000;
+    private static final int READ_TIMEOUT = 10000;
     private final URL mUrl;
     private final HttpMethod mMethod;
     private final Map<String, String> mHeaders = new HashMap<String, String>();
@@ -56,7 +56,7 @@ public class HttpRequest {
             }
 
             // Writing to output string will send request
-            if (mMethod != HttpMethod.GET && requestHandler != null) {
+            if (mMethod.isRequestBodyAllowed() && requestHandler != null) {
                 httpURLConnection.setDoOutput(true);
                 requestHandler.write(httpURLConnection.getOutputStream());
             }

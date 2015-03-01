@@ -43,4 +43,6 @@ public interface ActivityProperties extends ServerObjectProperties {
     Media getCoverMedia();
 
     Integer getFavouritesCount();
+
+    Double getRatingAverage();
 }

@@ -73,6 +73,7 @@ public class Database {
         public final static String time_max = "time_max";
         public final static String featured = "featured";
         public final static String favourite_count = "favourite_count";
+        public final static String rating_average = "rating_average";
     }
 
 /*
@@ -117,12 +118,9 @@ public class Database {
     public static class rating {
         final static String T = "rating";
 
-        final static String id = "id";
-        final static String server_id = "server_id";
         final static String activity_id = "activity_id";
-        final static String datetime_created = "datetime_created";
         final static String rating = "rating";
-        final static String source_uri = "source_uri";
+        final static String status = "status";
         final static String user_id = "user_id";
     }
 

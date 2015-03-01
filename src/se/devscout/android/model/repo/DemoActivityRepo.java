@@ -157,4 +157,19 @@ public class DemoActivityRepo implements ActivityBank {
     public URI getMediaItemURI(MediaProperties mediaProperties, int width, int height) {
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    public Rating readRating(ActivityKey activityKey, UserKey userKey) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void setRating(ActivityKey activityKey, UserKey userKey, int rating) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void unsetRating(ActivityKey activityKey, UserKey userKey) {
+        throw new UnsupportedOperationException();
+    }
 }

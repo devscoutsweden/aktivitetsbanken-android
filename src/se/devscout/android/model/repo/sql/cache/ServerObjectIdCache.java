@@ -59,10 +59,10 @@ public abstract class ServerObjectIdCache<T extends SynchronizedServerObject, P 
             columnNames[columnNames.length - 2] = mServerIdColumnName;
             Cursor localIdsQuery = mDatabaseHelper.getDb().query(mTable, columnNames, null, null, null, null, null);
             while (localIdsQuery.moveToNext()) {
-                long[] values = new long[mCompareColumnNames.length];
+                double[] values = new double[mCompareColumnNames.length];
                 for (int i = 0; i < mCompareColumnNames.length; i++) {
                     String columnName = mCompareColumnNames[i];
-                    values[i] = localIdsQuery.getLong(localIdsQuery.getColumnIndex(columnName));
+                    values[i] = localIdsQuery.getDouble(localIdsQuery.getColumnIndex(columnName));
                 }
                 IdCacheEntry entry = new IdCacheEntry(localIdsQuery.getInt(localIdsQuery.getColumnIndex(mIdColumnName)), localIdsQuery.getInt(localIdsQuery.getColumnIndex(mServerIdColumnName)), values);
                 mEntries.add(entry);

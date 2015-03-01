@@ -57,4 +57,11 @@ public interface ActivityBank {
     Media readMediaItem(MediaKey key);
 
     URI getMediaItemURI(MediaProperties mediaProperties, int width, int height);
+
+    Rating readRating(ActivityKey activityKey, UserKey userKey);
+
+    void setRating(ActivityKey activityKey, UserKey userKey, int rating);
+
+    void unsetRating(ActivityKey activityKey, UserKey userKey);
+
 }

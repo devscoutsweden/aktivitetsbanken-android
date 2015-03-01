@@ -43,6 +43,7 @@ public class QueryBuilder {
         mSelect.add("a." + Database.activity.time_max);
         mSelect.add("a." + Database.activity.featured);
         mSelect.add("a." + Database.activity.favourite_count);
+        mSelect.add("a." + Database.activity.rating_average);
         mFrom.append("   " + Database.activity.T + " a "/* +
                 "   inner join " + Database.activity_data.T + " admax on a." + Database.activity.id + " = admax." + Database.activity_data.activity_id + " " +
                 "   inner join " + Database.activity_data.T + " ad on a." + Database.activity.id + " = ad." + Database.activity_data.activity_id + " "*/);

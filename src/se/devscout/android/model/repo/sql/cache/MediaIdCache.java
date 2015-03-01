@@ -12,7 +12,7 @@ public class MediaIdCache extends ServerObjectIdCache<MediaBean, MediaProperties
 
     @Override
     protected IdCacheEntry createIdCacheEntry(MediaBean entry) {
-        return new IdCacheEntry(entry.getId(), entry.getServerId(), new long[]{entry.getServerRevisionId()});
+        return new IdCacheEntry(entry.getId(), entry.getServerId(), new double[]{entry.getServerRevisionId()});
     }
 
     @Override

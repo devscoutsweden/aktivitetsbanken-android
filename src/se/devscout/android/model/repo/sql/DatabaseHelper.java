@@ -100,7 +100,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static int[] DATABASE_MIGRATION_SCRIPTS = {
             R.raw.db_migrate_0_create_server_database,
             R.raw.db_migrate_1_category_icon,
-            R.raw.db_migrate_2_category_usage_count
+            R.raw.db_migrate_2_category_usage_count,
+            R.raw.db_migrate_3_alter_rating,
+            R.raw.db_migrate_4_add_average_rating
     };
 
     public DatabaseHelper(Context context) {
@@ -539,6 +541,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         } else {
             values.putNull(Database.activity.favourite_count);
         }
+        if (properties.getRatingAverage() != null) {
+            values.put(Database.activity.rating_average, properties.getRatingAverage());
+        } else {
+            values.putNull(Database.activity.rating_average);
+        }
 //        values.put(Database.activity_data.source_uri, properties.getSourceURI() != null ? properties.getSourceURI().toString() : null);
         return values;
     }
@@ -966,5 +973,56 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             values.put(Database.user.api_key, properties.getAPIKey());
         }
         return values;
+    }
+
+    public Rating readRating(ActivityKey activityKey, UserKey userKey) {
+        RatingCursor ratingCursor = new RatingCursor(getDb(), activityKey, userKey);
+        if (ratingCursor.moveToNext()) {
+            return ratingCursor.getRating();
+        }
+        ratingCursor.close();
+        return null;
+    }
+
+    public boolean setRating(ActivityKey activityKey, UserKey userKey, RatingPropertiesBean properties) {
+        ContentValues values = createContentValues(properties);
+
+        values.put(Database.rating.activity_id, activityKey.getId());
+        values.put(Database.rating.user_id, userKey.getId());
+
+        getDb().insertWithOnConflict(
+                Database.rating.T,
+                null,
+                values,
+                SQLiteDatabase.CONFLICT_REPLACE);
+        return true;
+    }
+
+    public boolean removeRating(ActivityKey activityKey, UserKey userKey) {
+        int rowsDeleted = getDb().delete(Database.rating.T, "" +
+                Database.rating.activity_id + " = " + activityKey.getId().toString()
+                + " AND " +
+                Database.rating.user_id + " = " + userKey.getId().toString(),
+                null);
+        return rowsDeleted < 1;
+    }
+
+    private ContentValues createContentValues(RatingPropertiesBean properties) {
+        ContentValues values = new ContentValues();
+        if (properties.getRating() >= 0) {
+            values.put(Database.rating.rating, properties.getRating());
+        }
+        values.put(Database.rating.status, properties.getStatus().name());
+        return values;
+    }
+
+    public List<Rating> readRatings(UserKey user) {
+        ArrayList<Rating> ratings = new ArrayList<Rating>();
+        RatingCursor ratingCursor = new RatingCursor(getDb(), null, user);
+        while (ratingCursor.moveToNext()) {
+            ratings.add(ratingCursor.getRating());
+        }
+        ratingCursor.close();
+        return ratings;
     }
 }
