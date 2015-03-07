@@ -247,7 +247,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         ActivityKey[] ratedActivitiesKeys = new ActivityKey[ratings.size()];
         int i = 0;
         for (Rating rating : ratings) {
-            ratedActivitiesKeys[i++] = new ObjectIdentifierBean(rating.getActivityId());
+            ratedActivitiesKeys[i++] = fixActivityKey(new ObjectIdentifierBean(rating.getActivityId()));
         }
 
         // Build list of each locally rated activity's corresponding server id.
@@ -259,7 +259,8 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
 
         // Iterate over user's ratings in app
         for (Rating rating : ratings) {
-            String uri = "http://" + getRemoteHost() + "/api/v1/activities/" + serverIds.get(rating.getActivityId()) + "/rating";
+            Long serverActivityId = serverIds.get(fixActivityKey(new ObjectIdentifierBean(rating.getActivityId())).getId());
+            String uri = "http://" + getRemoteHost() + "/api/v1/activities/" + serverActivityId + "/rating";
             try {
                 switch (rating.getStatus()) {
                     case NO_CHANGE:
