@@ -151,13 +151,27 @@ public class ActivityFragment extends ActivityBankFragment implements Background
         }
 
         SimpleDocumentLayout linearLayout = (SimpleDocumentLayout) view.findViewById(R.id.activityDocument);
-        linearLayout
-                .addHeaderAndText(R.string.activity_introduction, activityProperties.getDescriptionIntroduction())
-                .addHeaderAndText(R.string.activity_tab_material, activityProperties.getDescriptionMaterial())
-                .addHeaderAndText(R.string.activity_preparations, activityProperties.getDescriptionPreparation())
-                .addHeaderAndText(R.string.activity_how_to_do, activityProperties.getDescription())
-                .addHeaderAndText(R.string.activity_safety, activityProperties.getDescriptionSafety())
-                .addHeaderAndText(R.string.activity_notes, activityProperties.getDescriptionNotes());
+
+        StringBuilder body = new StringBuilder();
+        if (activityProperties.getDescriptionIntroduction().length() > 0) {
+            body.append("## " + getString(R.string.activity_introduction) + "\n" + activityProperties.getDescriptionIntroduction() + "\n");
+        }
+        if (activityProperties.getDescriptionMaterial().length() > 0) {
+            body.append("## " + getString(R.string.activity_tab_material) + "\n" + activityProperties.getDescriptionMaterial() + "\n");
+        }
+        if (activityProperties.getDescriptionPreparation().length() > 0) {
+            body.append("## " + getString(R.string.activity_preparations) + "\n" + activityProperties.getDescriptionPreparation() + "\n");
+        }
+        if (activityProperties.getDescription().length() > 0) {
+            body.append("## " + getString(R.string.activity_how_to_do) + "\n" + activityProperties.getDescription() + "\n");
+        }
+        if (activityProperties.getDescriptionSafety().length() > 0) {
+            body.append("## " + getString(R.string.activity_safety) + "\n" + activityProperties.getDescriptionSafety() + "\n");
+        }
+        if (activityProperties.getDescriptionNotes().length() > 0) {
+            body.append("## " + getString(R.string.activity_notes) + "\n" + activityProperties.getDescriptionNotes() + "\n");
+        }
+        linearLayout.addBodyText(body.toString().trim());
 
         if (!activityProperties.getMediaItems().isEmpty()) {
             linearLayout.addHeader(R.string.activity_tab_photos);
