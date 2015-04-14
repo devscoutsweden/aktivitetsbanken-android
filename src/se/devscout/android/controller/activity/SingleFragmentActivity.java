@@ -22,7 +22,6 @@ import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
-import se.devscout.android.util.http.UnauthorizedException;
 import se.devscout.android.view.widget.ComponentFactoryRepo;
 import se.devscout.android.view.widget.TabComponentFactory;
 import se.devscout.server.api.ActivityBank;
@@ -38,7 +37,7 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
     private DrawerListAdapter mDrawerListAdapter;
     private AbstractActivityBankListener mActivityBankListener;
 
-//    private CredentialsManager mCredentialsManager;
+    //    private CredentialsManager mCredentialsManager;
     private AbstractActivityBankListener mActivityBackAsyncExceptionListener;
 
     protected SingleFragmentActivity() {
@@ -84,17 +83,13 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
         if (mActivityBackAsyncExceptionListener == null) {
             mActivityBackAsyncExceptionListener = new AbstractActivityBankListener() {
                 @Override
-                public void onAsyncException(final Exception e) {
-                    if (e instanceof UnauthorizedException) {
-//                    UnauthorizedException exception = (UnauthorizedException) e;
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(SingleFragmentActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                            }
-                        });
-                    }
+                public void onServiceDegradation(final String message, final Exception e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(SingleFragmentActivity.this, message, Toast.LENGTH_LONG).show();
+                        }
+                    });
                 }
             };
         }

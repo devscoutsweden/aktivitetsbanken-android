@@ -63,7 +63,7 @@ public class HomeWidgetFragment extends ActivityBankFragment implements Activity
     }
 
     @Override
-    public void onAsyncException(Exception e) {
+    public void onServiceDegradation(String message, Exception e) {
     }
 
     @Override

@@ -15,6 +15,6 @@ public abstract class AbstractActivityBankListener implements ActivityBankListen
     }
 
     @Override
-    public void onAsyncException(Exception e) {
+    public void onServiceDegradation(String message, Exception e) {
     }
 }

@@ -9,5 +9,5 @@ public interface ActivityBankListener {
 
     void onFavouriteChange(ActivityKey activityKey, UserKey userKey, boolean isFavouriteNow);
 
-    void onAsyncException(Exception e);
+    void onServiceDegradation(String message, Exception e);
 }

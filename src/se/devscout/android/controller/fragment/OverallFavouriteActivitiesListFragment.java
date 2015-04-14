@@ -67,7 +67,7 @@ public class OverallFavouriteActivitiesListFragment extends ActivitiesListFragme
     }
 
     @Override
-    public void onAsyncException(Exception e) {
+    public void onServiceDegradation(String message, Exception e) {
     }
 
     public static OverallFavouriteActivitiesListFragment create() {

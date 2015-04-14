@@ -226,4 +226,8 @@
     <string name="searchTopRatedOnlyLabel">Minst 4 i betyg</string>
     <string name="title_filter_visitor_average_rating">Betyg %.1f eller högre</string>
     <string name="subtitle_filter_visitor_average_rating">har %.1f eller högre som snittbetyg</string>
+    <string name="remote_could_not_save_favourites">Synkade inte dina favoriter pga. nätproblem.</string>
+    <string name="remote_could_get_categories">Listan med kategorier kan vara felaktig pga. nätproblem.</string>
+    <string name="remote_could_not_find_activities">Visar bara offline-resultat pga. nätproblem.</string>
+    <string name="remote_could_not_save_ratings">Synkade inte dina betyg pga. nätproblem.</string>
 </resources>

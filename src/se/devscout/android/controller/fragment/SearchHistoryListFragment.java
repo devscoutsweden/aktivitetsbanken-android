@@ -62,6 +62,6 @@ public class SearchHistoryListFragment extends QuickSearchListFragment<SearchHis
     }
 
     @Override
-    public void onAsyncException(Exception e) {
+    public void onServiceDegradation(String message, Exception e) {
     }
 }

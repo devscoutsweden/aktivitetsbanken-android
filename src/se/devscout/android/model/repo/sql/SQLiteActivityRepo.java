@@ -207,9 +207,9 @@ public class SQLiteActivityRepo implements ActivityBank {
     }
 */
 
-    protected void fireAsyncException(Exception e) {
+    protected void fireServiceDegradation(String message, Exception e) {
         for (ActivityBankListener listener : mListeners) {
-            listener.onAsyncException(e);
+            listener.onServiceDegradation(message, e);
         }
     }
 
