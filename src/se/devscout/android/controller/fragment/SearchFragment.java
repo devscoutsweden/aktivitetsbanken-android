@@ -3,6 +3,7 @@ package se.devscout.android.controller.fragment;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -248,14 +249,18 @@ public class SearchFragment extends ActivityBankFragment {
 
             @Override
             protected void onPostExecute(Category[] categories) {
-                ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(
-                        getActivity(),
-                        android.R.layout.simple_spinner_item,
-                        categories);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinner.setAdapter(adapter);
-                spinner.setSelection(Math.min(mInitialCategorySpinnerSelection, categories.length - 1));
-                spinner.setVisibility(View.VISIBLE);
+                FragmentActivity activity = getActivity();
+                if (activity != null) {
+                    // Checking for null in case task finishes after activity has been closed/stopped/disposed by operating system.
+                    ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(
+                            activity,
+                            android.R.layout.simple_spinner_item,
+                            categories);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinner.setAdapter(adapter);
+                    spinner.setSelection(Math.min(mInitialCategorySpinnerSelection, categories.length - 1));
+                    spinner.setVisibility(View.VISIBLE);
+                }
             }
         };
         task.execute();

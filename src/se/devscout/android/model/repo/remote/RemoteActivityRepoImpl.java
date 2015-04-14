@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import se.devscout.android.R;
 import se.devscout.android.controller.fragment.TitleActivityFilterVisitor;
 import se.devscout.android.model.*;
 import se.devscout.android.model.repo.sql.LocalObjectRefreshness;
@@ -20,9 +21,11 @@ import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.android.util.http.*;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.URIBuilderActivityFilterVisitor;
+import se.devscout.server.api.activityfilter.IsUserFavouriteFilter;
 import se.devscout.server.api.model.*;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -33,7 +36,6 @@ import java.util.*;
 
 public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements CredentialsManager.Listener {
     private static final String DEFAULT_REQUEST_BODY_ENCODING = "utf-8";
-    private static final String HTTP_HEADER_AUTHORIZATION = "Authorization";
     private static final String HTTP_HEADER_CONTENT_TYPE = "Content-Type";
     private static final String HTTP_HEADER_X_ANDROID_APP_INSTALLATION_ID = "X-AndroidAppInstallationId";
     private static final SimpleDateFormat API_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'");
@@ -52,6 +54,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
 //    private String authType;
     //TODO: Use synchronized map since onAuthenticated is called from AsyncTask!?
     private HashMap<Long, Credentials> mCredentialsMap = new HashMap<Long, Credentials>();
+    private int timeoutCounter;
 
 
     public static RemoteActivityRepoImpl getInstance(Context ctx) {
@@ -164,12 +167,8 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
             body.put("email", properties.getName());
 
             readUrlAsBytes(uri, body.toString(), HttpMethod.PUT);
-        } catch (JSONException e) {
-            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not update user information because of an unhandled problem.", e);
-        } catch (IOException e) {
-            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not update user information because of an unhandled problem.", e);
-        } catch (UnhandledHttpResponseCodeException e) {
-            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not update user information because of an unhandled problem.", e);
+        } catch (IOException | JSONException | UnhandledHttpResponseCodeException | UnauthorizedException e) {
+            handleRemoteException(e, "Could not update user information because of an unhandled problem.");
         }
     }
 
@@ -276,11 +275,9 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
                         mDatabaseHelper.removeRating(new ObjectIdentifierBean(rating.getActivityId()), getCurrentUser());
                         break;
                 }
-            } catch (IOException e) {
-                LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not update server-side rating for activity " + rating.getActivityId(), e);
-                return;
-            } catch (UnhandledHttpResponseCodeException e) {
-                LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not update server-side rating for activity " + rating.getActivityId() + " because of server-side error.", e);
+            } catch (IOException | UnhandledHttpResponseCodeException | UnauthorizedException e) {
+                handleRemoteException(e, "Could not update server-side rating for activity " + rating.getActivityId());
+                fireServiceDegradation(mContext.getString(R.string.remote_could_not_save_ratings), e);
                 return;
             }
         }
@@ -309,14 +306,9 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
                     serverFavouritesMissingInDatabase.add(new ServerObjectIdentifierBean(remoteId));
                 }
             }
-        } catch (IOException e) {
-            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not retrieve user's list of favourites from server. Aborting synchronizeFavourites().", e);
-            return;
-        } catch (JSONException e) {
-            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not retrieve user's list of favourites from server. Aborting synchronizeFavourites().", e);
-            return;
-        } catch (UnhandledHttpResponseCodeException e) {
-            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not retrieve user's list of favourites from server. Aborting synchronizeFavourites().", e);
+        } catch (IOException | JSONException | UnhandledHttpResponseCodeException | UnauthorizedException e) {
+            handleRemoteException(e, "Could not retrieve user's list of favourites from server. Aborting synchronizeFavourites().");
+            fireServiceDegradation(mContext.getString(R.string.remote_could_not_save_favourites), e);
             return;
         }
 
@@ -444,10 +436,9 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
             String uri = "http://" + getRemoteHost() + "/api/v1/favourites";
 
             readUrlAsBytes(uri, new JSONObject(Collections.singletonMap("id", jsonArray)).toString(), HttpMethod.PUT);
-        } catch (IOException e) {
-            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server", e);
-        } catch (UnhandledHttpResponseCodeException e) {
-            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not send favourites to server", e);
+        } catch (IOException | UnhandledHttpResponseCodeException | UnauthorizedException e) {
+            handleRemoteException(e);
+            fireServiceDegradation(mContext.getString(R.string.remote_could_not_save_favourites), e);
         }
     }
 
@@ -475,28 +466,30 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     }
 
     private List<ActivityBean> findActivities(ActivityFilter condition, String[] attrNames) throws UnauthorizedException {
+
+        if (condition instanceof IsUserFavouriteFilter) {
+            LogUtil.d(RemoteActivityRepoImpl.class.getName(), "Never ask server for user's favourite activities. Assume that local database is up-to-date since last log-in.");
+            return super.findActivity(condition);
+        }
+
         URIBuilderActivityFilterVisitor visitor = new ApiV1Visitor(getRemoteHost());
-        Uri uri2 = null;
+        Uri uri = null;
         try {
-            uri2 = condition.visit(visitor);
+            uri = condition.visit(visitor);
         } catch (UnsupportedOperationException e) {
             LogUtil.e(RemoteActivityRepoImpl.class.getName(), "App does not think API can handle the search query. Delegate search to database and pray that the database supports the query!");
             return super.findActivity(condition);
         }
         if (attrNames != null) {
-            Uri.Builder builder = uri2.buildUpon();
-            for (String attrName : attrNames) {
-                builder.appendQueryParameter("attrs[]", attrName);
-            }
-            builder.appendQueryParameter("attrs[]", "favourite_count");
-            builder.appendQueryParameter("attrs[]", "ratings_average");
-            uri2 = builder.build();
+            ArrayList attrs = new ArrayList(Arrays.asList(attrNames));
+            attrs.add("favourite_count");
+            attrs.add("ratings_average");
+            uri = uri.buildUpon().appendQueryParameter("attrs", TextUtils.join(",", attrs)).build();
         }
         StopWatch stopWatch = new StopWatch("findActivity " + condition.visit(new TitleActivityFilterVisitor(mContext)));
-        String uri = uri2.toString();
         try {
             stopWatch.logEvent("Preparing request");
-            JSONArray array = getJSONArray(uri, null);
+            JSONArray array = getJSONArray(uri.toString(), null);
             stopWatch.logEvent("Sending query to server and reading response");
             ArrayList<ActivityBean> result = new ArrayList<ActivityBean>();
             stopWatch.logEvent("Parsed JSON");
@@ -528,18 +521,29 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
             }
             stopWatch.logEvent("Saving all returned data in local database");
             return result;
-        } catch (IOException e) {
-            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not query server", e);
-            return super.findActivity(condition);
-        } catch (JSONException e) {
-            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Error parsing JSON response", e);
-            return super.findActivity(condition);
-        } catch (UnhandledHttpResponseCodeException e) {
-            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Cannot handle server response.", e);
+        } catch (IOException | JSONException | UnhandledHttpResponseCodeException | UnauthorizedException e) {
+            handleRemoteException(e, "Could not search for activities");
+            fireServiceDegradation(mContext.getString(R.string.remote_could_not_find_activities), e);
             return super.findActivity(condition);
         } finally {
             stopWatch.logEvent("The last things");
             LogUtil.d(RemoteActivityRepoImpl.class.getName(), stopWatch.getSummary());
+        }
+    }
+
+    private void handleRemoteException(Exception e) throws UnauthorizedException {
+        handleRemoteException(e, "Something went wrong when communicating with the server");
+    }
+
+    private void handleRemoteException(Exception e, String msg) throws UnauthorizedException {
+        LogUtil.e(RemoteActivityRepoImpl.class.getName(), msg, e);
+        if (e instanceof UnauthorizedException) {
+            UnauthorizedException ue = (UnauthorizedException) e;
+            if (ue.isAuthorizationHeaderProvided()) {
+                throw ue;
+            } else {
+                // The server says that the user is not authorized and the app didn't even send any credentials. Maybe the user would have been permitted had he/she only been logged in!? At least we could try to search the app's local database -- maybe that will return some results.
+            }
         }
     }
 
@@ -696,14 +700,9 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
 
                     mCachedCategories.add(act);
                 }
-            } catch (IOException e) {
-                LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not query server", e);
-                mCachedCategories = super.readCategories();
-            } catch (JSONException e) {
-                LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Error parsing JSON response", e);
-                mCachedCategories = super.readCategories();
-            } catch (UnhandledHttpResponseCodeException e) {
-                LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Cannot handle server response.", e);
+            } catch (IOException | JSONException | UnhandledHttpResponseCodeException | UnauthorizedException e) {
+                handleRemoteException(e);
+                fireServiceDegradation(mContext.getString(R.string.remote_could_get_categories), e);
                 mCachedCategories = super.readCategories();
             }
         }
@@ -958,8 +957,8 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         Credentials credentials = mCredentialsMap.get(getCurrentUserId());
         if (credentials != null) {
             String authHeaderValue = "Token token=\"" + credentials.getToken() + "\", type=\"" + credentials.getType() + "\"";
-            request.setHeader(HTTP_HEADER_AUTHORIZATION, authHeaderValue);
-            LogUtil.d(HttpRequest.class.getName(), "Header " + HTTP_HEADER_AUTHORIZATION + ": " + authHeaderValue);
+            request.setHeader(HttpRequest.HEADER_AUTHORIZATION, authHeaderValue);
+            LogUtil.d(HttpRequest.class.getName(), "Header " + HttpRequest.HEADER_AUTHORIZATION + ": " + authHeaderValue);
         }
 
         LogUtil.d(HttpRequest.class.getName(), "Sending request to " + url.toExternalForm());
@@ -984,6 +983,9 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
                     }
                 }
             });
+        } catch (SocketTimeoutException e1) {
+            timeoutCounter++;
+            throw e1;
         } catch (HeaderException e) {
             // Not possible since above ResponseHeadersValidator never throws such HeaderException
         }

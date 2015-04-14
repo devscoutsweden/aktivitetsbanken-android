@@ -31,7 +31,7 @@ public class ApiV1Visitor implements URIBuilderActivityFilterVisitor {
 
     @Override
     public Uri visit(CategoryFilter filter) {
-        mUriBuilder.appendQueryParameter("categories[]", String.valueOf(filter.getServerId()));
+        mUriBuilder.appendQueryParameter("categories", String.valueOf(filter.getServerId()));
         return mUriBuilder.build();
     }
 

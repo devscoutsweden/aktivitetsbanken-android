@@ -1,6 +1,8 @@
 package se.devscout.android.util.http;
 
 public class UnauthorizedException extends Exception {
+    private boolean authorizationHeaderProvided;
+
     public UnauthorizedException() {
     }
 
@@ -14,5 +16,13 @@ public class UnauthorizedException extends Exception {
 
     public UnauthorizedException(Throwable throwable) {
         super(throwable);
+    }
+
+    public UnauthorizedException(boolean authorizationHeaderProvided) {
+        this.authorizationHeaderProvided = authorizationHeaderProvided;
+    }
+
+    public boolean isAuthorizationHeaderProvided() {
+        return authorizationHeaderProvided;
     }
 }
