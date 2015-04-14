@@ -114,8 +114,9 @@ public class SimpleDocumentLayout extends LinearLayout {
     private static final Rule MULTIPLE_LINE_FEEDS = new Rule(2, Pattern.compile("^\\s*$")) {
         @Override
         void apply(SpannableStringBuilder sb, int sequencePos, Context context, Matcher textMatcher) {
-            addEmptyLine(sb, 0.5f);
-            sb.append(textMatcher.group(1));
+            if (sequencePos == 0) {
+                addEmptyLine(sb, 0.5f);
+            }
         }
     };
 
@@ -201,13 +202,14 @@ public class SimpleDocumentLayout extends LinearLayout {
                     // The number of rows matching the pattern equals/exceeds the rule's "triggering threshold".
 
                     // Apply the rule on all the lines matched by the rule/pattern
+                    int sequencePos = 0;
                     for (int j = 0; j < rowsMatching; j++) {
                         String ruleSubject = strings[i + j];
                         if (ruleSubject.length() > 0) {
                             Matcher matcher = rule.pattern.matcher(ruleSubject);
                             matcher.find();
 
-                            rule.apply(sb, j, getContext(), matcher);
+                            rule.apply(sb, sequencePos++, getContext(), matcher);
                             sb.append('\n');
                         }
                     }
@@ -255,7 +257,7 @@ public class SimpleDocumentLayout extends LinearLayout {
 
             Typeface oldTypeface = paint.getTypeface();
             int oldStyle = oldTypeface != null ? oldTypeface.getStyle() : 0;
-            Typeface typeface = isBigHeader ? ScoutTypeFace.getInstance(mContext).getMedium() : ScoutTypeFace.getInstance(mContext).getLight();
+            Typeface typeface = /*isBigHeader ? ScoutTypeFace.getInstance(mContext).getMedium() : */ScoutTypeFace.getInstance(mContext).getLight();
             int fakeStyle = oldStyle & ~typeface.getStyle();
             if ((fakeStyle & Typeface.BOLD) != 0) {
                 paint.setFakeBoldText(true);

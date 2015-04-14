@@ -75,7 +75,7 @@
 
     <style name="Document_Paragraph" parent="Document_TextItem">
         <item name="android:textSize">@dimen/Document_Paragraph_TextSize</item>
-        <item name="android:paddingTop">@dimen/Document_Paragraph_PaddingTop</item>
+        <!--<item name="android:paddingTop">@dimen/Document_Paragraph_PaddingTop</item>-->
         <item name="android:lineSpacingExtra">@dimen/Document_Paragraph_LineSpacingExtra</item>
     </style>
 

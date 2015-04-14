@@ -171,20 +171,21 @@ public class ActivityFragment extends ActivityBankFragment implements Background
         if (activityProperties.getDescriptionNotes().length() > 0) {
             body.append("## " + getString(R.string.activity_notes) + "\n" + activityProperties.getDescriptionNotes() + "\n");
         }
-        linearLayout.addBodyText(body.toString().trim());
 
         if (!activityProperties.getMediaItems().isEmpty()) {
-            linearLayout.addHeader(R.string.activity_tab_photos);
+            body.append("## " + getString(R.string.activity_tab_photos) + "\n");
             for (Media media : activityProperties.getMediaItems()) {
-                linearLayout.addBodyText(media.getURI().toString());
+                body.append(/*"* " + */media.getURI().toString() + "\n");
             }
         }
         if (!activityProperties.getReferences().isEmpty()) {
-            linearLayout.addHeader(R.string.activity_tab_references);
+            body.append("## " + getString(R.string.activity_tab_references) + "\n");
             for (Reference reference : activityProperties.getReferences()) {
-                linearLayout.addBodyText(reference.getURI().toString());
+                body.append(/*"* " + */reference.getURI().toString() + "\n");
             }
         }
+
+        linearLayout.addBodyText(body.toString().trim());
 
         view.findViewById(R.id.scrollView).setVisibility(View.VISIBLE);
         view.findViewById(R.id.progressBar).setVisibility(View.GONE);
