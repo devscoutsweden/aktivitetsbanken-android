@@ -137,24 +137,32 @@ public class CredentialsManager {
     }
 
     public void addListener(Listener listener) {
-        if (!mListeners.contains(listener)) {
-            mListeners.add(listener);
+        synchronized (mListeners) {
+            if (!mListeners.contains(listener)) {
+                mListeners.add(listener);
+            }
         }
     }
 
     public void removeListener(Listener listener) {
-        mListeners.remove(listener);
+        synchronized (mListeners) {
+            mListeners.remove(listener);
+        }
     }
 
     private void fireAuthenticationStatusChange(State state) {
-        for (Listener listener : mListeners) {
-            listener.onAuthenticationStatusChange(state);
+        synchronized (mListeners) {
+            for (Listener listener : mListeners) {
+                listener.onAuthenticationStatusChange(state);
+            }
         }
     }
 
     private void fireAuthenticated(IdentityProvider provider, String data, UserProperties userProperties) {
-        for (Listener listener : mListeners) {
-            listener.onAuthenticated(provider, data, userProperties);
+        synchronized (mListeners) {
+            for (Listener listener : mListeners) {
+                listener.onAuthenticated(provider, data, userProperties);
+            }
         }
     }
 
