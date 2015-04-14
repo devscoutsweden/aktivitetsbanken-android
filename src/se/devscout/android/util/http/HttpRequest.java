@@ -1,5 +1,6 @@
 package se.devscout.android.util.http;
 
+import android.text.TextUtils;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.StopWatch;
 import se.devscout.android.util.UsageLogUtil;
@@ -19,9 +20,12 @@ public class HttpRequest {
     public static final String HEADER_CONTENT_ENCODING_GZIP = "gzip";
     private static final int CONNECT_TIMEOUT = 5000;
     private static final int READ_TIMEOUT = 10000;
+    public static final String HEADER_AUTHORIZATION = "Authorization";
+    private static final int TIMEOUT_COUNT_FOR_HOST_BLOCK = 2;
     private final URL mUrl;
     private final HttpMethod mMethod;
     private final Map<String, String> mHeaders = new HashMap<String, String>();
+    private static Map<String, Integer> mTimeouts = new HashMap<>();
 
     public HttpRequest(URL url, HttpMethod method) {
         mUrl = url;
@@ -38,6 +42,9 @@ public class HttpRequest {
     }
 
     public <T> HttpResponse<T> run(ResponseStreamHandler<T> responseHandler, RequestBodyStreamHandler requestHandler, ResponseHeadersValidator responseHeadersValidator) throws IOException, UnauthorizedException, UnhandledHttpResponseCodeException, HeaderException {
+
+        assertHostAvailability(mUrl);
+
         HttpResponse<T> response = new HttpResponse<T>();
 
         StopWatch stopWatch = new StopWatch("readUrl " + mUrl);
@@ -84,11 +91,13 @@ public class HttpRequest {
                 case HttpURLConnection.HTTP_NO_CONTENT:
                     break;
                 case HttpURLConnection.HTTP_UNAUTHORIZED:
-                    throw new UnauthorizedException();
+                case HttpURLConnection.HTTP_FORBIDDEN:
+                    throw new UnauthorizedException(!TextUtils.isEmpty(httpURLConnection.getRequestProperty(HEADER_AUTHORIZATION)));
                 default:
                     throw new UnhandledHttpResponseCodeException(httpURLConnection.getResponseCode());
             }
         } catch (SocketTimeoutException e) {
+            logTimeout(mUrl);
             long now = System.currentTimeMillis();
             String timeString = String.valueOf(now - startTime);
             stopWatch.logEvent("Http request failed because of socket timeout after roughly " + timeString + " ms.");
@@ -103,6 +112,27 @@ public class HttpRequest {
             LogUtil.d(HttpRequest.class.getName(), stopWatch.getSummary());
         }
         return response;
+    }
+
+    private void logTimeout(URL url) {
+        synchronized (HttpRequest.class) {
+            if (mTimeouts.containsKey(url.getHost())) {
+                mTimeouts.put(url.getHost(), mTimeouts.get(url.getHost()) + 1);
+            } else {
+                mTimeouts.put(url.getHost(), 1);
+            }
+        }
+    }
+
+    private void assertHostAvailability(URL url) throws SocketTimeoutException {
+        synchronized (HttpRequest.class) {
+            Integer count = mTimeouts.get(url.getHost());
+            if (count != null && count > TIMEOUT_COUNT_FOR_HOST_BLOCK) {
+                String message = "Will not attempt to connect to " + url.getHost() + " due to earlier failures.";
+                LogUtil.i(HttpRequest.class.getName(), message);
+                throw new SocketTimeoutException(message);
+            }
+        }
     }
 
     public void setHeader(String header, String value) {
