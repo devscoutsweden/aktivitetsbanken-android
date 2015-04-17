@@ -5,22 +5,19 @@ import se.devscout.android.model.*;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.PrimitiveActivityFilterFactory;
 import se.devscout.android.util.http.UnauthorizedException;
-import se.devscout.server.api.ActivityBank;
-import se.devscout.server.api.ActivityBankListener;
-import se.devscout.server.api.ActivityFilter;
-import se.devscout.server.api.ActivityFilterFactory;
+import se.devscout.server.api.*;
 import se.devscout.server.api.model.*;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
 
 public class SQLiteActivityRepo implements ActivityBank {
     protected final DatabaseHelper mDatabaseHelper;
     private List<ActivityBankListener> mListeners = new ArrayList<ActivityBankListener>();
     private static SQLiteActivityRepo ourInstance;
+
+    private SQLiteModificationCounters mModificationCounters;
 
     public static SQLiteActivityRepo getInstance(Context ctx) {
         if (ourInstance == null) {
@@ -31,6 +28,7 @@ public class SQLiteActivityRepo implements ActivityBank {
 
     public SQLiteActivityRepo(Context ctx) {
         mDatabaseHelper = new DatabaseHelper(ctx);
+        mModificationCounters = new SQLiteModificationCounters();
     }
 
     @Override
@@ -181,13 +179,20 @@ public class SQLiteActivityRepo implements ActivityBank {
         mDatabaseHelper.removeRating(activityKey, userKey);
     }
 
+    @Override
+    public ModificationCounters getModificationCounters() {
+        return mModificationCounters;
+    }
+
     private void fireSearchHistoryItemAdded(SearchHistory searchHistoryItem) {
+        mModificationCounters.touch(SQLiteModificationCounters.Key.SEARCH_HISTORY);
         for (ActivityBankListener listener : mListeners) {
             listener.onSearchHistoryItemAdded(searchHistoryItem);
         }
     }
 
     private void fireFavouriteChange(ActivityKey activityKey, UserKey userKey, boolean isFavouriteNow) {
+        mModificationCounters.touch(SQLiteModificationCounters.Key.FAVOURITE_LIST);
         for (ActivityBankListener listener : mListeners) {
             listener.onFavouriteChange(activityKey, userKey, isFavouriteNow);
         }
@@ -219,5 +224,39 @@ public class SQLiteActivityRepo implements ActivityBank {
 
     public boolean setAnonymousUserAPIKey(String apiKey, UserKey userKey) {
         return mDatabaseHelper.updateUserAPIKey(apiKey, userKey);
+    }
+
+    private static class SQLiteModificationCounters implements ModificationCounters {
+
+        private static enum Key {
+            FAVOURITE_LIST,
+            SEARCH_HISTORY
+        }
+
+        private Map<Key, Long> counters = new HashMap<>();
+
+        private SQLiteModificationCounters() {
+            for (Key key : Key.values()) {
+                touch(key);
+            }
+        }
+
+        @Override
+        public long getFavouriteList() {
+            return get(Key.FAVOURITE_LIST);
+        }
+
+        @Override
+        public long getSearchHistory() {
+            return get(Key.SEARCH_HISTORY);
+        }
+
+        private synchronized long get(Key key) {
+            return counters.get(key).longValue();
+        }
+
+        private synchronized void touch(Key key) {
+            counters.put(key, System.currentTimeMillis());
+        }
     }
 }

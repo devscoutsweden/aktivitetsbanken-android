@@ -64,4 +64,9 @@ public interface ActivityBank {
 
     void unsetRating(ActivityKey activityKey, UserKey userKey);
 
+    /**
+     * Returns information about when certain lists/tables/entities of the database was last changed.
+     */
+    ModificationCounters getModificationCounters();
+
 }

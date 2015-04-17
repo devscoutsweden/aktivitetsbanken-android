@@ -18,15 +18,10 @@ import se.devscout.android.view.widget.ComponentFactoryRepo;
 import se.devscout.android.view.widget.FragmentListener;
 import se.devscout.android.view.widget.WidgetComponentFactory;
 import se.devscout.android.view.widget.WidgetView;
-import se.devscout.server.api.ActivityBankListener;
-import se.devscout.server.api.model.ActivityKey;
-import se.devscout.server.api.model.SearchHistory;
-import se.devscout.server.api.model.UserKey;
 
 import java.util.*;
 
-//TODO: It might be cleaner to create an AbstractActivityBankListener instead of implementing ActivityBankListener
-public class HomeWidgetFragment extends ActivityBankFragment implements ActivityBankListener {
+public class HomeWidgetFragment extends ActivityBankFragment {
 
     private static final String PREFS_KEY_WIDGET_IDS = "homeWidgets";
     private static final List<String> DEFAULT_WIDGETS = Arrays.asList(
@@ -37,33 +32,12 @@ public class HomeWidgetFragment extends ActivityBankFragment implements Activity
             ComponentFactoryRepo.FEATURED_ACTIVITIES,
             ComponentFactoryRepo.CRASH_REPORTER);
 
-    private boolean mRefreshResultOnResume = false;
+    private long mFavouriteListModificationCounter;
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean("mRefreshResultOnResume", mRefreshResultOnResume);
+        outState.putLong("mFavouriteListModificationCounter", mFavouriteListModificationCounter);
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onDestroyView() {
-        getActivityBank().removeListener(this);
-        super.onDestroyView();
-    }
-
-    @Override
-    public void onSearchHistoryItemAdded(SearchHistory searchHistory) {
-    }
-
-    @Override
-    public void onFavouriteChange(ActivityKey activityKey, UserKey userKey, boolean isFavouriteNow) {
-        synchronized (this) {
-            mRefreshResultOnResume = true;
-        }
-    }
-
-    @Override
-    public void onServiceDegradation(String message, Exception e) {
     }
 
     @Override
@@ -71,19 +45,27 @@ public class HomeWidgetFragment extends ActivityBankFragment implements Activity
         super.onResume();
 
         final LinearLayout ll = (LinearLayout) getView().findViewById(R.id.home_widgets_container);
+
+        long latest = getActivityBank().getModificationCounters().getFavouriteList();
+        boolean refreshResultOnResume = false;
+        if (mFavouriteListModificationCounter < latest) {
+            mFavouriteListModificationCounter = latest;
+            refreshResultOnResume = true;
+        }
+
         for (int i = 0; i < ll.getChildCount(); i++) {
             View view = ll.getChildAt(i);
 
             if (view instanceof ActivitiesListView) {
                 ActivitiesListView activitiesListView = (ActivitiesListView) view;
-                if (mRefreshResultOnResume || !activitiesListView.isResultPresent()) {
+                if (refreshResultOnResume || !activitiesListView.isResultPresent()) {
                     activitiesListView.runSearchTaskInNewThread();
                 }
             }
 
             if (view instanceof FragmentListener) {
                 FragmentListener widget = (FragmentListener) view;
-                widget.onFragmentResume(mRefreshResultOnResume);
+                widget.onFragmentResume(refreshResultOnResume);
             }
         }
     }
@@ -91,9 +73,8 @@ public class HomeWidgetFragment extends ActivityBankFragment implements Activity
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            mRefreshResultOnResume = savedInstanceState.getBoolean("mRefreshResultOnResume");
+            mFavouriteListModificationCounter = savedInstanceState.getLong("mFavouriteListModificationCounter");
         }
-        getActivityBank().addListener(this);
 
         final View view = inflater.inflate(R.layout.home, container, false);
 

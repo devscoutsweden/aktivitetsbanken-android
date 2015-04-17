@@ -25,6 +25,7 @@ import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
 import se.devscout.android.view.widget.ComponentFactoryRepo;
 import se.devscout.android.view.widget.TabComponentFactory;
 import se.devscout.server.api.ActivityBank;
+import se.devscout.server.api.ActivityBankListener;
 import se.devscout.server.api.model.SearchHistory;
 
 public abstract class SingleFragmentActivity<T extends Fragment> extends FragmentActivity implements AdapterView.OnItemClickListener {
@@ -35,7 +36,7 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
     protected ActionBarDrawerToggle mDrawerToggle;
     protected T mFragment;
     private DrawerListAdapter mDrawerListAdapter;
-    private AbstractActivityBankListener mActivityBankListener;
+    private ActivityBankListener mActivityBankListener;
 
     //    private CredentialsManager mCredentialsManager;
     private AbstractActivityBankListener mActivityBackAsyncExceptionListener;

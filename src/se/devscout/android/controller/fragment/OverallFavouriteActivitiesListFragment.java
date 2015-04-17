@@ -6,14 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import se.devscout.android.view.ActivitiesListView;
 import se.devscout.android.view.OverallFavouriteActivitiesListView;
-import se.devscout.server.api.ActivityBankListener;
-import se.devscout.server.api.model.ActivityKey;
-import se.devscout.server.api.model.SearchHistory;
-import se.devscout.server.api.model.UserKey;
-//TODO: It might be cleaner to create an AbstractActivityBankListener instead of implementing ActivityBankListener
-public class OverallFavouriteActivitiesListFragment extends ActivitiesListFragment implements ActivityBankListener {
+public class OverallFavouriteActivitiesListFragment extends ActivitiesListFragment {
 
-    private boolean mRefreshResultOnResume = false;
+    private long mFavouriteListModificationCounter;
 
     /**
      * No-args constructor necessary when support library restored fragment.
@@ -29,45 +24,25 @@ public class OverallFavouriteActivitiesListFragment extends ActivitiesListFragme
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            mRefreshResultOnResume = savedInstanceState.getBoolean("mRefreshResultOnResume");
+            mFavouriteListModificationCounter = savedInstanceState.getLong("mFavouriteListModificationCounter");
         }
-        getActivityBank().addListener(this);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean("mRefreshResultOnResume", mRefreshResultOnResume);
+        outState.putLong("mFavouriteListModificationCounter", mFavouriteListModificationCounter);
         super.onSaveInstanceState(outState);    //To change body of overridden methods use File | Settings | File Templates.
     }
 
     @Override
-    public void onDestroyView() {
-        getActivityBank().removeListener(this);
-        super.onDestroyView();
-    }
-    @Override
     public void onResume() {
         super.onResume();
-        if (mRefreshResultOnResume || !getListView().isResultPresent()) {
-            //TODO: Necessary? Remove?
+        long latest = getActivityBank().getModificationCounters().getFavouriteList();
+        if (mFavouriteListModificationCounter < latest || !getListView().isResultPresent()) {
+            mFavouriteListModificationCounter = latest;
             getListView().runSearchTaskInNewThread();
         }
-    }
-
-    @Override
-    public void onSearchHistoryItemAdded(SearchHistory searchHistory) {
-    }
-
-    @Override
-    public void onFavouriteChange(ActivityKey activityKey, UserKey userKey, boolean isFavouriteNow) {
-        synchronized (this) {
-            mRefreshResultOnResume = true;
-        }
-    }
-
-    @Override
-    public void onServiceDegradation(String message, Exception e) {
     }
 
     public static OverallFavouriteActivitiesListFragment create() {

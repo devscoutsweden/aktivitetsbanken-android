@@ -7,16 +7,11 @@ import android.view.ViewGroup;
 import se.devscout.android.R;
 import se.devscout.android.view.SearchHistoryListItem;
 import se.devscout.android.view.SearchHistoryListView;
-import se.devscout.server.api.ActivityBankListener;
-import se.devscout.server.api.model.ActivityKey;
-import se.devscout.server.api.model.SearchHistory;
-import se.devscout.server.api.model.UserKey;
 
 import java.util.List;
-//TODO: It might be cleaner to create an AbstractActivityBankListener instead of implementing ActivityBankListener
-public class SearchHistoryListFragment extends QuickSearchListFragment<SearchHistoryListItem, SearchHistoryListView> implements ActivityBankListener {
+public class SearchHistoryListFragment extends QuickSearchListFragment<SearchHistoryListItem, SearchHistoryListView> {
 
-    private boolean mRefreshResultOnResume = false;
+    private long mSearchHistoryModificationCounter;
 
     public SearchHistoryListFragment() {
         // Send empty list to superclass. This does not matter since doSearch() is overridden.
@@ -30,8 +25,11 @@ public class SearchHistoryListFragment extends QuickSearchListFragment<SearchHis
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        getActivityBank().addListener(this);
-
+        synchronized (this) {
+            if (savedInstanceState != null) {
+                mSearchHistoryModificationCounter = savedInstanceState.getLong("mSearchHistoryModificationCounter");
+            }
+        }
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -43,25 +41,11 @@ public class SearchHistoryListFragment extends QuickSearchListFragment<SearchHis
     public void onResume() {
         super.onResume();
         synchronized (this) {
-            if (mRefreshResultOnResume) {
-                //TODO: Necessary? Remove?
+            long latest = getActivityBank().getModificationCounters().getSearchHistory();
+            if (mSearchHistoryModificationCounter < latest || !getListView().isResultPresent()) {
+                mSearchHistoryModificationCounter = latest;
                 getListView().runSearchTaskInNewThread();
             }
         }
-    }
-
-    @Override
-    public void onSearchHistoryItemAdded(SearchHistory searchHistory) {
-        synchronized (this) {
-            mRefreshResultOnResume = true;
-        }
-    }
-
-    @Override
-    public void onFavouriteChange(ActivityKey activityKey, UserKey userKey, boolean isFavouriteNow) {
-    }
-
-    @Override
-    public void onServiceDegradation(String message, Exception e) {
     }
 }
