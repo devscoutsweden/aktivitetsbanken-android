@@ -61,17 +61,17 @@ public class CredentialsManager {
         setState(State.LOGGED_OUT);
     }
 
-    public void logInUsingGoogle(SingleFragmentActivity activity) {
-        logIn(new GoogleAuthenticationStrategy(this, activity));
+    public void logInUsingGoogle(SingleFragmentActivity activity, boolean silent) {
+        logIn(new GoogleAuthenticationStrategy(this, activity), silent);
     }
 
-    private void logIn(AuthenticationStrategy strategy) {
+    private void logIn(AuthenticationStrategy strategy, boolean silent) {
         if (mAuthStrategy != null) {
             mAuthStrategy.startLogOut(false);
         }
         mAuthStrategy = strategy;
         setState(State.LOGGING_IN);
-        strategy.startLogIn();
+        strategy.startLogIn(silent);
     }
 
     public void onLogInCancelled() {

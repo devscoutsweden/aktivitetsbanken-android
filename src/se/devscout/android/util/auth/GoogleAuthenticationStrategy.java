@@ -43,6 +43,7 @@ class GoogleAuthenticationStrategy implements AuthenticationStrategy, GoogleApiC
     private boolean mIntentInProgress;
     private ConnectionResult mConnectionResult;
     private boolean mSignInClicked;
+    private boolean mSilent = false;
 
 
     GoogleAuthenticationStrategy(CredentialsManager credentialsManager, SingleFragmentActivity activity) {
@@ -52,7 +53,7 @@ class GoogleAuthenticationStrategy implements AuthenticationStrategy, GoogleApiC
     }
 
     @Override
-    public void startLogIn() {
+    public void startLogIn(boolean silent) {
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(mActivity, this, this)
                     .addApi(Plus.API)
@@ -60,6 +61,8 @@ class GoogleAuthenticationStrategy implements AuthenticationStrategy, GoogleApiC
                     .addScope(Plus.SCOPE_PLUS_PROFILE)
                     .build();
         }
+
+        mSilent = silent;
 
         if (!mGoogleApiClient.isConnecting()) {
             mSignInClicked = true;
@@ -221,7 +224,7 @@ class GoogleAuthenticationStrategy implements AuthenticationStrategy, GoogleApiC
                                 userInfo);
                     }
                 } catch (IOException e) {
-                    LogUtil.e(SingleFragmentActivity.class.getName(), "Could not get Google ID token", e);
+                    LogUtil.e(GoogleAuthenticationStrategy.class.getName(), "Could not get Google ID token", e);
                 } catch (final GoogleAuthException e) {
                     activity.runOnUiThread(new Runnable() {
                         @Override
@@ -244,7 +247,7 @@ class GoogleAuthenticationStrategy implements AuthenticationStrategy, GoogleApiC
                                 Intent intent = exception.getIntent();
                                 activity.startActivityForResult(intent, REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR);
                             }
-                            LogUtil.e(SingleFragmentActivity.class.getName(), "Could not get Google ID token", e);
+                            LogUtil.e(GoogleAuthenticationStrategy.class.getName(), "Could not get Google ID token", e);
                         }
                     });
                 }
@@ -254,21 +257,29 @@ class GoogleAuthenticationStrategy implements AuthenticationStrategy, GoogleApiC
     }
 
     private void startChooseAccountActivity() {
-        mActivity.startActivityForResult(AccountPicker.newChooseAccountIntent(null, null, new String[]{"com.google"}, false, null, null, null, null), RC_CHOOSE_ACCOUNT);
+        if (!mSilent) {
+            mActivity.startActivityForResult(AccountPicker.newChooseAccountIntent(null, null, new String[]{"com.google"}, false, null, null, null, null), RC_CHOOSE_ACCOUNT);
+        } else {
+            LogUtil.e(GoogleAuthenticationStrategy.class.getName(), "Google account chooser should have been shown but will not be shown since silent=true.");
+        }
     }
 
     /**
      * Method to resolve any signin errors
      */
     private void resolveSignInError() {
-        if (mConnectionResult.hasResolution()) {
-            try {
-                mIntentInProgress = true;
-                mConnectionResult.startResolutionForResult(mActivity, RC_SIGN_IN);
-            } catch (IntentSender.SendIntentException e) {
-                mIntentInProgress = false;
-                mGoogleApiClient.connect();
+        if (!mSilent) {
+            if (mConnectionResult.hasResolution()) {
+                try {
+                    mIntentInProgress = true;
+                    mConnectionResult.startResolutionForResult(mActivity, RC_SIGN_IN);
+                } catch (IntentSender.SendIntentException e) {
+                    mIntentInProgress = false;
+                    mGoogleApiClient.connect();
+                }
             }
+        } else {
+            LogUtil.e(GoogleAuthenticationStrategy.class.getName(), "Will not handle sign-in error since silent=true.");
         }
     }
 

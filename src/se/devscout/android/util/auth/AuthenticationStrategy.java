@@ -11,7 +11,7 @@ import android.content.Intent;
  */
 public interface AuthenticationStrategy {
 
-    void startLogIn();
+    void startLogIn(boolean silent);
 
     void startLogOut(boolean revokeAccess);
 

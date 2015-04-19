@@ -198,8 +198,6 @@
     <string name="auth_logged_out_better_text">När du är inloggad kan du till exempel:\n
         - favorit-markera\n
         - betygsätta aktiviteter\n
-        - göra listor med aktiviteter\n
-        - skapa egna aktiviteter\n
         \nOm vi hjälps åt att betygsätta,
         kommentera och förbättra så
         blir det enklare för alla
@@ -210,9 +208,7 @@
     <string name="auth_logged_in_smarter">Smarta grejer?</string>
     <string name="auth_logged_in_smarter_text">Du kan till exempel:\n
         - favorit-markera\n
-        - betygsätta aktiviteter\n
-        - göra listor med aktiviteter\n
-        - skapa egna aktiviteter
+        - betygsätta aktiviteter
     </string>
     <string name="auth_ok_i_got_it">Ok, jag fattar</string>
     <string name="auth_widget_title">In- och utloggning</string>
@@ -230,4 +226,7 @@
     <string name="remote_could_get_categories">Listan med kategorier kan vara felaktig pga. nätproblem.</string>
     <string name="remote_could_not_find_activities">Visar bara offline-resultat pga. nätproblem.</string>
     <string name="remote_could_not_save_ratings">Synkade inte dina betyg pga. nätproblem.</string>
+    <string name="preferenceAuthAutoLogin">Alltid inloggad</string>
+    <string name="preferenceAuthAutoLoginSummary">Du loggas automatiskt in när appen startas.</string>
+    <string name="preferenceAuth">Konto</string>
 </resources>

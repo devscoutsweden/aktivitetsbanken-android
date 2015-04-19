@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.StartTabsFragment;
@@ -27,6 +28,10 @@ public class StartActivity extends SingleFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        boolean authAutoLogin = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("auth_auto_login", true);
+        if (authAutoLogin) {
+            CredentialsManager.getInstance(this).logInUsingGoogle(this, true);
+        }
         mDrawerToggle.setDrawerIndicatorEnabled(true);
     }
 
@@ -77,6 +82,12 @@ public class StartActivity extends SingleFragmentActivity {
                 break;
         }
         return super.onMenuItemSelected(featureId, item);
+    }
+
+    @Override
+    protected boolean onPrepareOptionsPanel(View view, Menu menu) {
+        menu.findItem(R.id.menuStartLogOutAndRevokeAccess).setVisible(CredentialsManager.getInstance(this).getState().isLoggedIn());
+        return super.onPrepareOptionsPanel(view, menu);
     }
 
     @Override
