@@ -112,7 +112,17 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
     protected abstract void onItemClick(View view, int position);
 
     protected List<T> getItems() {
-        return mResult;
+        if (mList instanceof ListView) {
+            // Return copy of, potentially sorted, list
+            ArrayAdapter<T> source = (ArrayAdapter<T>) ((ListView) mList).getAdapter();
+            ArrayList<T> list = new ArrayList<>();
+            for (int i = 0; i < source.getCount(); i++) {
+                list.add(source.getItem(i));
+            }
+            return list;
+        } else {
+            return mResult;
+        }
     }
 
     private void initEmptyViewText(int textViewId, int textId) {
