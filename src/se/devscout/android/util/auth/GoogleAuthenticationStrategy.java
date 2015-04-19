@@ -260,6 +260,7 @@ class GoogleAuthenticationStrategy implements AuthenticationStrategy, GoogleApiC
         if (!mSilent) {
             mActivity.startActivityForResult(AccountPicker.newChooseAccountIntent(null, null, new String[]{"com.google"}, false, null, null, null, null), RC_CHOOSE_ACCOUNT);
         } else {
+            mCredentialsManager.onLogInCancelled();
             LogUtil.e(GoogleAuthenticationStrategy.class.getName(), "Google account chooser should have been shown but will not be shown since silent=true.");
         }
     }
@@ -268,7 +269,7 @@ class GoogleAuthenticationStrategy implements AuthenticationStrategy, GoogleApiC
      * Method to resolve any signin errors
      */
     private void resolveSignInError() {
-        if (!mSilent) {
+//        if (!mSilent) {
             if (mConnectionResult.hasResolution()) {
                 try {
                     mIntentInProgress = true;
@@ -278,9 +279,9 @@ class GoogleAuthenticationStrategy implements AuthenticationStrategy, GoogleApiC
                     mGoogleApiClient.connect();
                 }
             }
-        } else {
-            LogUtil.e(GoogleAuthenticationStrategy.class.getName(), "Will not handle sign-in error since silent=true.");
-        }
+//        } else {
+//            LogUtil.e(GoogleAuthenticationStrategy.class.getName(), "Will not handle sign-in error since silent=true.");
+//        }
     }
 
     private SharedPreferences getPreferences() {
