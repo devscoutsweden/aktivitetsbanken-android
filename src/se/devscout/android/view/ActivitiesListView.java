@@ -221,7 +221,7 @@ public class ActivitiesListView extends NonBlockingSearchView<ActivitiesListItem
             mStopWatch.logEvent("Added search to history");
             List<ActivitiesListItem> items = new ArrayList<ActivitiesListItem>();
             for (Activity activity : activities) {
-                items.add(new ActivitiesListItem(activity));
+                items.add(new ActivitiesListItem(activity, getContext()));
             }
             mStopWatch.logEvent("Created list items");
             return items;

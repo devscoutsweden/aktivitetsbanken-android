@@ -1,14 +1,13 @@
 package se.devscout.android.view;
 
+import android.content.Context;
+import se.devscout.android.util.ResourceUtil;
 import se.devscout.server.api.model.Activity;
 import se.devscout.server.api.model.Media;
 import se.devscout.server.api.model.Range;
 
-import java.io.Serializable;
-
-public class ActivitiesListItem implements Serializable {
+public class ActivitiesListItem extends AsyncImageBean {
     private final Integer mFavouritesCount;
-    private String mName;
     private Range<Integer> mParticipants;
     private Range<Integer> mTimeActivity;
     private String mDescription;
@@ -16,8 +15,8 @@ public class ActivitiesListItem implements Serializable {
     private Range<Integer> mAges;
     private Media mCoverMedia;
 
-    public ActivitiesListItem(Activity activity) {
-        mName = activity.getName();
+    public ActivitiesListItem(Activity activity, Context context) {
+        super(activity.getName(), ResourceUtil.getFullScreenMediaURIs(activity.getCoverMedia(), context));
         mParticipants = activity.getParticipants();
         mTimeActivity = activity.getTimeActivity();
         mDescription = activity.getDescription();
@@ -25,14 +24,6 @@ public class ActivitiesListItem implements Serializable {
         mId = activity.getId();
         mCoverMedia = activity.getCoverMedia();
         mFavouritesCount = activity.getFavouritesCount();
-    }
-
-    public String getName() {
-        return mName;
-    }
-
-    public void setName(String name) {
-        mName = name;
     }
 
     public Range<Integer> getParticipants() {

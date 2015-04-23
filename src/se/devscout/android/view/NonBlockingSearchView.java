@@ -83,7 +83,7 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
         mList = linearLayout;
     }
 
-    protected abstract ArrayAdapter createAdapter(List<T> result);
+    protected abstract ArrayAdapter<T> createAdapter(List<T> result);
 
     protected void sort(Comparator<T> sorter) {
         if (mList instanceof ListView) {

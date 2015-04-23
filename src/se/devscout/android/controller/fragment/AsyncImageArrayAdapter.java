@@ -9,27 +9,26 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
-import se.devscout.android.util.ResourceUtil;
 import se.devscout.android.view.ActivitiesListItem;
-import se.devscout.android.view.AsyncImageBean;
 import se.devscout.android.view.AsyncImageView;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class AsyncImageArrayAdapter extends ArrayAdapter<AsyncImageBean> {
+public class AsyncImageArrayAdapter extends ArrayAdapter<ActivitiesListItem> {
 
-    public AsyncImageArrayAdapter(Context context, List<AsyncImageBean> result) {
+    public AsyncImageArrayAdapter(Context context, List<ActivitiesListItem> result) {
         super(context, R.layout.simple_list_item_1, result);
     }
 
-    public static ArrayAdapter fromList(List<ActivitiesListItem> result, Context context) {
+/*
+    public static ArrayAdapter<ActivitiesListItem> fromList(List<ActivitiesListItem> result, Context context) {
         List<AsyncImageBean> props = new ArrayList<AsyncImageBean>();
         for (ActivitiesListItem item : result) {
             props.add(new AsyncImageBean(item.getName(), ResourceUtil.getFullScreenMediaURIs(item.getCoverMedia(), context)));
         }
         return new AsyncImageArrayAdapter(context, props);
     }
+*/
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -47,8 +46,7 @@ public class AsyncImageArrayAdapter extends ArrayAdapter<AsyncImageBean> {
         } else if (convertView instanceof AsyncImageView) {
             view = (AsyncImageView) convertView;
         }
-        AsyncImageBean item = getItem(position);
-
+        ActivitiesListItem item = getItem(position);
 
         view.setImage(item, ((SingleFragmentActivity) getContext()).getBackgroundTasksHandlerThread());
         view.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getContext().getResources().getDimensionPixelSize(R.dimen.thumbnail_height)));

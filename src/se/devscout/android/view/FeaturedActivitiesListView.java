@@ -29,8 +29,8 @@ public class FeaturedActivitiesListView extends ActivitiesListView {
     }
 
     @Override
-    protected ArrayAdapter createAdapter(final List<ActivitiesListItem> result) {
-        return AsyncImageArrayAdapter.fromList(result, getContext());
+    protected ArrayAdapter<ActivitiesListItem> createAdapter(final List<ActivitiesListItem> result) {
+        return new AsyncImageArrayAdapter(getContext(), result);
     }
 
 }
