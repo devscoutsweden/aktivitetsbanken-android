@@ -28,8 +28,6 @@ import se.devscout.android.model.UserPropertiesBean;
 import se.devscout.android.util.IdentityProvider;
 import se.devscout.android.util.LogUtil;
 
-import java.io.IOException;
-
 class GoogleAuthenticationStrategy implements AuthenticationStrategy, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final int RC_SIGN_IN = 0;
     private static final int RC_CHOOSE_ACCOUNT = 1000;
@@ -223,8 +221,6 @@ class GoogleAuthenticationStrategy implements AuthenticationStrategy, GoogleApiC
                                 token,
                                 userInfo);
                     }
-                } catch (IOException e) {
-                    LogUtil.e(GoogleAuthenticationStrategy.class.getName(), "Could not get Google ID token", e);
                 } catch (final GoogleAuthException e) {
                     activity.runOnUiThread(new Runnable() {
                         @Override
@@ -250,6 +246,8 @@ class GoogleAuthenticationStrategy implements AuthenticationStrategy, GoogleApiC
                             LogUtil.e(GoogleAuthenticationStrategy.class.getName(), "Could not get Google ID token", e);
                         }
                     });
+                } catch (Throwable e) {
+                    LogUtil.e(GoogleAuthenticationStrategy.class.getName(), "Could not get Google ID token", e);
                 }
                 return null;
             }
