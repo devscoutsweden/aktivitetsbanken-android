@@ -58,24 +58,11 @@
         <item name="android:scaleType">centerCrop</item>
     </style>
 
-    <style name="Document_TextItem">
+    <style name="SimpleDocument">
         <item name="android:layout_margin">0dp</item>
-        <item name="android:paddingBottom">0dp</item>
-        <item name="android:paddingLeft">@dimen/defaultMargin</item>
-        <item name="android:paddingRight">@dimen/defaultMargin</item>
+        <item name="android:padding">@dimen/defaultMargin</item>
         <item name="android:background">@color/basicVeryLight</item>
         <item name="android:textColor">@color/basicVeryDark</item>
-    </style>
-
-    <style name="Document_Header" parent="Document_TextItem">
-        <item name="android:textSize">@dimen/Document_Header_TextSize</item>
-        <item name="android:paddingTop">@dimen/Document_Header_PaddingTop</item>
-        <item name="android:textStyle">normal</item>
-    </style>
-
-    <style name="Document_Paragraph" parent="Document_TextItem">
-        <item name="android:textSize">@dimen/Document_Paragraph_TextSize</item>
-        <!--<item name="android:paddingTop">@dimen/Document_Paragraph_PaddingTop</item>-->
         <item name="android:lineSpacingExtra">@dimen/Document_Paragraph_LineSpacingExtra</item>
     </style>
 

@@ -132,10 +132,10 @@
                     </LinearLayout>
                 </RelativeLayout>
 
-                <view
+                <TextView
+                    style="@style/SimpleDocument"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    class="se.devscout.android.view.SimpleDocumentLayout"
                     android:id="@+id/activityDocument"
                     android:layout_alignParentTop="true"
                     android:layout_alignRight="@+id/activityViewPager"

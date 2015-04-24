@@ -21,7 +21,7 @@ import se.devscout.android.util.concurrency.UpdateFavouriteStatusParam;
 import se.devscout.android.util.http.UnauthorizedException;
 import se.devscout.android.view.AsyncImageBean;
 import se.devscout.android.view.AsyncImageView;
-import se.devscout.android.view.SimpleDocumentLayout;
+import se.devscout.android.view.TextViewUtil;
 import se.devscout.server.api.model.*;
 
 import java.util.List;
@@ -150,7 +150,7 @@ public class ActivityFragment extends ActivityBankFragment implements Background
             view.findViewById(R.id.activityCover).setVisibility(View.GONE);
         }
 
-        SimpleDocumentLayout linearLayout = (SimpleDocumentLayout) view.findViewById(R.id.activityDocument);
+        TextView textView = (TextView) view.findViewById(R.id.activityDocument);
 
         StringBuilder body = new StringBuilder();
         if (activityProperties.getDescriptionIntroduction().length() > 0) {
@@ -185,7 +185,10 @@ public class ActivityFragment extends ActivityBankFragment implements Background
             }
         }
 
-        linearLayout.addBodyText(body.toString().trim());
+        textView.setText(TextViewUtil.parseText(body.toString().trim(), context));
+        textView.setLineSpacing(
+                getResources().getDimensionPixelSize(R.dimen.Document_Paragraph_LineSpacingExtra),
+                1.0f);
 
         view.findViewById(R.id.scrollView).setVisibility(View.VISIBLE);
         view.findViewById(R.id.progressBar).setVisibility(View.GONE);
