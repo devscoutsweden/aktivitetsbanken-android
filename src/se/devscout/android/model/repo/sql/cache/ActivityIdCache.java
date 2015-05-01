@@ -12,7 +12,13 @@ public class ActivityIdCache extends ServerObjectIdCache<ActivityBean, ActivityP
 
     @Override
     protected IdCacheEntry createIdCacheEntry(ActivityBean entry) {
-        return new IdCacheEntry(entry.getId(), entry.getServerId(), new double[]{entry.getServerRevisionId(), entry.getFavouritesCount() != null ? entry.getFavouritesCount().doubleValue() : 0, entry.getRatingAverage() != null ? entry.getRatingAverage().doubleValue() : 0});
+        return new IdCacheEntry(
+                entry.getId(),
+                entry.getServerId(),
+                new double[]{
+                        entry.getServerRevisionId(),
+                        entry.getFavouritesCount() != null ? entry.getFavouritesCount().doubleValue() : 0,
+                        entry.getRatingAverage() != null ? entry.getRatingAverage().doubleValue() : 0});
     }
 
     public void addEntry(long id, ActivityProperties properties) {
