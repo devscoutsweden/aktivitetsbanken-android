@@ -19,9 +19,7 @@ import se.devscout.android.util.concurrency.BackgroundTask;
 import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
 import se.devscout.android.util.concurrency.UpdateFavouriteStatusParam;
 import se.devscout.android.util.http.UnauthorizedException;
-import se.devscout.android.view.AsyncImageBean;
-import se.devscout.android.view.AsyncImageView;
-import se.devscout.android.view.TextViewUtil;
+import se.devscout.android.view.*;
 import se.devscout.server.api.model.*;
 
 import java.util.List;
@@ -33,10 +31,10 @@ public class ActivityFragment extends ActivityBankFragment implements Background
 
     private ObjectIdentifierBean mActivityKey;
 
-    public void onRead(final Activity activityProperties, View view) {
+    public void onRead(final Activity activityProperties, final View view) {
         view.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 
-        FragmentActivity context = getActivity();
+        final FragmentActivity context = getActivity();
         if (view == null || context == null) {
             LogUtil.e(ActivityFragment.class.getName(), "Could not display activity information since view or context is null: view = " + view + " context = " + context);
             return;
@@ -148,6 +146,22 @@ public class ActivityFragment extends ActivityBankFragment implements Background
             view.findViewById(R.id.activityCover).setVisibility(View.VISIBLE);
         } else {
             view.findViewById(R.id.activityCover).setVisibility(View.GONE);
+        }
+
+        final Button relButton = (Button) view.findViewById(R.id.showRelatedActivitiesButton);
+        if (relButton != null) {
+            // Button will be null after clicking it once since clicking it will also remove it.
+            relButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View clickedView) {
+                    LinearLayout container = (LinearLayout) view.findViewById(R.id.showRelatedActivitiesContainer);
+                    container.removeView(clickedView);
+                    final ActivityKey activityKey = mActivityKey;
+                    final ActivitiesListView relatedActivitiesView = new RelatedActivitiesListView(context, activityKey, activityProperties.getRelatedActivitiesKeys());
+                    container.addView(relatedActivitiesView);
+                    relatedActivitiesView.runSearchTaskInNewThread();
+                }
+            });
         }
 
         TextView textView = (TextView) view.findViewById(R.id.activityDocument);

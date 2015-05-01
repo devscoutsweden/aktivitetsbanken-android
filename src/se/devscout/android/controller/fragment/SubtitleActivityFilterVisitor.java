@@ -6,6 +6,7 @@ import se.devscout.android.R;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.ActivityFilterVisitor;
 import se.devscout.server.api.AverageRatingFilter;
+import se.devscout.server.api.RelatedToFilter;
 import se.devscout.server.api.activityfilter.*;
 
 public class SubtitleActivityFilterVisitor implements ActivityFilterVisitor {
@@ -96,5 +97,10 @@ public class SubtitleActivityFilterVisitor implements ActivityFilterVisitor {
     @Override
     public String visit(AverageRatingFilter filter) {
         return mContext.getString(R.string.subtitle_filter_visitor_average_rating, filter.getLimit());
+    }
+
+    @Override
+    public String visit(RelatedToFilter filter) {
+        return "RELATEDTO-" + filter.getActivityKey().getId();
     }
 }

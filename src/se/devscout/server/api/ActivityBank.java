@@ -20,6 +20,20 @@ public interface ActivityBank {
 
     ActivityList readActivities(ActivityKey... keys) throws UnauthorizedException;
 
+    /**
+     * Returns activities related to the primary activity.
+     *
+     * @param primaryActivity         The activity for which related activities
+     *                                should be returned/calculated.
+     * @param forcedRelatedActivities The activities to consider to be related,
+     *                                in case the method cannot determine the
+     *                                information by itself or if the caller
+     *                                wants to be explicit.
+     * @return
+     * @throws UnauthorizedException
+     */
+    List<? extends Activity> readRelatedActivities(ActivityKey primaryActivity, List<ActivityKey> forcedRelatedActivities) throws UnauthorizedException;
+
     ActivityFilterFactory getFilterFactory();
 
     Reference createReference(ActivityKey key, ReferenceProperties properties);

@@ -4,6 +4,7 @@ import se.devscout.android.model.IntegerRange;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.AverageRatingFilter;
 import se.devscout.server.api.BaseActivityFilterVisitor;
+import se.devscout.server.api.RelatedToFilter;
 import se.devscout.server.api.activityfilter.*;
 
 class SQLActivityFilterVisitor implements BaseActivityFilterVisitor<Void> {
@@ -83,6 +84,12 @@ class SQLActivityFilterVisitor implements BaseActivityFilterVisitor<Void> {
     @Override
     public Void visit(AverageRatingFilter filter) {
         mQueryBuilder.addWhereAverageRating(filter);
+        return null;
+    }
+
+    @Override
+    public Void visit(RelatedToFilter filter) {
+        mQueryBuilder.addWhereRelatedTo(filter);
         return null;
     }
 }

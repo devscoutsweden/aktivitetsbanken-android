@@ -152,6 +152,13 @@ public class Database {
         final static String category_id = "category_id";
     }
 
+    public static class activity_relations {
+        final static String T = "activity_relations";
+
+        final static String activity_id = "activity_id";
+        final static String related_activity_id = "related_activity_id";
+    }
+
     public static class history {
         final static String T = "history";
 

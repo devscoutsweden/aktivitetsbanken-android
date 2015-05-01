@@ -12,11 +12,19 @@ public class ActivityPropertiesBean extends ServerObjectPropertiesBean implement
     private UserKey mOwner;
     private Integer mFavouritesCount;
     private Double mRatingAverage;
+    /**
+     * The default value is null and this is important: Null indicates that it
+     * is unknown whether or not the activity is related to any other
+     * activities. Initializing to an empty list would indicates that there are
+     * no related activities, and that may not be true.
+     */
+    private List<ActivityKey> mRelatedActivitiesKeys;
 
     public ActivityPropertiesBean(boolean publishable, long serverId, long serverRevisionId, UserKey owner) {
         super(publishable, serverId, serverRevisionId);
         mOwner = owner;
     }
+
     private String mName;
     private Date mDatePublished = new Date();
     private Date mDateCreated = new Date();
@@ -210,5 +218,23 @@ public class ActivityPropertiesBean extends ServerObjectPropertiesBean implement
 
     public void setRatingAverage(Double ratingAverage) {
         mRatingAverage = ratingAverage;
+    }
+
+    @Override
+    public List<ActivityKey> getRelatedActivitiesKeys() {
+        return mRelatedActivitiesKeys;
+    }
+
+    /**
+     * Note the difference between setting this value to null or an empty list:
+     * <p/>
+     * null: Activity may or may not have any related activities.
+     * <p/>
+     * Empty list: Activity has no related activities.
+     *
+     * @param relatedActivitiesKeys
+     */
+    public void setRelatedActivitiesKeys(List<ActivityKey> relatedActivitiesKeys) {
+        mRelatedActivitiesKeys = relatedActivitiesKeys;
     }
 }

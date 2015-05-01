@@ -57,6 +57,23 @@ public class SQLiteActivityRepo implements ActivityBank {
     }
 
     @Override
+    public List<? extends Activity> readRelatedActivities(ActivityKey primaryActivity, List<ActivityKey> forcedRelatedActivities) throws UnauthorizedException {
+        // Read activities forcedRelatedActivities. Caches activities will be returned without network traffic. Non-cached activities will be fetched from the server API.
+
+        if (forcedRelatedActivities != null) {
+            ActivityList relatedActivities = readActivities(forcedRelatedActivities.toArray(new ActivityKey[forcedRelatedActivities.size()]));
+            ArrayList<ActivityKey> relatedKeys = new ArrayList<>();
+            for (Activity relatedActivity : relatedActivities) {
+                relatedKeys.add(new ObjectIdentifierBean(relatedActivity.getId()));
+            }
+
+            mDatabaseHelper.clearRelatedActivities(primaryActivity);
+            mDatabaseHelper.addRelatedActivities(primaryActivity, relatedKeys);
+        }
+        return mDatabaseHelper.readRelatedActivities(primaryActivity);
+    }
+
+    @Override
     public ActivityFilterFactory getFilterFactory() {
         return new PrimitiveActivityFilterFactory();
     }

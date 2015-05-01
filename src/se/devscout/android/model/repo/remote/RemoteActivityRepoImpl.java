@@ -396,6 +396,15 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     }
 
     @Override
+    public List<? extends Activity> readRelatedActivities(ActivityKey primaryActivity, List<ActivityKey> forcedRelatedActivities) throws UnauthorizedException {
+        return super.readRelatedActivities(
+                /* Correct, if necessary, the activity key of the activity for which we want to fetch related activities. */
+                fixActivityKey(primaryActivity),
+                /* No need to fix the keys for the "forced related activities" since they will be fixed by readActivities, when called. */
+                forcedRelatedActivities);
+    }
+
+    @Override
     public List<Reference> readReferences(ActivityKey activityKey) {
         //TODO: implement/overload/fix this method. High priority.
         ActivityKey key = fixActivityKey(activityKey);
@@ -461,7 +470,9 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
                 "participants_min",
                 "time_max",
                 "time_min",
-                "media_files"};
+                "media_files",
+                /* Returning updated_at is important in order to detect server-side changes, which will trigger the app to, later on, update its cached data based on new data from the server. */
+                "updated_at"};
         return findActivities(condition, attrNames);
     }
 
@@ -747,14 +758,29 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         return cat;
     }
 
+    /**
+     * Returns a number identifying the supplied object. The object's
+     * highest/greatest identifier is returned if the object has multiple
+     * identifiers.
+     */
     private long getServerRevisionId(JSONObject obj) {
+        long revId = 0;
         if (obj.has("revision_id")) {
-            return obj.optLong("revision_id", new Date().getTime());
-        } else if (obj.has("updated_at")) {
-            return getDate(obj, "updated_at").getTime();
-        } else {
-            return getDate(obj, "created_at").getTime();
+            revId = Math.max(revId, obj.optLong("revision_id", new Date().getTime()));
         }
+        if (obj.has("_updated_at")) {
+            revId = Math.max(revId, getDate(obj, "_updated_at").getTime());
+        }
+        if (obj.has("updated_at")) {
+            revId = Math.max(revId, getDate(obj, "updated_at").getTime());
+        }
+        if (obj.has("_created_at")) {
+            revId = Math.max(revId, getDate(obj, "_created_at").getTime());
+        }
+        if (obj.has("created_at")) {
+            revId = Math.max(revId, getDate(obj, "created_at").getTime());
+        }
+        return revId;
     }
 
     private ServerActivityBean getActivityBean(JSONObject obj) throws JSONException {
@@ -801,15 +827,24 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
             }
         }
 
+        if (obj.has("_related")) {
+            List<ActivityKey> related = new ArrayList<>();
+            for (JSONObject jsonObject : getJSONObjectList(obj, "_related")) {
+                ActivityKey key = new ObjectIdentifierBean(-jsonObject.getLong("related_activity_id"));
+                related.add(key);
+            }
+            act.setRelatedActivitiesKeys(related);
+        }
+
         act.setSafety(obj.optString("descr_safety", null));
         act.setDescription(obj.optString("descr_main", null));
         act.setIntroduction(obj.optString("descr_introduction", null));
         act.setMaterial(obj.optString("descr_material", null));
         act.setPreparation(obj.optString("descr_prepare", null));
         act.setDateCreated(getDate(obj, "created_at"));
-        act.setFavouritesCount(obj.has("favourite_count") && !obj.isNull("favourite_count") ? obj.getInt("favourite_count") : null);
-        act.setRatingAverage(obj.has("ratings_average") && !obj.isNull("ratings_average") ? obj.getDouble("ratings_average") : null);
-        act.setMyRating(obj.has("my_rating") && !obj.isNull("my_rating") ? obj.getDouble("my_rating") : null);
+        act.setFavouritesCount(obj.has("_favourite_count") && !obj.isNull("_favourite_count") ? obj.getInt("_favourite_count") : null);
+        act.setRatingAverage(obj.has("_ratings_average") && !obj.isNull("_ratings_average") ? obj.getDouble("_ratings_average") : null);
+        act.setMyRating(obj.has("_my_rating") && !obj.isNull("_my_rating") ? obj.getDouble("_my_rating") : null);
 //        act.addRevisions(act);
         return act;
     }

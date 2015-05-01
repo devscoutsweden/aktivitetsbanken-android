@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.ActivityFilterVisitor;
 import se.devscout.server.api.AverageRatingFilter;
+import se.devscout.server.api.RelatedToFilter;
 import se.devscout.server.api.activityfilter.*;
 
 class EqualsFilterVisitor implements ActivityFilterVisitor {
@@ -79,5 +80,10 @@ class EqualsFilterVisitor implements ActivityFilterVisitor {
     @Override
     public String visit(AverageRatingFilter filter) {
         return "averagerating" + filter.getLimit();
+    }
+
+    @Override
+    public String visit(RelatedToFilter filter) {
+        return "relatedto" + filter.getActivityKey().getId();
     }
 }

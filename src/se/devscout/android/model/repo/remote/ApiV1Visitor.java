@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import se.devscout.android.util.LogUtil;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.AverageRatingFilter;
+import se.devscout.server.api.RelatedToFilter;
 import se.devscout.server.api.URIBuilderActivityFilterVisitor;
 import se.devscout.server.api.activityfilter.*;
 
@@ -104,5 +105,11 @@ public class ApiV1Visitor implements URIBuilderActivityFilterVisitor {
     public Uri visit(AverageRatingFilter filter) {
         mUriBuilder.appendQueryParameter("ratings_average_min", String.valueOf(filter.getLimit()));
         return mUriBuilder.build();
+    }
+
+    @Override
+    public Uri visit(RelatedToFilter filter) {
+        // The server API does not support searching for activities related to another activity
+        throw new UnsupportedOperationException();
     }
 }

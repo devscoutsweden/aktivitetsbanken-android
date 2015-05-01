@@ -17,7 +17,8 @@
             android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:divider="@drawable/list_item_padding">
+            android:divider="@drawable/list_item_padding"
+            android:id="@+id/activityItems">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -189,6 +190,29 @@
                         android:stepSize="1"
                         android:layout_gravity="center" />
                 </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="@drawable/card_background"
+                android:padding="@dimen/iconButtonMargin"
+                android:id="@+id/showRelatedActivitiesContainer">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/showRelatedActivitiesHeader"
+                    android:id="@+id/textView"
+                    android:textSize="@dimen/largeTextSize"
+                    android:layout_gravity="center_horizontal" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/showRelatedActivitiesLoad"
+                    android:id="@+id/showRelatedActivitiesButton"
+                    android:layout_gravity="center_horizontal" />
             </LinearLayout>
 
         </LinearLayout>

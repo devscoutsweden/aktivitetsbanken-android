@@ -45,4 +45,12 @@ public interface ActivityProperties extends ServerObjectProperties {
     Integer getFavouritesCount();
 
     Double getRatingAverage();
+
+    /**
+     * @return A list of related keys for related activities. Empty list if
+     * there are no related activities. Null if it is not known if the activity
+     * has any related activities, so there is an subtle but important
+     * difference between returning null and an empty list.
+     */
+    List<ActivityKey> getRelatedActivitiesKeys();
 }

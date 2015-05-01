@@ -87,7 +87,7 @@
     <string name="startTabFavourites">Favoriter</string>
     <string name="startTabOverallFavourites">Mångas favoriter</string>
     <string name="searchResultDefaultEmptyMessage">Listan är tom.</string>
-    <string name="searchResultDefaultEmptyHeader">New Text</string>
+    <string name="searchResultDefaultEmptyHeader">Inga träffar</string>
     <string name="favouritesEmptyHeader">Du har inga favoriter. Ännu.</string>
     <string name="favouritesEmptyMessage">Tryck på \u2605 för att en aktivitet ska synas här.</string>
     <string name="featuredEmptyHeader">Utvalda aktiviteter saknas.</string>
@@ -229,4 +229,8 @@
     <string name="preferenceAuthAutoLogin">Alltid inloggad</string>
     <string name="preferenceAuthAutoLoginSummary">Du loggas automatiskt in när appen startas.</string>
     <string name="preferenceAuth">Konto</string>
+    <string name="noRelatedActivitiesMessage">Vi kan inte hitta några liknande aktiviteter.</string>
+    <string name="noRelatedActivitiesHeader">Den här aktiviteten är unik!</string>
+    <string name="showRelatedActivitiesHeader">Liknande aktiviteter</string>
+    <string name="showRelatedActivitiesLoad">Visa</string>
 </resources>

@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import se.devscout.android.model.IntegerRange;
 import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.server.api.AverageRatingFilter;
+import se.devscout.server.api.RelatedToFilter;
 import se.devscout.server.api.activityfilter.CategoryFilter;
 import se.devscout.server.api.activityfilter.OverallFavouriteActivitiesFilter;
 import se.devscout.server.api.model.ActivityKey;
@@ -192,5 +193,24 @@ public class QueryBuilder {
                 "   or " +
                 "   r." + Database.rating.rating + " >= " + String.valueOf(filter.getLimit()) +
                 ")");
+    }
+
+    /**
+     * This filter ensures all returned activities to be related to the
+     * activity specified by the filter. A filter for activity 123 could be
+     * explained as "return activities related to 123".
+     *
+     * @param filter
+     */
+    public void addWhereRelatedTo(RelatedToFilter filter) {
+        mFrom.append("" +
+                "   inner join" +
+                "   " + Database.activity_relations.T + " rel " +
+                "   on" +
+                "   (" +
+                "   rel." + Database.activity_relations.activity_id + " = " + filter.getActivityKey().getId() +
+                "   and" +
+                "   rel." + Database.activity_relations.related_activity_id + " = a." + Database.activity.id + " " +
+                "   )");
     }
 }

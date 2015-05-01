@@ -16,6 +16,7 @@ import se.devscout.android.model.repo.sql.cache.MediaIdCache;
 import se.devscout.android.model.repo.sql.cache.ReferenceIdCache;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.SimpleActivityKeysFilter;
+import se.devscout.android.util.SimpleRelatedToFilter;
 import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.model.*;
@@ -101,7 +102,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             R.raw.db_migrate_1_category_icon,
             R.raw.db_migrate_2_category_usage_count,
             R.raw.db_migrate_3_alter_rating,
-            R.raw.db_migrate_4_add_average_rating
+            R.raw.db_migrate_4_add_average_rating,
+            R.raw.db_migrate_5_related_activities
     };
 
     public DatabaseHelper(Context context) {
@@ -1004,5 +1006,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         ratingCursor.close();
         return ratings;
+    }
+
+    public void addRelatedActivities(ActivityKey activityKey, List<ActivityKey> relatedKeys) {
+        for (ActivityKey relatedKey : relatedKeys) {
+            ContentValues values = new ContentValues();
+            values.put(Database.activity_relations.activity_id, activityKey.getId());
+            values.put(Database.activity_relations.related_activity_id, relatedKey.getId());
+
+            getDb().insert(Database.activity_relations.T, null, values);
+        }
+    }
+
+    public void clearRelatedActivities(ActivityKey activityKey) {
+        getDb().delete(Database.activity_relations.T, "" +
+                Database.activity_relations.activity_id + " = " + activityKey.getId().toString(),
+                null);
+    }
+
+    public List<? extends ActivityBean> readRelatedActivities(ActivityKey activity) {
+        return readActivities(new SimpleRelatedToFilter(activity));
     }
 }
