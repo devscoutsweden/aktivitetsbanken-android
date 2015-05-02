@@ -1,6 +1,6 @@
 package se.devscout.android.view;
 
-import android.support.v4.app.FragmentActivity;
+import android.content.Context;
 import se.devscout.android.R;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.http.UnauthorizedException;
@@ -23,7 +23,7 @@ public class RelatedActivitiesListView extends ActivitiesListView {
      * @param activityKey           The activity for which we want to find related activities.
      * @param relatedActivitiesKeys Override/replace any preexisting relations with these ones. Specify null if you want to show the currently known/stored relations.
      */
-    public RelatedActivitiesListView(FragmentActivity context, ActivityKey activityKey, List<ActivityKey> relatedActivitiesKeys) {
+    public RelatedActivitiesListView(Context context, ActivityKey activityKey, List<ActivityKey> relatedActivitiesKeys) {
         super(context, R.string.noRelatedActivitiesMessage, R.string.noRelatedActivitiesHeader, null, null, true);
         mActivityKey = activityKey;
         mRelatedActivitiesKeys = relatedActivitiesKeys;

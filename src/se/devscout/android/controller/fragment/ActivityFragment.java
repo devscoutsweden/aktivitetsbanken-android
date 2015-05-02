@@ -20,6 +20,7 @@ import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
 import se.devscout.android.util.concurrency.UpdateFavouriteStatusParam;
 import se.devscout.android.util.http.UnauthorizedException;
 import se.devscout.android.view.*;
+import se.devscout.android.view.widget.WidgetView;
 import se.devscout.server.api.model.*;
 
 import java.util.List;
@@ -87,23 +88,6 @@ public class ActivityFragment extends ActivityBankFragment implements Background
             averageRatingBar.setVisibility(View.GONE);
         }
 
-        final RatingBar myRatingBar = (RatingBar) view.findViewById(R.id.myRatingBar);
-        final Rating rating = getActivityBank().readRating(mActivityKey, userKey);
-        int ratingNumber = rating != null ? rating.getRating() : 0;
-        myRatingBar.setRating(ratingNumber);
-
-        MyRatingBarListener myRatingBarListener = new MyRatingBarListener();
-        myRatingBar.setOnRatingBarChangeListener(myRatingBarListener);
-//        myRatingBar.setOnTouchListener(myRatingBarListener);
-//        myRatingBar.setOnClickListener(myRatingBarListener);
-
-        view.findViewById(R.id.unsetRatingIcon).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                myRatingBar.setRating(0);
-            }
-        });
-
         Integer commentCount = null;
         boolean isCommented = commentCount != null && commentCount > 0;
 //        if (isCommented) {
@@ -148,21 +132,25 @@ public class ActivityFragment extends ActivityBankFragment implements Background
             view.findViewById(R.id.activityCover).setVisibility(View.GONE);
         }
 
-        final Button relButton = (Button) view.findViewById(R.id.showRelatedActivitiesButton);
-        if (relButton != null) {
-            // Button will be null after clicking it once since clicking it will also remove it.
-            relButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View clickedView) {
-                    LinearLayout container = (LinearLayout) view.findViewById(R.id.showRelatedActivitiesContainer);
-                    container.removeView(clickedView);
-                    final ActivityKey activityKey = mActivityKey;
-                    final ActivitiesListView relatedActivitiesView = new RelatedActivitiesListView(context, activityKey, activityProperties.getRelatedActivitiesKeys());
-                    container.addView(relatedActivitiesView);
-                    relatedActivitiesView.runSearchTaskInNewThread();
-                }
-            });
-        }
+        LinearLayout activityItems = (LinearLayout) view.findViewById(R.id.activityItems);
+        activityItems.addView(
+                new WidgetView(
+                        context,
+                        R.string.showRelatedActivitiesHeader,
+                        new RelatedActivitiesView(
+                                context,
+                                mActivityKey,
+                                activityProperties.getRelatedActivitiesKeys())));
+
+        activityItems.addView(
+                new WidgetView(
+                        context,
+                        R.string.activityRatingHeader,
+                        new ActivityRatingView(
+                                context,
+                                mActivityKey,
+                                CredentialsManager.getInstance(getActivity()).getCurrentUser(),
+                                getActivityBank())));
 
         TextView textView = (TextView) view.findViewById(R.id.activityDocument);
 
@@ -277,55 +265,4 @@ public class ActivityFragment extends ActivityBankFragment implements Background
         return fragment;
     }
 
-    private class MyRatingBarListener implements /*View.OnTouchListener, */RatingBar.OnRatingBarChangeListener {
-//        private boolean mSupressChangeEvent;
-//        private float mStartX;
-//        private float mTouchMarginOfError = getResources().getDimensionPixelSize(R.dimen.defaultMargin);// TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics());
-
-        @Override
-        public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-//            if (!mSupressChangeEvent) {
-            UserKey userKey = CredentialsManager.getInstance(getActivity()).getCurrentUser();
-            if (rating > 0) {
-                getActivityBank().setRating(mActivityKey, userKey, (int) rating);
-            } else {
-                getActivityBank().unsetRating(mActivityKey, userKey);
-            }
-            LogUtil.d(ActivityFragment.class.getName(), "onRatingChanged");
-//            }
-        }
-
-/*
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                mSupressChangeEvent = false;
-                mStartX = motionEvent.getX();
-                LogUtil.d(ActivityFragment.class.getName(), "ACTION_DOWN");
-            } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                float delta = motionEvent.getX() - mStartX;
-                if (-mTouchMarginOfError < delta && delta < mTouchMarginOfError) {
-                    int value = (int) (motionEvent.getX() / view.getHeight()) + 1;
-                    // User performed a click, not a drag/slide.
-                    final RatingBar ratingBar = (RatingBar) view;
-                    LogUtil.d(ActivityFragment.class.getName(), "NON-SLIDE current=" + ratingBar.getRating() + ", clicked=" + value);
-                    if ((int) ratingBar.getRating() == value) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                ratingBar.setRating(0);
-                            }
-                        });
-                        mSupressChangeEvent = true;
-                    }
-                }
-                LogUtil.d(ActivityFragment.class.getName(), "ACTION_UP Moved " + delta + " pixels (margin of error: " + mTouchMarginOfError + ")");
-                if (!mSupressChangeEvent) {
-                    LogUtil.d(ActivityFragment.class.getName(), "NO CHANGE");
-                }
-            }
-            return false;
-        }
-*/
-    }
 }

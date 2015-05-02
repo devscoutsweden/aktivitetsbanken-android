@@ -7,12 +7,11 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import se.devscout.android.R;
 import se.devscout.android.view.ActivitiesListView;
 
-public class WidgetView extends RelativeLayout implements FragmentListener {
+public class WidgetView extends LinearLayout implements FragmentListener {
     private int mTitleTextId;
 
     public WidgetView(Context context, int titleTextId) {
@@ -33,23 +32,29 @@ public class WidgetView extends RelativeLayout implements FragmentListener {
         init(context);
     }
 
+    public WidgetView(Context context, int titleTextId, View contentView) {
+        this(context, titleTextId);
+        setContentView(contentView);
+    }
+
     private void init(Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.widget_container, this, true);
+        final TextView title = (TextView) findViewById(R.id.textView);
         if (mTitleTextId > 0) {
-            final TextView title = (TextView) findViewById(R.id.textView);
             title.setText(mTitleTextId);
-
-            findViewById(R.id.imageView).setVisibility(GONE);
         } else {
-            findViewById(R.id.linearLayout).setVisibility(GONE);
+            ((LinearLayout) findViewById(R.id.start_widget)).removeView(title);
         }
     }
 
     public void setContentView(View view) {
-        LinearLayout widgetContentList = (LinearLayout) findViewById(R.id.widget_container);
-        widgetContentList.removeAllViews();
-        widgetContentList.addView(view);
+        int padding = getResources().getDimensionPixelSize(R.dimen.iconButtonMargin);
+        view.setPadding(padding, padding, padding, padding);
+        view.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+        view.setId(R.id.showRelatedActivitiesButton);
+        LinearLayout container = (LinearLayout) findViewById(R.id.start_widget);
+        container.addView(view);
     }
 
 
@@ -73,10 +78,10 @@ public class WidgetView extends RelativeLayout implements FragmentListener {
 
     @Override
     public void onFragmentResume(boolean refreshResultOnResume) {
-        LinearLayout widgetContentList = (LinearLayout) findViewById(R.id.widget_container);
+//        LinearLayout widgetContentList = (LinearLayout) findViewById(R.id.widget_container);
 
         //TODO: It is good to assume the first child is the one we want?
-        View view = widgetContentList.getChildAt(0);
+        View view = findViewById(R.id.showRelatedActivitiesButton);//widgetContentList.getChildAt(0);
         if (view instanceof FragmentListener) {
             FragmentListener fragmentListener = (FragmentListener) view;
             fragmentListener.onFragmentResume(refreshResultOnResume);

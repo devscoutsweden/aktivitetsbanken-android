@@ -233,4 +233,5 @@
     <string name="noRelatedActivitiesHeader">Den här aktiviteten är unik!</string>
     <string name="showRelatedActivitiesHeader">Liknande aktiviteter</string>
     <string name="showRelatedActivitiesLoad">Visa</string>
+    <string name="activityRatingHeader">Vad tycker du?</string>
 </resources>
