@@ -30,11 +30,17 @@ import java.util.List;
 public class ActivitiesListView extends NonBlockingSearchView<ActivitiesListItem> {
     private Sorter mSortOrder;
     private ActivityFilter mFilter;
+    private boolean mAddSearchHistory;
 
     public ActivitiesListView(Context context, int emptyMessageTextId, int emptyHeaderTextId, ActivityFilter filter, Sorter sortOrder, boolean isListContentHeight) {
+        this(context, emptyMessageTextId, emptyHeaderTextId, filter, sortOrder, isListContentHeight, false);
+    }
+
+    public ActivitiesListView(Context context, int emptyMessageTextId, int emptyHeaderTextId, ActivityFilter filter, Sorter sortOrder, boolean isListContentHeight, boolean addSearchHistory) {
         super(context, emptyMessageTextId, emptyHeaderTextId, isListContentHeight);
         mFilter = filter;
         mSortOrder = sortOrder;
+        mAddSearchHistory = addSearchHistory;
     }
 
     @Override
@@ -54,6 +60,7 @@ public class ActivitiesListView extends NonBlockingSearchView<ActivitiesListItem
         bundle.putParcelable("instanceState", super.onSaveInstanceState());
         bundle.putSerializable("mFilter", mFilter);
         bundle.putSerializable("mSortOrder", mSortOrder);
+        bundle.putBoolean("mAddSearchHistory", mAddSearchHistory);
         return bundle;
     }
 
@@ -63,6 +70,7 @@ public class ActivitiesListView extends NonBlockingSearchView<ActivitiesListItem
             Bundle bundle = (Bundle) state;
             mFilter = (ActivityFilter) bundle.getSerializable("mFilter");
             mSortOrder = (Sorter) bundle.getSerializable("mSortOrder");
+            mAddSearchHistory = bundle.getBoolean("mAddSearchHistory");
             state = bundle.getParcelable("instanceState");
         }
         super.onRestoreInstanceState(state);
@@ -137,6 +145,7 @@ public class ActivitiesListView extends NonBlockingSearchView<ActivitiesListItem
         Sorter(Comparator<ActivitiesListItem> comparator) {
             mComparator = comparator;
         }
+
         @Override
         public int compare(ActivitiesListItem activity, ActivitiesListItem activity2) {
             return mComparator.compare(activity, activity2);
@@ -216,9 +225,14 @@ public class ActivitiesListView extends NonBlockingSearchView<ActivitiesListItem
             mStopWatch.logEvent("Acquired ActivityBank");
             List<Activity> activities = (List<Activity>) activityBank.findActivity(mFilter);
             mStopWatch.logEvent("Query server");
-            final SearchHistoryDataBean searchHistoryDataBean = new SearchHistoryDataBean(mFilter);
-            activityBank.createSearchHistory(new SearchHistoryPropertiesBean(null, searchHistoryDataBean), CredentialsManager.getInstance(getContext()).getCurrentUser());
-            mStopWatch.logEvent("Added search to history");
+            if (mAddSearchHistory) {
+                activityBank.createSearchHistory(
+                        new SearchHistoryPropertiesBean(
+                                null,
+                                new SearchHistoryDataBean(mFilter)),
+                        CredentialsManager.getInstance(getContext()).getCurrentUser());
+                mStopWatch.logEvent("Added search to history");
+            }
             List<ActivitiesListItem> items = new ArrayList<ActivitiesListItem>();
             for (Activity activity : activities) {
                 items.add(new ActivitiesListItem(activity, getContext()));

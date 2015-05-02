@@ -52,7 +52,7 @@ public class SearchResultActivity extends SingleFragmentActivity<ActivitiesListF
     protected ActivitiesListFragment createFragment() {
         ActivityFilter filter = (ActivityFilter) getIntent().getSerializableExtra(INTENT_EXTRA_FILTER);
         if (filter != null) {
-            return ActivitiesListFragment.create(filter, ActivitiesListView.Sorter.NAME);
+            return ActivitiesListFragment.create(filter, ActivitiesListView.Sorter.NAME, true);
         }
         throw new IllegalArgumentException("Neither activities nor filter specified when starting activity.");
     }

@@ -15,6 +15,6 @@ class ActivitiesListDrawerItem extends ExecutableDrawerItem {
 
     @Override
     public Fragment createFragment() {
-        return ActivitiesListFragment.create(mFilter, ActivitiesListView.Sorter.NAME);
+        return ActivitiesListFragment.create(mFilter, ActivitiesListView.Sorter.NAME, false);
     }
 }
