@@ -31,8 +31,9 @@ import java.util.List;
 public class ActivityFragment extends ActivityBankFragment implements BackgroundTasksHandlerThread.Listener/* implements BackgroundTasksHandlerThread.Listener */ {
 
     private ObjectIdentifierBean mActivityKey;
+    private boolean mActivityLoaded;
 
-    public void onRead(final Activity activityProperties, final View view) {
+    public synchronized void onRead(final Activity activityProperties, final View view) {
         view.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 
         final FragmentActivity context = getActivity();
@@ -41,8 +42,12 @@ public class ActivityFragment extends ActivityBankFragment implements Background
             return;
         }
 
-        context.invalidateOptionsMenu();
+        if (mActivityLoaded) {
+            LogUtil.e(ActivityFragment.class.getName(), "Activity has already been loaded.");
+            return;
+        }
 
+        context.invalidateOptionsMenu();
 
         String ages = activityProperties.getAges().toString();
         String participantCount = activityProperties.getParticipants().toString();
@@ -194,6 +199,8 @@ public class ActivityFragment extends ActivityBankFragment implements Background
 
         view.findViewById(R.id.scrollView).setVisibility(View.VISIBLE);
         view.findViewById(R.id.progressBar).setVisibility(View.GONE);
+
+        mActivityLoaded = true;
     }
 
     @Override
@@ -219,6 +226,7 @@ public class ActivityFragment extends ActivityBankFragment implements Background
              * Restore fields from saved state, for example after the device has been rotated.
              */
             mActivityKey = (ObjectIdentifierBean) savedInstanceState.getSerializable("mActivityKey");
+            mActivityLoaded = savedInstanceState.getBoolean("mActivityLoaded");
         }
         return createView(inflater, container, container.getRootView().getContext());
     }
@@ -241,7 +249,9 @@ public class ActivityFragment extends ActivityBankFragment implements Background
     public void onStart() {
         super.onStart();
         getBackgroundTasksHandlerThread(getActivity()).addListener(this);
-        getBackgroundTasksHandlerThread(getActivity()).queueReadActivity(mActivityKey);
+        if (!mActivityLoaded) {
+            getBackgroundTasksHandlerThread(getActivity()).queueReadActivity(mActivityKey);
+        }
     }
 
     @Override
@@ -257,6 +267,7 @@ public class ActivityFragment extends ActivityBankFragment implements Background
          * Store fields into saved state, for example when the activity is destroyed after the device has been rotated.
          */
         outState.putSerializable("mActivityKey", mActivityKey);
+        outState.putBoolean("mActivityLoaded", mActivityLoaded);
     }
 
     public static ActivityFragment create(ActivityKey activityKey) {
