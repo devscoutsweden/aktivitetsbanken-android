@@ -51,8 +51,10 @@ public class TextViewUtil {
         void apply(SpannableStringBuilder sb, int sequencePos, final Context context, final Matcher textMatcher) {
             addEmptyLine(sb, 0.5f);
             String text = textMatcher.group(2);
-            sb.append(text);
-            sb.setSpan(new HeaderSpan(textMatcher, context), sb.length() - text.length(), sb.length(), 0);
+            if (text != null) {
+                sb.append(text);
+                sb.setSpan(new HeaderSpan(textMatcher, context), sb.length() - text.length(), sb.length(), 0);
+            }
         }
     };
     /**
@@ -67,8 +69,10 @@ public class TextViewUtil {
                 addEmptyLine(sb, 0.5f);
             }
             String text = textMatcher.group(2);
-            sb.append(text);
-            sb.setSpan(new CustomBulletSpan(context), sb.length() - text.length(), sb.length(), 0);
+            if (text != null) {
+                sb.append(text);
+                sb.setSpan(new CustomBulletSpan(context), sb.length() - text.length(), sb.length(), 0);
+            }
         }
     };
     /**
@@ -83,8 +87,10 @@ public class TextViewUtil {
                 addEmptyLine(sb, 0.5f);
             }
             String text = textMatcher.group(1);
-            sb.append(text);
-            sb.setSpan(new BulletSpan(BulletSpan.STANDARD_GAP_WIDTH * 5), sb.length() - text.length(), sb.length(), 0);
+            if (text != null) {
+                sb.append(text);
+                sb.setSpan(new BulletSpan(BulletSpan.STANDARD_GAP_WIDTH * 5), sb.length() - text.length(), sb.length(), 0);
+            }
         }
     };
 
@@ -96,7 +102,10 @@ public class TextViewUtil {
         @Override
         void apply(SpannableStringBuilder sb, int sequencePos, Context context, Matcher textMatcher) {
             addEmptyLine(sb, 0.5f);
-            sb.append(textMatcher.group(1));
+            String text = textMatcher.group(1);
+            if (text != null) {
+                sb.append(text);
+            }
         }
     };
 
