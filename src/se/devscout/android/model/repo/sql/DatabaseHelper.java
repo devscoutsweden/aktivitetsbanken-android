@@ -828,6 +828,60 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return items instanceof ArrayList ? (ArrayList<SearchHistoryBean>) items : new ArrayList(items);
     }
+    public List<? extends ActivityBean> readActivityHistory(UserKey user, boolean descendingOrder, int limit, boolean onlyUnique) {
+        Collection<ActivityKey> keys = onlyUnique ? new LinkedHashSet<ActivityKey>() : new ArrayList<ActivityKey>();
+
+
+        /**
+         * Step 1: Get the id numbers of the most recently viewed activities.
+         */
+
+        try {
+            ActivityHistoryCursor cursor = new ActivityHistoryCursor(getDb(), user, descendingOrder);
+            while (cursor.moveToNext() && (limit == 0 || keys.size() < limit)) {
+                long id = cursor.getId();
+                if (!mBannedSearchHistoryIds.contains(id)) {
+                    try {
+                        ActivityHistoryBean item = cursor.getHistoryItem();
+                        keys.add(new ObjectIdentifierBean(item.getData().getId()));
+                    } catch (Throwable e) {
+                        logError(e, "Could not read activity history");
+                        mBannedSearchHistoryIds.add(id);
+                    }
+                } else {
+                    logDebug("Ignoring banned activity history item " + id);
+                }
+            }
+
+            // Do some clean-up:
+            deleteBannedSearchHistoryItems();
+
+        } catch (Exception e) {
+            logError(e, "Could not read activity history");
+        }
+
+        /*
+         * Step 2: Load the activities. Unfortunately they are not returned in a predictable order..
+         */
+
+        List<? extends ActivityBean> list = readActivities(new SimpleActivityKeysFilter(keys.toArray(new ActivityKey[keys.size()])));
+
+        /*
+         * Step 3: ...so the last thing to do is to put the items in the
+         * correct order, i.e. the order in which they were returned in step 1.
+         */
+
+        ArrayList<ActivityBean> result = new ArrayList<>();
+        for (ActivityKey key : keys) {
+            for (ActivityBean activityBean : list) {
+                if (activityBean.getId().longValue() == key.getId().longValue()) {
+                    result.add(activityBean);
+                    break;
+                }
+            }
+        }
+        return result;
+    }
 
     private void deleteBannedSearchHistoryItems() {
         if (!mBannedSearchHistoryIds.isEmpty()) {
@@ -845,11 +899,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public void createActivityHistoryItem(HistoryProperties<ActivityHistoryData> properties, UserKey userKey) throws IOException {
+        createHistoryItem(properties, userKey, HistoryType.ACTIVITY);
+    }
+    
     public void createSearchHistoryItem(HistoryProperties<SearchHistoryData> properties, UserKey userKey) throws IOException {
+        createHistoryItem(properties, userKey, HistoryType.SEARCH);
+    }
+
+    private void createHistoryItem(HistoryProperties properties, UserKey userKey, HistoryType type) throws IOException {
         ContentValues values = new ContentValues();
         values.put(Database.history.data, serializeObject(properties.getData()));
         values.put(Database.history.user_id, userKey.getId());
-        values.put(Database.history.type, String.valueOf(HistoryType.SEARCH.getDatabaseValue()));
+        values.put(Database.history.type, String.valueOf(type.getDatabaseValue()));
 
         getDb().insert(Database.history.T, null, values);
     }

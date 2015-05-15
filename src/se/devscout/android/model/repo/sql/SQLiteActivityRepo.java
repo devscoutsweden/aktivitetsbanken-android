@@ -57,7 +57,7 @@ public class SQLiteActivityRepo implements ActivityBank {
     }
 
     @Override
-    public List<? extends Activity> readRelatedActivities(ActivityKey primaryActivity, List<ActivityKey> forcedRelatedActivities) throws UnauthorizedException {
+    public List<? extends Activity> readRelatedActivities(ActivityKey primaryActivity, List<? extends ActivityKey> forcedRelatedActivities) throws UnauthorizedException {
         // Read activities forcedRelatedActivities. Caches activities will be returned without network traffic. Non-cached activities will be fetched from the server API.
 
         if (forcedRelatedActivities != null) {
@@ -119,6 +119,23 @@ public class SQLiteActivityRepo implements ActivityBank {
     @Override
     public Boolean isFavourite(ActivityKey activityKey, UserKey userKey) {
         return mDatabaseHelper.isFavourite(activityKey, userKey);
+    }
+
+    @Override
+    public List<? extends Activity> readActivityHistory(int limit, UserKey userKey) {
+        return mDatabaseHelper.readActivityHistory(userKey, true, limit, true);
+    }
+
+    @Override
+    public ActivityHistory createActivityHistory(HistoryProperties<ActivityHistoryData> properties, UserKey userKey) {
+        try {
+            mDatabaseHelper.createActivityHistoryItem(properties, userKey);
+            mModificationCounters.touch(SQLiteModificationCounters.Key.ACTIVITY_HISTORY);
+            LogUtil.i(SQLiteActivityRepo.class.getName(), "Saved " + properties.getData().getId() + " in activity history.");
+        } catch (IOException e) {
+            LogUtil.e(SQLiteActivityRepo.class.getName(), "Could not create activity history entry", e);
+        }
+        return null;
     }
 
     @Override
@@ -247,7 +264,8 @@ public class SQLiteActivityRepo implements ActivityBank {
 
         private static enum Key {
             FAVOURITE_LIST,
-            SEARCH_HISTORY
+            SEARCH_HISTORY,
+            ACTIVITY_HISTORY
         }
 
         private Map<Key, Long> counters = new HashMap<>();
@@ -266,6 +284,11 @@ public class SQLiteActivityRepo implements ActivityBank {
         @Override
         public long getSearchHistory() {
             return get(Key.SEARCH_HISTORY);
+        }
+
+        @Override
+        public long getActivityHistory() {
+            return get(Key.ACTIVITY_HISTORY);
         }
 
         private synchronized long get(Key key) {

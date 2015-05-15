@@ -10,6 +10,7 @@ import java.util.List;
 public class ComponentFactoryRepo {
     public static final String CRASH_REPORTER = "CrashReporter";
     public static final String WELCOME_MESSAGE = "WelcomeMessage";
+    public static final String RECENT_ACTIVITIES = "RecentActivities";
     public static final String SPONTANEOUS_ACTIVITIES = "SpontaneousActivities";
     public static final String SIMPLE_SEARCH_ACTIVITIES = "SimpleSearchActivities";
     public static final String OVERALL_FAVOURITE_ACTIVITIES = "OverallFavouriteActivities";
@@ -44,6 +45,7 @@ public class ComponentFactoryRepo {
 
         ArrayList<WidgetComponentFactory> factories = new ArrayList<WidgetComponentFactory>();
         factories.add(new WelcomeMessageComponentFactory(WELCOME_MESSAGE));
+        factories.add(new RecentActivitiesComponentFactory(RECENT_ACTIVITIES));
         factories.add(new AuthenticationComponentFactory(AUTHENTICATION));
         factories.add(new SimpleSearchActivitiesComponentFactory(SIMPLE_SEARCH_ACTIVITIES));
         factories.add(new SpontaneousActivitiesComponentFactory(SPONTANEOUS_ACTIVITIES));

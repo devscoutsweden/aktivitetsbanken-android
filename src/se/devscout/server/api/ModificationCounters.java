@@ -15,4 +15,6 @@ public interface ModificationCounters {
     long getFavouriteList();
 
     long getSearchHistory();
+
+    long getActivityHistory();
 }

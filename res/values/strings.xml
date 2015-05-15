@@ -51,6 +51,7 @@
     <string name="startTabAgeGroups">Ålder</string>
     <string name="startTabTracks">Målspår</string>
     <string name="startTabFeatured">Utvalda</string>
+    <string name="startTabRecentActivities">Visa igen?</string>
     <string name="searchResultTitle">Sökresultat</string>
     <string name="searchResultTitleCategoryTrack">Målspår %1$s</string>
     <plurals name="searchResultSubtitleCategoryTrack">
@@ -231,6 +232,8 @@
     <string name="preferenceAuth">Konto</string>
     <string name="noRelatedActivitiesMessage">Vi kan inte hitta några liknande aktiviteter.</string>
     <string name="noRelatedActivitiesHeader">Den här aktiviteten är unik!</string>
+    <string name="noRecentActivitiesMessage">Här kommer de aktiviteter du senast tittat på att synas.</string>
+    <string name="noRecentActivitiesHeader">Sök! Bläddra! Upptäck!</string>
     <string name="showRelatedActivitiesHeader">Liknande aktiviteter</string>
     <string name="showRelatedActivitiesLoad">Visa</string>
     <string name="activityRatingHeader">Vad tycker du?</string>

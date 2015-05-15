@@ -3,6 +3,7 @@ package se.devscout.android.view;
 import android.content.Context;
 import se.devscout.android.R;
 import se.devscout.android.util.ActivityBankFactory;
+import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.android.util.http.UnauthorizedException;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.model.Activity;
@@ -15,16 +16,16 @@ import java.util.List;
  * Component for displaying (searching for) activities which are related to a
  * particular activity.
  */
-public class RelatedActivitiesListView extends ActivitiesListView {
+public class ActivityHistoryListView extends ActivitiesListView {
     private final ActivityKey mActivityKey;
-    private List<? extends ActivityKey> mRelatedActivitiesKeys;
+    private List<ActivityKey> mRelatedActivitiesKeys;
 
     /**
      * @param activityKey           The activity for which we want to find related activities.
      * @param relatedActivitiesKeys Override/replace any preexisting relations with these ones. Specify null if you want to show the currently known/stored relations.
      */
-    public RelatedActivitiesListView(Context context, ActivityKey activityKey, List<? extends ActivityKey> relatedActivitiesKeys) {
-        super(context, R.string.noRelatedActivitiesMessage, R.string.noRelatedActivitiesHeader, null, null, true);
+    public ActivityHistoryListView(Context context, ActivityKey activityKey, List<ActivityKey> relatedActivitiesKeys) {
+        super(context, R.string.noRecentActivitiesMessage, R.string.noRecentActivitiesHeader, null, null, true);
         mActivityKey = activityKey;
         mRelatedActivitiesKeys = relatedActivitiesKeys;
     }
@@ -38,10 +39,10 @@ public class RelatedActivitiesListView extends ActivitiesListView {
                 ActivityBank activityBank = ActivityBankFactory.getInstance(getContext());
                 mStopWatch.logEvent("Acquired ActivityBank");
 
-                List<Activity> activities = (List<Activity>) activityBank.readRelatedActivities(
-                        mActivityKey,
-                        mRelatedActivitiesKeys);
-                mStopWatch.logEvent("Read related activities");
+                List<? extends Activity> activities = activityBank.readActivityHistory(
+                        5,
+                        CredentialsManager.getInstance(getContext()).getCurrentUser());
+                mStopWatch.logEvent("Read recent activities");
 
                 List<ActivitiesListItem> items = new ArrayList<ActivitiesListItem>();
                 for (Activity activity : activities) {

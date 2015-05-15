@@ -32,7 +32,7 @@ public interface ActivityBank {
      * @return
      * @throws UnauthorizedException
      */
-    List<? extends Activity> readRelatedActivities(ActivityKey primaryActivity, List<ActivityKey> forcedRelatedActivities) throws UnauthorizedException;
+    List<? extends Activity> readRelatedActivities(ActivityKey primaryActivity, List<? extends ActivityKey> forcedRelatedActivities) throws UnauthorizedException;
 
     ActivityFilterFactory getFilterFactory();
 
@@ -51,6 +51,10 @@ public interface ActivityBank {
     void unsetFavourite(ActivityKey activityKey, UserKey userKey) throws UnauthorizedException;
 
     Boolean isFavourite(ActivityKey activityKey, UserKey userKey);
+
+    List<? extends Activity> readActivityHistory(int limit, UserKey userKey);
+
+    ActivityHistory createActivityHistory(HistoryProperties<ActivityHistoryData> properties, UserKey userKey);
 
     List<? extends SearchHistory> readSearchHistory(int limit, UserKey userKey);
 

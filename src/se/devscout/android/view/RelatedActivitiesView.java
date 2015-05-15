@@ -13,9 +13,9 @@ import java.util.List;
 
 public class RelatedActivitiesView extends LinearLayout {
     private ActivityKey mActivityKey;
-    private List<ActivityKey> mRelatedActivitiesKeys;
+    private List<? extends ActivityKey> mRelatedActivitiesKeys;
 
-    public RelatedActivitiesView(Context context, ActivityKey activityKey, List<ActivityKey> relatedActivitiesKeys) {
+    public RelatedActivitiesView(Context context, ActivityKey activityKey, List<? extends ActivityKey> relatedActivitiesKeys) {
         super(context);
         mActivityKey = activityKey;
         mRelatedActivitiesKeys = relatedActivitiesKeys;
@@ -53,7 +53,6 @@ public class RelatedActivitiesView extends LinearLayout {
                 }
             });
         }
-//        setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, isListContentHeight ? ViewGroup.LayoutParams.WRAP_CONTENT : LayoutParams.MATCH_PARENT));
     }
 
 }

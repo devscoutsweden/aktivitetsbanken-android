@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 import se.devscout.android.controller.fragment.GalleryThumbnailsFragment;
 import se.devscout.android.model.ObjectIdentifierBean;
-import se.devscout.server.api.model.Media;
+import se.devscout.server.api.model.MediaKey;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +39,10 @@ public class GalleryThumbnailsActivity extends SingleFragmentActivity {
         getActionBar().hide();
     }
 
-    public static Intent createIntent(Context ctx, List<Media> mediaItems) {
+    public static Intent createIntent(Context ctx, List<? extends MediaKey> mediaItems) {
         Intent intent = new Intent(ctx, GalleryThumbnailsActivity.class);
         ArrayList<ObjectIdentifierBean> keys = new ArrayList<ObjectIdentifierBean>();
-        for (Media media : mediaItems) {
+        for (MediaKey media : mediaItems) {
             keys.add(new ObjectIdentifierBean(media));
         }
         intent.putExtra(INTENT_EXTRA_KEYS, keys);

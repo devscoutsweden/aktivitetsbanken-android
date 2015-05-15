@@ -1,8 +1,8 @@
 package se.devscout.android.model.repo.sql;
 
-import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import se.devscout.android.model.ObjectIdentifierBean;
-import se.devscout.android.model.SearchHistoryBean;
+import se.devscout.server.api.model.HistoryType;
 import se.devscout.server.api.model.UserKey;
 
 import java.io.ByteArrayInputStream;
@@ -10,9 +10,20 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 
-public abstract class AbstractHistoryCursor<P extends SearchHistoryBean, T extends Serializable> extends BaseCursorWrapper {
-    public AbstractHistoryCursor(Cursor cursor) {
-        super(cursor);
+public abstract class AbstractHistoryCursor<P, T extends Serializable> extends BaseCursorWrapper {
+    public AbstractHistoryCursor(SQLiteDatabase db, UserKey user, boolean descendingOrder, HistoryType type) {
+        super(db.query(Database.history.T,
+                new String[]{
+                        Database.history.id,
+                        Database.history.user_id,
+                        Database.history.type,
+                        Database.history.data
+                },
+                Database.history.user_id + " = " + user.getId() + " and " + Database.history.type + " = ?",
+                new String[]{String.valueOf(type.getDatabaseValue())},
+                null,
+                null,
+                Database.history.id + (descendingOrder ? " DESC" : "")));
     }
 
 

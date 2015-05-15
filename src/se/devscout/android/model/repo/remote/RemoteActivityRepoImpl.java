@@ -92,10 +92,18 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         return super.createReference(fixActivityKey(key), properties);
     }
 
+/*
     @Override
     public SearchHistory createSearchHistory(HistoryProperties<SearchHistoryData> properties, UserKey userKey) {
         //TODO: this method probably does not have to be overloaded, as long as search history should only be stored server-side as well. Low priority.
         return super.createSearchHistory(properties, userKey);
+    }
+*/
+
+    @Override
+    public ActivityHistory createActivityHistory(HistoryProperties<ActivityHistoryData> properties, UserKey userKey) {
+        ActivityHistoryPropertiesBean fixedProperties = new ActivityHistoryPropertiesBean(userKey, new ActivityHistoryDataBean(fixActivityKey(new ObjectIdentifierBean(properties.getData().getId()))));
+        return super.createActivityHistory(fixedProperties, userKey);
     }
 
     @Override
@@ -396,7 +404,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     }
 
     @Override
-    public List<? extends Activity> readRelatedActivities(ActivityKey primaryActivity, List<ActivityKey> forcedRelatedActivities) throws UnauthorizedException {
+    public List<? extends Activity> readRelatedActivities(ActivityKey primaryActivity, List<? extends ActivityKey> forcedRelatedActivities) throws UnauthorizedException {
         return super.readRelatedActivities(
                 /* Correct, if necessary, the activity key of the activity for which we want to fetch related activities. */
                 fixActivityKey(primaryActivity),
@@ -411,10 +419,12 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         return key != null ? super.readReferences(key) : null;
     }
 
+/*
     @Override
     public List<? extends SearchHistory> readSearchHistory(int limit, UserKey userKey) {
         return super.readSearchHistory(limit, userKey);
     }
+*/
 
     @Override
     public void setFavourite(ActivityKey activityKey, UserKey userKey) throws UnauthorizedException {
