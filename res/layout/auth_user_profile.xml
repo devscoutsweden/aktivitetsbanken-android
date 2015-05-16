@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/basicVeryLight"
+    android:padding="@dimen/defaultMargin">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/contentView">
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <ScrollView
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/scrollView"
+                android:layout_above="@+id/contentView"
+                android:layout_alignParentTop="true"
+                android:layout_span="2"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:padding="@dimen/defaultMargin">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/profileNameHeader"
+                        android:id="@+id/profileNameHeader" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Alice"
+                        android:id="@+id/profileNameValue"
+                        android:layout_gravity="left|center_vertical"
+                        android:layout_marginLeft="@dimen/iconButtonMargin"
+                        android:textSize="@dimen/mediumTextSize"
+                        android:layout_marginTop="@dimen/defaultMargin" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/profileEmailHeader"
+                        android:id="@+id/profileEmailHeader"
+                        android:layout_marginTop="@dimen/iconButtonMargin" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="alice@example.com"
+                        android:id="@+id/profileEmailValue"
+                        android:layout_gravity="left|center_vertical"
+                        android:layout_marginLeft="@dimen/iconButtonMargin"
+                        android:textSize="@dimen/mediumTextSize"
+                        android:layout_marginTop="@dimen/defaultMargin" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/profileRoleHeader"
+                        android:id="@+id/profileRoleHeader"
+                        android:layout_marginTop="@dimen/iconButtonMargin" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="administrator"
+                        android:id="@+id/profileRoleValue"
+                        android:layout_gravity="left|center_vertical"
+                        android:layout_marginLeft="@dimen/iconButtonMargin"
+                        android:textSize="@dimen/mediumTextSize"
+                        android:layout_marginTop="@dimen/defaultMargin" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/profileRoleDescriptionTemplate"
+                        android:id="@+id/profileRoleDescription"
+                        android:layout_gravity="left|center_vertical"
+                        android:layout_marginLeft="@dimen/iconButtonMargin"
+                        android:layout_marginTop="@dimen/defaultMargin" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/profileApiHeader"
+                        android:id="@+id/profileApiHeader"
+                        android:layout_marginTop="@dimen/iconButtonMargin" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="8d0f0f68c8829a0a1a2d3c..."
+                        android:id="@+id/profileApiValue"
+                        android:layout_gravity="left|center_vertical"
+                        android:layout_marginLeft="@dimen/iconButtonMargin"
+                        android:textSize="@dimen/mediumTextSize"
+                        android:layout_marginTop="@dimen/defaultMargin" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/profileApiDescription"
+                        android:id="@+id/profileApiDescription"
+                        android:layout_gravity="left|center_vertical"
+                        android:layout_marginLeft="@dimen/iconButtonMargin"
+                        android:layout_marginTop="@dimen/defaultMargin"
+                        android:textSize="@dimen/microTextSize" />
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/profileShowDetails"
+                        android:id="@+id/profileShowDetails"
+                        android:checked="false" />
+                </LinearLayout>
+            </ScrollView>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/uiBlockSize"
+                android:text="@string/button_close"
+                android:id="@+id/buttonCancel"
+                android:layout_alignLeft="@+id/scrollView"
+                android:layout_alignBottom="@+id/buttonOk"
+                android:layout_weight="1"
+                android:layout_span="1" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/uiBlockSize"
+                android:text="@string/button_save"
+                android:id="@+id/buttonOk"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_weight="1"
+                android:layout_span="1" />
+        </TableRow>
+    </TableLayout>
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/basicVeryLightTrans"
+        android:id="@+id/progressView"
+        android:clickable="true">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            style="?android:progressBarStyleLarge" />
+    </FrameLayout>
+
+</FrameLayout>

@@ -7,7 +7,7 @@ public class UserCursor extends BaseCursorWrapper {
     public UserCursor(SQLiteDatabase db) {
         super(db.query(
                 Database.user.T,
-                new String[]{Database.user.id, Database.user.server_id, Database.user.server_revision_id, Database.user.display_name, Database.user.api_key},
+                new String[]{Database.user.id, Database.user.server_id, Database.user.server_revision_id, Database.user.display_name, Database.user.api_key, Database.user.email_address},
                 null,
                 null,
                 null,
@@ -21,7 +21,7 @@ public class UserCursor extends BaseCursorWrapper {
                 getString(getColumnIndex(Database.user.api_key)),
                 getId(),
                 getInt(getColumnIndex(Database.user.server_id)),
-                getInt(getColumnIndex(Database.user.server_revision_id))
-        );
+                getInt(getColumnIndex(Database.user.server_revision_id)),
+                getString(getColumnIndex(Database.user.email_address)));
     }
 }

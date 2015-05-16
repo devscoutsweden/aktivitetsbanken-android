@@ -72,6 +72,10 @@ public interface ActivityBank {
 
     User readUser(UserKey key);
 
+    UserProfile readUserProfile();
+
+    void updateUserProfile(UserProperties properties) throws UnauthorizedException;
+
     Media readMediaItem(MediaKey key);
 
     URI getMediaItemURI(MediaProperties mediaProperties, int width, int height);

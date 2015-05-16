@@ -168,11 +168,11 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     public void updateUser(UserKey key, UserProperties properties) throws UnauthorizedException {
         super.updateUser(key, properties);
         try {
-            String uri = "http://" + getRemoteHost() + "/api/v1/users/profile";
+            String uri = "http://" + getRemoteHost() + "/api/v1/users/" + key.getId();
 
             JSONObject body = new JSONObject();
             body.put("display_name", properties.getDisplayName());
-            body.put("email", properties.getName());
+            body.put("email", properties.getEmailAddress());
 
             readUrlAsBytes(uri, body.toString(), HttpMethod.PUT);
         } catch (IOException | JSONException | UnhandledHttpResponseCodeException | UnauthorizedException e) {
@@ -238,6 +238,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
                         updateUser(getCurrentUser(), userProperties);
                         synchronizeFavourites();
                         synchronizeRatings();
+                        // todo: Update local database based on information from server (in case user has updated server-side profile data using other client)
                     } catch (UnauthorizedException e) {
                         LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not provide user information to server", e);
                     }
@@ -342,6 +343,62 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     public Boolean isFavourite(ActivityKey activityKey, UserKey userKey) {
         ActivityKey key = fixActivityKey(activityKey);
         return key != null ? super.isFavourite(key, userKey) : null;
+    }
+
+    @Override
+    public UserProfileBean readUserProfile() {
+        // Load user information from app database...
+        UserProfileBean userProfile = super.readUserProfile();
+
+        // ...and complement with information from the server (also use the name and e-mail reported by server instead of what is stored in app database).
+        String uri = "http://" + getRemoteHost() + "/api/v1/users/profile";
+        try {
+            JSONObject object = getJSONObject(uri, null, HttpMethod.GET);
+            UserProfileBean mergedUserProfile = new UserProfileBean(
+                    object.getString("display_name"),
+                    userProfile.getAPIKey(),
+                    userProfile.getId(),
+                    userProfile.getServerId(),
+                    userProfile.getServerRevisionId(),
+                    object.getString("email"));
+
+            // Build list of permissions
+            mergedUserProfile.setRole(object.getString("role"));
+            JSONArray rolePermissions = object.getJSONArray("role_permissions");
+            String[] permissions = new String[rolePermissions.length()];
+            for (int i = 0; i < rolePermissions.length(); i++) {
+                permissions[i] = rolePermissions.getString(i);
+            }
+            mergedUserProfile.setRolePermissions(permissions);
+
+            // Assume that the first key is good and valid.
+            List<JSONObject> objects = getJSONObjectList(object, "keys");
+            if (!objects.isEmpty()) {
+                mergedUserProfile.setAPIKey(objects.get(0).getString("key"));
+            }
+
+            // todo: Update local database based on information from server (in case user has updated server-side profile data using other client)
+
+            return mergedUserProfile;
+        } catch (IOException | JSONException | UnauthorizedException | UnhandledHttpResponseCodeException e) {
+            return userProfile;
+        }
+    }
+
+    @Override
+    public void updateUserProfile(UserProperties properties) throws UnauthorizedException {
+        super.updateUserProfile(properties);
+        try {
+            String uri = "http://" + getRemoteHost() + "/api/v1/users/profile";
+
+            JSONObject body = new JSONObject();
+            body.put("display_name", properties.getDisplayName());
+            body.put("email", properties.getEmailAddress());
+
+            readUrlAsBytes(uri, body.toString(), HttpMethod.PUT);
+        } catch (IOException | JSONException | UnhandledHttpResponseCodeException | UnauthorizedException e) {
+            handleRemoteException(e, "Could not update user profile because of an unhandled problem.");
+        }
     }
 
     private ActivityKey fixActivityKey(ActivityKey activityKey) {

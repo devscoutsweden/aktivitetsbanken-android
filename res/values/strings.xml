@@ -145,6 +145,8 @@
     <string name="welcomeWidgetTitle">Välkomstmeddelande</string>
     <string name="startSelectWidgets">Välj kort...</string>
     <string name="button_positive">Okej</string>
+    <string name="button_close">Stäng</string>
+    <string name="button_save">Spara</string>
     <string name="searchHistoryEmptyMessage">Du har ännu inte gjort några sökningar.</string>
     <string name="searchHistoryEmptyTitle">Din sökhistorik är tom</string>
     <string name="noSpontaneousActivitiesFoundTitle">Oj, inga hittades</string>
@@ -237,4 +239,16 @@
     <string name="showRelatedActivitiesHeader">Liknande aktiviteter</string>
     <string name="showRelatedActivitiesLoad">Visa</string>
     <string name="activityRatingHeader">Vad tycker du?</string>
+    <string name="profileNameHeader">Namn</string>
+    <string name="profileEmailHeader">E-postadress</string>
+    <string name="profileRoleHeader">Roll</string>
+    <string name="profileRoleDescriptionTemplate">Som %1$s är du alltid redo eftersom du kan göra allt det här:%2$s</string>
+    <string name="profileApiHeader">API-nyckel</string>
+    <string name="profileApiDescription">En API-nyckel är ett sorts lösenord som
+        appen använder när den pratar med Aktivitetsbankens server.
+    </string>
+    <string name="profileShowDetails">Visa detaljer</string>
+    <string name="show_profile">Visa min profil...</string>
+    <string name="profileCouldNotSaveToAPI">Kunde inte spara på servern.
+    </string>
 </resources>

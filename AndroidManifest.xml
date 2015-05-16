@@ -27,5 +27,6 @@
         <activity android:name=".controller.activity.SettingsActivity"></activity>
         <activity android:name=".controller.activity.GalleryThumbnailsActivity" android:theme="@style/PhotoGallery"></activity>
         <activity android:name=".controller.activity.GalleryFullscreenActivity" android:theme="@style/PhotoGallery"></activity>
+        <activity android:name=".controller.activity.UserProfileActivity"></activity>
     </application>
 </manifest>

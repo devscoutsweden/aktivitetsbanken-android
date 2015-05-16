@@ -6,7 +6,7 @@ public class UserPropertiesBean extends ServerObjectPropertiesBean implements Us
     protected String mName;
     private String mAPIKey;
     private String mDisplayName;
-//    private String mEmailAddress;
+    private String mEmailAddress;
 //    private boolean mEmailAddressVerified;
 //    private HashAlgorithm mPasswordHashAlgorithm;
 //    private String mPasswordHashAlgorithmParameter;
@@ -14,11 +14,11 @@ public class UserPropertiesBean extends ServerObjectPropertiesBean implements Us
     public UserPropertiesBean() {
     }
 
-    public UserPropertiesBean(String displayName, String apiKey, long serverId, long serverRevisionId, boolean publishable) {
+    public UserPropertiesBean(String displayName, String apiKey, long serverId, long serverRevisionId, boolean publishable, String emailAddress) {
         super(publishable, serverId, serverRevisionId);
         mDisplayName = displayName;
         mAPIKey = apiKey;
-//        mEmailAddress = emailAddress;
+        mEmailAddress = emailAddress;
     }
 
     @Override
@@ -31,12 +31,10 @@ public class UserPropertiesBean extends ServerObjectPropertiesBean implements Us
         return mDisplayName;
     }
 
-/*
     @Override
     public String getEmailAddress() {
         return mEmailAddress;
     }
-*/
 
 /*
     @Override
@@ -70,11 +68,9 @@ public class UserPropertiesBean extends ServerObjectPropertiesBean implements Us
         mDisplayName = displayName;
     }
 
-/*
     public void setEmailAddress(String emailAddress) {
         mEmailAddress = emailAddress;
     }
-*/
 
 /*
     public void setEmailAddressVerified(boolean emailAddressVerified) {

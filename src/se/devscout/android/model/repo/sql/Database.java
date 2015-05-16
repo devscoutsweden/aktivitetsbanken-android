@@ -10,6 +10,7 @@ public class Database {
         final static String server_revision_id = "server_revision_id";
         final static String api_key = "api_key";
         final static String display_name = "display_name";
+        final static String email_address = "email_address";
     }
 
     public static class category {

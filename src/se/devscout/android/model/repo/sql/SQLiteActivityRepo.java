@@ -4,6 +4,7 @@ import android.content.Context;
 import se.devscout.android.model.*;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.PrimitiveActivityFilterFactory;
+import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.android.util.http.UnauthorizedException;
 import se.devscout.server.api.*;
 import se.devscout.server.api.model.*;
@@ -14,6 +15,7 @@ import java.util.*;
 
 public class SQLiteActivityRepo implements ActivityBank {
     protected final DatabaseHelper mDatabaseHelper;
+    private final Context mContext;
     private List<ActivityBankListener> mListeners = new ArrayList<ActivityBankListener>();
     private static SQLiteActivityRepo ourInstance;
 
@@ -27,7 +29,8 @@ public class SQLiteActivityRepo implements ActivityBank {
     }
 
     public SQLiteActivityRepo(Context ctx) {
-        mDatabaseHelper = new DatabaseHelper(ctx);
+        mContext = ctx;
+        mDatabaseHelper = new DatabaseHelper(mContext);
         mModificationCounters = new SQLiteModificationCounters();
     }
 
@@ -186,6 +189,17 @@ public class SQLiteActivityRepo implements ActivityBank {
     @Override
     public User readUser(UserKey key) {
         return mDatabaseHelper.readUser(key);
+    }
+
+    @Override
+    public UserProfileBean readUserProfile() {
+        User user = readUser(CredentialsManager.getInstance(mContext).getCurrentUser());
+        return new UserProfileBean(user.getDisplayName(), user.getAPIKey(), user.getId(), user.getServerId(), user.getServerRevisionId(), null);
+    }
+
+    @Override
+    public void updateUserProfile(UserProperties properties) throws UnauthorizedException {
+        updateUser(CredentialsManager.getInstance(mContext).getCurrentUser(), properties);
     }
 
     @Override

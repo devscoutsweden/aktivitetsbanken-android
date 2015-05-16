@@ -41,6 +41,9 @@ public class StartActivity extends SingleFragmentActivity {
             case R.id.menuStartSettings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
+            case R.id.menuStartShowProfile:
+                startActivity(UserProfileActivity.createIntent(StartActivity.this));
+                break;
             case R.id.menuStartClearImageCache:
                 new CleanImageCacheTaskExecutor(0, 0).run(null, this);
                 Toast.makeText(this, R.string.clearImageCacheDone, Toast.LENGTH_SHORT).show();

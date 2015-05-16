@@ -7,6 +7,8 @@ public interface UserProperties extends ServerObjectProperties {
 
     String getAPIKey();
 
+    String getEmailAddress();
+
 //    boolean isEmailAddressVerified();
 
 //    byte[] getPasswordHash();
