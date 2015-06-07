@@ -21,8 +21,8 @@ public class OverallFavouriteActivitiesListView extends ActivitiesListView {
 
     public OverallFavouriteActivitiesListView(ActivityBankFragment context, Sorter sortOrder, boolean isListContentHeight) {
         super(context.getActivity(),
-                R.string.favouritesEmptyHeader,
-                R.string.favouritesEmptyMessage,
+                R.string.overallFavouritesEmptyHeader,
+                R.string.overallFavouritesEmptyMessage,
                 ActivityBankFactory.getInstance(context.getActivity()).getFilterFactory().createOverallFavouriteActivitiesFilter(5),
                 sortOrder,
                 isListContentHeight);

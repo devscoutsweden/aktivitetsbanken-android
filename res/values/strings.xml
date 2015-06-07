@@ -90,7 +90,9 @@
     <string name="searchResultDefaultEmptyMessage">Listan är tom.</string>
     <string name="searchResultDefaultEmptyHeader">Inga träffar</string>
     <string name="favouritesEmptyHeader">Du har inga favoriter. Ännu.</string>
-    <string name="favouritesEmptyMessage">Tryck på \u2605 för att en aktivitet ska synas här.</string>
+    <string name="favouritesEmptyMessage">Tryck på \u2764 när du öppnat en aktivitet för den ska synas här.</string>
+    <string name="overallFavouritesEmptyHeader">Tyvärr så är listan tom just nu.</string>
+    <string name="overallFavouritesEmptyMessage">Här visas aktiviteter som många har som favoriter.</string>
     <string name="featuredEmptyHeader">Utvalda aktiviteter saknas.</string>
     <string name="featuredEmptyMessage">Just har inga aktiviteter valts ut av någon redaktör.</string>
     <string name="searchResultEmptyTitle">Tyvärr, inga träffar.</string>
@@ -227,6 +229,7 @@
     <string name="subtitle_filter_visitor_average_rating">har %.1f eller högre som snittbetyg</string>
     <string name="remote_could_not_save_favourites">Synkade inte dina favoriter pga. nätproblem.</string>
     <string name="remote_could_get_categories">Listan med kategorier kan vara felaktig pga. nätproblem.</string>
+    <string name="remote_could_get_system_messages">Kunde inte konfigurera app pga. nätproblem.</string>
     <string name="remote_could_not_find_activities">Visar bara offline-resultat pga. nätproblem.</string>
     <string name="remote_could_not_save_ratings">Synkade inte dina betyg pga. nätproblem.</string>
     <string name="preferenceAuthAutoLogin">Alltid inloggad</string>
