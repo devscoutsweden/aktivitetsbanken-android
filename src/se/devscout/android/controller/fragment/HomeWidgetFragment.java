@@ -25,10 +25,12 @@ public class HomeWidgetFragment extends ActivityBankFragment {
 
     private static final String PREFS_KEY_WIDGET_IDS = "homeWidgets";
     private static final List<String> DEFAULT_WIDGETS = Arrays.asList(
-            ComponentFactoryRepo.WELCOME_MESSAGE,
+//            ComponentFactoryRepo.WELCOME_MESSAGE,
             ComponentFactoryRepo.SIMPLE_SEARCH_ACTIVITIES,
+            ComponentFactoryRepo.SPONTANEOUS_ACTIVITIES,
             ComponentFactoryRepo.AUTHENTICATION,
             ComponentFactoryRepo.OVERALL_FAVOURITE_ACTIVITIES,
+            ComponentFactoryRepo.FAVOURITE_ACTIVITIES,
             ComponentFactoryRepo.FEATURED_ACTIVITIES,
             ComponentFactoryRepo.CRASH_REPORTER);
 
@@ -161,11 +163,23 @@ public class HomeWidgetFragment extends ActivityBankFragment {
     }
 
     private Map<String, WidgetComponentFactory> getWidgetFactories(List<String> widgetIds) {
-        final Map<String, WidgetComponentFactory> allWidgets = new LinkedHashMap<String, WidgetComponentFactory>();
-        for (WidgetComponentFactory finder : ComponentFactoryRepo.getInstance(getActivity()).getWidgetFactories()) {
-            if (widgetIds == null || widgetIds.contains(finder.getId())) {
-                allWidgets.put(getString(finder.getTitleResId()), finder);
+        List<WidgetComponentFactory> allFactories = ComponentFactoryRepo.getInstance(getActivity()).getWidgetFactories();
+        List<WidgetComponentFactory> selectedFactories;
+        if (widgetIds == null) {
+            selectedFactories = allFactories;
+        } else {
+            selectedFactories = new ArrayList<>();
+            for (String widgetId : widgetIds) {
+                for (WidgetComponentFactory finder : allFactories) {
+                    if (widgetId.equals(finder.getId())) {
+                        selectedFactories.add(finder);
+                    }
+                }
             }
+        }
+        final Map<String, WidgetComponentFactory> allWidgets = new LinkedHashMap<>();
+        for (WidgetComponentFactory factory : selectedFactories) {
+            allWidgets.put(getString(factory.getTitleResId()), factory);
         }
         return allWidgets;
     }
