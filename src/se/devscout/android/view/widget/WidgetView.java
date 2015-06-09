@@ -52,7 +52,7 @@ public class WidgetView extends LinearLayout implements FragmentListener {
         int padding = getResources().getDimensionPixelSize(R.dimen.iconButtonMargin);
         view.setPadding(padding, padding, padding, padding);
         view.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-        view.setId(R.id.showRelatedActivitiesButton);
+        view.setId(R.id.widgetView);
         LinearLayout container = (LinearLayout) findViewById(R.id.start_widget);
         container.addView(view);
     }
@@ -81,7 +81,7 @@ public class WidgetView extends LinearLayout implements FragmentListener {
 //        LinearLayout widgetContentList = (LinearLayout) findViewById(R.id.widget_container);
 
         //TODO: It is good to assume the first child is the one we want?
-        View view = findViewById(R.id.showRelatedActivitiesButton);//widgetContentList.getChildAt(0);
+        View view = findViewById(R.id.widgetView);//widgetContentList.getChildAt(0);
         if (view instanceof FragmentListener) {
             FragmentListener fragmentListener = (FragmentListener) view;
             fragmentListener.onFragmentResume(refreshResultOnResume);
