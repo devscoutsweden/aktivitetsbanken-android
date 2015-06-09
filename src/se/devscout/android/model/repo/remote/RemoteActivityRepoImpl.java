@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import se.devscout.android.BuildConfig;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.TitleActivityFilterVisitor;
 import se.devscout.android.model.*;
@@ -48,8 +49,8 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     private static final String HOST_TEST = "devscout.mikaelsvensson.info";
     private static final int PORT_TEST = 10081;
 
-    private static final String HOST = /*BuildConfig.DEBUG ? HOST_TEST :*/ HOST_PRODUCTION;
-    private static final int PORT = /*BuildConfig.DEBUG ? PORT_TEST :*/ PORT_PRODUCTION;
+    private static final String HOST = BuildConfig.DEBUG ? HOST_TEST : HOST_PRODUCTION;
+    private static final int PORT = BuildConfig.DEBUG ? PORT_TEST : PORT_PRODUCTION;
     private static final String SYSTEM_MESSAGE_KEY_API_HOST = "api:host";
     private static final String SYSTEM_MESSAGE_KEY_CONTACT_ERROR = "contact:error";
 
