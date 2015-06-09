@@ -15,7 +15,7 @@ public class ApiV1Visitor implements URIBuilderActivityFilterVisitor {
 
     public ApiV1Visitor(String host) {
         //TODO: the host to use should be a configuration parameter, and preferable something that can change with time without having to redistribute the app.
-        mUriBuilder = Uri.parse("http://" + host + "/api/v1/activities").buildUpon();
+        mUriBuilder = Uri.parse(host).buildUpon();
     }
 
     @Override

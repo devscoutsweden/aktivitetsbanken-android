@@ -91,4 +91,5 @@ public interface ActivityBank {
      */
     ModificationCounters getModificationCounters();
 
+    List<String> getSystemMessages(String key);
 }

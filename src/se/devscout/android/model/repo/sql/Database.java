@@ -168,4 +168,16 @@ public class Database {
         final static String type = "type";
         final static String data = "data";
     }
+
+    public static class system_messages {
+        final static String T = "system_messages";
+
+        final static String id = "id";
+        final static String server_id = "server_id";
+        final static String server_revision_id = "server_revision_id";
+        final static String valid_from = "valid_from";
+        final static String valid_to = "valid_to";
+        final static String key = "key";
+        final static String value = "value";
+    }
 }

@@ -96,6 +96,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private Map<Long, CategoryBean> mCacheCategory;
     private Map<Long, MediaBean> mCacheMedia;
     private Map<Long, ReferenceBean> mCacheReference;
+    private Map<Long, SystemMessageBean> mCacheSystemMessage;
 
     private static int[] DATABASE_MIGRATION_SCRIPTS = {
             R.raw.db_migrate_0_create_server_database,
@@ -104,7 +105,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             R.raw.db_migrate_3_alter_rating,
             R.raw.db_migrate_4_add_average_rating,
             R.raw.db_migrate_5_related_activities,
-            R.raw.db_migrate_6_add_email_address
+            R.raw.db_migrate_6_add_email_address,
+            R.raw.db_migrate_7_create_system_messages
     };
 
     public DatabaseHelper(Context context) {
@@ -119,6 +121,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         mCacheCategory = new HashMap<Long, CategoryBean>();
         mCacheMedia = new HashMap<Long, MediaBean>();
         mCacheReference = new HashMap<Long, ReferenceBean>();
+        mCacheSystemMessage = new HashMap<Long, SystemMessageBean>();
     }
 
     @Override
@@ -670,6 +673,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return references;
     }
 
+    public List<SystemMessageBean> readSystemMessages() {
+        ArrayList<SystemMessageBean> references = new ArrayList<SystemMessageBean>();
+        mCacheSystemMessage.clear();
+        SystemMessageCursor msgCursor = new SystemMessageCursor(getDb());
+        while (msgCursor.moveToNext()) {
+            long msgId = msgCursor.getId();
+            try {
+                if (!mCacheSystemMessage.containsKey(msgId)) {
+                    mCacheSystemMessage.put(msgId, msgCursor.getReference());
+                }
+                references.add(mCacheSystemMessage.get(msgId));
+            } catch (URISyntaxException e) {
+                LogUtil.e(DatabaseHelper.class.getName(), "Could not parse URI in database. System message " + msgId + " will not be accessible by client.", e);
+            }
+        }
+        msgCursor.close();
+        return references;
+    }
+
     public List<MediaBean> readMediaItems() {
         ArrayList<MediaBean> mediaItems = new ArrayList<MediaBean>();
         mCacheMedia.clear();
@@ -1092,5 +1114,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public List<? extends ActivityBean> readRelatedActivities(ActivityKey activity) {
         return readActivities(new SimpleRelatedToFilter(activity));
+    }
+
+    public void setSystemMessages(List<? extends SystemMessage> messages) {
+        SQLiteDatabase db = getDb();
+        db.beginTransaction();
+        try {
+            db.delete(Database.system_messages.T, null, null);
+            for (SystemMessage message : messages) {
+                db.insert(Database.system_messages.T, null, createContentValues(message));
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    private ContentValues createContentValues(SystemMessage message) {
+        ContentValues values = new ContentValues();
+        values.put(Database.system_messages.server_id, message.getServerId());
+        values.put(Database.system_messages.server_revision_id, message.getServerRevisionId());
+        values.put(Database.system_messages.key, message.getKey());
+        values.put(Database.system_messages.value, message.getValue());
+        if (message.getValidFrom() != null) {
+            values.put(Database.system_messages.valid_from, message.getValidFrom().getTime());
+        }
+        if (message.getValidTo() != null) {
+            values.put(Database.system_messages.valid_to, message.getValidTo().getTime());
+        }
+        return values;
     }
 }

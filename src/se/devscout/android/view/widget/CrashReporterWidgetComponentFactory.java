@@ -16,6 +16,7 @@ import se.devscout.android.R;
 import se.devscout.android.controller.fragment.ActivityBankFragment;
 import se.devscout.android.controller.fragment.HomeWidgetFragment;
 import se.devscout.android.util.LogUtil;
+import se.devscout.android.util.PreferencesUtil;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -66,7 +67,9 @@ public class CrashReporterWidgetComponentFactory extends AbstractComponentFactor
 
             /* Fill it with Data */
                         emailIntent.setType("plain/text");
-                        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"devscout@mikaelsvensson.info"});
+                        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{
+                                PreferencesUtil.getErrorReportMailAddress(activityBankFragment.getActivity())
+                        });
                         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "App Crash Report " + items[i]);
 
                         File crashReportFile = mMap.get(items[i]);

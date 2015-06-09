@@ -9,11 +9,11 @@
             android:summary="@string/preferenceAuthAutoLoginSummary"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/preferenceServer">
-        <EditTextPreference
+        <ListPreference
             android:key="server_address"
-            android:defaultValue="devscout.mikaelsvensson.info:10081"
-            android:inputType="text"
+            android:defaultValue=""
             android:title="@string/preferenceServerAddress"
+            android:dialogTitle="@string/preferenceServerAddress"
             android:summary="@string/preferenceServerAddressSummary"/>
         <EditTextPreference
             android:key="server_download_limit_small"

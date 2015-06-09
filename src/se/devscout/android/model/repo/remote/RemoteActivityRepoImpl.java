@@ -13,10 +13,7 @@ import se.devscout.android.controller.fragment.TitleActivityFilterVisitor;
 import se.devscout.android.model.*;
 import se.devscout.android.model.repo.sql.LocalObjectRefreshness;
 import se.devscout.android.model.repo.sql.SQLiteActivityRepo;
-import se.devscout.android.util.IdentityProvider;
-import se.devscout.android.util.InstallationProperties;
-import se.devscout.android.util.LogUtil;
-import se.devscout.android.util.StopWatch;
+import se.devscout.android.util.*;
 import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.android.util.http.*;
 import se.devscout.server.api.ActivityFilter;
@@ -45,6 +42,17 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     private static final String API_TOKEN_TYPE_API_KEY = "apikey";
     private static final String API_TOKEN_TYPE_GOOGLE = "google";
 
+    private static final String HOST_PRODUCTION = "aktivitetsbanken.devscout.se";
+    private static final int PORT_PRODUCTION = 80;
+
+    private static final String HOST_TEST = "devscout.mikaelsvensson.info";
+    private static final int PORT_TEST = 10081;
+
+    private static final String HOST = /*BuildConfig.DEBUG ? HOST_TEST :*/ HOST_PRODUCTION;
+    private static final int PORT = /*BuildConfig.DEBUG ? PORT_TEST :*/ PORT_PRODUCTION;
+    private static final String SYSTEM_MESSAGE_KEY_API_HOST = "api:host";
+    private static final String SYSTEM_MESSAGE_KEY_CONTACT_ERROR = "contact:error";
+
     private static RemoteActivityRepoImpl ourInstance;
     private final Context mContext;
 
@@ -71,7 +79,17 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     }
 
     private String getRemoteHost() {
-        return PreferenceManager.getDefaultSharedPreferences(mContext).getString("server_address", "devscout.mikaelsvensson.info:10081");
+        String userSelectedHost = PreferencesUtil.getServerAddress(mContext);
+        String host = userSelectedHost;
+        if (TextUtils.isEmpty(host)) {
+            List<String> hostNames = getSystemMessages(SYSTEM_MESSAGE_KEY_API_HOST);
+            if (hostNames.size() > 0) {
+                host = hostNames.get(0);
+            } else {
+                host = HOST + ":" + PORT;
+            }
+        }
+        return host;
     }
 
     @Override
@@ -133,7 +151,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     @Override
     public boolean createAnonymousAPIUser() {
         try {
-            String uri = "http://" + getRemoteHost() + "/api/v1/users";
+            String uri = "http://" + getRemoteHost() + "/api/v1/" + "users";
             JSONObject body = new JSONObject();
             body.put("display_name", "android-app-" + InstallationProperties.getInstance(mContext).getId());
             JSONObject response = getJSONObject(uri, body, HttpMethod.POST);
@@ -164,11 +182,12 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     }
 */
 
+/*
     @Override
     public void updateUser(UserKey key, UserProperties properties) throws UnauthorizedException {
         super.updateUser(key, properties);
         try {
-            String uri = "http://" + getRemoteHost() + "/api/v1/users/" + key.getId();
+            String uri = getURL("users/" + key.getId());
 
             JSONObject body = new JSONObject();
             body.put("display_name", properties.getDisplayName());
@@ -179,12 +198,13 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
             handleRemoteException(e, "Could not update user information because of an unhandled problem.");
         }
     }
+*/
 
     @Override
     public URI getMediaItemURI(MediaProperties mediaProperties, int width, int height) {
         if (mediaProperties != null && width > 0 && height > 0) {
             try {
-                return new URI("http://" + getRemoteHost() + "/api/v1/media_files/" + mediaProperties.getServerId() + "/file?size=" + Math.max(width, height));
+                return new URI(getURL("media_files/" + mediaProperties.getServerId() + "/file?size=" + Math.max(width, height)));
             } catch (URISyntaxException e) {
                 LogUtil.e(RemoteActivityRepoImpl.class.getName(), "A very unexpected exception was thrown, but life (app!) will go on.", e);
                 return super.getMediaItemURI(mediaProperties, width, height);
@@ -235,7 +255,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
                      * been verified, will be created if not create before.
                      */
                     try {
-                        updateUser(getCurrentUser(), userProperties);
+                        updateUserProfile(userProperties);
                         synchronizeFavourites();
                         synchronizeRatings();
                         // todo: Update local database based on information from server (in case user has updated server-side profile data using other client)
@@ -268,7 +288,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         // Iterate over user's ratings in app
         for (Rating rating : ratings) {
             Long serverActivityId = serverIds.get(fixActivityKey(new ObjectIdentifierBean(rating.getActivityId())).getId());
-            String uri = "http://" + getRemoteHost() + "/api/v1/activities/" + serverActivityId + "/rating";
+            String uri = getURL("activities/" + serverActivityId + "/rating");
             try {
                 switch (rating.getStatus()) {
                     case NO_CHANGE:
@@ -306,7 +326,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         //
         List<ServerObjectIdentifierBean> serverFavouritesMissingInDatabase = new ArrayList<ServerObjectIdentifierBean>();
         try {
-            String uri = "http://" + getRemoteHost() + "/api/v1/favourites";
+            String uri = getURL("favourites");
             JSONArray favouriteActivityKeysStoredRemotely = getJSONArray(uri, null);
             for (int i = 0; i < favouriteActivityKeysStoredRemotely.length(); i++) {
                 long remoteId = favouriteActivityKeysStoredRemotely.getLong(i);
@@ -351,7 +371,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         UserProfileBean userProfile = super.readUserProfile();
 
         // ...and complement with information from the server (also use the name and e-mail reported by server instead of what is stored in app database).
-        String uri = "http://" + getRemoteHost() + "/api/v1/users/profile";
+        String uri = getURL("users/profile");
         try {
             JSONObject object = getJSONObject(uri, null, HttpMethod.GET);
             UserProfileBean mergedUserProfile = new UserProfileBean(
@@ -366,10 +386,15 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
             mergedUserProfile.setRole(object.getString("role"));
             JSONArray rolePermissions = object.getJSONArray("role_permissions");
             String[] permissions = new String[rolePermissions.length()];
+//            boolean isAllowedToUseTestAPI = "administrator".equalsIgnoreCase(mergedUserProfile.getRole());
             for (int i = 0; i < rolePermissions.length(); i++) {
-                permissions[i] = rolePermissions.getString(i);
+                String role = rolePermissions.getString(i);
+                permissions[i] = role;
+//                isAllowedToUseTestAPI |= "administrator".equalsIgnoreCase(role);
             }
             mergedUserProfile.setRolePermissions(permissions);
+
+//            PreferenceManager.getDefaultSharedPreferences(mContext).edit().putBoolean("is_allowed_to_use_test_api", isAllowedToUseTestAPI);
 
             // Assume that the first key is good and valid.
             List<JSONObject> objects = getJSONObjectList(object, "keys");
@@ -389,7 +414,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     public void updateUserProfile(UserProperties properties) throws UnauthorizedException {
         super.updateUserProfile(properties);
         try {
-            String uri = "http://" + getRemoteHost() + "/api/v1/users/profile";
+            String uri = getURL("users/profile");
 
             JSONObject body = new JSONObject();
             body.put("display_name", properties.getDisplayName());
@@ -509,7 +534,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
             for (ActivityBean key : favourites) {
                 jsonArray.put(key.getServerId());
             }
-            String uri = "http://" + getRemoteHost() + "/api/v1/favourites";
+            String uri = getURL("favourites");
 
             readUrlAsBytes(uri, new JSONObject(Collections.singletonMap("id", jsonArray)).toString(), HttpMethod.PUT);
         } catch (IOException | UnhandledHttpResponseCodeException | UnauthorizedException e) {
@@ -550,7 +575,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
             return super.findActivity(condition);
         }
 
-        URIBuilderActivityFilterVisitor visitor = new ApiV1Visitor(getRemoteHost());
+        URIBuilderActivityFilterVisitor visitor = new ApiV1Visitor(getURL("activities"));
         Uri uri = null;
         try {
             uri = condition.visit(visitor);
@@ -768,7 +793,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         //TODO: Host name should not be kept in source code
         if (mCachedCategories == null) {
             try {
-                String uri = "http://" + getRemoteHost() + "/api/v1/categories";
+                String uri = getURL("categories");
                 JSONArray array = getJSONArray(uri, null);
                 mCachedCategories = new ArrayList<CategoryBean>();
                 for (JSONObject obj : getJSONArrayAsList(array)) {
@@ -785,6 +810,98 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
             }
         }
         return mCachedCategories;
+    }
+
+    @Override
+    public List<String> getSystemMessages(String key) {
+        long lastGetSystemMessages = PreferenceManager.getDefaultSharedPreferences(mContext).getLong(getClass().getSimpleName() + ".LastGetSystemMessage", 0);
+        long now = System.currentTimeMillis();
+        if (now - lastGetSystemMessages > 24 * 60 * 60 * 1000) {
+
+            // Time to see if new messages are available.
+
+            // Check to see if the API's host name is saved in the database
+            // since before. Otherwise the app will use a default host name
+            // (this will definitely happen the first time the app is launched).
+            String userSelectedHost = PreferencesUtil.getServerAddress(mContext);
+            String host = userSelectedHost;
+            if (TextUtils.isEmpty(host)) {
+                List<String> hostNames = super.getSystemMessages(SYSTEM_MESSAGE_KEY_API_HOST);
+                if (hostNames.size() > 0) {
+                    host = hostNames.get(0);
+                } else {
+                    host = HOST + ":" + PORT;
+                }
+            }
+            String uri = getURL("system_messages?valid=now_and_future", host);
+
+            try {
+                List<JSONObject> objects = getJSONArrayAsList(getJSONArray(uri, null));
+                List<SystemMessageBean> messages = new ArrayList<>();
+                for (JSONObject object : objects) {
+                    messages.add(getSystemMessageBean(object));
+                }
+
+                // Save the retrieved messages to the database.
+                mDatabaseHelper.setSystemMessages(messages);
+
+                // Record current time so that the method knows when to check for new messages the next time.
+                PreferenceManager.getDefaultSharedPreferences(mContext).edit().putLong(getClass().getSimpleName() + ".LastGetSystemMessage", new Date().getTime()).commit();
+            } catch (IOException | JSONException | UnhandledHttpResponseCodeException | UnauthorizedException e) {
+                try {
+                    handleRemoteException(e);
+                } catch (UnauthorizedException e1) {
+                    // Ignore error. We know that this will never happen in this case since we know that the API always permits anyone to read system messages.
+                }
+                fireServiceDegradation(mContext.getString(R.string.remote_could_get_system_messages), e);
+                return super.getSystemMessages(key);
+            }
+
+            initPreferenceAPIHosts();
+
+            initPreferenceErrorReportRecipient();
+        }
+
+        // Return system messages from database
+        return super.getSystemMessages(key);
+    }
+
+    private void initPreferenceErrorReportRecipient() {
+        List<String> contactError = super.getSystemMessages(SYSTEM_MESSAGE_KEY_CONTACT_ERROR);
+        PreferencesUtil.setErrorReportMailAddress(mContext, !contactError.isEmpty() ? contactError.get(0) : null);
+    }
+
+    private void initPreferenceAPIHosts() {
+        HashSet<String> hosts = new HashSet<>();
+        hosts.addAll(super.getSystemMessages(SYSTEM_MESSAGE_KEY_API_HOST));
+
+        hosts.add(HOST + ":" + PORT);
+//            if (BuildConfig.DEBUG || PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("is_allowed_to_use_test_api", false)) {
+//                hosts.addAll(super.getSystemMessages("api:test-host"));
+//                hosts.add(HOST_TEST + ":" + PORT_TEST);
+//            }
+        PreferencesUtil.setServerAddresses(mContext, hosts);
+    }
+
+    private SystemMessageBean getSystemMessageBean(JSONObject object) throws JSONException {
+        return new SystemMessageBean(
+                0L,
+                object.getLong("id"),
+                getServerRevisionId(object),
+                object.getString("key"),
+                getDate(object, "valid_from", null),
+                getDate(object, "valid_from", null),
+                object.getString("value")
+        );
+    }
+
+    private String getURL(String noun) {
+        String host = getRemoteHost();
+        return getURL(noun, host);
+    }
+
+    private String getURL(String noun, String remoteHost) {
+        return "http://" + remoteHost + "/api/v1/" + noun;
     }
 
     private JSONArray getJSONArray(String uri, JSONObject body) throws IOException, JSONException, UnauthorizedException, UnhandledHttpResponseCodeException {
@@ -937,6 +1054,10 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     }
 
     private Date getDate(JSONObject obj, String fieldName) {
+        return getDate(obj, fieldName, new Date());
+    }
+
+    private Date getDate(JSONObject obj, String fieldName, Date defaultDate) {
         try {
             if (obj.has(fieldName)) {
                 return API_DATE_FORMAT.parse(obj.getString(fieldName));
@@ -948,7 +1069,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         } catch (ParseException e) {
             LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not parse " + fieldName + ". Will use current date instead. " + e.getMessage() + ".");
         }
-        return new Date();
+        return defaultDate;
     }
 
     private List<JSONObject> getJSONObjectList(JSONObject obj, String arrayAttributeName) throws JSONException {
@@ -1017,7 +1138,21 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
 
     private byte[] readUrlAsBytes(String urlSpec, String body, HttpMethod method) throws IOException, UnauthorizedException, UnhandledHttpResponseCodeException {
         try {
-            return readUrl(urlSpec, body, method);
+            URL url = new URL(urlSpec);
+            try {
+                return readUrl(body, method, url);
+            } catch (SocketTimeoutException e) {
+                URL urlDefaultHost = new URL(
+                        url.getProtocol(),
+                        HOST,
+                        PORT,
+                        url.getFile());
+                if (!url.getHost().equals(urlDefaultHost.getHost())) {
+                    return readUrl(body, method, urlDefaultHost);
+                } else {
+                    throw e;
+                }
+            }
         } catch (UnauthorizedException e) {
             LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Server said that user is unauthorized");
 //            if (getAPIKey() == null) {
@@ -1048,8 +1183,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         }
     }
 
-    private byte[] readUrl(String urlSpec, final String body, HttpMethod method) throws IOException, UnauthorizedException, UnhandledHttpResponseCodeException {
-        URL url = new URL(urlSpec);
+    private byte[] readUrl(final String body, HttpMethod method, URL url) throws IOException, UnauthorizedException, UnhandledHttpResponseCodeException {
         HttpRequest request = new HttpRequest(url, method);
 
         String installationId = InstallationProperties.getInstance(mContext).getId().toString();
@@ -1072,19 +1206,20 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         RequestBodyStreamHandler requestHandler = new StringRequestBodyStreamHandler(body, Charset.forName(DEFAULT_REQUEST_BODY_ENCODING));
         ResponseStreamHandler<byte[]> responseHandler = new ByteArrayResponseStreamHandler();
         HttpResponse<byte[]> response = null;
-        try {
-            response = request.run(responseHandler, requestHandler, new ResponseHeadersValidator() {
-                @Override
-                public void validate(Map<String, List<String>> headers) throws HeaderException {
-                    for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
-                        if (!entry.getValue().isEmpty() && HTTP_HEADER_API_KEY.equals(entry.getKey())) {
-                            mCredentialsMap.put(
-                                    getCurrentUserId(),
-                                    new Credentials(entry.getValue().get(0), API_TOKEN_TYPE_API_KEY));
-                        }
+        ResponseHeadersValidator responseHeadersValidator = new ResponseHeadersValidator() {
+            @Override
+            public void validate(Map<String, List<String>> headers) throws HeaderException {
+                for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
+                    if (!entry.getValue().isEmpty() && HTTP_HEADER_API_KEY.equals(entry.getKey())) {
+                        mCredentialsMap.put(
+                                getCurrentUserId(),
+                                new Credentials(entry.getValue().get(0), API_TOKEN_TYPE_API_KEY));
                     }
                 }
-            });
+            }
+        };
+        try {
+            response = request.run(responseHandler, requestHandler, responseHeadersValidator);
         } catch (SocketTimeoutException e1) {
             timeoutCounter++;
             throw e1;

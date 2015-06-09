@@ -232,6 +232,23 @@ public class SQLiteActivityRepo implements ActivityBank {
         return mModificationCounters;
     }
 
+    @Override
+    public List<String> getSystemMessages(String key) {
+        ArrayList<String> values = new ArrayList<>();
+        List<SystemMessageBean> systemMessages = mDatabaseHelper.readSystemMessages();
+        for (SystemMessageBean systemMessage : systemMessages) {
+            if (systemMessage.getKey().equalsIgnoreCase(key)) {
+                Date now = new Date();
+                boolean isAfterMessageStart = systemMessage.getValidFrom() == null || systemMessage.getValidFrom().before(now);
+                boolean isBeforeMessageEnd = systemMessage.getValidTo() == null || systemMessage.getValidTo().after(now);
+                if (isAfterMessageStart && isBeforeMessageEnd) {
+                    values.add(systemMessage.getValue());
+                }
+            }
+        }
+        return values;
+    }
+
     private void fireSearchHistoryItemAdded(SearchHistory searchHistoryItem) {
         mModificationCounters.touch(SQLiteModificationCounters.Key.SEARCH_HISTORY);
         for (ActivityBankListener listener : mListeners) {
