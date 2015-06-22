@@ -70,8 +70,7 @@ public class SQLiteActivityRepo implements ActivityBank {
                 relatedKeys.add(new ObjectIdentifierBean(relatedActivity.getId()));
             }
 
-            mDatabaseHelper.clearRelatedActivities(primaryActivity);
-            mDatabaseHelper.addRelatedActivities(primaryActivity, relatedKeys);
+            mDatabaseHelper.setRelatedActivities(primaryActivity, relatedKeys);
         }
         return mDatabaseHelper.readRelatedActivities(primaryActivity);
     }

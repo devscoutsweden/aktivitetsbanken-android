@@ -211,6 +211,20 @@ public class QueryBuilder {
                 "   rel." + Database.activity_relations.activity_id + " = " + filter.getActivityKey().getId() +
                 "   and" +
                 "   rel." + Database.activity_relations.related_activity_id + " = a." + Database.activity.id + " " +
+
+                // The database helper automatically adds a relation from the
+                // activity to itself in order to indicate that relationships
+                // have been defined. This makes it possible to differentiate
+                // between an activity without related activities (which will
+                // have only 1 related activity, itself) and an activity which
+                // related activities have not yet been determined/calculated
+                // (which will have 0 relations).
+                //
+                // Since these "self references" are only used internally by
+                // the database helper class, we must exclude them from the
+                // result using an AND clause.
+                "   and" +
+                "   rel." + Database.activity_relations.related_activity_id + " != rel." + Database.activity_relations.activity_id + " " +
                 "   )");
     }
 }

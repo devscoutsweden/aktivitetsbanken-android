@@ -53,6 +53,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     private static final int PORT = BuildConfig.DEBUG ? PORT_TEST : PORT_PRODUCTION;
     private static final String SYSTEM_MESSAGE_KEY_API_HOST = "api:host";
     private static final String SYSTEM_MESSAGE_KEY_CONTACT_ERROR = "contact:error";
+    private static final String SCHEMA = "http://";
 
     private static RemoteActivityRepoImpl ourInstance;
     private final Context mContext;
@@ -488,9 +489,55 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
 
     @Override
     public List<? extends Activity> readRelatedActivities(ActivityKey primaryActivity, List<? extends ActivityKey> forcedRelatedActivities) throws UnauthorizedException {
+        ActivityKey activityKey = fixActivityKey(primaryActivity);
+        if (activityKey != null && forcedRelatedActivities == null && !mDatabaseHelper.isRelatedActivitiesSet(activityKey)) {
+
+            // Entering this if clause means that...
+            // (1) The activity for which related activities should be shown exists in the database,
+            // (2) we are not forced to show a specific set of related activities and
+            // (3) no related activities are stored in the local database.
+
+            try {
+                long serverId = super.readActivities(activityKey).get(0).getServerId();
+
+                // Get the server-side id numbers of the related activities
+                JSONArray jsonArray = getJSONArray(getURL("activities/" + serverId + "/related"), null);
+                Map<Long, Long> remoteToLocalId = new LinkedHashMap<>();
+                List<JSONObject> relatedActivitiesInfo = getJSONArrayAsList(jsonArray);
+                ServerObjectIdentifier[] remoteIds = new ServerObjectIdentifier[relatedActivitiesInfo.size()];
+                for (JSONObject jsonObject : relatedActivitiesInfo) {
+                    long relatedActivityId = jsonObject.getLong("related_activity_id");
+                    remoteToLocalId.put(relatedActivityId, null);
+                    remoteIds[remoteToLocalId.size() - 1] = new ServerObjectIdentifierBean(relatedActivityId);
+                }
+
+                // Load all the related activities. Data will be fetched from server if necessary.
+                List<ActivityBean> activities = findActivities(new RemoteServerObjectIdentifiersFilter(remoteIds), null);
+
+                // For each related activity, get the activity's local id.
+                for (ActivityBean activity : activities) {
+                    remoteToLocalId.put(activity.getServerId(), mDatabaseHelper.getLocalIdByServerId(activity));
+                }
+
+                // Create a new list of activity ids, but this list will contain the local ids of the related activities rather than the remote ids.
+                ArrayList<ActivityKey> relatedKeys = new ArrayList<>();
+                for (Long localId : remoteToLocalId.values()) {
+                    relatedKeys.add(new ObjectIdentifierBean(localId));
+                }
+
+                // Create the links between current activity and related activities (using local ids instead of remote ids).
+                mDatabaseHelper.setRelatedActivities(activityKey, relatedKeys);
+            } catch (JSONException e) {
+                handleRemoteException(e);
+            } catch (IOException | UnhandledHttpResponseCodeException | UnauthorizedException e) {
+                fireServiceDegradation(mContext.getString(R.string.remote_could_not_save_favourites), e);
+                handleRemoteException(e);
+            }
+
+        }
         return super.readRelatedActivities(
                 /* Correct, if necessary, the activity key of the activity for which we want to fetch related activities. */
-                fixActivityKey(primaryActivity),
+                activityKey,
                 /* No need to fix the keys for the "forced related activities" since they will be fixed by readActivities, when called. */
                 forcedRelatedActivities);
     }
@@ -565,7 +612,8 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
                 "time_min",
                 "media_files",
                 /* Returning updated_at is important in order to detect server-side changes, which will trigger the app to, later on, update its cached data based on new data from the server. */
-                "updated_at"};
+                "updated_at",
+                "created_at"};
         return findActivities(condition, attrNames);
     }
 
@@ -626,8 +674,8 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
             stopWatch.logEvent("Saving all returned data in local database");
             return result;
         } catch (IOException | JSONException | UnhandledHttpResponseCodeException | UnauthorizedException e) {
-            handleRemoteException(e, "Could not search for activities");
             fireServiceDegradation(mContext.getString(R.string.remote_could_not_find_activities), e);
+            handleRemoteException(e, "Could not search for activities");
             return super.findActivity(condition);
         } finally {
             stopWatch.logEvent("The last things");
@@ -805,8 +853,8 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
                     mCachedCategories.add(act);
                 }
             } catch (IOException | JSONException | UnhandledHttpResponseCodeException | UnauthorizedException e) {
-                handleRemoteException(e);
                 fireServiceDegradation(mContext.getString(R.string.remote_could_get_categories), e);
+                handleRemoteException(e);
                 mCachedCategories = super.readCategories();
             }
         }
@@ -849,12 +897,12 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
                 // Record current time so that the method knows when to check for new messages the next time.
                 PreferenceManager.getDefaultSharedPreferences(mContext).edit().putLong(getClass().getSimpleName() + ".LastGetSystemMessage", new Date().getTime()).commit();
             } catch (IOException | JSONException | UnhandledHttpResponseCodeException | UnauthorizedException e) {
+                fireServiceDegradation(mContext.getString(R.string.remote_could_get_system_messages), e);
                 try {
                     handleRemoteException(e);
                 } catch (UnauthorizedException e1) {
                     // Ignore error. We know that this will never happen in this case since we know that the API always permits anyone to read system messages.
                 }
-                fireServiceDegradation(mContext.getString(R.string.remote_could_get_system_messages), e);
                 return super.getSystemMessages(key);
             }
 
@@ -902,7 +950,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     }
 
     private String getURL(String noun, String remoteHost) {
-        return "http://" + remoteHost + "/api/v1/" + noun;
+        return SCHEMA + remoteHost + "/api/v1/" + noun;
     }
 
     private JSONArray getJSONArray(String uri, JSONObject body) throws IOException, JSONException, UnauthorizedException, UnhandledHttpResponseCodeException {
@@ -1035,8 +1083,9 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     }
 
     private MediaBean getMediaFileBean(JSONObject jsonObject) throws JSONException, URISyntaxException {
+        String uri = jsonObject.getString("uri");
         return new MediaBean(
-                new URI(jsonObject.getString("uri")),
+                uri.startsWith("system/media_files") ? new URI(SCHEMA + getRemoteHost() + "/" + uri) : new URI(uri),
                 jsonObject.getString("mime_type"),
                 0L,
                 jsonObject.getLong("id"),

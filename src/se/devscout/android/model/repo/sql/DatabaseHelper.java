@@ -334,6 +334,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         deleteReferencesFromActivity(key);
         addReferencesToActivity(key.getId(), properties.getReferences());
 
+        // Remove relations between current activity and other activities.
+        // This is a precaution against displaying the wrong set of related
+        // activites, just in case it is an update to the list of related
+        // activities which triggered updateActivity to be called. The correct
+        // set of related activities will have to be restored at a later point
+        // in time, e.g. when the user requests related activities to be shown.
+        clearRelatedActivities(key);
+
         return true;
     }
 
@@ -851,6 +859,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return items instanceof ArrayList ? (ArrayList<SearchHistoryBean>) items : new ArrayList(items);
     }
+
     public List<? extends ActivityBean> readActivityHistory(UserKey user, boolean descendingOrder, int limit, boolean onlyUnique) {
         Collection<ActivityKey> keys = onlyUnique ? new LinkedHashSet<ActivityKey>() : new ArrayList<ActivityKey>();
 
@@ -925,7 +934,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void createActivityHistoryItem(HistoryProperties<ActivityHistoryData> properties, UserKey userKey) throws IOException {
         createHistoryItem(properties, userKey, HistoryType.ACTIVITY);
     }
-    
+
     public void createSearchHistoryItem(HistoryProperties<SearchHistoryData> properties, UserKey userKey) throws IOException {
         createHistoryItem(properties, userKey, HistoryType.SEARCH);
     }
@@ -1096,7 +1105,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return ratings;
     }
 
-    public void addRelatedActivities(ActivityKey activityKey, List<ActivityKey> relatedKeys) {
+    public void setRelatedActivities(ActivityKey activityKey, List<ActivityKey> relatedKeys) {
+        clearRelatedActivities(activityKey);
+
+        // The database helper automatically adds a relation from the
+        // activity to itself in order to indicate that relationships
+        // have been defined. This makes it possible to differentiate
+        // between an activity without related activities (which will
+        // have only 1 related activity, itself) and an activity which
+        // related activities have not yet been determined/calculated
+        // (which will have 0 relations).
+        relatedKeys.add(activityKey);
+
+        addRelatedActivities(activityKey, relatedKeys);
+    }
+
+    private void addRelatedActivities(ActivityKey activityKey, List<ActivityKey> relatedKeys) {
         for (ActivityKey relatedKey : relatedKeys) {
             ContentValues values = new ContentValues();
             values.put(Database.activity_relations.activity_id, activityKey.getId());
@@ -1106,7 +1130,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void clearRelatedActivities(ActivityKey activityKey) {
+    private void clearRelatedActivities(ActivityKey activityKey) {
         getDb().delete(Database.activity_relations.T, "" +
                 Database.activity_relations.activity_id + " = " + activityKey.getId().toString(),
                 null);
@@ -1114,6 +1138,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public List<? extends ActivityBean> readRelatedActivities(ActivityKey activity) {
         return readActivities(new SimpleRelatedToFilter(activity));
+    }
+
+    public boolean isRelatedActivitiesSet(ActivityKey activityKey) {
+        return getDb().query(
+                Database.activity_relations.T,
+                new String[]{Database.activity_relations.activity_id}, "" +
+                Database.activity_relations.activity_id + " = " + activityKey.getId() +
+
+                // The database helper automatically adds a relation from the
+                // activity to itself in order to indicate that relationships
+                // have been defined. This makes it possible to differentiate
+                // between an activity without related activities (which will
+                // have only 1 related activity, itself) and an activity which
+                // related activities have not yet been determined/calculated
+                // (which will have 0 relations).
+                //
+                // Since these "self references" are only used internally by
+                // the database helper class, we must exclude them from the
+                // result using an AND clause.
+                " AND " + Database.activity_relations.related_activity_id + " != " + activityKey.getId(),
+                null,
+                null,
+                null,
+                null,
+                null).moveToFirst();
     }
 
     public void setSystemMessages(List<? extends SystemMessage> messages) {
