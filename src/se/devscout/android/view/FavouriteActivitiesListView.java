@@ -1,13 +1,9 @@
 package se.devscout.android.view;
 
-import android.widget.ArrayAdapter;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.ActivityBankFragment;
-import se.devscout.android.controller.fragment.AsyncImageArrayAdapter;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.auth.CredentialsManager;
-
-import java.util.List;
 
 public class FavouriteActivitiesListView extends ActivitiesListView {
 
@@ -29,9 +25,11 @@ public class FavouriteActivitiesListView extends ActivitiesListView {
                 isListContentHeight);
     }
 
+/*
     @Override
     protected ArrayAdapter<ActivitiesListItem> createAdapter(final List<ActivitiesListItem> result) {
         return new AsyncImageArrayAdapter(getContext(), result);
     }
+*/
 
 }
