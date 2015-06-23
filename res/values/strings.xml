@@ -194,7 +194,8 @@
     <string name="show_usage_stats">Visa statistik...</string>
     <string name="asyncImageTooLarge">Bilden har inte hämtats eftersom den är för stor.</string>
     <string name="asyncImageDownloadAnyway">Hämta ändå</string>
-    <string name="asyncImageTooLargeDetails">Bilden är %1$d KB stor men inställningarna tillåter bara bilder under %2$d KB.</string><string name="asyncImageError">Oj, det gick inte att visa bilden.</string>
+    <string name="asyncImageTooLargeDetails">Bilden är %1$d KB stor men inställningarna tillåter bara bilder under %2$d KB.</string>
+    <string name="asyncImageError">Oj, det gick inte att visa bilden.</string>
     <string name="pick_account">Tyvärr, men du måste välja ett konto för att kunna logga in.</string>
     <string name="repo_unauthorized_could_not_save_favourites">Kunde inte spara eftersom du inte är inloggad.</string>
     <string name="auth_log_out">Logga ut</string>
