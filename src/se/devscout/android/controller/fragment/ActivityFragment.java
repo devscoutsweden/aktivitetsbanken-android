@@ -3,6 +3,7 @@ package se.devscout.android.controller.fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -150,8 +151,8 @@ public class ActivityFragment extends ActivityBankFragment implements Background
                                     getActivityBank())));
 
             TextView textView = (TextView) view.findViewById(R.id.activityDocument);
-
             textView.setText(TextViewUtil.parseText(mBodyText, context));
+            Linkify.addLinks(textView, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
             textView.setLineSpacing(
                     getResources().getDimensionPixelSize(R.dimen.Document_Paragraph_LineSpacingExtra),
                     1.0f);
