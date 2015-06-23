@@ -30,12 +30,11 @@
     </LinearLayout>
 
     <TextView
-        android:text="ABCåäögj"
+        android:text="ABCåäöxyzABCåäöxyzABCåäöxyzABCåäöxyz"
         android:id="@+id/asyncImageOverlayLabel"
         android:layout_gravity="center_horizontal|bottom"
         style="@style/ImageOverlay_SingleTextLine"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_width="match_parent"/>
 
     <LinearLayout
         android:orientation="vertical"

@@ -38,11 +38,12 @@
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
         <item name="android:textSize">@dimen/extraLargeTextSize</item>
-        <item name="android:gravity">center_vertical</item>
+        <item name="android:gravity">bottom</item>
         <item name="android:textColor">#ffff</item>
-        <item name="android:background">#5000</item>
+        <!--<item name="android:background">#5000</item>-->
         <!--<item name="android:textColor">@color/basicVeryLight</item>-->
-        <!--<item name="android:background">@drawable/gradient_label_background</item>-->
+        <item name="android:background">@drawable/gradient_label_background</item>
+        <item name="android:layout_height">@dimen/uiBlockSizeLarge</item>
     </style>
 
     <style name="PhotoGallery">
