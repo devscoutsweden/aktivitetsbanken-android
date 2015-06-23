@@ -207,7 +207,11 @@ class GoogleAuthenticationStrategy implements AuthenticationStrategy, GoogleApiC
                 try {
                     String scope = "audience:server:client_id:" + WEB_APP_CLIENT_ID;
                     String token = GoogleAuthUtil.getToken(activity, mGoogleAccountName, scope);
-                    if (token != null) {
+
+                    /* mGoogleApiClient can be null if the activity ends before this AsyncTask has been run. */
+                    boolean isClientSet = mGoogleApiClient != null;
+
+                    if (isClientSet && token != null) {
                         Person person = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
                         UserPropertiesBean userInfo = null;
                         if (person != null) {
@@ -268,15 +272,15 @@ class GoogleAuthenticationStrategy implements AuthenticationStrategy, GoogleApiC
      */
     private void resolveSignInError() {
 //        if (!mSilent) {
-            if (mConnectionResult.hasResolution()) {
-                try {
-                    mIntentInProgress = true;
-                    mConnectionResult.startResolutionForResult(mActivity, RC_SIGN_IN);
-                } catch (IntentSender.SendIntentException e) {
-                    mIntentInProgress = false;
-                    mGoogleApiClient.connect();
-                }
+        if (mConnectionResult.hasResolution()) {
+            try {
+                mIntentInProgress = true;
+                mConnectionResult.startResolutionForResult(mActivity, RC_SIGN_IN);
+            } catch (IntentSender.SendIntentException e) {
+                mIntentInProgress = false;
+                mGoogleApiClient.connect();
             }
+        }
 //        } else {
 //            LogUtil.e(GoogleAuthenticationStrategy.class.getName(), "Will not handle sign-in error since silent=true.");
 //        }
