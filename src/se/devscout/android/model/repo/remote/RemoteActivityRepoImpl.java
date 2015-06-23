@@ -2,6 +2,7 @@ package se.devscout.android.model.repo.remote;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import org.json.JSONArray;
@@ -1234,6 +1235,11 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     }
 
     private byte[] readUrl(final String body, HttpMethod method, URL url) throws IOException, UnauthorizedException, UnhandledHttpResponseCodeException {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            // Throw IOException now instead of later having NetworkOnMainThreadException thrown by the operating system.
+            LogUtil.e(HttpRequest.class.getName(), "Cannot use network from main thread. URL: " + url.toExternalForm());
+            throw new IOException("Cannot use network from main thread.");
+        }
         HttpRequest request = new HttpRequest(url, method);
 
         String installationId = InstallationProperties.getInstance(mContext).getId().toString();
