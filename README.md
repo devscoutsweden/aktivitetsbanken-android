@@ -4,13 +4,13 @@ aktivitetsbanken-android
 Här hittar du källkoden till den inofficiella Android-appen för Aktivitetsbanken
 (http://www.scouterna.se/aktiviteter-och-lager/aktivitetsbanken/).
 
-== Läget just nu
+# Läget just nu
 
 Vi söker personer som vill beta-testa appen och som gärna delar med sig av sina
 synpunkter till oss som utvecklar appen, allt för att appen ska få alla de
 funktioner som ni som användare vill ha!
 
-== Så här blir du beta-testare
+# Så här blir du beta-testare
 
 1. Gå med i Google+-gruppen [Testa Android-app för Aktivitetsbanken](https://plus.google.com/u/0/communities/108714619055335412441).
 
