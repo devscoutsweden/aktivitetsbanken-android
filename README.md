@@ -1,83 +1,21 @@
 aktivitetsbanken-android
 ========================
 
-This is an Android app for accessing the "activity database" called Aktivitetsbanken (managed by www.scouterna.se).
+Här hittar du källkoden till den inofficiella Android-appen för Aktivitetsbanken
+(http://www.scouterna.se/aktiviteter-och-lager/aktivitetsbanken/).
 
-== How To Release To Google Play
+== Läget just nu
 
-=== Preparing
+Vi söker personer som vill beta-testa appen och som gärna delar med sig av sina
+synpunkter till oss som utvecklar appen, allt för att appen ska få alla de
+funktioner som ni som användare vill ha!
 
-1. Increment /manifest/@android:versionCode in /AndroidManifest.xml by 1.
+== Så här blir du beta-testare
 
-2. Make sure /manifest/@android:versionName in /AndroidManifest.xml is correct.
+1. Gå med i Google+-gruppen [Testa Android-app för Aktivitetsbanken](https://plus.google.com/u/0/communities/108714619055335412441).
 
-3. Commit changes to Git repository. Suggested commit comment: "Bumped versionCode."
+2. Gå till https://play.google.com/apps/testing/se.devscout.android för att
+installera appen.
 
-=== Compiling
-
-Create APK file suitable for release:
-
-    aktivitetsbanken-android\> ant clean release
-
-Problems which may occur:
-
-One or more "build-related files", like google-play-services_lib\build.xml, may be missing (or specify incorrect paths). If so, try running this command:
-
-    $ android update lib-project --target android-15 --path .
-
-    Updated project.properties
-    Updated local.properties
-    No project name specified, using project folder name 'google-play-services_lib'.
-    If you wish to change it, edit the first line of build.xml.
-    Added file ...\google-play-services_lib\build.xml
-    Added file ...\google-play-services_lib\proguard-project.txt
-
-=== Signing
-
-Sign using /dev/scout private key:
-
-    aktivitetsbanken-android\bin> jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore %PATH_TO_AKTIVITETSBANKEN_KEYSTORE% Aktivitetsbanken-release-unsigned.apk aktivitetsbanken-android
-
-Rename file (not necessary but useful to avoid confusion):
-
-    aktivitetsbanken-android\bin> del Aktivitetsbanken-release-signed.apk
-    aktivitetsbanken-android\bin> move Aktivitetsbanken-release-unsigned.apk Aktivitetsbanken-release-signed.apk
-
-Verify that all files were signed correctly:
-
-    aktivitetsbanken-android\bin> jarsigner -verify -verbose -certs Aktivitetsbanken-release-signed.apk
-
-=== Aligning
-
-Remove previously created APK file:
-
-    aktivitetsbanken-android\bin> del Aktivitetsbanken-release.apk
-
-The final touch:
-
-    aktivitetsbanken-android\bin> "%PATH_TO_ANDROID_DEVELOPER_TOOLS%\sdk\tools\zipalign.exe" -v 4 Aktivitetsbanken-release-signed.apk Aktivitetsbanken-release.apk
-
-    or...
-
-    aktivitetsbanken-android\bin> "%PATH_TO_ANDROID_DEVELOPER_TOOLS%\sdk\build-tools\19.1.0\zipalign.exe" -v 4 Aktivitetsbanken-release-signed.apk Aktivitetsbanken-release.apk
-
-=== Test Release Version on Locally Connected Device
-
-    %PATH_TO_ANDROID_DEVELOPER_TOOLS%\sdk\platform-tools>adb install %PATH_TO_SOURCE_CODE%\bin\Aktivitetsbanken-release.apk
-    2269 KB/s (1761524 bytes in 0.758s)
-            pkg: /data/local/tmp/Aktivitetsbanken-release.apk
-    Failure [INSTALL_FAILED_ALREADY_EXISTS]
-
-    %PATH_TO_ANDROID_DEVELOPER_TOOLS%\sdk\platform-tools>adb install -r %PATH_TO_SOURCE_CODE%\bin\Aktivitetsbanken-release.apk
-    3359 KB/s (1761524 bytes in 0.512s)
-            pkg: /data/local/tmp/Aktivitetsbanken-release.apk
-    Failure [INSTALL_PARSE_FAILED_INCONSISTENT_CERTIFICATES]
-
-    %PATH_TO_ANDROID_DEVELOPER_TOOLS%\sdk\platform-tools>adb install %PATH_TO_SOURCE_CODE%\bin\Aktivitetsbanken-release.apk
-    3399 KB/s (1761524 bytes in 0.506s)
-            pkg: /data/local/tmp/Aktivitetsbanken-release.apk
-    Success
-
-=== Publishing on Google Play
-
-Finally, you upload Aktivitetsbanken-release.apk to Google Play using the Developer Console.
+3. Berätta för oss vad du tycker, exempelvis genom att skriva i Google+-gruppen.
+Vi tar tacksamt emot önskemål, buggrapporter och snälla ord =)
