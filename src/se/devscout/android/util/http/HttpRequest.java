@@ -18,8 +18,8 @@ import java.util.zip.GZIPInputStream;
 public class HttpRequest {
     private static final String HEADER_CONTENT_ENCODING = "Content-Encoding";
     public static final String HEADER_CONTENT_ENCODING_GZIP = "gzip";
-    private static final int CONNECT_TIMEOUT = 5000;
-    private static final int READ_TIMEOUT = 10000;
+    private static final int CONNECT_TIMEOUT = 10000;
+    private static final int READ_TIMEOUT = 30000;
     public static final String HEADER_AUTHORIZATION = "Authorization";
     private static final int TIMEOUT_COUNT_FOR_HOST_BLOCK = 2;
     private final URL mUrl;
@@ -43,7 +43,7 @@ public class HttpRequest {
 
     public <T> HttpResponse<T> run(ResponseStreamHandler<T> responseHandler, RequestBodyStreamHandler requestHandler, ResponseHeadersValidator responseHeadersValidator) throws IOException, UnauthorizedException, UnhandledHttpResponseCodeException, HeaderException {
 
-        assertHostAvailability(mUrl);
+//        assertHostAvailability(mUrl);
 
         HttpResponse<T> response = new HttpResponse<T>();
 

@@ -57,6 +57,21 @@
                 android:gravity="center"
                 android:textSize="@dimen/smallTextSize" />
 
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:id="@+id/searchResultRetry">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/searchResultRetryButton"
+                    style="@style/ImageButton"
+                    android:src="@drawable/ic_action_refresh"
+                    android:layout_gravity="center_horizontal" />
+            </LinearLayout>
+
         </LinearLayout>
     </FrameLayout>
 

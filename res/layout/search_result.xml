@@ -53,6 +53,35 @@
                 android:gravity="center"
                 android:textSize="@dimen/smallTextSize" />
 
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:id="@+id/searchResultRetry"
+                android:layout_gravity="center_horizontal"
+                android:clickable="true"
+                android:background="?android:attr/selectableItemBackground">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/searchResultRetryButton"
+                    style="@style/ImageButton"
+                    android:src="@drawable/ic_action_refresh"
+                    android:layout_gravity="center_horizontal"
+                    android:baselineAlignBottom="false"
+                    android:tint="@color/accentBlue" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Segt nät? Pröva igen!"
+                    android:id="@+id/textView"
+                    android:layout_gravity="center_vertical"
+                    style="@style/ClickableLabel"
+                    android:layout_marginRight="@dimen/iconButtonMargin" />
+            </LinearLayout>
+
         </LinearLayout>
     </FrameLayout>
 </FrameLayout>

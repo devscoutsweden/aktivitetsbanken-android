@@ -15,6 +15,7 @@ import se.devscout.android.R;
 import se.devscout.android.controller.fragment.ActivitiesListFragment;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.StopWatch;
+import se.devscout.android.util.UsageLogUtil;
 import se.devscout.android.util.http.UnauthorizedException;
 
 import java.io.Serializable;
@@ -36,6 +37,7 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
     private int mEmptyHeaderTextId;
     private int mEmptyMessageTextId;
     private boolean mSearchPending;
+    private int mHttpTimeoutCountRef;
 
     public NonBlockingSearchView(Context context, int emptyMessageTextId, int emptyHeaderTextId, boolean isListContentHeight) {
         super(context);
@@ -55,16 +57,29 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
         mProgressView = (FrameLayout) findViewById(R.id.searchResultProgress);
         mEmptyView = findViewById(R.id.searchResultEmpty);
 
+        findViewById(R.id.searchResultRetry).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showLoadingSpinner();
+                runSearchTaskInNewThread();
+            }
+        });
+
         showLoadingSpinner();
 
-        initEmptyViewText(R.id.searchResultEmptyHeader, mEmptyHeaderTextId);
-        initEmptyViewText(R.id.searchResultEmptyMessage, mEmptyMessageTextId);
+        initEmptyTextViews(mEmptyHeaderTextId, mEmptyMessageTextId);
+    }
+
+    private void initEmptyTextViews(int headerTextId, int messageTextId) {
+        initEmptyViewText(R.id.searchResultEmptyHeader, headerTextId);
+        initEmptyViewText(R.id.searchResultEmptyMessage, messageTextId);
     }
 
     private void showLoadingSpinner() {
         mList.setVisibility(View.INVISIBLE);
         mEmptyView.setVisibility(View.INVISIBLE);
         mProgressView.setVisibility(View.VISIBLE);
+        findViewById(R.id.searchResultRetry).setVisibility(GONE);
     }
 
     private void initScrollingList(Context context) {
@@ -136,6 +151,14 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
     }
 
     public void setResult(List<T> result) {
+        if (UsageLogUtil.getInstance().getHttpTimeouts() > mHttpTimeoutCountRef) {
+            // At least one http timeout has occurred since the search was initiated. This timeout MAY have caused problems to the current search and the user should be given the option to restart the search operation.
+//            initEmptyTextViews(R.string.searchResultErrorTitle, R.string.searchResultErrorMessage);
+            findViewById(R.id.searchResultRetry).setVisibility(VISIBLE);
+        } else {
+//            initEmptyTextViews(mEmptyHeaderTextId, mEmptyMessageTextId);
+            findViewById(R.id.searchResultRetry).setVisibility(GONE);
+        }
         if (result == null) {
             //TODO: Necessary? Remove?
             result = new ArrayList<T>();
@@ -190,6 +213,7 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
         Bundle bundle = new Bundle();
         bundle.putParcelable("instanceState", super.onSaveInstanceState());
         bundle.putSerializable("mResult", mResult);
+        bundle.putInt("mHttpTimeoutCountRef", mHttpTimeoutCountRef);
 //        bundle.putBoolean("mRefreshResultOnResume", mRefreshResultOnResume);
         return bundle;
     }
@@ -199,6 +223,7 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
         if (state instanceof Bundle) {
             Bundle bundle = (Bundle) state;
             mResult = (ArrayList<T>) bundle.getSerializable("mResult");
+            mHttpTimeoutCountRef = bundle.getInt("mHttpTimeoutCountRef");
 //            mRefreshResultOnResume = bundle.getBoolean("mRefreshResultOnResume");
             state = bundle.getParcelable("instanceState");
 
@@ -211,6 +236,7 @@ public abstract class NonBlockingSearchView<T extends Serializable> extends Fram
 
     public void runSearchTaskInNewThread() {
         synchronized (this) {
+            mHttpTimeoutCountRef = UsageLogUtil.getInstance().getHttpTimeouts();
             if (!mSearchPending) {
                 mSearchPending = true;
                 createSearchTask().execute();
