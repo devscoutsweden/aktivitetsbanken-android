@@ -32,8 +32,13 @@ public class ApiV1Visitor implements URIBuilderActivityFilterVisitor {
 
     @Override
     public Uri visit(CategoryFilter filter) {
-        mUriBuilder.appendQueryParameter("categories", String.valueOf(filter.getServerId()));
-        return mUriBuilder.build();
+        long serverId = filter.getServerId();
+        if (serverId > 0) {
+            mUriBuilder.appendQueryParameter("categories", String.valueOf(serverId));
+            return mUriBuilder.build();
+        } else {
+            throw new UnsupportedOperationException("App will not ask for category " + serverId + ". That number is not a correct id.");
+        }
     }
 
     @Override

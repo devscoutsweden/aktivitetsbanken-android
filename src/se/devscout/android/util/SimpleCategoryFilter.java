@@ -13,6 +13,9 @@ public class SimpleCategoryFilter implements CategoryFilter {
     private final long serverId;
 
     public SimpleCategoryFilter(String group, String name, long serverId) {
+        if (serverId <= 0) {
+            throw new IllegalArgumentException("Cannot create filter for category {group=" + group + ", name=" + name + "} when serverId=" + serverId);
+        }
         this.group = group;
         this.name = name;
         this.serverId = serverId;
