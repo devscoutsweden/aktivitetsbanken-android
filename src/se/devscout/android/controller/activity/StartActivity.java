@@ -89,7 +89,12 @@ public class StartActivity extends SingleFragmentActivity {
 
     @Override
     protected boolean onPrepareOptionsPanel(View view, Menu menu) {
-        menu.findItem(R.id.menuStartLogOutAndRevokeAccess).setVisible(CredentialsManager.getInstance(this).getState().isLoggedIn());
+        MenuItem item = menu.findItem(R.id.menuStartLogOutAndRevokeAccess);
+        if (item != null) {
+            item.setVisible(CredentialsManager.getInstance(this).getState().isLoggedIn());
+        } else {
+            LogUtil.e(StartActivity.class.getName(), "Could not find menu item menuStartLogOutAndRevokeAccess");
+        }
         return super.onPrepareOptionsPanel(view, menu);
     }
 
