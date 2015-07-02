@@ -3,9 +3,9 @@ package se.devscout.android.model;
 import se.devscout.server.api.UserProfile;
 
 public class UserProfileBean extends UserBean implements UserProfile {
-//    private String[] mAPIKeys;
-    private String[] mRolePermissions;
-    private String mRole;
+    //    private String[] mAPIKeys;
+    private String[] mRolePermissions = {};
+    private String mRole = "unknown";
 
     public UserProfileBean(String displayName, String apiKey, Long id, long serverId, long serverRevisionId, String emailAddress) {
         super(displayName, apiKey, id, serverId, serverRevisionId, emailAddress);

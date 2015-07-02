@@ -124,7 +124,12 @@ public class AuthUserProfileFragment extends ActivityBankFragment {
                     mDisplayName = profile.getDisplayName();
                     mEmail = profile.getEmailAddress();
                     mRole = profile.getRole();
-                    mRoleDescription = getString(R.string.profileRoleDescriptionTemplate, profile.getRole(), "\n- " + TextUtils.join("\n- ", profile.getRolePermissions()));
+                    String[] rolePermissions = profile.getRolePermissions();
+                    if (null != rolePermissions && rolePermissions.length > 0) {
+                        mRoleDescription = getString(R.string.profileRoleDescriptionTemplate, profile.getRole(), "\n- " + TextUtils.join("\n- ", rolePermissions));
+                    } else {
+                        mRoleDescription = "";
+                    }
                     initView(view);
                 }
             }.execute();

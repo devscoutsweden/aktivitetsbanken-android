@@ -9,7 +9,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import se.devscout.android.BuildConfig;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.TitleActivityFilterVisitor;
 import se.devscout.android.model.*;
@@ -50,8 +49,8 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     private static final String HOST_TEST = "devscout.mikaelsvensson.info";
     private static final int PORT_TEST = 10081;
 
-    private static final String HOST = BuildConfig.DEBUG ? HOST_TEST : HOST_PRODUCTION;
-    private static final int PORT = BuildConfig.DEBUG ? PORT_TEST : PORT_PRODUCTION;
+    private static final String HOST = /*BuildConfig.DEBUG ? HOST_TEST :*/ HOST_PRODUCTION;
+    private static final int PORT = /*BuildConfig.DEBUG ? PORT_TEST :*/ PORT_PRODUCTION;
     private static final String SYSTEM_MESSAGE_KEY_API_HOST = "api:host";
     private static final String SYSTEM_MESSAGE_KEY_CONTACT_ERROR = "contact:error";
     private static final String SCHEMA = "http://";
@@ -377,38 +376,37 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         String uri = getURL("users/profile");
         try {
             JSONObject object = getJSONObject(uri, null, HttpMethod.GET);
-            UserProfileBean mergedUserProfile = new UserProfileBean(
-                    object.getString("display_name"),
-                    userProfile.getAPIKey(),
-                    userProfile.getId(),
-                    userProfile.getServerId(),
-                    userProfile.getServerRevisionId(),
-                    object.getString("email"));
 
             // Build list of permissions
-            mergedUserProfile.setRole(object.getString("role"));
+            userProfile.setDisplayName(object.getString("display_name"));
+            userProfile.setEmailAddress(object.getString("email"));
+            userProfile.setRole(object.getString("role"));
             JSONArray rolePermissions = object.getJSONArray("role_permissions");
             String[] permissions = new String[rolePermissions.length()];
-//            boolean isAllowedToUseTestAPI = "administrator".equalsIgnoreCase(mergedUserProfile.getRole());
             for (int i = 0; i < rolePermissions.length(); i++) {
                 String role = rolePermissions.getString(i);
                 permissions[i] = role;
-//                isAllowedToUseTestAPI |= "administrator".equalsIgnoreCase(role);
             }
-            mergedUserProfile.setRolePermissions(permissions);
-
-//            PreferenceManager.getDefaultSharedPreferences(mContext).edit().putBoolean("is_allowed_to_use_test_api", isAllowedToUseTestAPI);
+            userProfile.setRolePermissions(permissions);
 
             // Assume that the first key is good and valid.
             List<JSONObject> objects = getJSONObjectList(object, "keys");
             if (!objects.isEmpty()) {
-                mergedUserProfile.setAPIKey(objects.get(0).getString("key"));
+                userProfile.setAPIKey(objects.get(0).getString("key"));
             }
 
             // todo: Update local database based on information from server (in case user has updated server-side profile data using other client)
 
-            return mergedUserProfile;
+            return userProfile;
         } catch (IOException | JSONException | UnauthorizedException | UnhandledHttpResponseCodeException e) {
+            userProfile.setRole("");
+            userProfile.setAPIKey("");
+            userProfile.setRolePermissions(new String[0]);
+            try {
+                handleRemoteException(e);
+            } catch (UnauthorizedException e1) {
+                // Ignore exception.
+            }
             return userProfile;
         }
     }
@@ -630,7 +628,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         try {
             uri = condition.visit(visitor);
         } catch (UnsupportedOperationException e) {
-            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "App does not think API can handle the search query. Delegate search to database and pray that the database supports the query!");
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "App does not think API can handle the search query. Delegate search to database and pray that the database supports the query!", e);
             return super.findActivity(condition);
         }
         if (attrNames != null) {
@@ -645,8 +643,9 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
             JSONArray array = getJSONArray(uri.toString(), null);
             stopWatch.logEvent("Sending query to server and reading response");
             ArrayList<ActivityBean> result = new ArrayList<ActivityBean>();
+            List<JSONObject> objects = getJSONArrayAsList(array);
             stopWatch.logEvent("Parsed JSON");
-            for (JSONObject obj : getJSONArrayAsList(array)) {
+            for (JSONObject obj : objects) {
                 ServerActivityBean act = getActivityBean(obj);
 
                 if (attrNames == null) {
@@ -1127,7 +1126,6 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         if (obj.has(arrayAttributeName)) {
             return getJSONArrayAsList(obj.getJSONArray(arrayAttributeName));
         } else {
-            LogUtil.d(RemoteActivityRepoImpl.class.getName(), "Will return empty list instead of the (missing) array '" + arrayAttributeName + "'.");
             return Collections.emptyList();
         }
     }
