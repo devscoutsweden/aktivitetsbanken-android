@@ -5,7 +5,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import se.devscout.android.AgeGroup;
 import se.devscout.android.R;
@@ -45,7 +44,7 @@ public class FindSpontaneousActivitiesView<T extends Serializable> extends Linea
     }
 
     private void initAdditionalCheckboxLabel(int buttonId, final AgeGroup ageGroup, final ViewGroup container) {
-        ImageView button = (ImageView) findViewById(buttonId);
+        View button = findViewById(buttonId);
         button.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {

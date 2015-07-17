@@ -100,10 +100,15 @@ public class SearchFragment extends ActivityBankFragment {
         final Spinner categoryDropDown = initCategoryDropDown(searchView);
 
         initAdditionalCheckboxLabel(searchView, R.id.searchAgeAdventurerLogo, R.id.searchAgeAdventurer);
+        initAdditionalCheckboxLabel(searchView, R.id.searchAgeAdventurerLabel, R.id.searchAgeAdventurer);
         initAdditionalCheckboxLabel(searchView, R.id.searchAgeChallengerLogo, R.id.searchAgeChallenger);
+        initAdditionalCheckboxLabel(searchView, R.id.searchAgeChallengerLabel, R.id.searchAgeChallenger);
         initAdditionalCheckboxLabel(searchView, R.id.searchAgeDiscovererLogo, R.id.searchAgeDiscoverer);
+        initAdditionalCheckboxLabel(searchView, R.id.searchAgeDiscovererLabel, R.id.searchAgeDiscoverer);
         initAdditionalCheckboxLabel(searchView, R.id.searchAgeRoverLogo, R.id.searchAgeRover);
+        initAdditionalCheckboxLabel(searchView, R.id.searchAgeRoverLabel, R.id.searchAgeRover);
         initAdditionalCheckboxLabel(searchView, R.id.searchAgeTrackerLogo, R.id.searchAgeTracker);
+        initAdditionalCheckboxLabel(searchView, R.id.searchAgeTrackerLabel, R.id.searchAgeTracker);
 
         loadSavedValues(searchView);
 

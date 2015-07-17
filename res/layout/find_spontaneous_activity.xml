@@ -9,41 +9,112 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Slumpa aktivitet genom att välja åldersgrupp:"
-        android:id="@+id/textView" />
+        android:text="Slumpa aktivitet för åldersgrupp:"
+        android:id="@+id/textView"
+        android:layout_gravity="center_horizontal" />
 
     <LinearLayout
         android:divider="?android:attr/listDivider"
         android:showDividers="middle"
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="center">
 
-        <ImageView
+        <LinearLayout
             android:id="@+id/searchAgeTrackerLogo"
-            android:src="@drawable/logo_tracker_black"
-            style="@style/ImageButton" />
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:background="?android:attr/selectableItemBackground">
 
-        <ImageView
+            <ImageView
+                android:src="@drawable/logo_tracker"
+                style="@style/ImageButton" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="8-9"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/searchAgeDiscovererLogo"
-            android:src="@drawable/logo_discoverer_black"
-            style="@style/ImageButton" />
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:background="?android:attr/selectableItemBackground">
 
-        <ImageView
+            <ImageView
+                android:src="@drawable/logo_discoverer"
+                style="@style/ImageButton" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10-12"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/searchAgeAdventurerLogo"
-            android:src="@drawable/logo_adventurer_black"
-            style="@style/ImageButton" />
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:background="?android:attr/selectableItemBackground">
 
-        <ImageView
+            <ImageView
+                android:src="@drawable/logo_adventurer"
+                style="@style/ImageButton" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="13-15"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/searchAgeChallengerLogo"
-            android:src="@drawable/logo_challenger_black"
-            style="@style/ImageButton" />
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:background="?android:attr/selectableItemBackground">
 
-        <ImageView
+            <ImageView
+                android:src="@drawable/logo_challenger"
+                style="@style/ImageButton" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="15-18"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/searchAgeRoverLogo"
-            android:src="@drawable/logo_rover_black"
-            style="@style/ImageButton" />
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:background="?android:attr/selectableItemBackground">
 
+            <ImageView
+                android:src="@drawable/logo_rover"
+                style="@style/ImageButton" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="19-25"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>
