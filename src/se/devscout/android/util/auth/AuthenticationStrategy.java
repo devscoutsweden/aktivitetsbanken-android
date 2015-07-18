@@ -1,6 +1,6 @@
 package se.devscout.android.util.auth;
 
-import android.content.Intent;
+import se.devscout.android.controller.activity.SingleFragmentActivity;
 
 /**
  * Implementations enable support for a specific user identity validator, e.g.
@@ -11,13 +11,8 @@ import android.content.Intent;
  */
 public interface AuthenticationStrategy {
 
-    void startLogIn(boolean silent);
+    void startLogIn(SingleFragmentActivity activity, boolean silent);
 
-    void startLogOut(boolean revokeAccess);
+    void startLogOut(SingleFragmentActivity activity, boolean revokeAccess);
 
-    void onActivityStop();
-
-    void onActivityStart();
-
-    void onActivityResult(int requestCode, int resultCode, Intent data);
 }

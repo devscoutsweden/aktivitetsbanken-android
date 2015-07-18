@@ -40,9 +40,6 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     private static final String HTTP_HEADER_ACCEPT_ENCODING = "Accept-Encoding";
     private static final String HTTP_HEADER_API_KEY = "X-ScoutAPI-APIKey";
 
-    private static final String API_TOKEN_TYPE_API_KEY = "apikey";
-    private static final String API_TOKEN_TYPE_GOOGLE = "google";
-
     private static final String HOST_PRODUCTION = "aktivitetsbanken.devscout.se";
     private static final int PORT_PRODUCTION = 80;
 
@@ -62,8 +59,6 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     private List<CategoryBean> mCachedCategories;
     //    private String authToken;
 //    private String authType;
-    //TODO: Use synchronized map since onAuthenticated is called from AsyncTask!?
-    private HashMap<Long, Credentials> mCredentialsMap = new HashMap<Long, Credentials>();
     private int timeoutCounter;
 
 
@@ -216,30 +211,14 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         }
     }
 
-//    @Override
-//    public boolean isLoggedIn() {
-//        return mCredentialsMap.containsKey(getCurrentUserId());
-//    }
-
-//    @Override
-//    public void logOut() {
-//        mCredentialsMap.remove(getCurrentUserId());
-//        fireLoggedOut();
-//    }
-
     @Override
     public void onAuthenticationStatusChange(CredentialsManager.State currentState) {
     }
 
     @Override
-    public void onAuthenticated(IdentityProvider provider, String data, UserProperties userProperties) {
-        switch (provider) {
-            case GOOGLE:
-                mCredentialsMap.put(
-                        getCurrentUserId(),
-                        new Credentials(data, API_TOKEN_TYPE_GOOGLE));
-
-                if (userProperties != null) {
+    public void onAuthenticated(IdentityProvider provider, ServerAPICredentials data, UserProperties userProperties) {
+        try {
+            if (userProperties != null) {
                     /*
                      * Updating the user profile will do three things:
                      *
@@ -256,18 +235,13 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
                      * response headers. The user, after the Google id token has
                      * been verified, will be created if not create before.
                      */
-                    try {
-                        updateUserProfile(userProperties);
-                        synchronizeFavourites();
-                        synchronizeRatings();
-                        // todo: Update local database based on information from server (in case user has updated server-side profile data using other client)
-                    } catch (UnauthorizedException e) {
-                        LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not provide user information to server", e);
-                    }
-                }
-                break;
-            default:
-                throw new UnsupportedOperationException("Does not support identity provider " + provider);
+                updateUserProfile(userProperties);
+            }
+            synchronizeFavourites();
+            synchronizeRatings();
+            // todo: Update local database based on information from server (in case user has updated server-side profile data using other client)
+        } catch (UnauthorizedException e) {
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not provide user information to server", e);
         }
     }
 
@@ -1244,9 +1218,18 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         request.setHeader(HTTP_HEADER_X_ANDROID_APP_INSTALLATION_ID, installationId);
         request.setHeader(HTTP_HEADER_ACCEPT_ENCODING, HttpRequest.HEADER_CONTENT_ENCODING_GZIP);
 
-        Credentials credentials = mCredentialsMap.get(getCurrentUserId());
-        if (credentials != null) {
-            String authHeaderValue = "Token token=\"" + credentials.getToken() + "\", type=\"" + credentials.getType() + "\"";
+        final CredentialsManager credentialsManager = CredentialsManager.getInstance(mContext);
+        ServerAPICredentials serverAPICredentials = credentialsManager.getServerAPICredentials();
+//        switch (credentialsManager.getIdentityProvider()) {
+//            case API_KEY:
+//                serverAPICredentials = new ServerAPICredentials(credentialsManager.getServerAPICredentials(), API_TOKEN_TYPE_API_KEY);
+//                break;
+//            case GOOGLE:
+//                serverAPICredentials = new ServerAPICredentials(credentialsManager.getIdentityData(), API_TOKEN_TYPE_GOOGLE);
+//                break;
+//        }
+        if (serverAPICredentials != null) {
+            String authHeaderValue = "Token token=\"" + serverAPICredentials.getToken() + "\", type=\"" + serverAPICredentials.getType() + "\"";
             request.setHeader(HttpRequest.HEADER_AUTHORIZATION, authHeaderValue);
             LogUtil.d(HttpRequest.class.getName(), "Header " + HttpRequest.HEADER_AUTHORIZATION + ": " + authHeaderValue);
         }
@@ -1265,9 +1248,8 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
             public void validate(Map<String, List<String>> headers) throws HeaderException {
                 for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
                     if (!entry.getValue().isEmpty() && HTTP_HEADER_API_KEY.equals(entry.getKey())) {
-                        mCredentialsMap.put(
-                                getCurrentUserId(),
-                                new Credentials(entry.getValue().get(0), API_TOKEN_TYPE_API_KEY));
+                        String apiKey = entry.getValue().get(0);
+                        credentialsManager.setServerAPICredentials(new ServerAPICredentials(ServerAPICredentials.API_TOKEN_TYPE_API_KEY, apiKey));
                     }
                 }
             }
@@ -1304,11 +1286,11 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         }
     }
 
-    /**
-     * 1. Get list with local id, server_id and server_revision_id. This list can be cached and updated by DatabaseHelper.
-     * 2. Add new activities, i.e. incoming activities whose server_id is not in the list.
-     * 3. Update existing activities, i.e. incoming activities whose server_revision_id is greater than the locally stored value.
-     */
+/**
+ * 1. Get list with local id, server_id and server_revision_id. This list can be cached and updated by DatabaseHelper.
+ * 2. Add new activities, i.e. incoming activities whose server_id is not in the list.
+ * 3. Update existing activities, i.e. incoming activities whose server_revision_id is greater than the locally stored value.
+ */
 /*
     public void updateActivities(List<ActivityBean> incomingActivities) {
         SQLiteDatabase db = getDb();

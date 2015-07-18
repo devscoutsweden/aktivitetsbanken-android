@@ -28,10 +28,6 @@ public class StartActivity extends SingleFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-        boolean authAutoLogin = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("auth_auto_login", true);
-        if (authAutoLogin) {
-            CredentialsManager.getInstance(this).logInUsingGoogle(this, true);
-        }
         mDrawerToggle.setDrawerIndicatorEnabled(true);
     }
 
@@ -78,7 +74,7 @@ public class StartActivity extends SingleFragmentActivity {
             case R.id.menuStartLogOutAndRevokeAccess:
                 CredentialsManager cm = CredentialsManager.getInstance(this);
                 if (cm.getState().isLoggedIn()) {
-                    cm.logOut(true);
+                    cm.logOut(this, true);
                 } else {
                     Toast.makeText(this, R.string.auth_cannot_revoke_since_not_logged_in, Toast.LENGTH_SHORT).show();
                 }

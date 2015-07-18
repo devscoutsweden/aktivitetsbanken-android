@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="@string/preferenceAuth">
-        <CheckBoxPreference
-            android:key="auth_auto_login"
-            android:defaultValue="true"
-            android:title="@string/preferenceAuthAutoLogin"
-            android:summary="@string/preferenceAuthAutoLoginSummary"/>
-    </PreferenceCategory>
     <PreferenceCategory android:title="@string/preferenceServer">
         <ListPreference
             android:key="server_address"

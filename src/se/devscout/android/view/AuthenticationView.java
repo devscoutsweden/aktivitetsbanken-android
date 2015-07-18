@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.google.android.gms.common.SignInButton;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
+import se.devscout.android.model.repo.remote.ServerAPICredentials;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.IdentityProvider;
 import se.devscout.android.util.auth.CredentialsManager;
@@ -34,7 +35,7 @@ public class AuthenticationView extends LinearLayout implements CredentialsManag
     }
 
     @Override
-    public void onAuthenticated(IdentityProvider provider, String data, UserProperties userProperties) {
+    public void onAuthenticated(IdentityProvider provider, ServerAPICredentials data, UserProperties userProperties) {
     }
 
     public AuthenticationView(Context context, boolean isListContentHeight) {
@@ -61,7 +62,7 @@ public class AuthenticationView extends LinearLayout implements CredentialsManag
             public void onClick(View view) {
                 if (context instanceof SingleFragmentActivity) {
                     SingleFragmentActivity activity = (SingleFragmentActivity) context;
-                    CredentialsManager.getInstance(activity).logInUsingGoogle(activity, false);
+                    CredentialsManager.getInstance(activity).logIn(activity, false, IdentityProvider.GOOGLE);
                 }
             }
         });
@@ -72,7 +73,7 @@ public class AuthenticationView extends LinearLayout implements CredentialsManag
             public void onClick(View view) {
                 if (context instanceof SingleFragmentActivity) {
                     SingleFragmentActivity activity = (SingleFragmentActivity) context;
-                    CredentialsManager.getInstance(activity).logOut(false);
+                    CredentialsManager.getInstance(activity).logOut(activity, false);
                 }
             }
         });

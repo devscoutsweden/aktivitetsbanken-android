@@ -1,12 +1,12 @@
 package se.devscout.android.util.auth;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
 import se.devscout.android.model.ObjectIdentifierBean;
+import se.devscout.android.model.repo.remote.ServerAPICredentials;
 import se.devscout.android.util.IdentityProvider;
 import se.devscout.android.util.LogUtil;
 import se.devscout.server.api.ActivityBank;
@@ -27,9 +27,32 @@ public class CredentialsManager {
     private static CredentialsManager instance = null;
     private final SharedPreferences mPreferences;
     private State mState = State.LOGGED_OUT;
+    private IdentityProvider mIdentityProvider;
+    private ServerAPICredentials mServerAPICredentials;
+
+    public ServerAPICredentials getServerAPICredentials() {
+        return mServerAPICredentials;
+    }
+
+    public IdentityProvider getIdentityProvider() {
+        return mIdentityProvider;
+    }
 
     public CredentialsManager(Context context) {
         mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+        String prefIdentProv = mPreferences.getString("mIdentityProvider", null);
+        if (prefIdentProv != null) {
+            setIdentityProvider(IdentityProvider.valueOf(prefIdentProv));
+        }
+
+        String pref = mPreferences.getString("mServerAPICredentials", null);
+        if (pref != null) {
+            setServerAPICredentials(ServerAPICredentials.fromString(pref));
+        } else {
+            setServerAPICredentials(null);
+        }
+        setState(pref == null ? State.LOGGED_OUT : State.LOGGED_IN);
     }
 
     public State getState() {
@@ -52,26 +75,42 @@ public class CredentialsManager {
         return instance;
     }
 
-    public void onLogInDone(IdentityProvider provider, String data, UserProperties userProperties) {
+    public void onLogInDone(IdentityProvider provider, ServerAPICredentials data, UserProperties userProperties) {
+        setIdentityProvider(provider);
+        setServerAPICredentials(data);
+
         setState(State.LOGGED_IN);
         fireAuthenticated(provider, data, userProperties);
     }
 
+    public void setServerAPICredentials(ServerAPICredentials serverAPICredentials) {
+        mServerAPICredentials = serverAPICredentials;
+        if (serverAPICredentials != null) {
+            mPreferences.edit().putString("mServerAPICredentials", mServerAPICredentials.toString()).commit();
+        } else {
+            mPreferences.edit().remove("mServerAPICredentials").commit();
+        }
+    }
+
+    public void setIdentityProvider(IdentityProvider identityProvider) {
+        mIdentityProvider = identityProvider;
+        if (identityProvider != null) {
+            mPreferences.edit().putString("mIdentityProvider", mIdentityProvider.name()).commit();
+        } else {
+            mPreferences.edit().remove("mIdentityProvider").commit();
+        }
+    }
+
     public void onLogOutDone() {
+        setIdentityProvider(null);
+        setServerAPICredentials(null);
         setState(State.LOGGED_OUT);
     }
 
-    public void logInUsingGoogle(SingleFragmentActivity activity, boolean silent) {
-        logIn(new GoogleAuthenticationStrategy(this, activity), silent);
-    }
-
-    private void logIn(AuthenticationStrategy strategy, boolean silent) {
-        if (mAuthStrategy != null) {
-            mAuthStrategy.startLogOut(false);
-        }
-        mAuthStrategy = strategy;
+    public void logIn(SingleFragmentActivity activity, boolean silent, IdentityProvider identityProvider) {
         setState(State.LOGGING_IN);
-        strategy.startLogIn(silent);
+        setIdentityProvider(identityProvider);
+        mIdentityProvider.startLogIn(activity, silent);
     }
 
     public void onLogInCancelled() {
@@ -81,12 +120,10 @@ public class CredentialsManager {
     public interface Listener {
         void onAuthenticationStatusChange(State currentState);
 
-        void onAuthenticated(IdentityProvider provider, String data, UserProperties userProperties);
+        void onAuthenticated(IdentityProvider provider, ServerAPICredentials data, UserProperties userProperties);
     }
 
     private final List<Listener> mListeners = new ArrayList<Listener>();
-
-    private AuthenticationStrategy mAuthStrategy;
 
     public static enum State {
         LOGGED_IN(true, false),
@@ -111,29 +148,9 @@ public class CredentialsManager {
         }
     }
 
-    public void onActivityStop(SingleFragmentActivity activity) {
-        if (mAuthStrategy != null) {
-            mAuthStrategy.onActivityStop();
-        }
-    }
-
-    public void onActivityStart(SingleFragmentActivity activity) {
-        if (mAuthStrategy != null) {
-            mAuthStrategy.onActivityStart();
-        }
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data, SingleFragmentActivity activity) {
-        if (mAuthStrategy != null) {
-            mAuthStrategy.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    public void logOut(boolean revokeAccess) {
-        if (mAuthStrategy != null) {
-            setState(State.LOGGING_OUT);
-            mAuthStrategy.startLogOut(revokeAccess);
-        }
+    public void logOut(SingleFragmentActivity activity, boolean revokeAccess) {
+        setState(State.LOGGING_OUT);
+        mIdentityProvider.startLogOut(activity, revokeAccess);
     }
 
     public void addListener(Listener listener) {
@@ -158,7 +175,7 @@ public class CredentialsManager {
         }
     }
 
-    private void fireAuthenticated(IdentityProvider provider, String data, UserProperties userProperties) {
+    private void fireAuthenticated(IdentityProvider provider, ServerAPICredentials data, UserProperties userProperties) {
         synchronized (mListeners) {
             for (Listener listener : mListeners) {
                 listener.onAuthenticated(provider, data, userProperties);

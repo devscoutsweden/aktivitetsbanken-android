@@ -1,6 +1,5 @@
 package se.devscout.android.controller.activity;
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,7 +19,6 @@ import se.devscout.android.controller.activity.drawer.*;
 import se.devscout.android.controller.fragment.AbstractActivityBankListener;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.LogUtil;
-import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
 import se.devscout.android.view.widget.ComponentFactoryRepo;
 import se.devscout.android.view.widget.TabComponentFactory;
@@ -38,7 +36,6 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
     private DrawerListAdapter mDrawerListAdapter;
     private ActivityBankListener mActivityBankListener;
 
-    //    private CredentialsManager mCredentialsManager;
     private AbstractActivityBankListener mActivityBackAsyncExceptionListener;
 
     protected SingleFragmentActivity() {
@@ -55,18 +52,6 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
 
         }
         return mBackgroundTasksHandlerThread;
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        CredentialsManager.getInstance(this).onActivityStop(this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        CredentialsManager.getInstance(this).onActivityStart(this);
     }
 
     @Override
@@ -100,24 +85,6 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_fragment_activity);
-
-//        if (!CredentialsManager.getInstance().getState().isLoggedIn()) {
-//            mCredentialsManager = new CredentialsManager();
-//        }
-
-//        if (mCredentialsManager != null) {
-//            mCredentialsManager.onActivityCreate(this);
-//        }
-
-/*
-        SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signIn();
-            }
-        });
-*/
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.start_drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.start_drawer_list);
@@ -200,13 +167,6 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
             }
         }
     }
-
-/*
-    public void showLogIn() {
-        View view = findViewById(R.id.start_login_container);
-        view.setVisibility(View.VISIBLE);
-    }
-*/
 
     private FragmentCreatorDrawerItem createFragmentCreatorDrawerItem(TabComponentFactory finder) {
         int titleResId = finder.getTitleResId();
@@ -295,25 +255,4 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
 
     protected abstract T createFragment();
 
-    /**
-     * Because the resolution for the connection failure was started with startIntentSenderForResult and the code RC_SIGN_IN, we can capture the result inside Activity.onActivityResult.
-     *
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        CredentialsManager.getInstance(this).onActivityResult(requestCode, resultCode, data, this);
-    }
-
-/*
-    public void signInWithGplus() {
-        mCredentialsManager.signInWithGplus();
-    }
-
-    public void signOutFromGplus() {
-        mCredentialsManager.logOut();
-    }
-*/
 }

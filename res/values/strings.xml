@@ -255,4 +255,9 @@
     <string name="show_profile">Visa min profil...</string>
     <string name="profileCouldNotSaveToAPI">Kunde inte spara på servern.
     </string>
+    <string name="auth_progress_logging_out">Loggar ut.</string>
+    <string name="auth_progress_google_logging_in">Loggar in via Google</string>
+    <string name="auth_progress_google_revokation">Appen kommer inte längre ha tillgång till din Google-profil.
+        Du måste därför godkänna appen igen vid nästa inloggning.
+    </string>
 </resources>
