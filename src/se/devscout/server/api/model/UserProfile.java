@@ -1,9 +1,6 @@
-package se.devscout.server.api;
-
-import se.devscout.server.api.model.User;
+package se.devscout.server.api.model;
 
 public interface UserProfile extends User {
     String getRole();
     String[] getRolePermissions();
-//    String[] getAPIKeys();
 }

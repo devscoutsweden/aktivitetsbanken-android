@@ -1,9 +1,8 @@
 package se.devscout.android.model;
 
-import se.devscout.server.api.UserProfile;
+import se.devscout.server.api.model.UserProfile;
 
 public class UserProfileBean extends UserBean implements UserProfile {
-    //    private String[] mAPIKeys;
     private String[] mRolePermissions = {};
     private String mRole = "unknown";
 
@@ -20,15 +19,6 @@ public class UserProfileBean extends UserBean implements UserProfile {
     public String[] getRolePermissions() {
         return mRolePermissions;
     }
-
-//    @Override
-//    public String[] getAPIKeys() {
-//        return mAPIKeys;
-//    }
-
-//    public void setAPIKeys(String[] APIKeys) {
-//        mAPIKeys = APIKeys;
-//    }
 
     public void setRole(String role) {
         mRole = role;
