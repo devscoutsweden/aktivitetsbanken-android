@@ -1,7 +1,7 @@
 package se.devscout.android.util;
 
-import se.devscout.server.api.BaseActivityFilterVisitor;
 import se.devscout.server.api.activityfilter.AndFilter;
+import se.devscout.server.api.activityfilter.BaseActivityFilterVisitor;
 
 public class SimpleAndFilter extends SimpleCompoundFilter implements AndFilter {
 

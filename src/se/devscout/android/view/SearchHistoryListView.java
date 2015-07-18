@@ -7,7 +7,7 @@ import se.devscout.android.controller.fragment.TitleActivityFilterVisitor;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.server.api.ActivityBank;
-import se.devscout.server.api.ActivityFilter;
+import se.devscout.server.api.activityfilter.ActivityFilter;
 import se.devscout.server.api.model.SearchHistory;
 
 import java.net.URI;

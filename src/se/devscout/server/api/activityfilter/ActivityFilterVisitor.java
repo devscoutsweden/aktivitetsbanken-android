@@ -1,4 +1,4 @@
-package se.devscout.server.api;
+package se.devscout.server.api.activityfilter;
 
 public interface ActivityFilterVisitor extends BaseActivityFilterVisitor<String> {
 }

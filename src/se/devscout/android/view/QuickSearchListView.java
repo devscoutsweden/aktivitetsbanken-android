@@ -10,7 +10,7 @@ import android.widget.TextView;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.SearchResultActivity;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
-import se.devscout.server.api.ActivityFilter;
+import se.devscout.server.api.activityfilter.ActivityFilter;
 
 import java.io.Serializable;
 import java.net.URI;

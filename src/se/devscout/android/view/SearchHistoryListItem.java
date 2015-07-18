@@ -1,6 +1,6 @@
 package se.devscout.android.view;
 
-import se.devscout.server.api.ActivityFilter;
+import se.devscout.server.api.activityfilter.ActivityFilter;
 import se.devscout.server.api.model.SearchHistory;
 
 import java.io.Serializable;

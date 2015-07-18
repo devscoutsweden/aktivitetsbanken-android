@@ -1,7 +1,6 @@
-package se.devscout.server.api;
+package se.devscout.server.api.activityfilter;
 
 import se.devscout.android.util.SimpleAgeRangeFilter;
-import se.devscout.server.api.activityfilter.*;
 import se.devscout.server.api.model.Range;
 import se.devscout.server.api.model.UserKey;
 

@@ -1,6 +1,4 @@
-package se.devscout.server.api;
-
-import se.devscout.server.api.activityfilter.*;
+package se.devscout.server.api.activityfilter;
 
 public interface BaseActivityFilterVisitor<T> {
     T visit(AndFilter filter);

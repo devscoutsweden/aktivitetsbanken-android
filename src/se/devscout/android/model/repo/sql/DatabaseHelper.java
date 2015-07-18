@@ -18,7 +18,7 @@ import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.SimpleActivityKeysFilter;
 import se.devscout.android.util.SimpleRelatedToFilter;
 import se.devscout.android.util.auth.CredentialsManager;
-import se.devscout.server.api.ActivityFilter;
+import se.devscout.server.api.activityfilter.ActivityFilter;
 import se.devscout.server.api.model.*;
 
 import java.io.ByteArrayOutputStream;

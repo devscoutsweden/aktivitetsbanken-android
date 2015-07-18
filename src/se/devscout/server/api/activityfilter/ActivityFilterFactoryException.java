@@ -1,4 +1,4 @@
-package se.devscout.server.api;
+package se.devscout.server.api.activityfilter;
 
 public class ActivityFilterFactoryException extends Exception {
     public ActivityFilterFactoryException(String message) {

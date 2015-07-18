@@ -1,7 +1,7 @@
 package se.devscout.android.util;
 
-import se.devscout.server.api.BaseActivityFilterVisitor;
 import se.devscout.server.api.activityfilter.ActivityKeysFilter;
+import se.devscout.server.api.activityfilter.BaseActivityFilterVisitor;
 import se.devscout.server.api.model.ActivityKey;
 
 public class SimpleActivityKeysFilter implements ActivityKeysFilter {

@@ -1,6 +1,8 @@
 package se.devscout.server.api;
 
 import se.devscout.android.util.http.UnauthorizedException;
+import se.devscout.server.api.activityfilter.ActivityFilter;
+import se.devscout.server.api.activityfilter.ActivityFilterFactory;
 import se.devscout.server.api.model.*;
 
 import java.net.URI;

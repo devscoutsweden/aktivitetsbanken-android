@@ -18,7 +18,7 @@ import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.android.util.http.UnauthorizedException;
 import se.devscout.server.api.ActivityBank;
-import se.devscout.server.api.ActivityFilter;
+import se.devscout.server.api.activityfilter.ActivityFilter;
 import se.devscout.server.api.model.Activity;
 import se.devscout.server.api.model.Range;
 

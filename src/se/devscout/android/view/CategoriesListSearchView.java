@@ -6,7 +6,7 @@ import se.devscout.android.controller.fragment.CategoryListItem;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.SimpleCategoryFilter;
 import se.devscout.android.util.http.UnauthorizedException;
-import se.devscout.server.api.ActivityFilter;
+import se.devscout.server.api.activityfilter.ActivityFilter;
 import se.devscout.server.api.model.Category;
 import se.devscout.server.api.model.Media;
 

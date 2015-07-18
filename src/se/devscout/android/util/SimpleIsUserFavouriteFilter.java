@@ -1,6 +1,6 @@
 package se.devscout.android.util;
 
-import se.devscout.server.api.BaseActivityFilterVisitor;
+import se.devscout.server.api.activityfilter.BaseActivityFilterVisitor;
 import se.devscout.server.api.activityfilter.IsUserFavouriteFilter;
 import se.devscout.server.api.model.UserKey;
 

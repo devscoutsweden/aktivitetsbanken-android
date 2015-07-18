@@ -1,6 +1,6 @@
 package se.devscout.server.api.model;
 
-import se.devscout.server.api.ActivityFilter;
+import se.devscout.server.api.activityfilter.ActivityFilter;
 
 import java.io.Serializable;
 

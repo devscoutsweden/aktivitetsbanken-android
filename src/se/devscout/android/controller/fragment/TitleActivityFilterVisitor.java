@@ -3,8 +3,6 @@ package se.devscout.android.controller.fragment;
 import android.content.Context;
 import android.text.TextUtils;
 import se.devscout.android.R;
-import se.devscout.server.api.ActivityFilter;
-import se.devscout.server.api.ActivityFilterVisitor;
 import se.devscout.server.api.activityfilter.*;
 
 public class TitleActivityFilterVisitor implements ActivityFilterVisitor {

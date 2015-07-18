@@ -4,7 +4,7 @@ import android.content.Context;
 import se.devscout.android.AgeGroup;
 import se.devscout.android.R;
 import se.devscout.android.util.ActivityBankFactory;
-import se.devscout.server.api.ActivityFilter;
+import se.devscout.server.api.activityfilter.ActivityFilter;
 
 import java.net.URI;
 import java.util.Arrays;

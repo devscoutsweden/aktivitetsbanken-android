@@ -6,7 +6,11 @@ import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.PrimitiveActivityFilterFactory;
 import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.android.util.http.UnauthorizedException;
-import se.devscout.server.api.*;
+import se.devscout.server.api.ActivityBank;
+import se.devscout.server.api.ActivityBankListener;
+import se.devscout.server.api.ModificationCounters;
+import se.devscout.server.api.activityfilter.ActivityFilter;
+import se.devscout.server.api.activityfilter.ActivityFilterFactory;
 import se.devscout.server.api.model.*;
 
 import java.io.IOException;

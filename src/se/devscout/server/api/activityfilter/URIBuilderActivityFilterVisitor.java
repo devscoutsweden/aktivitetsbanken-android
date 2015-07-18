@@ -1,4 +1,4 @@
-package se.devscout.server.api;
+package se.devscout.server.api.activityfilter;
 
 import android.net.Uri;
 
