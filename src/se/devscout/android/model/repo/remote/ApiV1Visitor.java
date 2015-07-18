@@ -4,8 +4,6 @@ import android.net.Uri;
 import android.text.TextUtils;
 import se.devscout.android.util.LogUtil;
 import se.devscout.server.api.ActivityFilter;
-import se.devscout.server.api.AverageRatingFilter;
-import se.devscout.server.api.RelatedToFilter;
 import se.devscout.server.api.URIBuilderActivityFilterVisitor;
 import se.devscout.server.api.activityfilter.*;
 

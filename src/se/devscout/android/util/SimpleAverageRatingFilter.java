@@ -1,7 +1,7 @@
 package se.devscout.android.util;
 
-import se.devscout.server.api.AverageRatingFilter;
 import se.devscout.server.api.BaseActivityFilterVisitor;
+import se.devscout.server.api.activityfilter.AverageRatingFilter;
 
 public class SimpleAverageRatingFilter implements AverageRatingFilter {
     private double mLimit;

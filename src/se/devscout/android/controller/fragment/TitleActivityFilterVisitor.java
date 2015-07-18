@@ -5,8 +5,6 @@ import android.text.TextUtils;
 import se.devscout.android.R;
 import se.devscout.server.api.ActivityFilter;
 import se.devscout.server.api.ActivityFilterVisitor;
-import se.devscout.server.api.AverageRatingFilter;
-import se.devscout.server.api.RelatedToFilter;
 import se.devscout.server.api.activityfilter.*;
 
 public class TitleActivityFilterVisitor implements ActivityFilterVisitor {
