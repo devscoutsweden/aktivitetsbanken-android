@@ -4,11 +4,11 @@ import android.content.Context;
 import se.devscout.android.R;
 import se.devscout.android.model.ActivityKey;
 import se.devscout.android.model.UserKey;
+import se.devscout.android.model.repo.ActivityBank;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.android.util.http.UnauthorizedException;
-import se.devscout.server.api.ActivityBank;
 
 public class UpdateFavouriteStatusTaskExecutor implements BackgroundTasksHandlerThread.BackgroundTaskExecutor<UnauthorizedException, UpdateFavouriteStatusParam> {
     @Override

@@ -1,4 +1,4 @@
-package se.devscout.server.api.activityfilter;
+package se.devscout.android.model.activityfilter;
 
 public interface BaseActivityFilterVisitor<T> {
     T visit(AndFilter filter);

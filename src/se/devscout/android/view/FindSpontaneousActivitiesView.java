@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import se.devscout.android.AgeGroup;
 import se.devscout.android.R;
+import se.devscout.android.model.activityfilter.ActivityFilterFactory;
+import se.devscout.android.model.activityfilter.AndFilter;
 import se.devscout.android.util.ActivityBankFactory;
-import se.devscout.server.api.activityfilter.ActivityFilterFactory;
-import se.devscout.server.api.activityfilter.AndFilter;
 
 import java.io.Serializable;
 

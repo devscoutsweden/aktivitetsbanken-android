@@ -1,7 +1,7 @@
 package se.devscout.android.util;
 
-import se.devscout.server.api.activityfilter.BaseActivityFilterVisitor;
-import se.devscout.server.api.activityfilter.OverallFavouriteActivitiesFilter;
+import se.devscout.android.model.activityfilter.BaseActivityFilterVisitor;
+import se.devscout.android.model.activityfilter.OverallFavouriteActivitiesFilter;
 
 public class SimpleOverallFavouriteActivitiesFilter implements OverallFavouriteActivitiesFilter {
 

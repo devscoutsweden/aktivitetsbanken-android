@@ -2,8 +2,8 @@ package se.devscout.android.model.repo.remote;
 
 import android.net.Uri;
 import android.text.TextUtils;
+import se.devscout.android.model.activityfilter.*;
 import se.devscout.android.util.LogUtil;
-import se.devscout.server.api.activityfilter.*;
 
 public class ApiV1Visitor implements URIBuilderActivityFilterVisitor {
 

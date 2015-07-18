@@ -16,11 +16,11 @@ import se.devscout.android.R;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
 import se.devscout.android.model.User;
 import se.devscout.android.model.UserProperties;
+import se.devscout.android.model.repo.ActivityBank;
 import se.devscout.android.model.repo.remote.ServerAPICredentials;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.IdentityProvider;
 import se.devscout.android.util.auth.CredentialsManager;
-import se.devscout.server.api.ActivityBank;
 
 public class AuthenticationView extends LinearLayout implements CredentialsManager.Listener {
 

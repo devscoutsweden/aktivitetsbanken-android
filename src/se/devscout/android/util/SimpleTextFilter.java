@@ -1,7 +1,7 @@
 package se.devscout.android.util;
 
-import se.devscout.server.api.activityfilter.BaseActivityFilterVisitor;
-import se.devscout.server.api.activityfilter.TextFilter;
+import se.devscout.android.model.activityfilter.BaseActivityFilterVisitor;
+import se.devscout.android.model.activityfilter.TextFilter;
 
 public class SimpleTextFilter implements TextFilter {
     private final String mCondition;

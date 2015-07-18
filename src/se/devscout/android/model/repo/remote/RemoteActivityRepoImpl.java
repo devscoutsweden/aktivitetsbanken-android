@@ -12,14 +12,14 @@ import org.json.JSONTokener;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.TitleActivityFilterVisitor;
 import se.devscout.android.model.*;
+import se.devscout.android.model.activityfilter.ActivityFilter;
+import se.devscout.android.model.activityfilter.IsUserFavouriteFilter;
+import se.devscout.android.model.activityfilter.URIBuilderActivityFilterVisitor;
 import se.devscout.android.model.repo.sql.LocalObjectRefreshness;
 import se.devscout.android.model.repo.sql.SQLiteActivityRepo;
 import se.devscout.android.util.*;
 import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.android.util.http.*;
-import se.devscout.server.api.activityfilter.ActivityFilter;
-import se.devscout.server.api.activityfilter.IsUserFavouriteFilter;
-import se.devscout.server.api.activityfilter.URIBuilderActivityFilterVisitor;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;

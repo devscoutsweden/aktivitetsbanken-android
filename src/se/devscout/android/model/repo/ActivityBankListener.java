@@ -1,4 +1,4 @@
-package se.devscout.server.api;
+package se.devscout.android.model.repo;
 
 import se.devscout.android.model.ActivityKey;
 import se.devscout.android.model.SearchHistory;

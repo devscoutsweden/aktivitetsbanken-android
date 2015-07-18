@@ -1,4 +1,4 @@
-package se.devscout.server.api.activityfilter;
+package se.devscout.android.model.activityfilter;
 
 import se.devscout.android.model.UserKey;
 

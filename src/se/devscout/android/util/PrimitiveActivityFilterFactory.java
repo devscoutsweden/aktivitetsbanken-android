@@ -2,7 +2,7 @@ package se.devscout.android.util;
 
 import se.devscout.android.model.Range;
 import se.devscout.android.model.UserKey;
-import se.devscout.server.api.activityfilter.*;
+import se.devscout.android.model.activityfilter.*;
 
 public class PrimitiveActivityFilterFactory implements ActivityFilterFactory {
     @Override

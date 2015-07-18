@@ -1,7 +1,7 @@
 package se.devscout.android.util;
 
-import se.devscout.server.api.activityfilter.BaseActivityFilterVisitor;
-import se.devscout.server.api.activityfilter.IsFeaturedFilter;
+import se.devscout.android.model.activityfilter.BaseActivityFilterVisitor;
+import se.devscout.android.model.activityfilter.IsFeaturedFilter;
 
 /**
  * Tests if activity is marked a Featured.

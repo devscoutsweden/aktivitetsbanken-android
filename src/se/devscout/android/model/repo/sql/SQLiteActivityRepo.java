@@ -2,15 +2,15 @@ package se.devscout.android.model.repo.sql;
 
 import android.content.Context;
 import se.devscout.android.model.*;
+import se.devscout.android.model.activityfilter.ActivityFilter;
+import se.devscout.android.model.activityfilter.ActivityFilterFactory;
+import se.devscout.android.model.repo.ActivityBank;
+import se.devscout.android.model.repo.ActivityBankListener;
+import se.devscout.android.model.repo.ModificationCounters;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.PrimitiveActivityFilterFactory;
 import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.android.util.http.UnauthorizedException;
-import se.devscout.server.api.ActivityBank;
-import se.devscout.server.api.ActivityBankListener;
-import se.devscout.server.api.ModificationCounters;
-import se.devscout.server.api.activityfilter.ActivityFilter;
-import se.devscout.server.api.activityfilter.ActivityFilterFactory;
 
 import java.io.IOException;
 import java.net.URI;

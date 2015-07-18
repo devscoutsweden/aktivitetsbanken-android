@@ -7,10 +7,10 @@ import android.view.View;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
 import se.devscout.android.model.Media;
 import se.devscout.android.model.MediaKey;
+import se.devscout.android.model.repo.ActivityBank;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.ResourceUtil;
 import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
-import se.devscout.server.api.ActivityBank;
 
 import java.net.URI;
 

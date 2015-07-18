@@ -1,8 +1,8 @@
 package se.devscout.android.util;
 
 import se.devscout.android.model.ActivityKey;
-import se.devscout.server.api.activityfilter.BaseActivityFilterVisitor;
-import se.devscout.server.api.activityfilter.RelatedToFilter;
+import se.devscout.android.model.activityfilter.BaseActivityFilterVisitor;
+import se.devscout.android.model.activityfilter.RelatedToFilter;
 
 public class SimpleRelatedToFilter implements RelatedToFilter {
     private ActivityKey mActivityKey;

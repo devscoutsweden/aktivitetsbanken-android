@@ -1,7 +1,7 @@
 package se.devscout.android.model;
 
 import android.text.TextUtils;
-import se.devscout.server.api.activityfilter.*;
+import se.devscout.android.model.activityfilter.*;
 
 class EqualsFilterVisitor implements ActivityFilterVisitor {
 

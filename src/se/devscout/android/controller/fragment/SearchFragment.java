@@ -14,13 +14,13 @@ import se.devscout.android.controller.activity.SearchResultActivity;
 import se.devscout.android.model.Category;
 import se.devscout.android.model.CategoryBean;
 import se.devscout.android.model.IntegerRange;
+import se.devscout.android.model.activityfilter.ActivityFilterFactory;
+import se.devscout.android.model.activityfilter.ActivityFilterFactoryException;
+import se.devscout.android.model.activityfilter.AndFilter;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.android.util.http.UnauthorizedException;
-import se.devscout.server.api.activityfilter.ActivityFilterFactory;
-import se.devscout.server.api.activityfilter.ActivityFilterFactoryException;
-import se.devscout.server.api.activityfilter.AndFilter;
 
 import java.util.List;
 
@@ -147,23 +147,23 @@ public class SearchFragment extends ActivityBankFragment {
                 }
             }
 
-            private void initCategory(se.devscout.server.api.activityfilter.AndFilter filter, ActivityFilterFactory mFilterFactory) {
+            private void initCategory(se.devscout.android.model.activityfilter.AndFilter filter, ActivityFilterFactory mFilterFactory) {
                 Category selectedCategory = (Category) categoryDropDown.getSelectedItem();
                 if (selectedCategory != anyCategory) {
                     filter.getFilters().add(mFilterFactory.createCategoryFilter(selectedCategory.getGroup(), selectedCategory.getName(), selectedCategory.getServerId()));
                 }
             }
 
-            private void initTimeRange(se.devscout.server.api.activityfilter.AndFilter filter, ActivityFilterFactory mFilterFactory) {
+            private void initTimeRange(se.devscout.android.model.activityfilter.AndFilter filter, ActivityFilterFactory mFilterFactory) {
                 TimeRange selectedTimeRange = (TimeRange) spinner.getSelectedItem();
                 if (selectedTimeRange != anyTimeRange) {
                     // A time range is selected and it is not the "any-option".
-                    se.devscout.server.api.activityfilter.TimeRangeFilter filter1 = mFilterFactory.createTimeRangeFilter(selectedTimeRange);
+                    se.devscout.android.model.activityfilter.TimeRangeFilter filter1 = mFilterFactory.createTimeRangeFilter(selectedTimeRange);
                     filter.getFilters().add(filter1);
                 }
             }
 
-            private void initAgeFilter(se.devscout.server.api.activityfilter.AndFilter filter, ActivityFilterFactory mFilterFactory) {
+            private void initAgeFilter(se.devscout.android.model.activityfilter.AndFilter filter, ActivityFilterFactory mFilterFactory) {
                 IntegerRange range = new IntegerRange(Integer.MAX_VALUE, Integer.MAX_VALUE);
                 addAgeFilter(range, R.id.searchAgeAdventurer, AgeGroup.ADVENTURER, mFilterFactory);
                 addAgeFilter(range, R.id.searchAgeChallenger, AgeGroup.CHALLENGER, mFilterFactory);
@@ -176,7 +176,7 @@ public class SearchFragment extends ActivityBankFragment {
                 }
             }
 
-            private void initTextFilter(se.devscout.server.api.activityfilter.AndFilter filter, ActivityFilterFactory mFilterFactory) {
+            private void initTextFilter(se.devscout.android.model.activityfilter.AndFilter filter, ActivityFilterFactory mFilterFactory) {
                 EditText searchEditText = (EditText) searchView.findViewById(R.id.searchText);
                 String searchText = searchEditText.getText().toString();
                 if (searchText.length() > 0) {
@@ -184,21 +184,21 @@ public class SearchFragment extends ActivityBankFragment {
                 }
             }
 
-            private void initFeaturedOnlyFilter(se.devscout.server.api.activityfilter.AndFilter filter, ActivityFilterFactory mFilterFactory) {
+            private void initFeaturedOnlyFilter(se.devscout.android.model.activityfilter.AndFilter filter, ActivityFilterFactory mFilterFactory) {
                 CheckBox featuredOnlyCheckbox = (CheckBox) searchView.findViewById(R.id.searchFeaturedOnly);
                 if (featuredOnlyCheckbox.isChecked()) {
                     filter.getFilters().add(mFilterFactory.createIsFeaturedFilter());
                 }
             }
 
-            private void initFavouritesOnlyFilter(se.devscout.server.api.activityfilter.AndFilter filter, ActivityFilterFactory mFilterFactory) throws ActivityFilterFactoryException {
+            private void initFavouritesOnlyFilter(se.devscout.android.model.activityfilter.AndFilter filter, ActivityFilterFactory mFilterFactory) throws ActivityFilterFactoryException {
                 CheckBox searchFavouritesOnlyCheckbox = (CheckBox) searchView.findViewById(R.id.searchFavouritesOnly);
                 if (searchFavouritesOnlyCheckbox.isChecked()) {
                     filter.getFilters().add(mFilterFactory.createIsUserFavouriteFilter(CredentialsManager.getInstance(getActivity()).getCurrentUser()));
                 }
             }
 
-            private void initTopRatedOnlyFilter(se.devscout.server.api.activityfilter.AndFilter filter, ActivityFilterFactory mFilterFactory) throws ActivityFilterFactoryException {
+            private void initTopRatedOnlyFilter(se.devscout.android.model.activityfilter.AndFilter filter, ActivityFilterFactory mFilterFactory) throws ActivityFilterFactoryException {
                 CheckBox searchTopRatedOnlyCheckbox = (CheckBox) searchView.findViewById(R.id.searchTopRatedOnly);
                 if (searchTopRatedOnlyCheckbox.isChecked()) {
                     filter.getFilters().add(mFilterFactory.createAverageRatingFilter(4.0));

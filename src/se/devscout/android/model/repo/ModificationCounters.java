@@ -1,4 +1,4 @@
-package se.devscout.server.api;
+package se.devscout.android.model.repo;
 
 /**
  * Keeps track of "modification counter", also known as revisions or

@@ -1,7 +1,7 @@
 package se.devscout.android.model.repo.sql;
 
 import se.devscout.android.model.IntegerRange;
-import se.devscout.server.api.activityfilter.*;
+import se.devscout.android.model.activityfilter.*;
 
 class SQLActivityFilterVisitor implements BaseActivityFilterVisitor<Void> {
     private final QueryBuilder mQueryBuilder;

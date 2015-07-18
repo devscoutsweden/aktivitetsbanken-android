@@ -10,8 +10,8 @@ import se.devscout.android.R;
 import se.devscout.android.model.ActivityKey;
 import se.devscout.android.model.Rating;
 import se.devscout.android.model.UserKey;
+import se.devscout.android.model.repo.ActivityBank;
 import se.devscout.android.util.LogUtil;
-import se.devscout.server.api.ActivityBank;
 
 public class ActivityRatingView extends LinearLayout {
     private ActivityKey mActivityKey;

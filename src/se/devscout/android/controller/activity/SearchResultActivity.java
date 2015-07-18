@@ -7,8 +7,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.ActivitiesListFragment;
+import se.devscout.android.model.activityfilter.ActivityFilter;
 import se.devscout.android.view.ActivitiesListView;
-import se.devscout.server.api.activityfilter.ActivityFilter;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

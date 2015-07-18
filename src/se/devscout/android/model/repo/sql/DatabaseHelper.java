@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 import se.devscout.android.R;
 import se.devscout.android.model.*;
+import se.devscout.android.model.activityfilter.ActivityFilter;
 import se.devscout.android.model.repo.TestDataUtil;
 import se.devscout.android.model.repo.sql.cache.ActivityIdCache;
 import se.devscout.android.model.repo.sql.cache.CategoryIdCache;
@@ -18,7 +19,6 @@ import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.SimpleActivityKeysFilter;
 import se.devscout.android.util.SimpleRelatedToFilter;
 import se.devscout.android.util.auth.CredentialsManager;
-import se.devscout.server.api.activityfilter.ActivityFilter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

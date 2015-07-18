@@ -8,10 +8,10 @@ import se.devscout.android.controller.activity.SingleFragmentActivity;
 import se.devscout.android.model.ObjectIdentifierBean;
 import se.devscout.android.model.UserKey;
 import se.devscout.android.model.UserProperties;
+import se.devscout.android.model.repo.ActivityBank;
 import se.devscout.android.model.repo.remote.ServerAPICredentials;
 import se.devscout.android.util.IdentityProvider;
 import se.devscout.android.util.LogUtil;
-import se.devscout.server.api.ActivityBank;
 
 import java.util.ArrayList;
 import java.util.List;

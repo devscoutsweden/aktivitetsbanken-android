@@ -1,8 +1,8 @@
 package se.devscout.android.util;
 
 import se.devscout.android.model.Category;
-import se.devscout.server.api.activityfilter.BaseActivityFilterVisitor;
-import se.devscout.server.api.activityfilter.CategoryFilter;
+import se.devscout.android.model.activityfilter.BaseActivityFilterVisitor;
+import se.devscout.android.model.activityfilter.CategoryFilter;
 
 /**
  * Tests if activity is assigned to a certain category.

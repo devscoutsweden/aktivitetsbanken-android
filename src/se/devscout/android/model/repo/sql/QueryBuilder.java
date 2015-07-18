@@ -7,11 +7,11 @@ import se.devscout.android.model.ActivityKey;
 import se.devscout.android.model.IntegerRange;
 import se.devscout.android.model.Range;
 import se.devscout.android.model.UserKey;
+import se.devscout.android.model.activityfilter.AverageRatingFilter;
+import se.devscout.android.model.activityfilter.CategoryFilter;
+import se.devscout.android.model.activityfilter.OverallFavouriteActivitiesFilter;
+import se.devscout.android.model.activityfilter.RelatedToFilter;
 import se.devscout.android.util.auth.CredentialsManager;
-import se.devscout.server.api.activityfilter.AverageRatingFilter;
-import se.devscout.server.api.activityfilter.CategoryFilter;
-import se.devscout.server.api.activityfilter.OverallFavouriteActivitiesFilter;
-import se.devscout.server.api.activityfilter.RelatedToFilter;
 
 import java.util.ArrayList;
 import java.util.Arrays;

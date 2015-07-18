@@ -3,7 +3,7 @@ package se.devscout.android.controller.fragment;
 import android.content.Context;
 import android.text.TextUtils;
 import se.devscout.android.R;
-import se.devscout.server.api.activityfilter.*;
+import se.devscout.android.model.activityfilter.*;
 
 public class SubtitleActivityFilterVisitor implements ActivityFilterVisitor {
     private Context mContext;

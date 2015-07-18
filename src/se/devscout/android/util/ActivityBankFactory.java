@@ -1,8 +1,8 @@
 package se.devscout.android.util;
 
 import android.content.Context;
+import se.devscout.android.model.repo.ActivityBank;
 import se.devscout.android.model.repo.remote.RemoteActivityRepoImpl;
-import se.devscout.server.api.ActivityBank;
 
 public class ActivityBankFactory {
     private ActivityBankFactory() {

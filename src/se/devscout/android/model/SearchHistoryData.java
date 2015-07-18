@@ -1,6 +1,6 @@
 package se.devscout.android.model;
 
-import se.devscout.server.api.activityfilter.ActivityFilter;
+import se.devscout.android.model.activityfilter.ActivityFilter;
 
 import java.io.Serializable;
 

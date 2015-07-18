@@ -12,11 +12,11 @@ import se.devscout.android.R;
 import se.devscout.android.controller.activity.ActivitiesActivity;
 import se.devscout.android.controller.fragment.RangeComparator;
 import se.devscout.android.model.*;
+import se.devscout.android.model.activityfilter.ActivityFilter;
+import se.devscout.android.model.repo.ActivityBank;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.android.util.http.UnauthorizedException;
-import se.devscout.server.api.ActivityBank;
-import se.devscout.server.api.activityfilter.ActivityFilter;
 
 import java.util.ArrayList;
 import java.util.Collections;

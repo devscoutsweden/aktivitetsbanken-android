@@ -1,8 +1,8 @@
 package se.devscout.android.util;
 
 import se.devscout.android.model.Range;
-import se.devscout.server.api.activityfilter.AgeRangeFilter;
-import se.devscout.server.api.activityfilter.BaseActivityFilterVisitor;
+import se.devscout.android.model.activityfilter.AgeRangeFilter;
+import se.devscout.android.model.activityfilter.BaseActivityFilterVisitor;
 
 /**
  * Tests if the age interval of an activity intersects a certain age range.

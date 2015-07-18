@@ -5,10 +5,10 @@ import se.devscout.android.R;
 import se.devscout.android.controller.fragment.SubtitleActivityFilterVisitor;
 import se.devscout.android.controller.fragment.TitleActivityFilterVisitor;
 import se.devscout.android.model.SearchHistory;
+import se.devscout.android.model.activityfilter.ActivityFilter;
+import se.devscout.android.model.repo.ActivityBank;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.auth.CredentialsManager;
-import se.devscout.server.api.ActivityBank;
-import se.devscout.server.api.activityfilter.ActivityFilter;
 
 import java.net.URI;
 import java.util.ArrayList;

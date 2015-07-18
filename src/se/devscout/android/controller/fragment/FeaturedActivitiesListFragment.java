@@ -3,9 +3,9 @@ package se.devscout.android.controller.fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import se.devscout.android.model.activityfilter.IsFeaturedFilter;
 import se.devscout.android.view.ActivitiesListView;
 import se.devscout.android.view.FeaturedActivitiesListView;
-import se.devscout.server.api.activityfilter.IsFeaturedFilter;
 
 public class FeaturedActivitiesListFragment extends ActivitiesListFragment {
 

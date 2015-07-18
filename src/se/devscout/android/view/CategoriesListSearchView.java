@@ -5,10 +5,10 @@ import se.devscout.android.R;
 import se.devscout.android.controller.fragment.CategoryListItem;
 import se.devscout.android.model.Category;
 import se.devscout.android.model.Media;
+import se.devscout.android.model.activityfilter.ActivityFilter;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.SimpleCategoryFilter;
 import se.devscout.android.util.http.UnauthorizedException;
-import se.devscout.server.api.activityfilter.ActivityFilter;
 
 import java.net.URI;
 import java.util.ArrayList;

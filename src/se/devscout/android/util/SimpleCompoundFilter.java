@@ -1,6 +1,6 @@
 package se.devscout.android.util;
 
-import se.devscout.server.api.activityfilter.ActivityFilter;
+import se.devscout.android.model.activityfilter.ActivityFilter;
 
 import java.util.ArrayList;
 import java.util.Arrays;

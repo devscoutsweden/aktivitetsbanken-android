@@ -1,7 +1,7 @@
 package se.devscout.android.util;
 
-import se.devscout.server.api.activityfilter.BaseActivityFilterVisitor;
-import se.devscout.server.api.activityfilter.RandomActivitiesFilter;
+import se.devscout.android.model.activityfilter.BaseActivityFilterVisitor;
+import se.devscout.android.model.activityfilter.RandomActivitiesFilter;
 
 class SimpleRandomActivitiesFilter implements RandomActivitiesFilter {
     private int mNumberOfActivities;

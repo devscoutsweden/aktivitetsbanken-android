@@ -1,8 +1,8 @@
 package se.devscout.android.util;
 
 import se.devscout.android.model.UserKey;
-import se.devscout.server.api.activityfilter.BaseActivityFilterVisitor;
-import se.devscout.server.api.activityfilter.IsUserFavouriteFilter;
+import se.devscout.android.model.activityfilter.BaseActivityFilterVisitor;
+import se.devscout.android.model.activityfilter.IsUserFavouriteFilter;
 
 class SimpleIsUserFavouriteFilter implements IsUserFavouriteFilter {
     private UserKey mUserKey;
