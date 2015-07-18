@@ -1,9 +1,9 @@
 package se.devscout.android.model.repo.sql.cache;
 
 import se.devscout.android.model.MediaBean;
+import se.devscout.android.model.MediaProperties;
 import se.devscout.android.model.repo.sql.Database;
 import se.devscout.android.model.repo.sql.DatabaseHelper;
-import se.devscout.server.api.model.MediaProperties;
 
 public class MediaIdCache extends ServerObjectIdCache<MediaBean, MediaProperties> {
     public MediaIdCache(DatabaseHelper databaseHelper) {

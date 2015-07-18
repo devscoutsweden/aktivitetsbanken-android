@@ -1,10 +1,10 @@
 package se.devscout.android.model.repo.sql;
 
 import android.database.sqlite.SQLiteDatabase;
+import se.devscout.android.model.HistoryType;
 import se.devscout.android.model.SearchHistoryBean;
-import se.devscout.server.api.model.HistoryType;
-import se.devscout.server.api.model.SearchHistoryData;
-import se.devscout.server.api.model.UserKey;
+import se.devscout.android.model.SearchHistoryData;
+import se.devscout.android.model.UserKey;
 
 public class SearchHistoryCursor extends AbstractHistoryCursor<SearchHistoryBean, SearchHistoryData> {
     public SearchHistoryCursor(SQLiteDatabase db, UserKey user, boolean descendingOrder) {

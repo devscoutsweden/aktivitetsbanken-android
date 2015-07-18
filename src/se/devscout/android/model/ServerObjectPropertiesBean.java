@@ -1,7 +1,5 @@
 package se.devscout.android.model;
 
-import se.devscout.server.api.model.ServerObjectProperties;
-
 public class ServerObjectPropertiesBean extends ServerObjectIdentifierBean implements ServerObjectProperties {
     protected boolean mPublishable = false;
     private long mServerRevisionId;

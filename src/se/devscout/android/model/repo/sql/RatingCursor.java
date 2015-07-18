@@ -1,10 +1,10 @@
 package se.devscout.android.model.repo.sql;
 
 import android.database.sqlite.SQLiteDatabase;
+import se.devscout.android.model.ActivityKey;
 import se.devscout.android.model.RatingBean;
-import se.devscout.server.api.model.ActivityKey;
-import se.devscout.server.api.model.RatingStatus;
-import se.devscout.server.api.model.UserKey;
+import se.devscout.android.model.RatingStatus;
+import se.devscout.android.model.UserKey;
 
 public class RatingCursor extends BaseCursorWrapper {
     public RatingCursor(SQLiteDatabase db, ActivityKey activityKey, UserKey userKey) {

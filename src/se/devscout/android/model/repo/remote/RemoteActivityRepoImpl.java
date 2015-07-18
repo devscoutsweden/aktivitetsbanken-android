@@ -20,7 +20,6 @@ import se.devscout.android.util.http.*;
 import se.devscout.server.api.activityfilter.ActivityFilter;
 import se.devscout.server.api.activityfilter.IsUserFavouriteFilter;
 import se.devscout.server.api.activityfilter.URIBuilderActivityFilterVisitor;
-import se.devscout.server.api.model.*;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;

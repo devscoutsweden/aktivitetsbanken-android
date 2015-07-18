@@ -1,11 +1,11 @@
 package se.devscout.android.model.repo.sql.cache;
 
 import android.database.Cursor;
+import se.devscout.android.model.ServerObjectIdentifier;
+import se.devscout.android.model.ServerObjectProperties;
+import se.devscout.android.model.SynchronizedServerObject;
 import se.devscout.android.model.repo.sql.DatabaseHelper;
 import se.devscout.android.model.repo.sql.LocalObjectRefreshness;
-import se.devscout.server.api.model.ServerObjectIdentifier;
-import se.devscout.server.api.model.ServerObjectProperties;
-import se.devscout.server.api.model.SynchronizedServerObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;

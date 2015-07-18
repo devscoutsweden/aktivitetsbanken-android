@@ -1,9 +1,9 @@
 package se.devscout.android.model.repo.sql.cache;
 
 import se.devscout.android.model.CategoryBean;
+import se.devscout.android.model.CategoryProperties;
 import se.devscout.android.model.repo.sql.Database;
 import se.devscout.android.model.repo.sql.DatabaseHelper;
-import se.devscout.server.api.model.CategoryProperties;
 
 public class CategoryIdCache extends ServerObjectIdCache<CategoryBean, CategoryProperties> {
     public CategoryIdCache(DatabaseHelper databaseHelper) {

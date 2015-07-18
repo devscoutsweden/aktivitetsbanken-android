@@ -1,7 +1,5 @@
 package se.devscout.android.model;
 
-import se.devscout.server.api.model.*;
-
 import java.io.Serializable;
 
 public class ObjectIdentifierBean implements Serializable, ActivityKey, CategoryKey, UserKey, MediaKey {

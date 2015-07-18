@@ -1,7 +1,5 @@
 package se.devscout.android.model;
 
-import se.devscout.server.api.model.SystemMessageProperties;
-
 import java.util.Date;
 
 public class SystemMessagePropertiesBean extends ServerObjectPropertiesBean implements SystemMessageProperties {

@@ -11,16 +11,12 @@ import android.widget.TextView;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.ActivitiesActivity;
 import se.devscout.android.controller.fragment.RangeComparator;
-import se.devscout.android.model.ObjectIdentifierBean;
-import se.devscout.android.model.SearchHistoryDataBean;
-import se.devscout.android.model.SearchHistoryPropertiesBean;
+import se.devscout.android.model.*;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.android.util.http.UnauthorizedException;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.activityfilter.ActivityFilter;
-import se.devscout.server.api.model.Activity;
-import se.devscout.server.api.model.Range;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,7 +1,5 @@
 package se.devscout.android.model;
 
-import se.devscout.server.api.model.*;
-
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;

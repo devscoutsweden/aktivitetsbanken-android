@@ -14,13 +14,13 @@ import android.widget.TextView;
 import com.google.android.gms.common.SignInButton;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
+import se.devscout.android.model.User;
+import se.devscout.android.model.UserProperties;
 import se.devscout.android.model.repo.remote.ServerAPICredentials;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.IdentityProvider;
 import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.server.api.ActivityBank;
-import se.devscout.server.api.model.User;
-import se.devscout.server.api.model.UserProperties;
 
 public class AuthenticationView extends LinearLayout implements CredentialsManager.Listener {
 

@@ -1,7 +1,7 @@
 package se.devscout.android;
 
-import se.devscout.server.api.model.ObjectIdentifier;
-import se.devscout.server.api.model.ScoutCategoryTrack;
+import se.devscout.android.model.ObjectIdentifier;
+import se.devscout.android.model.ScoutCategoryTrack;
 
 public enum CategoryTrack implements ObjectIdentifier {
 

@@ -1,10 +1,10 @@
 package se.devscout.android.view;
 
 import android.content.Context;
+import se.devscout.android.model.Activity;
+import se.devscout.android.model.Media;
+import se.devscout.android.model.Range;
 import se.devscout.android.util.ResourceUtil;
-import se.devscout.server.api.model.Activity;
-import se.devscout.server.api.model.Media;
-import se.devscout.server.api.model.Range;
 
 public class ActivitiesListItem extends AsyncImageBean {
     private final Integer mFavouritesCount;

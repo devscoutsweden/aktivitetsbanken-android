@@ -3,7 +3,7 @@ package se.devscout.android.util;
 import android.R;
 import android.content.Context;
 import android.util.DisplayMetrics;
-import se.devscout.server.api.model.Media;
+import se.devscout.android.model.Media;
 
 import java.net.URI;
 import java.util.ArrayList;

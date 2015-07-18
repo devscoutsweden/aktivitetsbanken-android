@@ -1,8 +1,5 @@
 package se.devscout.android.model;
 
-import se.devscout.server.api.model.ServerActivity;
-import se.devscout.server.api.model.UserKey;
-
 public class ServerActivityBean extends ActivityBean implements ServerActivity {
     private Double mMyRating;
 

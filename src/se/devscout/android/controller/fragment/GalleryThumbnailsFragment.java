@@ -8,12 +8,12 @@ import android.widget.*;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.GalleryFullscreenActivity;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
+import se.devscout.android.model.Media;
+import se.devscout.android.model.MediaKey;
 import se.devscout.android.model.ObjectIdentifierBean;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.view.AsyncImageBean;
 import se.devscout.android.view.AsyncImageView;
-import se.devscout.server.api.model.Media;
-import se.devscout.server.api.model.MediaKey;
 
 import java.net.URI;
 import java.util.ArrayList;

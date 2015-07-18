@@ -8,9 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import se.devscout.android.R;
+import se.devscout.android.model.UserProfile;
 import se.devscout.android.model.UserPropertiesBean;
 import se.devscout.android.util.http.UnauthorizedException;
-import se.devscout.server.api.model.UserProfile;
 
 public class AuthUserProfileFragment extends ActivityBankFragment {
 

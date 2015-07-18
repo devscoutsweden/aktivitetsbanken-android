@@ -1,7 +1,7 @@
 package se.devscout.android.controller.fragment;
 
+import se.devscout.android.model.Category;
 import se.devscout.android.model.CategoryPropertiesBean;
-import se.devscout.server.api.model.Category;
 
 public class CategoryListItem extends CategoryPropertiesBean {
     public CategoryListItem(Category category) {

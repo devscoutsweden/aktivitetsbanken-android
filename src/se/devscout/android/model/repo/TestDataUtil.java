@@ -7,8 +7,8 @@ import org.xmlpull.v1.XmlPullParserException;
 import se.devscout.android.R;
 import se.devscout.android.model.ActivityBean;
 import se.devscout.android.model.IntegerRange;
+import se.devscout.android.model.Range;
 import se.devscout.android.util.LogUtil;
-import se.devscout.server.api.model.Range;
 
 import java.io.IOException;
 import java.net.URI;

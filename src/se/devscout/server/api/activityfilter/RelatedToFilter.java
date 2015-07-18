@@ -1,6 +1,6 @@
 package se.devscout.server.api.activityfilter;
 
-import se.devscout.server.api.model.ActivityKey;
+import se.devscout.android.model.ActivityKey;
 
 /**
  * Returns the activities which are related to the specified activity. Since

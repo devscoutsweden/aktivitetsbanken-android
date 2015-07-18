@@ -7,11 +7,11 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import se.devscout.android.R;
+import se.devscout.android.model.ActivityKey;
+import se.devscout.android.model.Rating;
+import se.devscout.android.model.UserKey;
 import se.devscout.android.util.LogUtil;
 import se.devscout.server.api.ActivityBank;
-import se.devscout.server.api.model.ActivityKey;
-import se.devscout.server.api.model.Rating;
-import se.devscout.server.api.model.UserKey;
 
 public class ActivityRatingView extends LinearLayout {
     private ActivityKey mActivityKey;

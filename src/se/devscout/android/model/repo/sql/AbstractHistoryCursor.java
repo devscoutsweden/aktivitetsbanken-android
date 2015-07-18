@@ -1,9 +1,9 @@
 package se.devscout.android.model.repo.sql;
 
 import android.database.sqlite.SQLiteDatabase;
+import se.devscout.android.model.HistoryType;
 import se.devscout.android.model.ObjectIdentifierBean;
-import se.devscout.server.api.model.HistoryType;
-import se.devscout.server.api.model.UserKey;
+import se.devscout.android.model.UserKey;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

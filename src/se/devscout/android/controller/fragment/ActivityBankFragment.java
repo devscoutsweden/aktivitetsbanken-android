@@ -5,12 +5,12 @@ import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
+import se.devscout.android.model.Media;
+import se.devscout.android.model.MediaKey;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.ResourceUtil;
 import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
 import se.devscout.server.api.ActivityBank;
-import se.devscout.server.api.model.Media;
-import se.devscout.server.api.model.MediaKey;
 
 import java.net.URI;
 

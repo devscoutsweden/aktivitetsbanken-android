@@ -1,7 +1,5 @@
 package se.devscout.android.model;
 
-import se.devscout.server.api.model.ReferenceProperties;
-
 import java.net.URI;
 
 public class ReferencePropertiesBean extends ServerObjectPropertiesBean implements ReferenceProperties {

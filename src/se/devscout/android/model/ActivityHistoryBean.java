@@ -1,9 +1,5 @@
 package se.devscout.android.model;
 
-import se.devscout.server.api.model.ActivityHistory;
-import se.devscout.server.api.model.ActivityHistoryData;
-import se.devscout.server.api.model.UserKey;
-
 public class ActivityHistoryBean extends ActivityHistoryPropertiesBean implements ActivityHistory {
 
     public ActivityHistoryBean(Long id, UserKey userKey, ActivityHistoryData data) {

@@ -2,11 +2,11 @@ package se.devscout.android.view;
 
 import android.content.Context;
 import se.devscout.android.R;
+import se.devscout.android.model.Activity;
+import se.devscout.android.model.ActivityKey;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.http.UnauthorizedException;
 import se.devscout.server.api.ActivityBank;
-import se.devscout.server.api.model.Activity;
-import se.devscout.server.api.model.ActivityKey;
 
 import java.util.ArrayList;
 import java.util.List;

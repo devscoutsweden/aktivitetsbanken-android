@@ -1,7 +1,5 @@
 package se.devscout.android.model;
 
-import se.devscout.server.api.model.UserProperties;
-
 public class UserPropertiesBean extends ServerObjectPropertiesBean implements UserProperties {
     protected String mName;
     private String mAPIKey;

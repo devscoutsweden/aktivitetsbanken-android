@@ -1,8 +1,5 @@
 package se.devscout.android.model;
 
-import se.devscout.server.api.model.CategoryProperties;
-import se.devscout.server.api.model.MediaKey;
-
 import java.io.Serializable;
 
 public class CategoryPropertiesBean extends ServerObjectPropertiesBean implements CategoryProperties, Serializable {

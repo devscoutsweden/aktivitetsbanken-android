@@ -1,7 +1,6 @@
 package se.devscout.android.model;
 
 import se.devscout.server.api.activityfilter.ActivityFilter;
-import se.devscout.server.api.model.SearchHistoryData;
 
 public class SearchHistoryDataBean implements SearchHistoryData {
     private ActivityFilter mFilter;

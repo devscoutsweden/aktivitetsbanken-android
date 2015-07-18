@@ -6,12 +6,12 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
 import se.devscout.android.model.ObjectIdentifierBean;
+import se.devscout.android.model.UserKey;
+import se.devscout.android.model.UserProperties;
 import se.devscout.android.model.repo.remote.ServerAPICredentials;
 import se.devscout.android.util.IdentityProvider;
 import se.devscout.android.util.LogUtil;
 import se.devscout.server.api.ActivityBank;
-import se.devscout.server.api.model.UserKey;
-import se.devscout.server.api.model.UserProperties;
 
 import java.util.ArrayList;
 import java.util.List;

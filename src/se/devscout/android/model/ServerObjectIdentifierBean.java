@@ -1,7 +1,5 @@
 package se.devscout.android.model;
 
-import se.devscout.server.api.model.ServerObjectIdentifier;
-
 import java.io.Serializable;
 
 public class ServerObjectIdentifierBean implements ServerObjectIdentifier, Serializable {

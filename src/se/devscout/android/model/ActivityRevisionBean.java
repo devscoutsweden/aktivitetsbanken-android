@@ -1,8 +1,5 @@
 package se.devscout.android.model;
 
-import se.devscout.server.api.model.ActivityKey;
-import se.devscout.server.api.model.ActivityRevision;
-
 import java.io.Serializable;
 
 public class ActivityRevisionBean extends ActivityRevisionPropertiesBean implements ActivityRevision, Serializable {

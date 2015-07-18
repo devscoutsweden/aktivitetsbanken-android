@@ -2,9 +2,9 @@ package se.devscout.android.controller.fragment;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import se.devscout.android.model.MediaKey;
 import se.devscout.android.model.ObjectIdentifierBean;
 import se.devscout.android.view.AsyncImageBean;
-import se.devscout.server.api.model.MediaKey;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -11,6 +11,7 @@ import android.widget.*;
 import se.devscout.android.AgeGroup;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.SearchResultActivity;
+import se.devscout.android.model.Category;
 import se.devscout.android.model.CategoryBean;
 import se.devscout.android.model.IntegerRange;
 import se.devscout.android.util.ActivityBankFactory;
@@ -20,7 +21,6 @@ import se.devscout.android.util.http.UnauthorizedException;
 import se.devscout.server.api.activityfilter.ActivityFilterFactory;
 import se.devscout.server.api.activityfilter.ActivityFilterFactoryException;
 import se.devscout.server.api.activityfilter.AndFilter;
-import se.devscout.server.api.model.Category;
 
 import java.util.List;
 

@@ -1,7 +1,5 @@
 package se.devscout.android.model;
 
-import se.devscout.server.api.model.MediaProperties;
-
 import java.net.URI;
 
 public class MediaPropertiesBean extends ServerObjectPropertiesBean implements MediaProperties {

@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import se.devscout.android.R;
-import se.devscout.server.api.model.ActivityKey;
+import se.devscout.android.model.ActivityKey;
 
 import java.util.List;
 

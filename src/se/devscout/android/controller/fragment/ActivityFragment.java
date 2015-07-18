@@ -11,7 +11,7 @@ import android.widget.*;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.GalleryThumbnailsActivity;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
-import se.devscout.android.model.ObjectIdentifierBean;
+import se.devscout.android.model.*;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.ResourceUtil;
 import se.devscout.android.util.auth.CredentialsManager;
@@ -21,7 +21,6 @@ import se.devscout.android.util.concurrency.UpdateFavouriteStatusParam;
 import se.devscout.android.util.http.UnauthorizedException;
 import se.devscout.android.view.*;
 import se.devscout.android.view.widget.WidgetView;
-import se.devscout.server.api.model.*;
 
 import java.util.ArrayList;
 import java.util.List;

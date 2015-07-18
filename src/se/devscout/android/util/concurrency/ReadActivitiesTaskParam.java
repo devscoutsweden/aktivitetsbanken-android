@@ -1,6 +1,6 @@
 package se.devscout.android.util.concurrency;
 
-import se.devscout.server.api.model.ActivityKey;
+import se.devscout.android.model.ActivityKey;
 
 /**
  * Interface used by the scheduled task in order to retrieve an up-to-date

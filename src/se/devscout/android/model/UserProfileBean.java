@@ -1,7 +1,5 @@
 package se.devscout.android.model;
 
-import se.devscout.server.api.model.UserProfile;
-
 public class UserProfileBean extends UserBean implements UserProfile {
     private String[] mRolePermissions = {};
     private String mRole = "unknown";

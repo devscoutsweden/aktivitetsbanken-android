@@ -3,15 +3,15 @@ package se.devscout.android.model.repo.sql;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
+import se.devscout.android.model.ActivityKey;
 import se.devscout.android.model.IntegerRange;
+import se.devscout.android.model.Range;
+import se.devscout.android.model.UserKey;
 import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.server.api.activityfilter.AverageRatingFilter;
 import se.devscout.server.api.activityfilter.CategoryFilter;
 import se.devscout.server.api.activityfilter.OverallFavouriteActivitiesFilter;
 import se.devscout.server.api.activityfilter.RelatedToFilter;
-import se.devscout.server.api.model.ActivityKey;
-import se.devscout.server.api.model.Range;
-import se.devscout.server.api.model.UserKey;
 
 import java.util.ArrayList;
 import java.util.Arrays;

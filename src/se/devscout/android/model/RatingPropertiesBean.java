@@ -1,8 +1,5 @@
 package se.devscout.android.model;
 
-import se.devscout.server.api.model.RatingProperties;
-import se.devscout.server.api.model.RatingStatus;
-
 public class RatingPropertiesBean implements RatingProperties {
     private RatingStatus mStatus;
 

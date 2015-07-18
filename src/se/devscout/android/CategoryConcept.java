@@ -1,7 +1,7 @@
 package se.devscout.android;
 
-import se.devscout.server.api.model.ObjectIdentifier;
-import se.devscout.server.api.model.ScoutCategoryConcept;
+import se.devscout.android.model.ObjectIdentifier;
+import se.devscout.android.model.ScoutCategoryConcept;
 
 public enum CategoryConcept implements ObjectIdentifier {
     SCOUTSOWN(R.string.category_concept_SCOUTSOWN, ScoutCategoryConcept.SCOUTSOWN, -1),

@@ -3,12 +3,10 @@ package se.devscout.android.controller.fragment;
 import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import se.devscout.android.model.ActivityHistoryPropertiesBean;
-import se.devscout.android.model.ObjectIdentifierBean;
+import se.devscout.android.model.*;
 import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.android.util.concurrency.BackgroundTask;
 import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
-import se.devscout.server.api.model.*;
 
 import java.util.ArrayList;
 import java.util.List;

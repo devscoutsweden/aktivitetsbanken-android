@@ -1,7 +1,5 @@
 package se.devscout.android.model;
 
-import se.devscout.server.api.model.Range;
-
 import java.io.Serializable;
 
 public class IntegerRange implements Range<Integer>, Serializable {

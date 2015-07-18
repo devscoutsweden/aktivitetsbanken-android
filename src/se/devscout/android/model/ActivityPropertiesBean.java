@@ -1,7 +1,6 @@
 package se.devscout.android.model;
 
 import se.devscout.android.util.ResourceUtil;
-import se.devscout.server.api.model.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;

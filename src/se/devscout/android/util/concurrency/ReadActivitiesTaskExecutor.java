@@ -1,12 +1,12 @@
 package se.devscout.android.util.concurrency;
 
 import android.content.Context;
+import se.devscout.android.model.Activity;
+import se.devscout.android.model.ActivityKey;
+import se.devscout.android.model.ActivityList;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.http.UnauthorizedException;
-import se.devscout.server.api.model.Activity;
-import se.devscout.server.api.model.ActivityKey;
-import se.devscout.server.api.model.ActivityList;
 
 import java.util.List;
 

@@ -5,12 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import se.devscout.android.R;
+import se.devscout.android.model.ActivityKey;
 import se.devscout.android.model.ObjectIdentifierBean;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.view.ActivitiesListItem;
 import se.devscout.android.view.ActivitiesListView;
 import se.devscout.server.api.activityfilter.ActivityFilter;
-import se.devscout.server.api.model.ActivityKey;
 
 import java.util.ArrayList;
 import java.util.List;

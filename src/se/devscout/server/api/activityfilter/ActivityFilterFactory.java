@@ -1,8 +1,8 @@
 package se.devscout.server.api.activityfilter;
 
+import se.devscout.android.model.Range;
+import se.devscout.android.model.UserKey;
 import se.devscout.android.util.SimpleAgeRangeFilter;
-import se.devscout.server.api.model.Range;
-import se.devscout.server.api.model.UserKey;
 
 public interface ActivityFilterFactory {
     SimpleAgeRangeFilter createAgeRangeFilter(Range<Integer> range);

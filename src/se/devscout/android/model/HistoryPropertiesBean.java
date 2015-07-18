@@ -1,9 +1,5 @@
 package se.devscout.android.model;
 
-import se.devscout.server.api.model.HistoryProperties;
-import se.devscout.server.api.model.HistoryType;
-import se.devscout.server.api.model.UserKey;
-
 import java.io.Serializable;
 
 public class HistoryPropertiesBean<D extends Serializable> implements HistoryProperties<D> {

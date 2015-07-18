@@ -1,8 +1,5 @@
 package se.devscout.android.model;
 
-import se.devscout.server.api.model.Activity;
-import se.devscout.server.api.model.UserKey;
-
 import java.io.Serializable;
 
 public class ActivityBean extends ActivityPropertiesBean implements Activity, Serializable, Comparable<ActivityBean> {

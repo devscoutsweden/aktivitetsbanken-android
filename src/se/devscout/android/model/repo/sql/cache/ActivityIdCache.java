@@ -1,9 +1,9 @@
 package se.devscout.android.model.repo.sql.cache;
 
 import se.devscout.android.model.ActivityBean;
+import se.devscout.android.model.ActivityProperties;
 import se.devscout.android.model.repo.sql.Database;
 import se.devscout.android.model.repo.sql.DatabaseHelper;
-import se.devscout.server.api.model.ActivityProperties;
 
 public class ActivityIdCache extends ServerObjectIdCache<ActivityBean, ActivityProperties> {
     public ActivityIdCache(DatabaseHelper databaseHelper) {

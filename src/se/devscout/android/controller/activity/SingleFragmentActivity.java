@@ -17,6 +17,7 @@ import android.widget.Toast;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.drawer.*;
 import se.devscout.android.controller.fragment.AbstractActivityBankListener;
+import se.devscout.android.model.SearchHistory;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
@@ -24,7 +25,6 @@ import se.devscout.android.view.widget.ComponentFactoryRepo;
 import se.devscout.android.view.widget.TabComponentFactory;
 import se.devscout.server.api.ActivityBank;
 import se.devscout.server.api.ActivityBankListener;
-import se.devscout.server.api.model.SearchHistory;
 
 public abstract class SingleFragmentActivity<T extends Fragment> extends FragmentActivity implements AdapterView.OnItemClickListener {
 

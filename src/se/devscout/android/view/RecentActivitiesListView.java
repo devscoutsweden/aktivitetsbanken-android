@@ -2,10 +2,10 @@ package se.devscout.android.view;
 
 import android.content.Context;
 import se.devscout.android.R;
+import se.devscout.android.model.Activity;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.server.api.ActivityBank;
-import se.devscout.server.api.model.Activity;
 
 import java.util.ArrayList;
 import java.util.List;

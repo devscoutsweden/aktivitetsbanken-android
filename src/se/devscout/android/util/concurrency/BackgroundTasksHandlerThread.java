@@ -6,8 +6,8 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.text.TextUtils;
 import android.widget.ImageView;
+import se.devscout.android.model.ActivityKey;
 import se.devscout.android.util.LogUtil;
-import se.devscout.server.api.model.ActivityKey;
 
 import java.net.URI;
 import java.util.*;

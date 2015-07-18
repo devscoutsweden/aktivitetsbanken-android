@@ -11,7 +11,6 @@ import se.devscout.server.api.ActivityBankListener;
 import se.devscout.server.api.ModificationCounters;
 import se.devscout.server.api.activityfilter.ActivityFilter;
 import se.devscout.server.api.activityfilter.ActivityFilterFactory;
-import se.devscout.server.api.model.*;
 
 import java.io.IOException;
 import java.net.URI;

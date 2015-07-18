@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 import se.devscout.android.controller.fragment.GalleryThumbnailsFragment;
+import se.devscout.android.model.MediaKey;
 import se.devscout.android.model.ObjectIdentifierBean;
-import se.devscout.server.api.model.MediaKey;
 
 import java.util.ArrayList;
 import java.util.List;

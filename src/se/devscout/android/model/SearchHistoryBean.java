@@ -1,9 +1,6 @@
 package se.devscout.android.model;
 
 import se.devscout.server.api.activityfilter.ActivityFilter;
-import se.devscout.server.api.model.SearchHistory;
-import se.devscout.server.api.model.SearchHistoryData;
-import se.devscout.server.api.model.UserKey;
 
 public class SearchHistoryBean extends SearchHistoryPropertiesBean implements SearchHistory {
 

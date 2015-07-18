@@ -1,9 +1,9 @@
 package se.devscout.android.model.repo.sql.cache;
 
 import se.devscout.android.model.ReferenceBean;
+import se.devscout.android.model.ReferenceProperties;
 import se.devscout.android.model.repo.sql.Database;
 import se.devscout.android.model.repo.sql.DatabaseHelper;
-import se.devscout.server.api.model.ReferenceProperties;
 
 public class ReferenceIdCache extends ServerObjectIdCache<ReferenceBean, ReferenceProperties> {
     public ReferenceIdCache(DatabaseHelper databaseHelper) {

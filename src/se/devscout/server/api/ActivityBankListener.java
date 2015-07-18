@@ -1,8 +1,8 @@
 package se.devscout.server.api;
 
-import se.devscout.server.api.model.ActivityKey;
-import se.devscout.server.api.model.SearchHistory;
-import se.devscout.server.api.model.UserKey;
+import se.devscout.android.model.ActivityKey;
+import se.devscout.android.model.SearchHistory;
+import se.devscout.android.model.UserKey;
 
 public interface ActivityBankListener {
     void onSearchHistoryItemAdded(SearchHistory searchHistory);
