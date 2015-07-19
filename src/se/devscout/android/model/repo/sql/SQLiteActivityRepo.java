@@ -7,6 +7,7 @@ import se.devscout.android.model.activityfilter.ActivityFilterFactory;
 import se.devscout.android.model.repo.ActivityBank;
 import se.devscout.android.model.repo.ActivityBankListener;
 import se.devscout.android.model.repo.ModificationCounters;
+import se.devscout.android.model.repo.remote.OfflineException;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.PrimitiveActivityFilterFactory;
 import se.devscout.android.util.auth.CredentialsManager;
@@ -200,7 +201,7 @@ public class SQLiteActivityRepo implements ActivityBank {
     }
 
     @Override
-    public void updateUserProfile(UserProperties properties) throws UnauthorizedException {
+    public void updateUserProfile(UserProperties properties) throws UnauthorizedException, OfflineException {
         updateUser(CredentialsManager.getInstance(mContext).getCurrentUser(), properties);
     }
 

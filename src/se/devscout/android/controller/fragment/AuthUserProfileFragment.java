@@ -10,6 +10,7 @@ import android.widget.*;
 import se.devscout.android.R;
 import se.devscout.android.model.UserProfile;
 import se.devscout.android.model.UserPropertiesBean;
+import se.devscout.android.model.repo.remote.OfflineException;
 import se.devscout.android.util.http.UnauthorizedException;
 
 public class AuthUserProfileFragment extends ActivityBankFragment {
@@ -81,6 +82,9 @@ public class AuthUserProfileFragment extends ActivityBankFragment {
                             ));
                             return true;
                         } catch (UnauthorizedException e) {
+                            Toast.makeText(getActivity(), getString(R.string.profileCouldNotSaveToAPI), Toast.LENGTH_SHORT);
+                            return false;
+                        } catch (OfflineException e) {
                             Toast.makeText(getActivity(), getString(R.string.profileCouldNotSaveToAPI), Toast.LENGTH_SHORT);
                             return false;
                         }

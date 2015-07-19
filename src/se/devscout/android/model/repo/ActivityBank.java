@@ -3,6 +3,7 @@ package se.devscout.android.model.repo;
 import se.devscout.android.model.*;
 import se.devscout.android.model.activityfilter.ActivityFilter;
 import se.devscout.android.model.activityfilter.ActivityFilterFactory;
+import se.devscout.android.model.repo.remote.OfflineException;
 import se.devscout.android.util.http.UnauthorizedException;
 
 import java.net.URI;
@@ -76,7 +77,7 @@ public interface ActivityBank {
 
     UserProfile readUserProfile();
 
-    void updateUserProfile(UserProperties properties) throws UnauthorizedException;
+    void updateUserProfile(UserProperties properties) throws UnauthorizedException, OfflineException;
 
     Media readMediaItem(MediaKey key);
 

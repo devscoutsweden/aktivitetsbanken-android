@@ -16,8 +16,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.drawer.*;
-import se.devscout.android.controller.fragment.AbstractActivityBankListener;
+import se.devscout.android.model.ActivityKey;
 import se.devscout.android.model.SearchHistory;
+import se.devscout.android.model.UserKey;
 import se.devscout.android.model.repo.ActivityBank;
 import se.devscout.android.model.repo.ActivityBankListener;
 import se.devscout.android.util.ActivityBankFactory;
@@ -36,7 +37,7 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
     private DrawerListAdapter mDrawerListAdapter;
     private ActivityBankListener mActivityBankListener;
 
-    private AbstractActivityBankListener mActivityBackAsyncExceptionListener;
+    private ActivityBankListener mActivityBackAsyncExceptionListener;
 
     protected SingleFragmentActivity() {
         LogUtil.initExceptionLogging(this);
@@ -67,7 +68,15 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
         super.onResume();
 
         if (mActivityBackAsyncExceptionListener == null) {
-            mActivityBackAsyncExceptionListener = new AbstractActivityBankListener() {
+            mActivityBackAsyncExceptionListener = new ActivityBankListener() {
+                @Override
+                public void onSearchHistoryItemAdded(SearchHistory searchHistory) {
+                }
+
+                @Override
+                public void onFavouriteChange(ActivityKey activityKey, UserKey userKey, boolean isFavouriteNow) {
+                }
+
                 @Override
                 public void onServiceDegradation(final String message, final Exception e) {
                     runOnUiThread(new Runnable() {
@@ -97,7 +106,7 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
         }
 
         mDrawerListAdapter.addSearchHistory(getString(R.string.drawer_search_history_header), getActivityBank());
-        mActivityBankListener = new AbstractActivityBankListener() {
+        mActivityBankListener = new ActivityBankListener() {
             @Override
             public void onSearchHistoryItemAdded(SearchHistory searchHistory) {
                 runOnUiThread(new Runnable() {
@@ -106,6 +115,14 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
                         mDrawerListAdapter.loadSearchHistoryItems(getActivityBank());
                     }
                 });
+            }
+
+            @Override
+            public void onFavouriteChange(ActivityKey activityKey, UserKey userKey, boolean isFavouriteNow) {
+            }
+
+            @Override
+            public void onServiceDegradation(String message, Exception e) {
             }
         };
 //        getActivityBank().addListener(mActivityBankListener);

@@ -1,6 +1,8 @@
 package se.devscout.android.model.repo.remote;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Looper;
 import android.preference.PreferenceManager;
@@ -241,10 +243,12 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
             // todo: Update local database based on information from server (in case user has updated server-side profile data using other client)
         } catch (UnauthorizedException e) {
             LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not provide user information to server", e);
+        } catch (OfflineException e) {
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not provide user information to server", e);
         }
     }
 
-    private void synchronizeRatings() throws UnauthorizedException {
+    private void synchronizeRatings() throws UnauthorizedException, OfflineException {
         // Get all ratings for current user from local database
         List<Rating> ratings = mDatabaseHelper.readRatings(getCurrentUser());
         ActivityKey[] ratedActivitiesKeys = new ActivityKey[ratings.size()];
@@ -294,7 +298,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
      * 4. Make sure all server-side favourites are also marked as favourites in app database.
      * 5. Send complete list of favourites to server.
      */
-    private void synchronizeFavourites() throws UnauthorizedException {
+    private void synchronizeFavourites() throws UnauthorizedException, OfflineException {
 
         //
         // Determine which server-side favourites have NOT been cached locally
@@ -371,7 +375,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
             // todo: Update local database based on information from server (in case user has updated server-side profile data using other client)
 
             return userProfile;
-        } catch (IOException | JSONException | UnauthorizedException | UnhandledHttpResponseCodeException e) {
+        } catch (OfflineException | IOException | JSONException | UnauthorizedException | UnhandledHttpResponseCodeException e) {
             userProfile.setRole("");
             userProfile.setAPIKey("");
             userProfile.setRolePermissions(new String[0]);
@@ -385,7 +389,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     }
 
     @Override
-    public void updateUserProfile(UserProperties properties) throws UnauthorizedException {
+    public void updateUserProfile(UserProperties properties) throws UnauthorizedException, OfflineException {
         super.updateUserProfile(properties);
         try {
             String uri = getURL("users/profile");
@@ -504,6 +508,8 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
             } catch (IOException | UnhandledHttpResponseCodeException | UnauthorizedException e) {
                 fireServiceDegradation(mContext.getString(R.string.remote_could_not_save_favourites), e);
                 handleRemoteException(e);
+            } catch (OfflineException e) {
+                LogUtil.d(RemoteActivityRepoImpl.class.getName(), "Device is offline. Will not attempt to connect to server.");
             }
 
         }
@@ -533,7 +539,11 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         ActivityKey key = fixActivityKey(activityKey);
         if (key != null) {
             super.setFavourite(key, userKey);
-            sendPutFavouritesRequest();
+            try {
+                sendPutFavouritesRequest();
+            } catch (OfflineException e) {
+                LogUtil.d(RemoteActivityRepoImpl.class.getName(), "Device is offline. Will not attempt to connect to server.");
+            }
         }
     }
 
@@ -542,11 +552,15 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         ActivityKey key = fixActivityKey(activityKey);
         if (key != null) {
             super.unsetFavourite(key, userKey);
-            sendPutFavouritesRequest();
+            try {
+                sendPutFavouritesRequest();
+            } catch (OfflineException e) {
+                LogUtil.d(RemoteActivityRepoImpl.class.getName(), "Device is offline. Will not attempt to connect to server.");
+            }
         }
     }
 
-    private void sendPutFavouritesRequest() throws UnauthorizedException {
+    private void sendPutFavouritesRequest() throws UnauthorizedException, OfflineException {
         try {
             List<ActivityBean> favourites = super.findActivity(getFilterFactory().createIsUserFavouriteFilter(getCurrentUser()));
 //        Set<ActivityKey> favourites = mDatabaseHelper.getFavourites(PreferencesUtil.getInstance(mContext).getCurrentUser());
@@ -649,6 +663,9 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         } catch (IOException | JSONException | UnhandledHttpResponseCodeException | UnauthorizedException e) {
             fireServiceDegradation(mContext.getString(R.string.remote_could_not_find_activities), e);
             handleRemoteException(e, "Could not search for activities");
+            return super.findActivity(condition);
+        } catch (OfflineException e) {
+            LogUtil.d(RemoteActivityRepoImpl.class.getName(), "Device is offline. Will not attempt to connect to server.");
             return super.findActivity(condition);
         } finally {
             stopWatch.logEvent("The last things");
@@ -829,6 +846,9 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
                 fireServiceDegradation(mContext.getString(R.string.remote_could_get_categories), e);
                 handleRemoteException(e);
                 mCachedCategories = super.readCategories();
+            } catch (OfflineException e) {
+                LogUtil.d(RemoteActivityRepoImpl.class.getName(), "Device is offline. Will not attempt to connect to server.");
+                mCachedCategories = super.readCategories();
             }
         }
         return mCachedCategories;
@@ -876,6 +896,9 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
                 } catch (UnauthorizedException e1) {
                     // Ignore error. We know that this will never happen in this case since we know that the API always permits anyone to read system messages.
                 }
+                return super.getSystemMessages(key);
+            } catch (OfflineException e) {
+                LogUtil.d(RemoteActivityRepoImpl.class.getName(), "Device is offline. Will not attempt to connect to server.");
                 return super.getSystemMessages(key);
             }
 
@@ -926,7 +949,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         return SCHEMA + remoteHost + "/api/v1/" + noun;
     }
 
-    private JSONArray getJSONArray(String uri, JSONObject body) throws IOException, JSONException, UnauthorizedException, UnhandledHttpResponseCodeException {
+    private JSONArray getJSONArray(String uri, JSONObject body) throws IOException, JSONException, UnauthorizedException, UnhandledHttpResponseCodeException, OfflineException {
         StopWatch stopWatch = new StopWatch("getJSONArray from " + uri);
         String s = readUrlAsString(uri, body != null ? body.toString() : null, HttpMethod.GET);
         stopWatch.logEvent("Fetched " + s.length() + " characters of data");
@@ -936,7 +959,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         return jsonArray;
     }
 
-    private JSONObject getJSONObject(String uri, JSONObject body, HttpMethod method) throws IOException, JSONException, UnauthorizedException, UnhandledHttpResponseCodeException {
+    private JSONObject getJSONObject(String uri, JSONObject body, HttpMethod method) throws IOException, JSONException, UnauthorizedException, UnhandledHttpResponseCodeException, OfflineException {
         String s = readUrlAsString(uri, body != null ? body.toString() : null, method);
         return (JSONObject) new JSONTokener(s).nextValue();
     }
@@ -1146,7 +1169,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         return values;
     }
 
-    private String readUrlAsString(String urlSpec, String body, HttpMethod method) throws IOException, UnhandledHttpResponseCodeException, UnauthorizedException {
+    private String readUrlAsString(String urlSpec, String body, HttpMethod method) throws IOException, UnhandledHttpResponseCodeException, UnauthorizedException, OfflineException {
         byte[] data = readUrlAsBytes(urlSpec, body, method);
         if (data != null) {
             String s = new String(data);
@@ -1158,7 +1181,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         }
     }
 
-    private byte[] readUrlAsBytes(String urlSpec, String body, HttpMethod method) throws IOException, UnauthorizedException, UnhandledHttpResponseCodeException {
+    private byte[] readUrlAsBytes(String urlSpec, String body, HttpMethod method) throws IOException, UnauthorizedException, UnhandledHttpResponseCodeException, OfflineException {
         try {
             URL url = new URL(urlSpec);
             try {
@@ -1205,7 +1228,19 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         }
     }
 
-    private byte[] readUrl(final String body, HttpMethod method, URL url) throws IOException, UnauthorizedException, UnhandledHttpResponseCodeException {
+
+    public boolean isOnline() {
+        ConnectivityManager connMgr = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
+    }
+
+    private byte[] readUrl(final String body, HttpMethod method, URL url) throws IOException, UnauthorizedException, UnhandledHttpResponseCodeException, OfflineException {
+
+        if (!isOnline()) {
+            throw new OfflineException();
+        }
+
         if (Looper.myLooper() == Looper.getMainLooper()) {
             // Throw IOException now instead of later having NetworkOnMainThreadException thrown by the operating system.
             LogUtil.e(HttpRequest.class.getName(), "Cannot use network from main thread. URL: " + url.toExternalForm());
