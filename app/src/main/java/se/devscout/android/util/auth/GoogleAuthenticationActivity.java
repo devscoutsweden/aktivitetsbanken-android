@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
@@ -25,6 +26,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
+
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
 import se.devscout.android.controller.fragment.AuthProgressFragment;
@@ -119,12 +121,12 @@ public class GoogleAuthenticationActivity extends SingleFragmentActivity<AuthPro
     }
 
     private void setStatusLabel(int resId, int detailsResId) {
-        ((TextView)findViewById(R.id.authProgressHeader)).setText(getString(resId));
+        ((TextView) findViewById(R.id.authProgressHeader)).setText(getString(resId));
         if (detailsResId > 0) {
-            ((TextView)findViewById(R.id.authProgressMessage)).setText(getString(detailsResId));
-            ((TextView)findViewById(R.id.authProgressMessage)).setVisibility(View.VISIBLE);
+            ((TextView) findViewById(R.id.authProgressMessage)).setText(getString(detailsResId));
+            ((TextView) findViewById(R.id.authProgressMessage)).setVisibility(View.VISIBLE);
         } else {
-            ((TextView)findViewById(R.id.authProgressMessage)).setVisibility(View.GONE);
+            ((TextView) findViewById(R.id.authProgressMessage)).setVisibility(View.GONE);
         }
     }
 
@@ -332,12 +334,18 @@ public class GoogleAuthenticationActivity extends SingleFragmentActivity<AuthPro
                                 // Forward the user to an activity in Google Play services.
                                 Intent intent = exception.getIntent();
                                 activity.startActivityForResult(intent, REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR);
+                            } else {
+                                LogUtil.e(GoogleAuthenticationActivity.class.getName(), "Could not get Google ID token", e);
+                                mCredentialsManager.onLogInCancelled();
+                                Toast.makeText(mActivity, e.getClass().getSimpleName() + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                finish();
                             }
-                            LogUtil.e(GoogleAuthenticationActivity.class.getName(), "Could not get Google ID token", e);
                         }
                     });
                 } catch (Throwable e) {
                     LogUtil.e(GoogleAuthenticationActivity.class.getName(), "Could not get Google ID token", e);
+                    mCredentialsManager.onLogInCancelled();
+                    finish();
                 }
                 return null;
             }
