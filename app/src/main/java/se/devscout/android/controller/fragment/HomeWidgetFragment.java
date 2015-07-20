@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+
 import se.devscout.android.R;
 import se.devscout.android.util.DialogUtil;
 import se.devscout.android.util.PreferencesUtil;
@@ -169,8 +170,8 @@ public class HomeWidgetFragment extends ActivityBankFragment {
             selectedFactories = allFactories;
         } else {
             selectedFactories = new ArrayList<>();
-            for (String widgetId : widgetIds) {
-                for (WidgetComponentFactory finder : allFactories) {
+            for (WidgetComponentFactory finder : allFactories) {
+                for (String widgetId : widgetIds) {
                     if (widgetId.equals(finder.getId())) {
                         selectedFactories.add(finder);
                     }
