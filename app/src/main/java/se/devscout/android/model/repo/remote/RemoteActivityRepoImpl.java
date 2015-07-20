@@ -11,6 +11,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+
+import se.devscout.android.BuildConfig;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.TitleActivityFilterVisitor;
 import se.devscout.android.model.*;
@@ -41,14 +43,6 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     private static final String HTTP_HEADER_ACCEPT_ENCODING = "Accept-Encoding";
     private static final String HTTP_HEADER_API_KEY = "X-ScoutAPI-APIKey";
 
-    private static final String HOST_PRODUCTION = "aktivitetsbanken.devscout.se";
-    private static final int PORT_PRODUCTION = 80;
-
-    private static final String HOST_TEST = "devscout.mikaelsvensson.info";
-    private static final int PORT_TEST = 10081;
-
-    private static final String HOST = /*BuildConfig.DEBUG ? HOST_TEST :*/ HOST_PRODUCTION;
-    private static final int PORT = /*BuildConfig.DEBUG ? PORT_TEST :*/ PORT_PRODUCTION;
     private static final String SYSTEM_MESSAGE_KEY_API_HOST = "api:host";
     private static final String SYSTEM_MESSAGE_KEY_CONTACT_ERROR = "contact:error";
     private static final String SCHEMA = "http://";
@@ -84,7 +78,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
             if (hostNames.size() > 0) {
                 host = hostNames.get(0);
             } else {
-                host = HOST + ":" + PORT;
+                host = BuildConfig.SERVER_API_HOST + ":" + BuildConfig.SERVER_API_PORT;
             }
         }
         return host;
@@ -872,7 +866,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
                 if (hostNames.size() > 0) {
                     host = hostNames.get(0);
                 } else {
-                    host = HOST + ":" + PORT;
+                    host = BuildConfig.SERVER_API_HOST + ":" + BuildConfig.SERVER_API_PORT;
                 }
             }
             String uri = getURL("system_messages?valid=now_and_future", host);
@@ -920,7 +914,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         HashSet<String> hosts = new HashSet<>();
         hosts.addAll(super.getSystemMessages(SYSTEM_MESSAGE_KEY_API_HOST));
 
-        hosts.add(HOST + ":" + PORT);
+        hosts.add(BuildConfig.SERVER_API_HOST + ":" + BuildConfig.SERVER_API_PORT);
 //            if (BuildConfig.DEBUG || PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("is_allowed_to_use_test_api", false)) {
 //                hosts.addAll(super.getSystemMessages("api:test-host"));
 //                hosts.add(HOST_TEST + ":" + PORT_TEST);
@@ -1189,8 +1183,8 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
             } catch (SocketTimeoutException e) {
                 URL urlDefaultHost = new URL(
                         url.getProtocol(),
-                        HOST,
-                        PORT,
+                        BuildConfig.SERVER_API_HOST,
+                        BuildConfig.SERVER_API_PORT,
                         url.getFile());
                 if (!url.getHost().equals(urlDefaultHost.getHost())) {
                     return readUrl(body, method, urlDefaultHost);

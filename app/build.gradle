@@ -19,6 +19,18 @@ android {
     compileSdkVersion 15
     buildToolsVersion "19.1.0"
 
+
+    productFlavors {
+        production {
+            buildConfigField 'String', 'SERVER_API_HOST', '"aktivitetsbanken.devscout.se"'
+            buildConfigField 'int', 'SERVER_API_PORT', '80'
+        }
+        staging {
+            buildConfigField 'String', 'SERVER_API_HOST', '"aktivitetsbanken-test.devscout.se"'
+            buildConfigField 'int', 'SERVER_API_PORT', '80'
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
