@@ -10,6 +10,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import se.devscout.android.BuildConfig;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.StartTabsFragment;
 import se.devscout.android.model.repo.sql.SQLiteActivityRepo;
@@ -48,6 +50,9 @@ public class StartActivity extends SingleFragmentActivity {
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(StartActivity.this);
                 UsageLogUtil usageLogUtil = UsageLogUtil.getInstance();
                 builder1.setMessage("" +
+                        "Default server:\n" + BuildConfig.SERVER_API_HOST + "\n\n" +
+                        "Version name:\n" + BuildConfig.VERSION_NAME + "\n\n" +
+                        "Version id: " + BuildConfig.VERSION_CODE + "\n" +
                         "HTTP requests: " + usageLogUtil.getHttpRequestCount() + "\n" +
                         "HTTP timeouts: " + usageLogUtil.getHttpTimeouts() + "\n" +
                         "Data received: " + usageLogUtil.getHttpBytesRead() + " bytes");
