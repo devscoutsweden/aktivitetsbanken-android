@@ -1,12 +1,8 @@
 package se.devscout.android.view;
 
-import android.widget.ArrayAdapter;
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.ActivityBankFragment;
-import se.devscout.android.controller.fragment.AsyncImageArrayAdapter;
 import se.devscout.android.util.ActivityBankFactory;
-
-import java.util.List;
 
 public class OverallFavouriteActivitiesListView extends ActivitiesListView {
 
@@ -26,11 +22,6 @@ public class OverallFavouriteActivitiesListView extends ActivitiesListView {
                 ActivityBankFactory.getInstance(context.getActivity()).getFilterFactory().createOverallFavouriteActivitiesFilter(5),
                 sortOrder,
                 isListContentHeight);
-    }
-
-    @Override
-    protected ArrayAdapter<ActivitiesListItem> createAdapter(final List<ActivitiesListItem> result) {
-        return new AsyncImageArrayAdapter(getContext(), result);
     }
 
 }
