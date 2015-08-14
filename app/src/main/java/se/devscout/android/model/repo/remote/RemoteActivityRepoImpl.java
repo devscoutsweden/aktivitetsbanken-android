@@ -231,6 +231,11 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
                      * been verified, will be created if not create before.
                      */
                 updateUserProfile(userProperties);
+
+                /*
+                 * Get user's role (and associated permissions).
+                 */
+                readUserProfile();
             }
             synchronizeFavourites();
             synchronizeRatings();
@@ -367,6 +372,8 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
             }
 
             // todo: Update local database based on information from server (in case user has updated server-side profile data using other client)
+
+            super.updateUserProfile(userProfile);
 
             return userProfile;
         } catch (OfflineException | IOException | JSONException | UnauthorizedException | UnhandledHttpResponseCodeException e) {
@@ -572,11 +579,27 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     }
 
     @Override
-    public ActivityProperties updateActivity(ActivityKey activityKey, ActivityProperties properties) {
-        //TODO: implement/overload/fix this method. Low priority.
+    public void updateActivity(ActivityKey activityKey, ActivityProperties properties) throws UnauthorizedException {
         ActivityKey key = fixActivityKey(activityKey);
         mActivitiesWhichAreOld.remove(new ObjectIdentifierBean(key.getId()));
-        return key != null ? super.updateActivity(key, properties) : null;
+
+        try {
+            String uri = getURL("activities/" + properties.getServerId());
+
+            JSONObject body = new JSONObject();
+            body.put("featured", properties.isFeatured());
+
+            readUrlAsBytes(uri, body.toString(), HttpMethod.PATCH);
+        } catch (UnauthorizedException e) {
+            LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not update activity because of authorization problem.", e);
+            throw e;
+        } catch (IOException | JSONException | UnhandledHttpResponseCodeException e) {
+            handleRemoteException(e, "Could not update activity because of an unhandled problem.");
+        } catch (OfflineException e) {
+            LogUtil.d(RemoteActivityRepoImpl.class.getName(), "Device is offline. Will not attempt to connect to server.");
+        }
+
+        super.updateActivity(key, properties);
     }
 
     @Override

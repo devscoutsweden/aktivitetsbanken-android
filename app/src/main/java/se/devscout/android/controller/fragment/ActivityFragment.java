@@ -43,7 +43,7 @@ public class ActivityFragment extends ActivityBankFragment implements Background
 
     private ObjectIdentifierBean mActivityKey;
 
-    public synchronized void initView(final View view) {
+    public synchronized void initView(final View view, ActivityProperties activityProperties) {
         final FragmentActivity context = getActivity();
         if (view == null || context == null) {
             LogUtil.e(ActivityFragment.class.getName(), "Could not display activity information since view or context is null: view = " + view + " context = " + context);
@@ -69,8 +69,10 @@ public class ActivityFragment extends ActivityBankFragment implements Background
             }
             view.findViewById(R.id.activityFactTime).setVisibility(isTimeSet ? View.VISIBLE : View.GONE);
 
-            final UserKey userKey = CredentialsManager.getInstance(getActivity()).getCurrentUser();
-            Boolean isFavourite = getActivityBank().isFavourite(mActivityKey, userKey);
+            CredentialsManager credentialsManager = CredentialsManager.getInstance(getActivity());
+            final UserKey currentUser = credentialsManager.getCurrentUser();
+
+            Boolean isFavourite = getActivityBank().isFavourite(mActivityKey, currentUser);
             int favouriteCountWhenNotPersonalFavourite = mFavouritesCount - (isFavourite ? 1 : 0);
 
             ToggleButton favouriteButton = (ToggleButton) view.findViewById(R.id.activityFavouriteToggleButton);
@@ -146,8 +148,21 @@ public class ActivityFragment extends ActivityBankFragment implements Background
                             new ActivityRatingView(
                                     context,
                                     mActivityKey,
-                                    CredentialsManager.getInstance(getActivity()).getCurrentUser(),
+                                    currentUser,
                                     getActivityBank())));
+
+            if (activityProperties != null && credentialsManager.getState().isLoggedIn() && getActivityBank().readUser(currentUser).getRole().equals(UserProperties.ROLE_ADMINISTRATOR)) {
+                activityItems.addView(
+                        new WidgetView(
+                                context,
+                                R.string.activityEditHeader,
+                                new ActivityEditView(
+                                        context,
+                                        mActivityKey,
+                                        currentUser,
+                                        getActivityBank(),
+                                        activityProperties)));
+            }
 
             TextView textView = (TextView) view.findViewById(R.id.activityDocument);
             textView.setText(TextViewUtil.parseText(mBodyText, context));
@@ -238,7 +253,7 @@ public class ActivityFragment extends ActivityBankFragment implements Background
                     mRelatedActivitiesKeys = null;
                 }
 
-                initView(getView());
+                initView(getView(), activityProperties);
             }
         } else if (response instanceof UnauthorizedException && parameter instanceof UpdateFavouriteStatusParam) {
             UnauthorizedException e = (UnauthorizedException) response;
@@ -269,7 +284,7 @@ public class ActivityFragment extends ActivityBankFragment implements Background
         }
 
         View view = inflater.inflate(R.layout.activity, container, false);
-        initView(view);
+        initView(view, null);
         return view;
     }
 

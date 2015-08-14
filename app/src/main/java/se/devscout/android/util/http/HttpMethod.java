@@ -4,7 +4,8 @@ public enum HttpMethod {
     POST(true),
     PUT(true),
     GET(false),
-    DELETE(false);
+    DELETE(false),
+    PATCH(true);
 
     private boolean mRequestBodyAllowed;
 

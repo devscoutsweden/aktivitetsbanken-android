@@ -5,15 +5,17 @@ public class UserPropertiesBean extends ServerObjectPropertiesBean implements Us
     private String mAPIKey;
     private String mDisplayName;
     private String mEmailAddress;
+    private String mRole;
 
     public UserPropertiesBean() {
     }
 
-    public UserPropertiesBean(String displayName, String apiKey, long serverId, long serverRevisionId, boolean publishable, String emailAddress) {
+    public UserPropertiesBean(String displayName, String apiKey, long serverId, long serverRevisionId, boolean publishable, String emailAddress, String role) {
         super(publishable, serverId, serverRevisionId);
         mDisplayName = displayName;
         mAPIKey = apiKey;
         mEmailAddress = emailAddress;
+        mRole = role;
     }
 
     @Override
@@ -29,6 +31,11 @@ public class UserPropertiesBean extends ServerObjectPropertiesBean implements Us
     @Override
     public String getEmailAddress() {
         return mEmailAddress;
+    }
+
+    @Override
+    public String getRole() {
+        return mRole;
     }
 
     public void setDisplayName(String displayName) {
@@ -50,5 +57,9 @@ public class UserPropertiesBean extends ServerObjectPropertiesBean implements Us
 
     public void setAPIKey(String APIKey) {
         mAPIKey = APIKey;
+    }
+
+    public void setRole(String mRole) {
+        this.mRole = mRole;
     }
 }

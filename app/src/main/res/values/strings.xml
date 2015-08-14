@@ -210,7 +210,7 @@
         att hitta nya, bra och
         roliga aktiviteter.
     </string>
-    <string name="auth_logged_in_promo">Hej, %1$s. Eftersom du är inloggad kan du göra en massa smarta grejer.</string>
+    <string name="auth_logged_in_promo">Hej%1$s. Eftersom du är inloggad kan du göra en massa smarta grejer.</string>
     <string name="auth_logged_in_smarter">Smarta grejer?</string>
     <string name="auth_logged_in_smarter_text">Du kan till exempel:\n
         - favorit-markera\n
@@ -260,4 +260,6 @@
     <string name="auth_progress_google_revokation">Appen kommer inte längre ha tillgång till din Google-profil.
         Du måste därför godkänna appen igen vid nästa inloggning.
     </string>
+    <string name="activityEditHeader">Ändra</string>
+    <string name="could_not_save_activity_unauthorized">Kunde inte spara. Är du ens inloggad?</string>
 </resources>

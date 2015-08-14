@@ -22,6 +22,7 @@ public class HttpRequest {
     private static final int READ_TIMEOUT = 30000;
     public static final String HEADER_AUTHORIZATION = "Authorization";
     private static final int TIMEOUT_COUNT_FOR_HOST_BLOCK = 2;
+    public static final String HEADER_HTTP_METHOD_OVERRIDE = "X-HTTP-Method-Override";
     private final URL mUrl;
     private final HttpMethod mMethod;
     private final Map<String, String> mHeaders = new HashMap<String, String>();
@@ -56,7 +57,14 @@ public class HttpRequest {
             stopWatch.logEvent("Connection has been opened");
             httpURLConnection.setConnectTimeout(CONNECT_TIMEOUT);
             httpURLConnection.setReadTimeout(READ_TIMEOUT);
-            httpURLConnection.setRequestMethod(mMethod.name());
+            switch (mMethod) {
+                case PATCH:
+                    httpURLConnection.setRequestMethod(HttpMethod.PUT.name());
+                    httpURLConnection.addRequestProperty(HEADER_HTTP_METHOD_OVERRIDE, "patch");
+                    break;
+                default:
+                    break;
+            }
 
             for (Map.Entry<String, String> entry : mHeaders.entrySet()) {
                 httpURLConnection.addRequestProperty(entry.getKey(), entry.getValue());

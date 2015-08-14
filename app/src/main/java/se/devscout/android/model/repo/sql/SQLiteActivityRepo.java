@@ -54,8 +54,10 @@ public class SQLiteActivityRepo implements ActivityBank {
     }
 
     @Override
-    public ActivityProperties updateActivity(ActivityKey key, ActivityProperties properties) {
-        throw new UnsupportedOperationException();
+    public void updateActivity(ActivityKey key, ActivityProperties properties) throws UnauthorizedException {
+        if (!mDatabaseHelper.updateActivity(key, properties)) {
+            LogUtil.e(SQLiteActivityRepo.class.getName(), "Could not update activity");
+        }
     }
 
     @Override
@@ -197,7 +199,7 @@ public class SQLiteActivityRepo implements ActivityBank {
     @Override
     public UserProfileBean readUserProfile() {
         User user = readUser(CredentialsManager.getInstance(mContext).getCurrentUser());
-        return new UserProfileBean(user.getDisplayName(), user.getAPIKey(), user.getId(), user.getServerId(), user.getServerRevisionId(), null);
+        return new UserProfileBean(user.getDisplayName(), user.getAPIKey(), user.getId(), user.getServerId(), user.getServerRevisionId(), null, user.getRole());
     }
 
     @Override

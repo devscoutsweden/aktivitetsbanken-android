@@ -78,8 +78,8 @@ public class AuthUserProfileFragment extends ActivityBankFragment {
                                     0L,
                                     0L,
                                     false,
-                                    params[1]
-                            ));
+                                    params[1],
+                                    null));
                             return true;
                         } catch (UnauthorizedException e) {
                             Toast.makeText(getActivity(), getString(R.string.profileCouldNotSaveToAPI), Toast.LENGTH_SHORT);

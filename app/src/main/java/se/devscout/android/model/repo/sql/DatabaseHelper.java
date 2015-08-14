@@ -105,7 +105,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             R.raw.db_migrate_4_add_average_rating,
             R.raw.db_migrate_5_related_activities,
             R.raw.db_migrate_6_add_email_address,
-            R.raw.db_migrate_7_create_system_messages
+            R.raw.db_migrate_7_create_system_messages,
+            R.raw.db_migrate_8_add_user_role
     };
 
     public DatabaseHelper(Context context) {
@@ -131,7 +132,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             executeSQLScripts(db, 0, DATABASE_MIGRATION_SCRIPTS.length);
 
             String apiKey = PreferenceManager.getDefaultSharedPreferences(mContext).getString("api_key", null);
-            long anonymousUserId = createUser(new UserPropertiesBean("Anonymous", apiKey, 0L, 0L, false, "anonymous@example.com"), db);
+            long anonymousUserId = createUser(new UserPropertiesBean(UserProperties.USER_NAME_ANONYMOUS, apiKey, 0L, 0L, false, "anonymous@example.com", null), db);
             CredentialsManager.getInstance(mContext).setCurrentUser(new ObjectIdentifierBean(anonymousUserId));
 
             db.setTransactionSuccessful();
@@ -1046,6 +1047,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         if (properties.getEmailAddress() != null) {
             values.put(Database.user.email_address, properties.getEmailAddress());
+        }
+        if (properties.getRole() != null) {
+            values.put(Database.user.role, properties.getRole());
         }
         if (properties.getAPIKey() != null) {
             values.put(Database.user.api_key, properties.getAPIKey());

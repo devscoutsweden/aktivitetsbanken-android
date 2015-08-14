@@ -11,6 +11,7 @@ public class Database {
         final static String api_key = "api_key";
         final static String display_name = "display_name";
         final static String email_address = "email_address";
+        final static String role = "role";
     }
 
     public static class category {

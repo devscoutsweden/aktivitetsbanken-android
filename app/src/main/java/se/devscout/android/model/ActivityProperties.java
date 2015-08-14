@@ -53,4 +53,6 @@ public interface ActivityProperties extends ServerObjectProperties {
      * difference between returning null and an empty list.
      */
     List<ActivityKey> getRelatedActivitiesKeys();
+
+    void setFeatured(boolean isFeatured);
 }

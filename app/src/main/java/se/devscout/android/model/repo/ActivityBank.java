@@ -19,7 +19,7 @@ public interface ActivityBank {
 
     void deleteActivity(ActivityKey key);
 
-    ActivityProperties updateActivity(ActivityKey key, ActivityProperties properties);
+    void updateActivity(ActivityKey key, ActivityProperties properties) throws UnauthorizedException;
 
     ActivityList readActivities(ActivityKey... keys) throws UnauthorizedException;
 

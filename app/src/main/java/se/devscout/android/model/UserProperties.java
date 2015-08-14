@@ -1,6 +1,9 @@
 package se.devscout.android.model;
 
 public interface UserProperties extends ServerObjectProperties {
+    String USER_NAME_ANONYMOUS = "Anonymous";
+    String ROLE_ADMINISTRATOR = "administrator";
+
     String getName();
 
     String getDisplayName();
@@ -8,6 +11,8 @@ public interface UserProperties extends ServerObjectProperties {
     String getAPIKey();
 
     String getEmailAddress();
+
+    String getRole();
 
 //    boolean isEmailAddressVerified();
 
