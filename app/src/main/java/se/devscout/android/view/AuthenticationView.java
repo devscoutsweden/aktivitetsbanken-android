@@ -11,7 +11,9 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.google.android.gms.common.SignInButton;
+
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
 import se.devscout.android.model.User;
@@ -104,7 +106,7 @@ public class AuthenticationView extends LinearLayout implements CredentialsManag
                 ActivityBank activityBank = ActivityBankFactory.getInstance(getContext());
                 User user = activityBank.readUser(CredentialsManager.getInstance(getContext()).getCurrentUser());
                 String name = user.getDisplayName() != null ? user.getDisplayName() : user.getName();
-                loggedInMessage.setText(getContext().getString(R.string.auth_logged_in_promo, name));
+                loggedInMessage.setText(getContext().getString(R.string.auth_logged_in_promo, name != null && !UserProperties.USER_NAME_ANONYMOUS.equals(name) ? " " + name : ""));
                 break;
         }
     }
