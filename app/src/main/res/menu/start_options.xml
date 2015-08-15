@@ -2,11 +2,6 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/menuStartResetDatabase"
-        android:title="@string/reset_database"
-        android:icon="@android:drawable/ic_menu_close_clear_cancel" />
-
-    <item
         android:id="@+id/menuStartShowProfile"
         android:title="@string/show_profile"/>
 
@@ -16,9 +11,12 @@
         android:icon="@drawable/ic_action_settings" />
 
     <item
-        android:id="@+id/menuStartClearImageCache"
-        android:title="@string/clear_image_cache"
-        android:icon="@drawable/ic_action_picture" />
+        android:id="@+id/menuStartLogOutAndRevokeAccess"
+        android:title="@string/log_out_and_revoke_access"/>
+
+    <item
+        android:id="@+id/menuStartResetDismissedMessages"
+        android:title="@string/reset_dismissed_messages"/>
 
     <item
         android:id="@+id/menuStartShowUsageStats"
@@ -26,6 +24,13 @@
         android:icon="@drawable/ic_action_sort_by_size" />
 
     <item
-        android:id="@+id/menuStartLogOutAndRevokeAccess"
-        android:title="@string/log_out_and_revoke_access"/>
+        android:id="@+id/menuStartResetDatabase"
+        android:title="@string/reset_database"
+        android:icon="@android:drawable/ic_menu_close_clear_cancel" />
+
+    <item
+        android:id="@+id/menuStartClearImageCache"
+        android:title="@string/clear_image_cache"
+        android:icon="@drawable/ic_action_picture" />
+
 </menu>

@@ -16,6 +16,7 @@ import se.devscout.android.R;
 import se.devscout.android.controller.fragment.StartTabsFragment;
 import se.devscout.android.model.repo.sql.SQLiteActivityRepo;
 import se.devscout.android.util.LogUtil;
+import se.devscout.android.util.PreferencesUtil;
 import se.devscout.android.util.UsageLogUtil;
 import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.android.util.concurrency.CleanImageCacheTaskExecutor;
@@ -41,6 +42,9 @@ public class StartActivity extends SingleFragmentActivity {
                 break;
             case R.id.menuStartShowProfile:
                 startActivity(UserProfileActivity.createIntent(StartActivity.this));
+                break;
+            case R.id.menuStartResetDismissedMessages:
+                PreferencesUtil.resetAllDismissedMessages(StartActivity.this);
                 break;
             case R.id.menuStartClearImageCache:
                 new CleanImageCacheTaskExecutor(0, 0).run(null, this);

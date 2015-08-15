@@ -120,6 +120,10 @@
         <item name="android:textAllCaps">true</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/accentBlue</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:layout_height">@dimen/iconButtonSize</item>
+        <item name="android:layout_margin">@dimen/iconButtonMargin</item>
     </style>
 
     <style name="ActivityRatingBar" parent="@android:style/Widget.RatingBar">>

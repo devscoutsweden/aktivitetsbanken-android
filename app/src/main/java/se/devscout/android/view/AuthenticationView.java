@@ -1,5 +1,8 @@
 package se.devscout.android.view;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
@@ -7,8 +10,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ import se.devscout.android.model.repo.ActivityBank;
 import se.devscout.android.model.repo.remote.ServerAPICredentials;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.IdentityProvider;
+import se.devscout.android.util.PreferencesUtil;
 import se.devscout.android.util.auth.CredentialsManager;
 
 public class AuthenticationView extends LinearLayout implements CredentialsManager.Listener {
@@ -69,7 +71,7 @@ public class AuthenticationView extends LinearLayout implements CredentialsManag
             }
         });
 
-        Button logOutButton = (Button) findViewById(R.id.auth_log_out_button);
+        TextView logOutButton = (TextView) findViewById(R.id.auth_log_out_button);
         logOutButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,19 +82,45 @@ public class AuthenticationView extends LinearLayout implements CredentialsManag
             }
         });
 
-        int width = getResources().getDimensionPixelSize(R.dimen.textColumnWidth);
-
-        CompoundButton smarterButton = (CompoundButton) findViewById(R.id.auth_logged_in_smarter_button);
-        smarterButton.setOnCheckedChangeListener(new AnimatedToggleSiblingViewListener(width));
-        smarterButton.setChecked(false);
-
-        final CompoundButton betterButton = (CompoundButton) findViewById(R.id.auth_logged_out_better_button);
-        betterButton.setOnCheckedChangeListener(new AnimatedToggleSiblingViewListener(width));
-        betterButton.setChecked(false);
+        initParentCollapseButton(R.id.auth_logged_out_message_collapse_button);
+        initParentCollapseButton(R.id.auth_logged_in_message_collapse_button);
 
         refresh(CredentialsManager.getInstance(context).getState());
 
         setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, isListContentHeight ? ViewGroup.LayoutParams.WRAP_CONTENT : LayoutParams.MATCH_PARENT));
+    }
+
+    private void initParentCollapseButton(final int buttonId) {
+        final View view = findViewById(buttonId);
+        final View viewToCollapse = (View) view.getParent();
+        if (PreferencesUtil.isMessageDismissed(getContext(), buttonId)) {
+            viewToCollapse.setVisibility(GONE);
+        } else {
+            view.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(final View clickedView) {
+                    PreferencesUtil.setMessageDismissed(getContext(), buttonId);
+                    final int height = viewToCollapse.getMeasuredHeight();
+                    ValueAnimator animator = ValueAnimator.ofInt(height, 0);
+                    animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                            int value = (Integer) valueAnimator.getAnimatedValue();
+                            ViewGroup.LayoutParams layoutParams = viewToCollapse.getLayoutParams();
+                            layoutParams.height = value;
+                            view.getParent().requestLayout();
+                        }
+                    });
+                    animator.addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            viewToCollapse.setVisibility(GONE);
+                        }
+                    });
+                    animator.start();
+                }
+            });
+        }
     }
 
     private void refresh(CredentialsManager.State state) {

@@ -201,26 +201,15 @@
     <string name="auth_log_out">Logga ut</string>
     <string name="auth_logged_out_promo">Logga in för att göra appen bättre för dig och andra.</string>
     <string name="auth_logged_out_better">Bättre? Hur då?</string>
-    <string name="auth_logged_out_better_text">När du är inloggad kan du till exempel:\n
-        - favorit-markera\n
-        - betygsätta aktiviteter\n
-        \nOm vi hjälps åt att betygsätta,
-        kommentera och förbättra så
-        blir det enklare för alla
-        att hitta nya, bra och
-        roliga aktiviteter.
+    <string name="auth_logged_out_better_text">När du är inloggad kan du favorit-markera och betygsätta aktiviteter.
+        Om vi hjälps åt att betygsätta och förbättra så blir det enklare för alla att hitta nya, bra och roliga aktiviteter.
     </string>
-    <string name="auth_logged_in_promo">Hej%1$s. Eftersom du är inloggad kan du göra en massa smarta grejer.</string>
+    <string name="auth_logged_in_promo">Hej%1$s.</string>
     <string name="auth_logged_in_smarter">Smarta grejer?</string>
-    <string name="auth_logged_in_smarter_text">Du kan till exempel:\n
-        - favorit-markera\n
-        - betygsätta aktiviteter
-    </string>
+    <string name="auth_logged_in_smarter_text">Eftersom du är inloggad kan du favorit-markera och betygsätta aktiviteter.</string>
     <string name="auth_ok_i_got_it">Ok, jag fattar</string>
     <string name="auth_widget_title">In- och utloggning</string>
-    <string name="log_out_and_revoke_access">Logga ut och ta bort koppling till
-        G+
-    </string>
+    <string name="log_out_and_revoke_access">Logga ut och ta bort koppling till G+</string>
     <string name="must_authorize_app">Du måste ge appen behörighet för att kunna logga in.</string>
     <string name="auth_cannot_revoke_since_not_logged_in">Kan inte logga ut
         eftersom du inte är inloggad
@@ -252,7 +241,7 @@
         appen använder när den pratar med Aktivitetsbankens server.
     </string>
     <string name="profileShowDetails">Visa detaljer</string>
-    <string name="show_profile">Visa min profil...</string>
+    <string name="show_profile">Min profil...</string>
     <string name="profileCouldNotSaveToAPI">Kunde inte spara på servern.
     </string>
     <string name="auth_progress_logging_out">Loggar ut.</string>
@@ -262,4 +251,5 @@
     </string>
     <string name="activityEditHeader">Ändra</string>
     <string name="could_not_save_activity_unauthorized">Kunde inte spara. Är du ens inloggad?</string>
+    <string name="reset_dismissed_messages">Ångra alla \"Ok, jag fattar\"</string>
 </resources>

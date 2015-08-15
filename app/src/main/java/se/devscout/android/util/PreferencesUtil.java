@@ -4,7 +4,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class PreferencesUtil {
 
@@ -61,5 +67,19 @@ public class PreferencesUtil {
 
     public static String getServerAddress(Context context) {
         return getSharedPrefs(context).getString("server_address", "");
+    }
+
+    public static boolean isMessageDismissed(Context context, int messageId) {
+        final Set<String> dismissedMessages = getSharedPrefs(context).getStringSet("dismissed_messages", Collections.<String>emptySet());
+        return dismissedMessages.contains(String.valueOf(messageId));
+    }
+
+    public static void setMessageDismissed(Context context, int messageId) {
+        final Set<String> dismissedMessages = getSharedPrefs(context).getStringSet("dismissed_messages", new HashSet<String>());
+        dismissedMessages.add(String.valueOf(messageId));
+        getSharedPrefs(context).edit().putStringSet("dismissed_messages", dismissedMessages).commit();
+    }
+    public static void resetAllDismissedMessages(Context context) {
+        getSharedPrefs(context).edit().putStringSet("dismissed_messages", new HashSet<String>()).commit();
     }
 }
