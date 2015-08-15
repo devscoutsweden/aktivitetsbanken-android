@@ -16,6 +16,8 @@ public class PreferencesUtil {
 
     private static final String DEFAULT_ERROR_REPORTING_MAIL_ADDRESS = "devscout@mikaelsvensson.info";
     private static final String PREF_CONTACT_ERROR = "contact_error";
+    private static final String PREF_DISMISSED_MESSAGES = "dismissed_messages";
+    private static final String PREF_SERVER_ADDRESSES = "server_addresses";
 
     public static List<String> getStringList(SharedPreferences preferences, String prefKey, List<String> defaultOrder) {
         TreeMap<Integer, String> map = new TreeMap<Integer, String>();
@@ -58,11 +60,11 @@ public class PreferencesUtil {
     }
 
     public static Set<String> getServerAddresses(Context context) {
-        return new TreeSet<>(getSharedPrefs(context).getStringSet("server_addresses", Collections.<String>emptySet()));
+        return new TreeSet<>(getSharedPrefs(context).getStringSet(PREF_SERVER_ADDRESSES, Collections.<String>emptySet()));
     }
 
     public static void setServerAddresses(Context context, HashSet<String> hosts) {
-        getSharedPrefs(context).edit().putStringSet("server_addresses", hosts).commit();
+        getSharedPrefs(context).edit().putStringSet(PREF_SERVER_ADDRESSES, hosts).commit();
     }
 
     public static String getServerAddress(Context context) {
@@ -70,16 +72,16 @@ public class PreferencesUtil {
     }
 
     public static boolean isMessageDismissed(Context context, int messageId) {
-        final Set<String> dismissedMessages = getSharedPrefs(context).getStringSet("dismissed_messages", Collections.<String>emptySet());
+        final Set<String> dismissedMessages = getSharedPrefs(context).getStringSet(PREF_DISMISSED_MESSAGES, Collections.<String>emptySet());
         return dismissedMessages.contains(String.valueOf(messageId));
     }
 
     public static void setMessageDismissed(Context context, int messageId) {
-        final Set<String> dismissedMessages = getSharedPrefs(context).getStringSet("dismissed_messages", new HashSet<String>());
+        final Set<String> dismissedMessages = getSharedPrefs(context).getStringSet(PREF_DISMISSED_MESSAGES, new HashSet<String>());
         dismissedMessages.add(String.valueOf(messageId));
-        getSharedPrefs(context).edit().putStringSet("dismissed_messages", dismissedMessages).commit();
+        getSharedPrefs(context).edit().putStringSet(PREF_DISMISSED_MESSAGES, dismissedMessages).commit();
     }
     public static void resetAllDismissedMessages(Context context) {
-        getSharedPrefs(context).edit().putStringSet("dismissed_messages", new HashSet<String>()).commit();
+        getSharedPrefs(context).edit().putStringSet(PREF_DISMISSED_MESSAGES, new HashSet<String>()).commit();
     }
 }
