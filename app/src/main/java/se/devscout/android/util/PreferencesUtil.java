@@ -71,14 +71,14 @@ public class PreferencesUtil {
         return getSharedPrefs(context).getString("server_address", "");
     }
 
-    public static boolean isMessageDismissed(Context context, int messageId) {
+    public static boolean isMessageDismissed(Context context, String id) {
         final Set<String> dismissedMessages = getSharedPrefs(context).getStringSet(PREF_DISMISSED_MESSAGES, Collections.<String>emptySet());
-        return dismissedMessages.contains(String.valueOf(messageId));
+        return dismissedMessages.contains(id);
     }
 
-    public static void setMessageDismissed(Context context, int messageId) {
+    public static void setMessageDismissed(Context context, String id) {
         final Set<String> dismissedMessages = getSharedPrefs(context).getStringSet(PREF_DISMISSED_MESSAGES, new HashSet<String>());
-        dismissedMessages.add(String.valueOf(messageId));
+        dismissedMessages.add(id);
         getSharedPrefs(context).edit().putStringSet(PREF_DISMISSED_MESSAGES, dismissedMessages).commit();
     }
     public static void resetAllDismissedMessages(Context context) {

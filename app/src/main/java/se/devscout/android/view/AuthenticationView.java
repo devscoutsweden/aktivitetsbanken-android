@@ -82,24 +82,24 @@ public class AuthenticationView extends LinearLayout implements CredentialsManag
             }
         });
 
-        initParentCollapseButton(R.id.auth_logged_out_message_collapse_button);
-        initParentCollapseButton(R.id.auth_logged_in_message_collapse_button);
+        initParentCollapseButton(R.id.auth_logged_out_message_collapse_button, "auth_logged_out_message");
+        initParentCollapseButton(R.id.auth_logged_in_message_collapse_button, "auth_logged_in_message");
 
         refresh(CredentialsManager.getInstance(context).getState());
 
         setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, isListContentHeight ? ViewGroup.LayoutParams.WRAP_CONTENT : LayoutParams.MATCH_PARENT));
     }
 
-    private void initParentCollapseButton(final int buttonId) {
+    private void initParentCollapseButton(final int buttonId, final String dismissedId) {
         final View view = findViewById(buttonId);
         final View viewToCollapse = (View) view.getParent();
-        if (PreferencesUtil.isMessageDismissed(getContext(), buttonId)) {
+        if (PreferencesUtil.isMessageDismissed(getContext(), dismissedId)) {
             viewToCollapse.setVisibility(GONE);
         } else {
             view.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(final View clickedView) {
-                    PreferencesUtil.setMessageDismissed(getContext(), buttonId);
+                    PreferencesUtil.setMessageDismissed(getContext(), dismissedId);
                     final int height = viewToCollapse.getMeasuredHeight();
                     ValueAnimator animator = ValueAnimator.ofInt(height, 0);
                     animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
