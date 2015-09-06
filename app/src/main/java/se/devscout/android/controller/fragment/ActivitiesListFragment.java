@@ -4,6 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import se.devscout.android.R;
 import se.devscout.android.model.ActivityKey;
 import se.devscout.android.model.ObjectIdentifierBean;
@@ -11,9 +15,6 @@ import se.devscout.android.model.activityfilter.ActivityFilter;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.view.ActivitiesListItem;
 import se.devscout.android.view.ActivitiesListView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ActivitiesListFragment extends NonBlockingSearchResultFragment<ActivitiesListItem, ActivitiesListView> {
     private ActivitiesListView.Sorter mSortOrder;
@@ -24,27 +25,35 @@ public class ActivitiesListFragment extends NonBlockingSearchResultFragment<Acti
         super();
     }
 
-    public ActivitiesListFragment(ActivityFilter filter, ActivitiesListView.Sorter sortOrder) {
-        this(filter, sortOrder, false);
-    }
-
-    public ActivitiesListFragment(ActivityFilter filter, ActivitiesListView.Sorter sortOrder, boolean addSearchHistory) {
-        mFilter = filter;
-        mSortOrder = sortOrder;
-        mAddSearchHistory = addSearchHistory;
+    public void setArguments(ActivityFilter filter, ActivitiesListView.Sorter sortOrder, boolean addSearchHistory) {
+        final Bundle args = new Bundle();
+        fillBundle(args, filter, sortOrder, addSearchHistory);
+        setArguments(args);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
+        initArguments(getArguments());
+        initArguments(savedInstanceState);
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    private void initArguments(Bundle bundle) {
+        if (bundle != null) {
             /*
              * Restore fields from saved state, for example after the device has been rotated.
              */
-            mSortOrder = (ActivitiesListView.Sorter) savedInstanceState.getSerializable("mSortOrder");
-            mAddSearchHistory = savedInstanceState.getBoolean("mAddSearchHistory");
+            mSortOrder = (ActivitiesListView.Sorter) bundle.getSerializable("mSortOrder");
+            mFilter = (ActivityFilter) bundle.getSerializable("mFilter");
+            mAddSearchHistory = bundle.getBoolean("mAddSearchHistory");
             LogUtil.d(ActivitiesListFragment.class.getName(), "State (e.g. search result) has been restored.");
         }
-        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    private void fillBundle(Bundle args, ActivityFilter filter, ActivitiesListView.Sorter sortOrder, boolean addSearchHistory) {
+        args.putSerializable("mFilter", filter);
+        args.putSerializable("mSortOrder", sortOrder);
+        args.putBoolean("mAddSearchHistory", addSearchHistory);
     }
 
     @Override
@@ -61,7 +70,7 @@ public class ActivitiesListFragment extends NonBlockingSearchResultFragment<Acti
     }
 
     public ActivitiesListView.Sorter getSortOrder() {
-        return mSortOrder;
+        return getArguments().getString("sortOrder", null) != null ? ActivitiesListView.Sorter.valueOf(getArguments().getString("sortOrder", null)) : null;
     }
 
     @Override
@@ -71,8 +80,7 @@ public class ActivitiesListFragment extends NonBlockingSearchResultFragment<Acti
          * Store fields into saved state, for example when the activity is destroyed after the device has been rotated.
          */
         LogUtil.d(ActivitiesListFragment.class.getName(), "Saving state");
-        outState.putSerializable("mSortOrder", mSortOrder);
-        outState.putBoolean("mAddSearchHistory", mAddSearchHistory);
+        fillBundle(outState, mFilter, mSortOrder, mAddSearchHistory);
         LogUtil.d(ActivitiesListFragment.class.getName(), "State saved");
     }
 
@@ -87,6 +95,8 @@ public class ActivitiesListFragment extends NonBlockingSearchResultFragment<Acti
     }
 
     public static ActivitiesListFragment create(ActivityFilter filter, ActivitiesListView.Sorter defaultSortOrder, boolean addSearchHistory) {
-        return new ActivitiesListFragment(filter, defaultSortOrder, addSearchHistory);
+        final ActivitiesListFragment fragment = new ActivitiesListFragment();
+        fragment.setArguments(filter, defaultSortOrder, addSearchHistory);
+        return fragment;
     }
 }
