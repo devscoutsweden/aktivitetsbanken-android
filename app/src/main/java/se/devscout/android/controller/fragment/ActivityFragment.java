@@ -7,11 +7,28 @@ import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.RatingBar;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.GalleryThumbnailsActivity;
 import se.devscout.android.controller.activity.SingleFragmentActivity;
-import se.devscout.android.model.*;
+import se.devscout.android.model.Activity;
+import se.devscout.android.model.ActivityKey;
+import se.devscout.android.model.ActivityList;
+import se.devscout.android.model.ActivityProperties;
+import se.devscout.android.model.Media;
+import se.devscout.android.model.ObjectIdentifierBean;
+import se.devscout.android.model.Reference;
+import se.devscout.android.model.UserKey;
+import se.devscout.android.model.UserProperties;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.ResourceUtil;
 import se.devscout.android.util.auth.CredentialsManager;
@@ -19,11 +36,13 @@ import se.devscout.android.util.concurrency.BackgroundTask;
 import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
 import se.devscout.android.util.concurrency.UpdateFavouriteStatusParam;
 import se.devscout.android.util.http.UnauthorizedException;
-import se.devscout.android.view.*;
+import se.devscout.android.view.ActivityEditView;
+import se.devscout.android.view.ActivityRatingView;
+import se.devscout.android.view.AsyncImageBean;
+import se.devscout.android.view.AsyncImageView;
+import se.devscout.android.view.RelatedActivitiesView;
+import se.devscout.android.view.TextViewUtil;
 import se.devscout.android.view.widget.WidgetView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Fragment for displaying (very) simple documents with headings, body paragraphs and images.
@@ -151,7 +170,10 @@ public class ActivityFragment extends ActivityBankFragment implements Background
                                     currentUser,
                                     getActivityBank())));
 
-            if (activityProperties != null && credentialsManager.getState().isLoggedIn() && getActivityBank().readUser(currentUser).getRole().equals(UserProperties.ROLE_ADMINISTRATOR)) {
+            if (activityProperties != null &&
+                    credentialsManager.getState().isLoggedIn() &&
+                    getActivityBank().readUser(currentUser).getRole() != null &&
+                    getActivityBank().readUser(currentUser).getRole().equals(UserProperties.ROLE_ADMINISTRATOR)) {
                 activityItems.addView(
                         new WidgetView(
                                 context,
