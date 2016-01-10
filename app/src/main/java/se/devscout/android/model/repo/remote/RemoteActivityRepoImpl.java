@@ -7,23 +7,11 @@ import android.net.Uri;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-
-import se.devscout.android.BuildConfig;
-import se.devscout.android.R;
-import se.devscout.android.controller.fragment.TitleActivityFilterVisitor;
-import se.devscout.android.model.*;
-import se.devscout.android.model.activityfilter.ActivityFilter;
-import se.devscout.android.model.activityfilter.IsUserFavouriteFilter;
-import se.devscout.android.model.activityfilter.URIBuilderActivityFilterVisitor;
-import se.devscout.android.model.repo.sql.LocalObjectRefreshness;
-import se.devscout.android.model.repo.sql.SQLiteActivityRepo;
-import se.devscout.android.util.*;
-import se.devscout.android.util.auth.CredentialsManager;
-import se.devscout.android.util.http.*;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -33,7 +21,74 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import se.devscout.android.BuildConfig;
+import se.devscout.android.R;
+import se.devscout.android.controller.fragment.TitleActivityFilterVisitor;
+import se.devscout.android.model.Activity;
+import se.devscout.android.model.ActivityBean;
+import se.devscout.android.model.ActivityHistory;
+import se.devscout.android.model.ActivityHistoryData;
+import se.devscout.android.model.ActivityHistoryDataBean;
+import se.devscout.android.model.ActivityHistoryPropertiesBean;
+import se.devscout.android.model.ActivityKey;
+import se.devscout.android.model.ActivityList;
+import se.devscout.android.model.ActivityProperties;
+import se.devscout.android.model.ActivityPropertiesBean;
+import se.devscout.android.model.Category;
+import se.devscout.android.model.CategoryBean;
+import se.devscout.android.model.CategoryKey;
+import se.devscout.android.model.HistoryProperties;
+import se.devscout.android.model.IntegerRange;
+import se.devscout.android.model.MediaBean;
+import se.devscout.android.model.MediaProperties;
+import se.devscout.android.model.ObjectIdentifierBean;
+import se.devscout.android.model.Rating;
+import se.devscout.android.model.RatingPropertiesBean;
+import se.devscout.android.model.RatingStatus;
+import se.devscout.android.model.Reference;
+import se.devscout.android.model.ReferenceBean;
+import se.devscout.android.model.ReferenceKey;
+import se.devscout.android.model.ReferenceProperties;
+import se.devscout.android.model.ServerActivityBean;
+import se.devscout.android.model.ServerObjectIdentifier;
+import se.devscout.android.model.ServerObjectIdentifierBean;
+import se.devscout.android.model.SystemMessageBean;
+import se.devscout.android.model.User;
+import se.devscout.android.model.UserKey;
+import se.devscout.android.model.UserProfileBean;
+import se.devscout.android.model.UserProperties;
+import se.devscout.android.model.activityfilter.ActivityFilter;
+import se.devscout.android.model.activityfilter.IsUserFavouriteFilter;
+import se.devscout.android.model.activityfilter.URIBuilderActivityFilterVisitor;
+import se.devscout.android.model.repo.sql.LocalObjectRefreshness;
+import se.devscout.android.model.repo.sql.SQLiteActivityRepo;
+import se.devscout.android.util.IdentityProvider;
+import se.devscout.android.util.InstallationProperties;
+import se.devscout.android.util.LogUtil;
+import se.devscout.android.util.PreferencesUtil;
+import se.devscout.android.util.StopWatch;
+import se.devscout.android.util.auth.CredentialsManager;
+import se.devscout.android.util.http.ByteArrayResponseStreamHandler;
+import se.devscout.android.util.http.HeaderException;
+import se.devscout.android.util.http.HttpMethod;
+import se.devscout.android.util.http.HttpRequest;
+import se.devscout.android.util.http.HttpResponse;
+import se.devscout.android.util.http.RequestBodyStreamHandler;
+import se.devscout.android.util.http.ResponseHeadersValidator;
+import se.devscout.android.util.http.ResponseStreamHandler;
+import se.devscout.android.util.http.StringRequestBodyStreamHandler;
+import se.devscout.android.util.http.UnauthorizedException;
+import se.devscout.android.util.http.UnhandledHttpResponseCodeException;
 
 public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements CredentialsManager.Listener {
     private static final String DEFAULT_REQUEST_BODY_ENCODING = "utf-8";
@@ -41,7 +96,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     private static final String HTTP_HEADER_X_ANDROID_APP_INSTALLATION_ID = "X-AndroidAppInstallationId";
     private static final SimpleDateFormat API_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'");
     private static final String HTTP_HEADER_ACCEPT_ENCODING = "Accept-Encoding";
-    private static final String HTTP_HEADER_API_KEY = "X-ScoutAPI-APIKey";
+    private static final String HTTP_HEADER_API_KEY = "X-ScoutAdmin-APIKey";
 
     private static final String SYSTEM_MESSAGE_KEY_API_HOST = "api:host";
     private static final String SYSTEM_MESSAGE_KEY_CONTACT_ERROR = "contact:error";
@@ -478,12 +533,12 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
                 long serverId = super.readActivities(activityKey).get(0).getServerId();
 
                 // Get the server-side id numbers of the related activities
-                JSONArray jsonArray = getJSONArray(getURL("activities/" + serverId + "/related"), null);
+                JSONObject jsonObject1 = getJSONObject(getURL("activities/" + serverId + "?attrs=related"), null, HttpMethod.GET);
                 Map<Long, Long> remoteToLocalId = new LinkedHashMap<>();
-                List<JSONObject> relatedActivitiesInfo = getJSONArrayAsList(jsonArray);
-                ServerObjectIdentifier[] remoteIds = new ServerObjectIdentifier[relatedActivitiesInfo.size()];
-                for (JSONObject jsonObject : relatedActivitiesInfo) {
-                    long relatedActivityId = jsonObject.getLong("related_activity_id");
+                JSONArray relatedActivityIds = jsonObject1.getJSONArray("related");
+                ServerObjectIdentifier[] remoteIds = new ServerObjectIdentifier[relatedActivityIds.length()];
+                for (int i = 0; i < relatedActivityIds.length(); i++) {
+                    long relatedActivityId = relatedActivityIds.getLong(i);
                     remoteToLocalId.put(relatedActivityId, null);
                     remoteIds[remoteToLocalId.size() - 1] = new ServerObjectIdentifierBean(relatedActivityId);
                 }
@@ -606,6 +661,11 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     public List<ActivityBean> findActivity(ActivityFilter condition) throws UnauthorizedException {
         String[] attrNames = {
                 "name",
+                "id",
+                "properties",
+                "group",
+                "mime_type",
+                "uri",
                 "featured",
                 "age_max",
                 "age_min",
@@ -781,7 +841,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     @Override
     public void unsetRating(ActivityKey activityKey, UserKey userKey) {
         Rating currentRating = readRating(activityKey, userKey);
-        mDatabaseHelper.setRating(activityKey, userKey, new RatingPropertiesBean(currentRating.getRating(), RatingStatus.REMOVED));
+        mDatabaseHelper.setRating(fixActivityKey(activityKey), userKey, new RatingPropertiesBean(currentRating.getRating(), RatingStatus.REMOVED));
     }
 
     private void processServerObject(CategoryBean category) {
@@ -1158,7 +1218,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
             try {
                 min = Math.min(Integer.parseInt(minValue), min);
             } catch (NumberFormatException e) {
-                LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not parse string as number", e);
+                LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not parse string as number. " + e.getMessage());
             }
         }
         List<String> maxValues = getStrings(obj, field + "_max");
@@ -1167,7 +1227,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
             try {
                 max = Math.max(Integer.parseInt(maxValue), max);
             } catch (NumberFormatException e) {
-                LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not parse string as number", e);
+                LogUtil.e(RemoteActivityRepoImpl.class.getName(), "Could not parse string as number. " + e.getMessage());
             }
         }
         return new IntegerRange(min, max);
@@ -1280,7 +1340,8 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
 //                break;
 //        }
         if (serverAPICredentials != null) {
-            String authHeaderValue = "Token token=\"" + serverAPICredentials.getToken() + "\", type=\"" + serverAPICredentials.getType() + "\"";
+//            String authHeaderValue = "Token token=\"" + serverAPICredentials.getToken() + "\", type=\"" + serverAPICredentials.getType() + "\"";
+            String authHeaderValue = serverAPICredentials.getType() + " " + serverAPICredentials.getToken();
             request.setHeader(HttpRequest.HEADER_AUTHORIZATION, authHeaderValue);
             LogUtil.d(HttpRequest.class.getName(), "Header " + HttpRequest.HEADER_AUTHORIZATION + ": " + authHeaderValue);
         }

@@ -1,8 +1,8 @@
 package se.devscout.android.model.repo.remote;
 
 public class ServerAPICredentials {
-    static final String API_TOKEN_TYPE_API_KEY = "apikey";
-    public static final String API_TOKEN_TYPE_GOOGLE = "google";
+    static final String API_TOKEN_TYPE_API_KEY = "ApiKey";
+    public static final String API_TOKEN_TYPE_GOOGLE = "Google";
     private String mType;
     private String mToken;
 

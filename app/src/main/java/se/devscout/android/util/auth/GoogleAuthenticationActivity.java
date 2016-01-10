@@ -82,7 +82,7 @@ public class GoogleAuthenticationActivity extends SingleFragmentActivity<AuthPro
     private static final int RC_SIGN_IN = 0;
     private static final int RC_CHOOSE_ACCOUNT = 1000;
     private static final int REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR = 1001;
-    private static final String WEB_APP_CLIENT_ID = "551713736410-q55omfobgs9j8ia4ae3r7sbi20vcvt49.apps.googleusercontent.com";
+    private static final String WEB_APP_CLIENT_ID = "563244170192-0cqja2c5pcm0m0beiro2e3r72jvogqkq.apps.googleusercontent.com";
     private final CredentialsManager mCredentialsManager;
 
     private final SingleFragmentActivity mActivity;
