@@ -31,12 +31,12 @@ public class IntegerRange implements Range<Integer>, Serializable {
 
     @Override
     public String toString() {
-        if (mMin != Integer.MIN_VALUE && mMax != Integer.MAX_VALUE) {
-            return mMin + "-" + mMax;
-        } else if (mMin != Integer.MIN_VALUE) {
-            return ">=" + mMin;
-        } else if (mMax != Integer.MAX_VALUE) {
-            return "<=" + mMax;
+        int min = Math.max(0, mMin);
+        int max = Math.min(99, mMax);
+        if (min > 0 && max < 99) {
+            return min + "-" + max;
+        } else if (max == 99) {
+            return "1-99+";
         } else {
             return "";
         }
