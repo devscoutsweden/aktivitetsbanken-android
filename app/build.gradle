@@ -31,6 +31,14 @@ def getVersionName = { ->
 }
 
 android {
+    signingConfigs {
+        devScoutDefault {
+            keyAlias 'aktivitetsbanken-android'
+            keyPassword AKTIVITETSBANKEN_APP_KEY_PASSWORD
+            storeFile file('keys.keystore')
+            storePassword AKTIVITETSBANKEN_APP_STORE_PASSWORD
+        }
+    }
     defaultConfig {
         applicationId "se.devscout.android"
 
@@ -40,21 +48,15 @@ android {
         minSdkVersion 15
         targetSdkVersion 15
     }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
-
     compileSdkVersion 15
     buildToolsVersion '23.0.2'
-
     dexOptions {
         dexInProcess = true
     }
-
-
-
     productFlavors {
         production {
             buildConfigField 'String', 'SERVER_API_HOST', '"aktivitetsbanken.devscout.se"'
@@ -67,11 +69,15 @@ android {
 //            buildConfigField 'int', 'SERVER_API_PORT', '8080'
         }
     }
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.devScoutDefault
+            versionNameSuffix '-release'
+        }
+        debug {
+            versionNameSuffix '-debug'
         }
     }
 }
@@ -79,5 +85,5 @@ android {
 dependencies {
     compile 'com.android.support:support-v4:19.1.0'
     compile 'com.google.android.gms:play-services:6.5.+'
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
 }
