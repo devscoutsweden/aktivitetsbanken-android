@@ -6,13 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
+import java.io.Serializable;
+
 import se.devscout.android.AgeGroup;
 import se.devscout.android.R;
 import se.devscout.android.model.activityfilter.ActivityFilterFactory;
 import se.devscout.android.model.activityfilter.AndFilter;
 import se.devscout.android.util.ActivityBankFactory;
-
-import java.io.Serializable;
 
 public class FindSpontaneousActivitiesView<T extends Serializable> extends LinearLayout {
     public FindSpontaneousActivitiesView(Context context, boolean isListContentHeight) {
@@ -55,7 +56,7 @@ public class FindSpontaneousActivitiesView<T extends Serializable> extends Linea
 //                        filterFactory.createTimeRangeFilter(new IntegerRange(0, 15)),
                         filterFactory.createRandomActivitiesFilter(5)
                 );
-                View oldListView = container.findViewById(1010);
+                View oldListView = container.findViewById(R.id.findSpontaneousActivitiesViewListId);
                 if (oldListView != null) {
                     container.removeView(oldListView);
                 }
@@ -66,7 +67,7 @@ public class FindSpontaneousActivitiesView<T extends Serializable> extends Linea
 
                 ActivitiesListView listView = new ActivitiesListView(getContext(), R.string.noSpontaneousActivitiesFoundMessage, R.string.noSpontaneousActivitiesFoundTitle, filter, ActivitiesListView.Sorter.NAME, true);
                 container.addView(listView);
-                listView.setId(1010);
+                listView.setId(R.id.findSpontaneousActivitiesViewListId);
                 listView.setVisibility(VISIBLE);
                 listView.runSearchTaskInNewThread();
             }

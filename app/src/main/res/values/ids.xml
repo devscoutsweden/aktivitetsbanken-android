@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="imageViewUri" type="id"/>
+    <item name="nonBlockingSearchResultFragmentViewId" type="id">111</item>
+    <item name="findSpontaneousActivitiesViewListId" type="id">1010</item>
 </resources>

@@ -4,12 +4,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import se.devscout.android.util.LogUtil;
-import se.devscout.android.view.NonBlockingSearchView;
 
 import java.io.Serializable;
 
-public abstract class NonBlockingSearchResultFragment<T extends Serializable, V extends NonBlockingSearchView<T>> extends ActivityBankFragment /*implements AdapterView.OnItemClickListener */{
+import se.devscout.android.R;
+import se.devscout.android.util.LogUtil;
+import se.devscout.android.view.NonBlockingSearchView;
+
+public abstract class NonBlockingSearchResultFragment<T extends Serializable, V extends NonBlockingSearchView<T>> extends ActivityBankFragment /*implements AdapterView.OnItemClickListener */ {
     private boolean mIsResultLoaded;
 
     @Override
@@ -22,8 +24,7 @@ public abstract class NonBlockingSearchResultFragment<T extends Serializable, V 
         }
 
         final V view = createView(inflater, container, savedInstanceState);
-        view.setId(111);
-
+        view.setId(R.id.nonBlockingSearchResultFragmentViewId);
         return view;
     }
 
@@ -36,7 +37,7 @@ public abstract class NonBlockingSearchResultFragment<T extends Serializable, V 
     }
 
     protected V getListView() {
-        return (V) getView().findViewById(111);
+        return (V) getView().findViewById(R.id.nonBlockingSearchResultFragmentViewId);
     }
 
     @Override
