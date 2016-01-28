@@ -8,15 +8,20 @@ import android.text.Layout;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
-import android.text.style.BulletSpan;
+import android.text.TextUtils;
+import android.text.style.DynamicDrawableSpan;
+import android.text.style.ImageSpan;
 import android.text.style.LeadingMarginSpan;
 import android.text.style.MetricAffectingSpan;
 import android.text.style.RelativeSizeSpan;
-import se.devscout.android.R;
-import se.devscout.android.util.ScoutTypeFace;
+import android.text.style.StyleSpan;
+import android.text.style.URLSpan;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import se.devscout.android.R;
+import se.devscout.android.util.ScoutTypeFace;
 
 /**
  * Fragment for displaying (very) simple documents with headings, body paragraphs and images.
@@ -75,21 +80,41 @@ public class TextViewUtil {
             }
         }
     };
+
+    private static final Rule QUOTE = new Rule(1, Pattern.compile("^>\\s*(.*)$")) {
+        @Override
+        void apply(SpannableStringBuilder sb, int sequencePos, final Context context, Matcher textMatcher) {
+            if (sequencePos == 0) {
+                addEmptyLine(sb, 0.5f);
+            }
+            String text = textMatcher.group(1);
+            if (!TextUtils.isEmpty(text)) {
+                // Do not print empty lines (especially if it is the last line of the quote) as they tend to make the subsequent paragraphs indented as well.
+                sb.append(text);
+                sb.setSpan(new QuotationSpan(context), sb.length() - text.length(), sb.length(), 0);
+                sb.setSpan(new StyleSpan(Typeface.ITALIC), sb.length() - text.length(), sb.length(), 0);
+            }
+        }
+    };
+
     /**
      * Pattern matches:
      * (1) lines starting with digit(s) and a period
      * (2) empty lines (this is to allow double-spaced lists to be seen as a single list -- the empty line is ignored by later code)
      */
-    private static final Rule NUMRERED_LIST_ITEM = new Rule(2, Pattern.compile("^(\\d+\\s*[.].*|\\s*)$")) {
+    private static final Rule NUMRERED_LIST_ITEM = new Rule(2, Pattern.compile("^((\\d+)\\s*[.](.*)|\\s*)$")) {
         @Override
         void apply(SpannableStringBuilder sb, int sequencePos, Context context, Matcher textMatcher) {
             if (sequencePos == 0) {
                 addEmptyLine(sb, 0.5f);
             }
-            String text = textMatcher.group(1);
-            if (text != null) {
-                sb.append(text);
-                sb.setSpan(new BulletSpan(BulletSpan.STANDARD_GAP_WIDTH * 5), sb.length() - text.length(), sb.length(), 0);
+            if (textMatcher.groupCount() >= 3) {
+                String text = textMatcher.group(3).trim();
+                int number = Integer.parseInt(textMatcher.group(2));
+                if (text != null) {
+                    sb.append(text);
+                    sb.setSpan(new CustomNumberedItemSpan(context, number == 1 && sequencePos > 0 ? (sequencePos + 1) : number), sb.length() - text.length(), sb.length(), 0);
+                }
             }
         }
     };
@@ -123,6 +148,38 @@ public class TextViewUtil {
     };
 
     /**
+     * The pattern only matches a single empty line but the rule only triggers
+     * if the pattern is matched twice (or more).
+     */
+    private static final Rule INLINE_LINK = new Rule(1, Pattern.compile("!?\\[([^\\[]*)\\]\\(([^\\)]+)\\)")) {
+        @Override
+        void apply(SpannableStringBuilder sb, int sequencePos, final Context context, final Matcher textMatcher) {
+
+            final String url = textMatcher.group(2).trim();
+            if (!TextUtils.isEmpty(url)) {
+                sb.append(url);
+                sb.setSpan(new URLSpan(url), sb.length() - url.length(), sb.length(), 0);
+            }
+        }
+    };
+
+    /**
+     * The pattern only matches a single empty line but the rule only triggers
+     * if the pattern is matched twice (or more).
+     */
+    private static final Rule INLINE_IMAGE = new Rule(1, Pattern.compile("^!\\[([^\\[]*)\\]\\(([^\\)]+)\\)$")) {
+        @Override
+        void apply(SpannableStringBuilder sb, int sequencePos, final Context context, final Matcher textMatcher) {
+
+            String descr = textMatcher.group(1);
+            String uri = textMatcher.group(2);
+
+            sb.append("[image]");
+            sb.setSpan(new ImageSpan(context, R.drawable.action_bar, DynamicDrawableSpan.ALIGN_BOTTOM), sb.length() - "[image]".length(), sb.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        }
+    };
+
+    /**
      * The list of rules used to process each line of text. The ordering is
      * crucial since only the first matching rule is applied (and if a rule is
      * selected, it is used for all the following lines which also match the
@@ -133,12 +190,20 @@ public class TextViewUtil {
             HEADER,
             BULLET_LIST_ITEM,
             NUMRERED_LIST_ITEM,
+            QUOTE,
             SINGLE_LINE_SENTENCE,
             MULTIPLE_LINE_FEEDS
     };
 
     public static Spanned parseText(String text, Context context) {
         SpannableStringBuilder sb = new SpannableStringBuilder();
+        parseBlockMarkup(text, context, sb);
+
+        parseInlineMarkup(sb);
+        return sb;
+    }
+
+    private static void parseBlockMarkup(String text, Context context, SpannableStringBuilder sb) {
         String[] strings = text.split("\n");
 
         // Iterate all lines of text
@@ -182,15 +247,25 @@ public class TextViewUtil {
             }
             if (!isStringMatchingRule) {
                 // The line does not match any rule. Treat as "regular line of text" (append the line and a linefeed to the buffer).
-                if (strings[i].length() > 0) {
-                    sb.append(strings[i]);
+                final String line = strings[i].trim();
+                if (line.length() > 0) {
+                    sb.append(line);
                     if (i < strings.length - 1) {
                         sb.append('\n');
                     }
                 }
             }
         }
-        return sb;
+    }
+
+    private static void parseInlineMarkup(SpannableStringBuilder sb) {
+        Matcher matcher = INLINE_LINK.pattern.matcher(sb);
+        int start = 0;
+        while (matcher.find(start)) {
+            sb.replace(matcher.start(), matcher.end(), matcher.group(2));
+            start = matcher.start() + matcher.group(2).length();
+            matcher = INLINE_LINK.pattern.matcher(sb);
+        }
     }
 
     private static class HeaderSpan extends MetricAffectingSpan {
@@ -254,6 +329,53 @@ public class TextViewUtil {
                 // Draw bullet
                 canvas.drawCircle(0.4f * getLeadingMargin(first), 0.0f + baseline - (0.4f * emHeight), 0.25f * emHeight, paint);
             }
+        }
+    }
+
+    /**
+     * This class is better then the built-in BulletSpan when it comes to
+     * taking the line height into account when drawing the bullet.
+     */
+    private static class CustomNumberedItemSpan implements LeadingMarginSpan {
+        private final Context mContext;
+        private final int mNumber;
+
+        public CustomNumberedItemSpan(Context context, int number) {
+            mContext = context;
+            mNumber = number;
+        }
+
+        @Override
+        public int getLeadingMargin(boolean first) {
+            return mContext.getResources().getDimensionPixelSize(R.dimen.largeTextSize);
+        }
+
+        @Override
+        public void drawLeadingMargin(Canvas canvas, Paint paint, int x, int dir, int top, int baseline, int bottom, CharSequence text, int start, int end, boolean first, Layout layout) {
+            if (first) {
+                canvas.drawText(String.valueOf(mNumber) + ".", 0.2f * getLeadingMargin(first), 0.0f + baseline, paint);
+            }
+        }
+    }
+
+    /**
+     * This class is better then the built-in BulletSpan when it comes to
+     * taking the line height into account when drawing the bullet.
+     */
+    private static class QuotationSpan implements LeadingMarginSpan {
+        private final Context mContext;
+
+        public QuotationSpan(Context context) {
+            mContext = context;
+        }
+
+        @Override
+        public int getLeadingMargin(boolean first) {
+            return mContext.getResources().getDimensionPixelSize(R.dimen.extraLargeTextSize);
+        }
+
+        @Override
+        public void drawLeadingMargin(Canvas canvas, Paint paint, int x, int dir, int top, int baseline, int bottom, CharSequence text, int start, int end, boolean first, Layout layout) {
         }
     }
 }

@@ -188,7 +188,7 @@ public class ActivityFragment extends ActivityBankFragment implements Background
 
             TextView textView = (TextView) view.findViewById(R.id.activityDocument);
             textView.setText(TextViewUtil.parseText(mBodyText, context));
-            Linkify.addLinks(textView, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
+            Linkify.addLinks(textView, Linkify.WEB_URLS);
             textView.setLineSpacing(
                     getResources().getDimensionPixelSize(R.dimen.Document_Paragraph_LineSpacingExtra),
                     1.0f);
