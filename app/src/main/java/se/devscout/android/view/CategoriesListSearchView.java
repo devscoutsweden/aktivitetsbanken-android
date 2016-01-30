@@ -1,19 +1,22 @@
 package se.devscout.android.view;
 
 import android.content.Context;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.CategoryListItem;
 import se.devscout.android.model.Category;
 import se.devscout.android.model.Media;
 import se.devscout.android.model.activityfilter.ActivityFilter;
+import se.devscout.android.model.repo.ActivityBank;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.SimpleCategoryFilter;
 import se.devscout.android.util.http.UnauthorizedException;
-
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class CategoriesListSearchView extends QuickSearchListView<CategoryListItem> {
 
@@ -23,7 +26,7 @@ public class CategoriesListSearchView extends QuickSearchListView<CategoryListIt
 
     @Override
     public SearchTask createSearchTask() {
-        return new MySearchTask();
+        return new GetCategoryListTask();
     }
 
     @Override
@@ -43,7 +46,13 @@ public class CategoriesListSearchView extends QuickSearchListView<CategoryListIt
 
     @Override
     protected String getTitle(CategoryListItem option) {
-        return option.getName();
+        if ("aktivitetsbanken-track".equals(option.getGroup())) {
+            return getResources().getString(R.string.searchResultTitleCategoryTrack, option.getName());
+        } else if ("aktivitetsbanken-concept".equals(option.getGroup())) {
+            return getResources().getString(R.string.searchResultTitleCategoryConcept, option.getName());
+        } else {
+            return option.getName();
+        }
     }
 
     @Override
@@ -66,16 +75,23 @@ public class CategoriesListSearchView extends QuickSearchListView<CategoryListIt
         return getContext().getString(R.string.searchResultTitleCategoryTrack, option.getName());
     }
 
-    private class MySearchTask extends SearchTask {
+    private class GetCategoryListTask extends SearchTask {
+
         @Override
         protected List<CategoryListItem> doSearch() throws UnauthorizedException {
-            List<? extends Category> categories = ActivityBankFactory.getInstance(getContext()).readCategories();
+            List<? extends Category> categories = ActivityBankFactory.getInstance(getContext()).readCategories(ActivityBank.DEFAULT_MINIMUM_ACTIVITIES_PER_CATEGORY);
             List<CategoryListItem> result = new ArrayList<CategoryListItem>();
             for (Category category : categories) {
                 if (category.getActivitiesCount() == null || category.getActivitiesCount() != 0) {
                     result.add(new CategoryListItem(category));
                 }
             }
+            Collections.sort(result, new Comparator<CategoryListItem>() {
+                @Override
+                public int compare(CategoryListItem categoryListItem, CategoryListItem t1) {
+                    return categoryListItem.getName().compareTo(t1.getName());
+                }
+            });
             return result;
         }
     }

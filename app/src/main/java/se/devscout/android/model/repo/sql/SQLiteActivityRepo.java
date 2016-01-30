@@ -1,7 +1,46 @@
 package se.devscout.android.model.repo.sql;
 
 import android.content.Context;
-import se.devscout.android.model.*;
+
+import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+
+import se.devscout.android.model.Activity;
+import se.devscout.android.model.ActivityBean;
+import se.devscout.android.model.ActivityHistory;
+import se.devscout.android.model.ActivityHistoryData;
+import se.devscout.android.model.ActivityKey;
+import se.devscout.android.model.ActivityList;
+import se.devscout.android.model.ActivityProperties;
+import se.devscout.android.model.Category;
+import se.devscout.android.model.CategoryBean;
+import se.devscout.android.model.CategoryKey;
+import se.devscout.android.model.HistoryProperties;
+import se.devscout.android.model.Media;
+import se.devscout.android.model.MediaKey;
+import se.devscout.android.model.MediaProperties;
+import se.devscout.android.model.ObjectIdentifierBean;
+import se.devscout.android.model.Rating;
+import se.devscout.android.model.RatingPropertiesBean;
+import se.devscout.android.model.RatingStatus;
+import se.devscout.android.model.Reference;
+import se.devscout.android.model.ReferenceBean;
+import se.devscout.android.model.ReferenceKey;
+import se.devscout.android.model.ReferenceProperties;
+import se.devscout.android.model.SearchHistory;
+import se.devscout.android.model.SearchHistoryBean;
+import se.devscout.android.model.SearchHistoryData;
+import se.devscout.android.model.SystemMessageBean;
+import se.devscout.android.model.User;
+import se.devscout.android.model.UserKey;
+import se.devscout.android.model.UserProfileBean;
+import se.devscout.android.model.UserProperties;
 import se.devscout.android.model.activityfilter.ActivityFilter;
 import se.devscout.android.model.activityfilter.ActivityFilterFactory;
 import se.devscout.android.model.repo.ActivityBank;
@@ -12,10 +51,6 @@ import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.PrimitiveActivityFilterFactory;
 import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.android.util.http.UnauthorizedException;
-
-import java.io.IOException;
-import java.net.URI;
-import java.util.*;
 
 public class SQLiteActivityRepo implements ActivityBank {
     protected final DatabaseHelper mDatabaseHelper;
@@ -103,7 +138,7 @@ public class SQLiteActivityRepo implements ActivityBank {
     }
 
     @Override
-    public List<CategoryBean> readCategories() throws UnauthorizedException {
+    public List<CategoryBean> readCategories(int minActivitiesCount) throws UnauthorizedException {
         return mDatabaseHelper.readCategories();
     }
 

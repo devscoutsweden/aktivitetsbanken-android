@@ -905,11 +905,11 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     }
 
     @Override
-    public List<CategoryBean> readCategories() throws UnauthorizedException {
+    public List<CategoryBean> readCategories(int minActivitiesCount) throws UnauthorizedException {
         //TODO: Host name should not be kept in source code
         if (mCachedCategories == null) {
             try {
-                String uri = getURL("categories");
+                String uri = getURL("categories?min_activities_count=" + minActivitiesCount);
                 JSONArray array = getJSONArray(uri, null);
                 mCachedCategories = new ArrayList<CategoryBean>();
                 for (JSONObject obj : getJSONArrayAsList(array)) {
@@ -922,10 +922,10 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
             } catch (IOException | JSONException | UnhandledHttpResponseCodeException | UnauthorizedException e) {
                 fireServiceDegradation(mContext.getString(R.string.remote_could_get_categories), e);
                 handleRemoteException(e);
-                mCachedCategories = super.readCategories();
+                mCachedCategories = super.readCategories(minActivitiesCount);
             } catch (OfflineException e) {
                 LogUtil.d(RemoteActivityRepoImpl.class.getName(), "Device is offline. Will not attempt to connect to server.");
-                mCachedCategories = super.readCategories();
+                mCachedCategories = super.readCategories(minActivitiesCount);
             }
         }
         return mCachedCategories;
