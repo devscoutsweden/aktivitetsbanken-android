@@ -7,7 +7,18 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import se.devscout.android.AgeGroup;
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.SearchResultActivity;
@@ -17,12 +28,11 @@ import se.devscout.android.model.IntegerRange;
 import se.devscout.android.model.activityfilter.ActivityFilterFactory;
 import se.devscout.android.model.activityfilter.ActivityFilterFactoryException;
 import se.devscout.android.model.activityfilter.AndFilter;
+import se.devscout.android.model.repo.ActivityBank;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.LogUtil;
 import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.android.util.http.UnauthorizedException;
-
-import java.util.List;
 
 public class SearchFragment extends ActivityBankFragment {
 
@@ -59,7 +69,7 @@ public class SearchFragment extends ActivityBankFragment {
         editor.putBoolean("searchAgeDiscoverer", ((CheckBox) view.findViewById(R.id.searchAgeDiscoverer)).isChecked());
         editor.putBoolean("searchAgeRover", ((CheckBox) view.findViewById(R.id.searchAgeRover)).isChecked());
         editor.putBoolean("searchAgeTracker", ((CheckBox) view.findViewById(R.id.searchAgeTracker)).isChecked());
-        editor.putBoolean("featuredOnlyCheckbox", ((CheckBox) view.findViewById(R.id.searchFeaturedOnly)).isChecked());
+//        editor.putBoolean("featuredOnlyCheckbox", ((CheckBox) view.findViewById(R.id.searchFeaturedOnly)).isChecked());
         editor.putBoolean("searchFavouritesOnlyCheckbox", ((CheckBox) view.findViewById(R.id.searchFavouritesOnly)).isChecked());
         editor.putBoolean("searchTopRatedOnlyCheckbox", ((CheckBox) view.findViewById(R.id.searchTopRatedOnly)).isChecked());
 
@@ -75,7 +85,7 @@ public class SearchFragment extends ActivityBankFragment {
         ((CheckBox) view.findViewById(R.id.searchAgeDiscoverer)).setChecked(getPreferences().getBoolean("searchAgeDiscoverer", false));
         ((CheckBox) view.findViewById(R.id.searchAgeRover)).setChecked(getPreferences().getBoolean("searchAgeRover", false));
         ((CheckBox) view.findViewById(R.id.searchAgeTracker)).setChecked(getPreferences().getBoolean("searchAgeTracker", false));
-        ((CheckBox) view.findViewById(R.id.searchFeaturedOnly)).setChecked(getPreferences().getBoolean("featuredOnlyCheckbox", false));
+//        ((CheckBox) view.findViewById(R.id.searchFeaturedOnly)).setChecked(getPreferences().getBoolean("featuredOnlyCheckbox", false));
         ((CheckBox) view.findViewById(R.id.searchFavouritesOnly)).setChecked(getPreferences().getBoolean("searchFavouritesOnlyCheckbox", false));
         ((CheckBox) view.findViewById(R.id.searchTopRatedOnly)).setChecked(getPreferences().getBoolean("searchTopRatedOnlyCheckbox", false));
     }
@@ -122,7 +132,7 @@ public class SearchFragment extends ActivityBankFragment {
                     ActivityFilterFactory mFilterFactory = getActivityBank().getFilterFactory();
                     AndFilter filter = mFilterFactory.createAndFilter();
 
-                    initFeaturedOnlyFilter(filter, mFilterFactory);
+//                    initFeaturedOnlyFilter(filter, mFilterFactory);
 
                     initFavouritesOnlyFilter(filter, mFilterFactory);
 
@@ -184,12 +194,14 @@ public class SearchFragment extends ActivityBankFragment {
                 }
             }
 
+/*
             private void initFeaturedOnlyFilter(se.devscout.android.model.activityfilter.AndFilter filter, ActivityFilterFactory mFilterFactory) {
                 CheckBox featuredOnlyCheckbox = (CheckBox) searchView.findViewById(R.id.searchFeaturedOnly);
                 if (featuredOnlyCheckbox.isChecked()) {
                     filter.getFilters().add(mFilterFactory.createIsFeaturedFilter());
                 }
             }
+*/
 
             private void initFavouritesOnlyFilter(se.devscout.android.model.activityfilter.AndFilter filter, ActivityFilterFactory mFilterFactory) throws ActivityFilterFactoryException {
                 CheckBox searchFavouritesOnlyCheckbox = (CheckBox) searchView.findViewById(R.id.searchFavouritesOnly);
@@ -238,7 +250,13 @@ public class SearchFragment extends ActivityBankFragment {
             @Override
             protected Category[] doInBackground(Void... voids) {
                 try {
-                    List<? extends Category> res = ActivityBankFactory.getInstance(getActivity()).readCategories();
+                    List<? extends Category> res = ActivityBankFactory.getInstance(getActivity()).readCategories(ActivityBank.DEFAULT_MINIMUM_ACTIVITIES_PER_CATEGORY);
+                    Collections.sort(res, new Comparator<Category>() {
+                        @Override
+                        public int compare(Category c1, Category c2) {
+                            return c1.getName().compareTo(c2.getName());
+                        }
+                    });
                     Category[] categories1 = new Category[res.size() + 1];
                     categories1[0] = anyCategory;
                     for (int i = 0; i < res.size(); i++) {

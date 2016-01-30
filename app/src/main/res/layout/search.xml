@@ -242,6 +242,7 @@
                     android:layout_column="4" />
             </GridLayout>
 
+<!--
             <CheckBox
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -249,6 +250,7 @@
                 android:id="@+id/searchFeaturedOnly"
                 android:layout_marginTop="@dimen/defaultMargin"
                 android:singleLine="false" />
+-->
 
             <CheckBox
                 android:layout_width="wrap_content"

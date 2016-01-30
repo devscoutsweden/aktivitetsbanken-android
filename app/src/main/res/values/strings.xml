@@ -101,7 +101,7 @@
     <string name="searchAgeGroupsLabel">Passande åldergrupper</string>
     <string name="searchTimeLabel">Tidsåtgång</string>
     <string name="searchOtherConditionsLabel">Övriga sökalternativ</string>
-    <string name="searchFeaturedOnlyLabel">Enbart utvalda av redaktör</string>
+    <!--<string name="searchFeaturedOnlyLabel">Enbart utvalda av redaktör</string>-->
     <string name="searchFavouritesOnlyLabel">Enbart mina favoriter</string>
     <string name="searchButtonLabel">Sök...</string>
     <string name="searchCategoryOptionAny">Alla kategorier</string>
@@ -252,4 +252,5 @@
     <string name="activityEditHeader">Ändra</string>
     <string name="could_not_save_activity_unauthorized">Kunde inte spara. Är du ens inloggad?</string>
     <string name="reset_dismissed_messages">Ångra alla \"Ok, jag fattar\"</string>
+    <string name="searchResultTitleCategory">Målspåret %1$s</string>
 </resources>
