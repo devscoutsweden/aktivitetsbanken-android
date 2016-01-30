@@ -11,6 +11,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import se.devscout.android.R;
 import se.devscout.android.util.DialogUtil;
 import se.devscout.android.util.PreferencesUtil;
@@ -19,8 +25,6 @@ import se.devscout.android.view.widget.ComponentFactoryRepo;
 import se.devscout.android.view.widget.FragmentListener;
 import se.devscout.android.view.widget.WidgetComponentFactory;
 import se.devscout.android.view.widget.WidgetView;
-
-import java.util.*;
 
 public class HomeWidgetFragment extends ActivityBankFragment {
 
@@ -32,7 +36,7 @@ public class HomeWidgetFragment extends ActivityBankFragment {
             ComponentFactoryRepo.AUTHENTICATION,
             ComponentFactoryRepo.OVERALL_FAVOURITE_ACTIVITIES,
             ComponentFactoryRepo.FAVOURITE_ACTIVITIES,
-            ComponentFactoryRepo.FEATURED_ACTIVITIES,
+//            ComponentFactoryRepo.FEATURED_ACTIVITIES,
             ComponentFactoryRepo.CRASH_REPORTER);
 
     private long mFavouriteListModificationCounter;
