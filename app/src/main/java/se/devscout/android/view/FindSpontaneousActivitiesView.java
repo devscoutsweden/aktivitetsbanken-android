@@ -11,6 +11,7 @@ import java.io.Serializable;
 
 import se.devscout.android.AgeGroup;
 import se.devscout.android.R;
+import se.devscout.android.model.IntegerRange;
 import se.devscout.android.model.activityfilter.ActivityFilterFactory;
 import se.devscout.android.model.activityfilter.AndFilter;
 import se.devscout.android.util.ActivityBankFactory;
@@ -52,8 +53,7 @@ public class FindSpontaneousActivitiesView<T extends Serializable> extends Linea
                 ActivityFilterFactory filterFactory = ActivityBankFactory.getInstance(getContext()).getFilterFactory();
                 AndFilter filter = filterFactory.createAndFilter(
                         filterFactory.createAgeRangeFilter(ageGroup.getScoutAgeRange()),
-// TODO: The time filter will have to be re-enabled once the server-side database actually has data about activity durations.
-//                        filterFactory.createTimeRangeFilter(new IntegerRange(0, 15)),
+                        filterFactory.createTimeRangeFilter(new IntegerRange(5, 10)),
                         filterFactory.createRandomActivitiesFilter(5)
                 );
                 View oldListView = container.findViewById(R.id.findSpontaneousActivitiesViewListId);
