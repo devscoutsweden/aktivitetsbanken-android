@@ -2,16 +2,17 @@
 <resources>
     <dimen name="microTextSize">12sp</dimen>
     <dimen name="smallTextSize">14sp</dimen>
-    <dimen name="mediumTextSize">18sp</dimen>
-    <dimen name="largeTextSize">22sp</dimen>
-    <dimen name="extraLargeTextSize">30sp</dimen>
+    <dimen name="mediumTextSize">16sp</dimen>
+    <dimen name="largeTextSize">24sp</dimen>
+    <dimen name="extraLargeTextSize">34sp</dimen>
 
-    <dimen name="uiBlockSize">48dp</dimen>
-    <dimen name="uiBlockSizeLarge">62dp</dimen>
+    <dimen name="uiBlockSize">56dp</dimen>
+    <dimen name="uiBlockSizeLarge">72dp</dimen>
 
-    <dimen name="defaultMargin">4dp</dimen>
+    <dimen name="defaultMargin">8dp</dimen>
+    <dimen name="sideMargin">16dp</dimen>
     <dimen name="iconButtonMargin">8dp</dimen>
-    <dimen name="iconButtonSize">32dp</dimen>
+    <dimen name="iconButtonSize">40dp</dimen>
     <dimen name="textColumnWidth">200dp</dimen>
 
     <dimen name="Document_Paragraph_PaddingTop">0sp</dimen>

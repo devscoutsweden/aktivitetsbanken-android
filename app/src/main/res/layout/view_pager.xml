@@ -2,27 +2,46 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:devscout="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
 
     <!-- A series of dots when a lot of (untitled) pages are shown. -->
-    <se.devscout.android.view.ViewPagerIndicator
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/iconButtonMargin"
+    <se.devscout.android.view.CustomViewPagerIndicator
         android:id="@+id/viewPagerIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="18dp"
         android:layout_weight="0"
-        android:layout_margin="@dimen/iconButtonMargin"
-        devscout:paddingDots="@dimen/microTextSize"
+        android:background="@color/accentBlue"
+        android:focusableInTouchMode="true"
+        android:padding="6dp"
         devscout:count="10"
-        devscout:selectedIndex="0"
-        android:focusableInTouchMode="true" />
+        devscout:fillColor="@color/basicVeryLight"
+        devscout:paddingDots="@dimen/microTextSize"
+        devscout:selectedIndex="0" />
 
-    <!-- Tabs similar to those of Google Play (see http://developer.android.com/samples/SlidingTabsBasic/index.html) -->
-    <se.devscout.android.view.SlidingTabLayout
-        android:id="@+id/viewPagerSlidingTabs"
+    <!--
+    Wrapping TabLayout in FrameLayout just to get a full-width background colour,
+    as suggested by http://stackoverflow.com/a/34889801
+    -->
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="@color/accentBlue">
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/viewPagerSlidingTabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            devscout:tabBackground="@color/accentBlue"
+            devscout:tabGravity="center"
+            devscout:tabIndicatorColor="@color/accentBlueDark"
+            devscout:tabIndicatorHeight="@dimen/defaultMargin"
+            devscout:tabMode="scrollable"
+            devscout:tabSelectedTextColor="@color/basicVeryLight"
+            devscout:tabTextColor="@color/basicLight" />
+    </FrameLayout>
 
     <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/viewPager"

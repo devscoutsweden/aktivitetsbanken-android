@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="72dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -14,9 +15,6 @@
         android:ellipsize="end"
         android:layout_toRightOf="@+id/quickSearchListItemImage"
         android:layout_alignTop="@+id/quickSearchListItemImage"
-        android:paddingLeft="@dimen/defaultMargin"
-        android:paddingTop="@dimen/defaultMargin"
-        android:paddingRight="@dimen/defaultMargin"
         android:textColor="@color/basicVeryDark" />
 
     <TextView
@@ -25,10 +23,8 @@
         android:text="New Text"
         android:id="@+id/quickSearchListItemSubtitle"
         android:textColor="@color/basicDark"
-        android:paddingLeft="@dimen/defaultMargin"
-        android:paddingRight="@dimen/defaultMargin"
-        android:paddingBottom="@dimen/defaultMargin"
-        android:paddingTop="0dp"
+        android:paddingTop="0pt"
+        android:paddingBottom="@dimen/sideMargin"
         android:textSize="@dimen/smallTextSize"
         android:singleLine="true"
         android:ellipsize="end"
@@ -36,13 +32,13 @@
         android:layout_below="@+id/quickSearchListItemTitle" />
 
     <se.devscout.android.view.AsyncThumbnailImageView
-        android:layout_width="@dimen/uiBlockSize"
-        android:layout_height="@dimen/uiBlockSize"
+        android:layout_width="@dimen/iconButtonSize"
+        android:layout_height="@dimen/iconButtonSize"
+        android:layout_margin="@dimen/sideMargin"
         android:id="@+id/quickSearchListItemImage"
         android:src="@drawable/launcher"
         android:baselineAlignBottom="false"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_margin="@dimen/defaultMargin" />
+        android:layout_alignParentTop="true"/>
 
 </RelativeLayout>

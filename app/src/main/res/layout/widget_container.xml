@@ -3,17 +3,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/card_background"
+    android:background="@color/basicVeryLight"
+    android:layout_marginLeft="0dp"
+    android:layout_marginRight="0dp"
+    android:layout_marginTop="0dp"
+    android:layout_marginBottom="@dimen/sideMargin"
+    android:padding="0dp"
+    android:elevation="@dimen/snackbar_elevation"
     android:id="@+id/start_widget"
     android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/uiBlockSize"
         android:text="Card Title"
-        android:padding="@dimen/iconButtonMargin"
+        android:padding="@dimen/sideMargin"
         android:id="@+id/textView"
         android:gravity="center_vertical"
         android:background="@color/basicVeryLight"
-        android:textSize="@dimen/largeTextSize" />
+        android:textSize="@dimen/largeTextSize"
+        android:layout_height="wrap_content" />
 </LinearLayout>

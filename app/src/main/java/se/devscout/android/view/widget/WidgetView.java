@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import se.devscout.android.R;
 import se.devscout.android.view.ActivitiesListView;
 
@@ -49,8 +50,8 @@ public class WidgetView extends LinearLayout implements FragmentListener {
     }
 
     public void setContentView(View view) {
-        int padding = getResources().getDimensionPixelSize(R.dimen.iconButtonMargin);
-        view.setPadding(padding, padding, padding, padding);
+//        int padding = getResources().getDimensionPixelSize(R.dimen.iconButtonMargin);
+//        view.setPadding(padding, padding, padding, padding);
         view.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         LinearLayout container = (LinearLayout) findViewById(R.id.start_widget);
         container.addView(view);

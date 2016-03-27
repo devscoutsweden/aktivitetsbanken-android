@@ -6,17 +6,13 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import se.devscout.android.R;
-import se.devscout.android.controller.fragment.ActivityBankFragment;
-import se.devscout.android.controller.fragment.HomeWidgetFragment;
-import se.devscout.android.util.LogUtil;
-import se.devscout.android.util.PreferencesUtil;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -24,7 +20,17 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import se.devscout.android.R;
+import se.devscout.android.controller.fragment.ActivityBankFragment;
+import se.devscout.android.controller.fragment.HomeWidgetFragment;
+import se.devscout.android.util.LogUtil;
+import se.devscout.android.util.PreferencesUtil;
 
 public class CrashReporterWidgetComponentFactory extends AbstractComponentFactory implements WidgetComponentFactory {
     private final Map<String, File> mMap;
@@ -85,11 +91,11 @@ public class CrashReporterWidgetComponentFactory extends AbstractComponentFactor
                         }
 
                         String value = MessageFormat.format("" +
-                                "App version: {11} ({10})\n" +
-                                "Android release: {2}\n" +
-                                "Device: {3} {4} {6} {7}\n" +
-                                "\n" +
-                                "{9}",
+                                        "App version: {11} ({10})\n" +
+                                        "Android release: {2}\n" +
+                                        "Device: {3} {4} {6} {7}\n" +
+                                        "\n" +
+                                        "{9}",
                                 crashReportFile.getName(),
                                 crashReportFile.length(),
                                 Build.VERSION.RELEASE,
@@ -136,12 +142,24 @@ public class CrashReporterWidgetComponentFactory extends AbstractComponentFactor
                 builder.show();
             }
         });
+        final int margin = activityBankFragment.getResources().getDimensionPixelSize(R.dimen.sideMargin);
+
+        final LinearLayout.LayoutParams buttonLayout = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        buttonLayout.setMargins(margin, 0, margin, margin);
+        buttonLayout.gravity = Gravity.CENTER_HORIZONTAL;
+        button.setLayoutParams(buttonLayout);
+
+        TextView text = new TextView(activityBankFragment.getActivity());
+        text.setText(activityBankFragment.getString(R.string.crashReportHelp));
+        final LinearLayout.LayoutParams textLayout = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        textLayout.setMargins(margin, margin, margin, margin);
+        text.setLayoutParams(textLayout);
+
         LinearLayout ll = new LinearLayout(activityBankFragment.getActivity());
         ll.setOrientation(LinearLayout.VERTICAL);
-        TextView textView = new TextView(activityBankFragment.getActivity());
-        textView.setText(activityBankFragment.getString(R.string.crashReportHelp));
-        ll.addView(textView);
+        ll.addView(text);
         ll.addView(button);
+
         return ll;
     }
 }

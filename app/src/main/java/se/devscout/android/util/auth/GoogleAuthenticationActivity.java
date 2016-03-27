@@ -64,7 +64,7 @@ public class GoogleAuthenticationActivity extends SingleFragmentActivity<AuthPro
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     public static Intent createLogInIntent(Context ctx) {

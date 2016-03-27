@@ -5,11 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
-import se.devscout.android.controller.fragment.GalleryFullsizePagerFragment;
-import se.devscout.android.model.ObjectIdentifierBean;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import se.devscout.android.controller.fragment.GalleryFullsizePagerFragment;
+import se.devscout.android.model.ObjectIdentifierBean;
 
 public class GalleryFullscreenActivity extends SingleFragmentActivity {
     private static final String INTENT_EXTRA_KEYS = "keys";
@@ -38,7 +39,7 @@ public class GalleryFullscreenActivity extends SingleFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getActionBar().hide();
+//        getSupportActionBar().hide();
     }
 
     public static Intent createIntent(Context ctx, List<ObjectIdentifierBean> keys, ArrayList<String> titles, int selectedIndex) {

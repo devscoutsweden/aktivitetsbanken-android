@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:text="Slumpa kort aktivitet för åldersgrupp:"
         android:id="@+id/textView"
+        android:layout_marginTop="@dimen/sideMargin"
         android:layout_gravity="center_horizontal" />
 
     <LinearLayout
@@ -19,6 +20,7 @@
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/sideMargin"
         android:gravity="center">
 
         <LinearLayout

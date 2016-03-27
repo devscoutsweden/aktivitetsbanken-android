@@ -5,13 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import se.devscout.android.R;
 import se.devscout.android.controller.fragment.ActivitiesListFragment;
 import se.devscout.android.model.activityfilter.ActivityFilter;
 import se.devscout.android.view.ActivitiesListView;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class SearchResultActivity extends SingleFragmentActivity<ActivitiesListFragment> {
 
@@ -43,7 +44,7 @@ public class SearchResultActivity extends SingleFragmentActivity<ActivitiesListF
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         setTitle(getIntent().getStringExtra(TITLE_RES_ID));
     }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+
 import se.devscout.android.controller.fragment.AuthUserProfileFragment;
 
 public class UserProfileActivity extends SingleFragmentActivity<AuthUserProfileFragment> {
@@ -27,7 +28,7 @@ public class UserProfileActivity extends SingleFragmentActivity<AuthUserProfileF
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     public static Intent createIntent(Context ctx) {

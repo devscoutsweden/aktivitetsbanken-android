@@ -5,12 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
-import se.devscout.android.controller.fragment.GalleryThumbnailsFragment;
-import se.devscout.android.model.MediaKey;
-import se.devscout.android.model.ObjectIdentifierBean;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import se.devscout.android.controller.fragment.GalleryThumbnailsFragment;
+import se.devscout.android.model.MediaKey;
+import se.devscout.android.model.ObjectIdentifierBean;
 
 public class GalleryThumbnailsActivity extends SingleFragmentActivity {
     private static final String INTENT_EXTRA_KEYS = "keys";
@@ -36,7 +37,7 @@ public class GalleryThumbnailsActivity extends SingleFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getActionBar().hide();
+//        getSupportActionBar().hide();
     }
 
     public static Intent createIntent(Context ctx, List<? extends MediaKey> mediaItems) {

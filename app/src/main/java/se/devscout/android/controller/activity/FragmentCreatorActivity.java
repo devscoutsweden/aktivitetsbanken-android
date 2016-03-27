@@ -32,7 +32,7 @@ public class FragmentCreatorActivity extends SingleFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         String title = (String) getIntent().getSerializableExtra(INTENT_EXTRA_ACTIVITY_TITLE);
         if (title != null) {
             setTitle(title);
