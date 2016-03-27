@@ -2,18 +2,19 @@ package se.devscout.android.controller.fragment;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import se.devscout.android.R;
-import se.devscout.android.view.SlidingTabLayout;
-import se.devscout.android.view.ViewPagerIndicator;
+import se.devscout.android.view.CustomViewPagerIndicator;
 
 public abstract class TabsFragment extends ActivityBankFragment {
 
-    private SlidingTabLayout mSlidingTabLayout;
+    private TabLayout mSlidingTabLayout;
 
     protected abstract StaticFragmentsPagerAdapter createPagerAdapter(FragmentManager fragmentManager);
 
@@ -23,16 +24,14 @@ public abstract class TabsFragment extends ActivityBankFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.view_pager, container, false);
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
-        ViewPagerIndicator viewPagerIndicator = (ViewPagerIndicator) view.findViewById(R.id.viewPagerIndicator);
-        viewPagerIndicator.setVisibility(View.GONE);
+        CustomViewPagerIndicator customViewPagerIndicator = (CustomViewPagerIndicator) view.findViewById(R.id.viewPagerIndicator);
+        customViewPagerIndicator.setVisibility(View.GONE);
         StaticFragmentsPagerAdapter pageAdapter = createPagerAdapter(getChildFragmentManager());
         mViewPager.setAdapter(pageAdapter);
 
-        mSlidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.viewPagerSlidingTabs);
-        mSlidingTabLayout.setViewPager(mViewPager);
-        mSlidingTabLayout.setSelectedIndicatorColors(getResources().getColor(R.color.accentBlue));
-        mSlidingTabLayout.setDividerColors(getResources().getColor(R.color.basicDark));
-        mSlidingTabLayout.setBackgroundColor(getResources().getColor(R.color.basicVeryLight));
+        mSlidingTabLayout = (TabLayout) view.findViewById(R.id.viewPagerSlidingTabs);
+        mSlidingTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        mSlidingTabLayout.setupWithViewPager(mViewPager);
 
         mViewPager.setCurrentItem(Math.min(getPreferences().getInt(getClass().getSimpleName() + "-selectedViewPageIndex", 0), pageAdapter.getCount() - 1));
 

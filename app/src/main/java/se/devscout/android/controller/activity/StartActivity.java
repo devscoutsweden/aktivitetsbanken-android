@@ -35,7 +35,7 @@ public class StartActivity extends SingleFragmentActivity {
     }
 
     @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menuStartSettings:
                 startActivity(new Intent(this, SettingsActivity.class));
@@ -89,7 +89,7 @@ public class StartActivity extends SingleFragmentActivity {
                 }
                 break;
         }
-        return super.onMenuItemSelected(featureId, item);
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

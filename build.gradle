@@ -4,7 +4,7 @@ buildscript {
         maven { url "http://dl.bintray.com/android/android-tools" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.0.0-alpha9'
+        classpath 'com.android.tools.build:gradle:2.0.0-beta7'
     }
 }
 

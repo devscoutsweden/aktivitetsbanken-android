@@ -7,10 +7,11 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
+
 import se.devscout.android.R;
 import se.devscout.android.util.LogUtil;
 
-public class ViewPagerIndicator extends View {
+public class CustomViewPagerIndicator extends View {
     private static final float CRAMPED_DOTS_PADDING_FACTOR = 0.8f;
     private static final float CRAMPED_DOTS_SCALE_FACTOR = 0.95f;
     private static final int CRAMPED_DOTS_MIN_SIZE = 2;
@@ -38,14 +39,14 @@ public class ViewPagerIndicator extends View {
         public double width;
     }
 
-    public ViewPagerIndicator(Context context, AttributeSet attrs) {
+    public CustomViewPagerIndicator(Context context, AttributeSet attrs) {
         super(context, attrs);
-        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.ViewPagerIndicator, 0, 0);
+        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.CustomViewPagerIndicator, 0, 0);
         try {
-            setCount(a.getInt(R.styleable.ViewPagerIndicator_count, 0));
-            setSelectedIndex(a.getInt(R.styleable.ViewPagerIndicator_selectedIndex, 0));
-            setPaddingDots(a.getDimension(R.styleable.ViewPagerIndicator_paddingDots, 0));
-            mColor = a.getColor(R.styleable.ViewPagerIndicator_color, android.R.color.darker_gray);
+            setCount(a.getInt(R.styleable.CustomViewPagerIndicator_count, 0));
+            setSelectedIndex(a.getInt(R.styleable.CustomViewPagerIndicator_selectedIndex, 0));
+            setPaddingDots(a.getDimension(R.styleable.CustomViewPagerIndicator_paddingDots, 0));
+            mColor = a.getColor(R.styleable.CustomViewPagerIndicator_fillColor, getResources().getColor(R.color.accentBlueDark));
             mPaintFilled = createPaint(mColor, Paint.Style.FILL);
             mPaintOutline = createPaint(mColor, Paint.Style.STROKE);
         } finally {
@@ -137,7 +138,7 @@ public class ViewPagerIndicator extends View {
 
     public void setCount(int count) {
         if (count < 0) {
-            LogUtil.i(ViewPagerIndicator.class.getName(), "Cannot set maximum value to " + count + " since minimum is 0. Will set maximum to 0.");
+            LogUtil.i(CustomViewPagerIndicator.class.getName(), "Cannot set maximum value to " + count + " since minimum is 0. Will set maximum to 0.");
             count = 0;
         }
         mCount = count;
@@ -150,10 +151,10 @@ public class ViewPagerIndicator extends View {
 
     public void setSelectedIndex(int selectedIndex) {
         if (selectedIndex > mCount) {
-            LogUtil.i(ViewPagerIndicator.class.getName(), "Cannot set current value to " + selectedIndex + " since maximum is " + mCount + ". Will set current to " + mCount + ".");
+            LogUtil.i(CustomViewPagerIndicator.class.getName(), "Cannot set current value to " + selectedIndex + " since maximum is " + mCount + ". Will set current to " + mCount + ".");
             selectedIndex = mCount;
         } else if (selectedIndex < 0) {
-            LogUtil.i(ViewPagerIndicator.class.getName(), "Cannot set current value to " + selectedIndex + " since minimum is 0. Will set current to 0.");
+            LogUtil.i(CustomViewPagerIndicator.class.getName(), "Cannot set current value to " + selectedIndex + " since minimum is 0. Will set current to 0.");
             selectedIndex = 0;
         }
         mSelectedIndex = selectedIndex;

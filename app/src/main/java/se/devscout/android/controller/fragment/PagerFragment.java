@@ -1,23 +1,25 @@
 package se.devscout.android.controller.fragment;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
+
 import se.devscout.android.R;
 import se.devscout.android.model.ObjectIdentifierBean;
 import se.devscout.android.util.LogUtil;
-import se.devscout.android.view.ViewPagerIndicator;
-
-import java.util.ArrayList;
+import se.devscout.android.view.CustomViewPagerIndicator;
 
 public abstract class PagerFragment extends ActivityBankFragment implements ViewPager.OnPageChangeListener {
     protected ArrayList<ObjectIdentifierBean> mKeys;
     protected ArrayList<String> mTitles;
     protected int mSelectedIndex;
-    protected ViewPagerIndicator mViewPagerIndicator;
+    protected CustomViewPagerIndicator mCustomViewPagerIndicator;
     private ViewPager mViewPager;
 
     @Override
@@ -34,10 +36,12 @@ public abstract class PagerFragment extends ActivityBankFragment implements View
         setHasOptionsMenu(true);
 
         final View view = inflater.inflate(getViewPagerLayout(), container, false);
+        TabLayout mSlidingTabLayout = (TabLayout) view.findViewById(R.id.viewPagerSlidingTabs);
+        mSlidingTabLayout.setVisibility(View.GONE);
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
-        mViewPagerIndicator = (ViewPagerIndicator) view.findViewById(R.id.viewPagerIndicator);
-        mViewPagerIndicator.setVisibility(mKeys.size() > 1 ? View.VISIBLE : View.GONE);
-        mViewPagerIndicator.setCount(mKeys.size());
+        mCustomViewPagerIndicator = (CustomViewPagerIndicator) view.findViewById(R.id.viewPagerIndicator);
+        mCustomViewPagerIndicator.setVisibility(mKeys.size() > 1 ? View.VISIBLE : View.GONE);
+        mCustomViewPagerIndicator.setCount(mKeys.size());
         mViewPager.setOnPageChangeListener(this);
         FragmentStatePagerAdapter pageAdapter = createPagerAdapter();
         mViewPager.setAdapter(pageAdapter);
@@ -78,7 +82,7 @@ public abstract class PagerFragment extends ActivityBankFragment implements View
     public void onPageSelected(int i) {
         updateActivityTitle(i);
         mSelectedIndex = i;
-        mViewPagerIndicator.setSelectedIndex(mSelectedIndex);
+        mCustomViewPagerIndicator.setSelectedIndex(mSelectedIndex);
         getActivity().invalidateOptionsMenu();
     }
 

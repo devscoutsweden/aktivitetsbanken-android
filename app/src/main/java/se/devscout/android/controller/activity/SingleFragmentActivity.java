@@ -3,19 +3,25 @@ package se.devscout.android.controller.activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import se.devscout.android.R;
-import se.devscout.android.controller.activity.drawer.*;
+import se.devscout.android.controller.activity.drawer.DrawerItem;
+import se.devscout.android.controller.activity.drawer.DrawerListAdapter;
+import se.devscout.android.controller.activity.drawer.ExecutableDrawerItem;
+import se.devscout.android.controller.activity.drawer.FragmentCreatorDrawerItem;
+import se.devscout.android.controller.activity.drawer.HeaderDrawerItem;
 import se.devscout.android.model.ActivityKey;
 import se.devscout.android.model.SearchHistory;
 import se.devscout.android.model.UserKey;
@@ -27,7 +33,7 @@ import se.devscout.android.util.concurrency.BackgroundTasksHandlerThread;
 import se.devscout.android.view.widget.ComponentFactoryRepo;
 import se.devscout.android.view.widget.TabComponentFactory;
 
-public abstract class SingleFragmentActivity<T extends Fragment> extends FragmentActivity implements AdapterView.OnItemClickListener {
+public abstract class SingleFragmentActivity<T extends Fragment> extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -93,6 +99,7 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.single_fragment_activity);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.start_drawer_layout);
@@ -130,44 +137,14 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
         mDrawerList.setAdapter(mDrawerListAdapter);
         mDrawerList.setOnItemClickListener(this);
 
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
+        // Get a support ActionBar corresponding to this toolbar
 
-            private CharSequence mOldTitle;
+        // Enable the Up button
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setHomeButtonEnabled(true);
 
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
-                setTitle(mOldTitle);
-                invalidateOptionsMenu();
-            }
-
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-                super.onDrawerSlide(drawerView, slideOffset);    //To change body of overridden methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public void onDrawerStateChanged(int newState) {
-                super.onDrawerStateChanged(newState);    //To change body of overridden methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-//                if (mIsSearchHistoryUpdated) {
-//                    mDrawerListAdapter.loadSearchHistoryItems(getActivityBank());
-//                    mIsSearchHistoryUpdated = false;
-//                }
-                mOldTitle = getActionBar().getTitle();
-                setTitle(R.string.app_name);
-                invalidateOptionsMenu();
-            }
-        };
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-        mDrawerToggle.setDrawerIndicatorEnabled(false);
-
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
+//        getActionBar().setDisplayHomeAsUpEnabled(true);
+//        getActionBar().setHomeButtonEnabled(true);
 
         FragmentManager fm = getSupportFragmentManager();
 
@@ -176,6 +153,18 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
             mFragment = createFragment();
             fm.beginTransaction().add(R.id.start_content_frame, mFragment).commit();
         }
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
+        // Use no-toolbar constructor because of what is described on http://stackoverflow.com/questions/26588917/appcompat-v7-toolbar-onoptionsitemselected-not-called
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerToggle.setDrawerIndicatorEnabled(false);
 
         if (savedInstanceState != null) {
             Fragment.SavedState state = (Fragment.SavedState) savedInstanceState.getParcelable("state");
@@ -253,6 +242,11 @@ public abstract class SingleFragmentActivity<T extends Fragment> extends Fragmen
             menu.clear();
         }
         return super.onPrepareOptionsPanel(view, menu);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
     @Override

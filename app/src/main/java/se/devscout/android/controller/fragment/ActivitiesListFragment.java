@@ -64,9 +64,11 @@ public class ActivitiesListFragment extends NonBlockingSearchResultFragment<Acti
     public void setSortOrder(ActivitiesListView.Sorter sortOrder) {
         mSortOrder = sortOrder;
 
-        //TODO: Really assume that first child is the one of interest?
-        ActivitiesListView activitiesListView = (ActivitiesListView) ((ViewGroup) getView()).getChildAt(0);
-        activitiesListView.setSortOrder(sortOrder);
+        final View view = getView().findViewById(R.id.nonBlockingSearchResultFragmentViewId);
+        if (view instanceof ActivitiesListView) {
+            ActivitiesListView activitiesListView = (ActivitiesListView) view;
+            activitiesListView.setSortOrder(sortOrder);
+        }
     }
 
     public ActivitiesListView.Sorter getSortOrder() {

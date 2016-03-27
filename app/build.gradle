@@ -52,10 +52,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
-    compileSdkVersion 15
+    compileSdkVersion 22
     buildToolsVersion '23.0.2'
     dexOptions {
-        dexInProcess = true
+//        dexInProcess = true
     }
     productFlavors {
         production {
@@ -82,7 +82,10 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:19.1.0'
+//    compile 'com.android.support:support-v13:23.1.0'
+//    compile 'com.android.support:appcompat-v7:23.1.0'
+    compile 'com.android.support:design:22.2.1'
     compile 'com.google.android.gms:play-services:6.5.+'
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:cardview-v7:22.2.1'
+//    compile fileTree(include: ['*.jar'], dir: 'libs')
 }
