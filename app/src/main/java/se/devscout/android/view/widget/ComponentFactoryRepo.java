@@ -1,11 +1,12 @@
 package se.devscout.android.view.widget;
 
 import android.content.Context;
-import se.devscout.android.util.LogUtil;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import se.devscout.android.util.LogUtil;
 
 public class ComponentFactoryRepo {
     public static final String CRASH_REPORTER = "CrashReporter";
@@ -49,7 +50,7 @@ public class ComponentFactoryRepo {
         factories.add(new AuthenticationComponentFactory(AUTHENTICATION));
         factories.add(new SimpleSearchActivitiesComponentFactory(SIMPLE_SEARCH_ACTIVITIES));
         factories.add(new SpontaneousActivitiesComponentFactory(SPONTANEOUS_ACTIVITIES));
-        factories.add(new FeaturedActivitiesComponentFactory(FEATURED_ACTIVITIES));
+//        factories.add(new FeaturedActivitiesComponentFactory(FEATURED_ACTIVITIES));
         factories.add(new FavouriteActivitiesComponentFactory(FAVOURITE_ACTIVITIES));
         factories.add(new OverallFavouriteActivitiesComponentFactory(OVERALL_FAVOURITE_ACTIVITIES));
         factories.add(new ActivitiesByCategoryComponentFactory(ACTIVITIES_BY_CATEGORY));
@@ -66,11 +67,11 @@ public class ComponentFactoryRepo {
         ArrayList<TabComponentFactory> factories = new ArrayList<TabComponentFactory>();
         factories.add(new HomeComponentFactory(HOME));
         factories.add(new ActivitiesByCategoryComponentFactory(ACTIVITIES_BY_CATEGORY));
-        factories.add(new FeaturedActivitiesComponentFactory(FEATURED_ACTIVITIES));
+//        factories.add(new FeaturedActivitiesComponentFactory(FEATURED_ACTIVITIES));
         factories.add(new FavouriteActivitiesComponentFactory(FAVOURITE_ACTIVITIES));
         factories.add(new OverallFavouriteActivitiesComponentFactory(OVERALL_FAVOURITE_ACTIVITIES));
         factories.add(new ActivitiesByAgeGroupComponentFactory(ACTIVITIES_BY_AGE_GROUP));
-        factories.add(new ActivitiesByCategoryTrackComponentFactory(ACTIVITIES_BY_CATEGORY_TRACK));
+//        factories.add(new ActivitiesByCategoryTrackComponentFactory(ACTIVITIES_BY_CATEGORY_TRACK));
         factories.add(new ExtendedSearchActivitiesComponentFactory(EXTENDED_SEARCH_ACTIVITIES));
         factories.add(new SearchHistoryComponentFactory(SEARCH_HISTORY));
         return factories;
