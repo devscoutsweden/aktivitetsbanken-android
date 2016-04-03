@@ -3,7 +3,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:devscout="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:paddingLeft="@dimen/sideMargin"
     android:paddingRight="@dimen/sideMargin"
     android:layout_height="@dimen/uiBlockSize">
 
@@ -15,12 +14,13 @@
         android:textStyle="bold"
         android:textSize="@dimen/mediumTextSize"
         android:ellipsize="end"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:singleLine="true"
         android:gravity="center_vertical"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/linearLayout" />
+        android:layout_toLeftOf="@+id/linearLayout"
+        android:layout_toRightOf="@+id/activitiesListItemImage"
+        android:layout_marginLeft="@dimen/sideMargin" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -61,5 +61,14 @@
             android:textSize="@dimen/microTextSize"
             android:layout_alignParentTop="true" />
     </LinearLayout>
+
+    <se.devscout.android.view.AsyncThumbnailImageView
+        android:layout_width="@dimen/uiBlockSize"
+        android:layout_height="match_parent"
+        android:id="@+id/activitiesListItemImage"
+        android:src="@drawable/launcher"
+        android:baselineAlignBottom="false"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true" />
 
 </RelativeLayout>

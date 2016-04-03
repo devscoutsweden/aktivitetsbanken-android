@@ -108,7 +108,7 @@ public class TextViewUtil {
             if (sequencePos == 0) {
                 addEmptyLine(sb, 0.5f);
             }
-            if (textMatcher.groupCount() >= 3) {
+            if (textMatcher.groupCount() >= 3 && textMatcher.group(3) != null) {
                 String text = textMatcher.group(3).trim();
                 int number = Integer.parseInt(textMatcher.group(2));
                 if (text != null) {

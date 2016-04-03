@@ -7,21 +7,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import se.devscout.android.R;
 import se.devscout.android.controller.activity.ActivitiesActivity;
+import se.devscout.android.controller.activity.SingleFragmentActivity;
 import se.devscout.android.controller.fragment.RangeComparator;
-import se.devscout.android.model.*;
+import se.devscout.android.model.Activity;
+import se.devscout.android.model.ObjectIdentifierBean;
+import se.devscout.android.model.Range;
+import se.devscout.android.model.SearchHistoryDataBean;
+import se.devscout.android.model.SearchHistoryPropertiesBean;
 import se.devscout.android.model.activityfilter.ActivityFilter;
 import se.devscout.android.model.repo.ActivityBank;
 import se.devscout.android.util.ActivityBankFactory;
 import se.devscout.android.util.auth.CredentialsManager;
 import se.devscout.android.util.http.UnauthorizedException;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 public class ActivitiesListView extends NonBlockingSearchView<ActivitiesListItem> {
     private Sorter mSortOrder;
@@ -172,6 +181,25 @@ public class ActivitiesListView extends NonBlockingSearchView<ActivitiesListItem
             initAgeGroups(convertView, activity);
 
             initPeople(convertView, activity);
+
+            AsyncImageView imageView = (AsyncImageView) convertView.findViewById(R.id.activitiesListItemImage);
+            final int width = getContext().getResources().getDimensionPixelSize(R.dimen.uiBlockSize);
+            URI imageURI = activity.getCoverMedia() != null ? ActivityBankFactory.getInstance(getContext()).getMediaItemURI(activity.getCoverMedia(), width, width) : null;
+            if (imageURI != null) {
+                URI[] uris = {imageURI};
+//                        int limitSmall = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getContext()).getString("server_download_limit_small", "10")) * 1000;
+                imageView.setImage(new AsyncImageBean(null, uris), ((SingleFragmentActivity) getContext()).getBackgroundTasksHandlerThread());
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+                final RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(imageView.getLayoutParams());
+                params.width = width;
+                imageView.setLayoutParams(params);
+            } else {
+                final RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(imageView.getLayoutParams());
+                params.width = 0;
+                imageView.setLayoutParams(params);
+            }
+            imageView.setVisibility(imageURI != null ? View.VISIBLE : View.INVISIBLE);
 
             return convertView;
         }
