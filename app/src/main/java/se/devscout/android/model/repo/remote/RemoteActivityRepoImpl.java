@@ -111,6 +111,10 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
 //    private String authType;
     private int timeoutCounter;
 
+    private enum ApiVersion {
+        V1,
+        V2
+    }
 
     public static RemoteActivityRepoImpl getInstance(Context ctx) {
         if (ourInstance == null) {
@@ -909,7 +913,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
         //TODO: Host name should not be kept in source code
         if (mCachedCategories == null) {
             try {
-                String uri = getURL("categories?min_activities_count=" + minActivitiesCount);
+                String uri = getURL("tags?min_activities_count=" + minActivitiesCount + "&attrs=id,name,media_file,group,activities_count,uri,mime_type", ApiVersion.V2);
                 JSONArray array = getJSONArray(uri, null);
                 mCachedCategories = new ArrayList<CategoryBean>();
                 for (JSONObject obj : getJSONArrayAsList(array)) {
@@ -1018,12 +1022,20 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
     }
 
     private String getURL(String noun) {
+        return getURL(noun, ApiVersion.V1);
+    }
+
+    private String getURL(String noun, ApiVersion apiVersion) {
         String host = getRemoteHost();
-        return getURL(noun, host);
+        return getURL(noun, host, apiVersion);
     }
 
     private String getURL(String noun, String remoteHost) {
-        return SCHEMA + remoteHost + "/api/v1/" + noun;
+        return getURL(noun, remoteHost, ApiVersion.V1);
+    }
+
+    private String getURL(String noun, String remoteHost, ApiVersion apiVersion) {
+        return SCHEMA + remoteHost + "/api/" + apiVersion.name().toLowerCase() + "/" + noun;
     }
 
     private JSONArray getJSONArray(String uri, JSONObject body) throws IOException, JSONException, UnauthorizedException, UnhandledHttpResponseCodeException, OfflineException {
@@ -1043,7 +1055,7 @@ public class RemoteActivityRepoImpl extends SQLiteActivityRepo implements Creden
 
     private CategoryBean getCategoryBean(JSONObject obj) throws JSONException {
         ObjectIdentifierBean iconMediaKey = null;
-        if (obj.has("media_file")) {
+        if (!obj.isNull("media_file")) {
             try {
                 MediaBean iconMedia = getMediaFileBean(obj.getJSONObject("media_file"));
                 processServerObject(iconMedia);

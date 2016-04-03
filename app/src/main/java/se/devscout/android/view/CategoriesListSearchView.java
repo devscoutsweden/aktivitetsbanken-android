@@ -32,8 +32,10 @@ public class CategoriesListSearchView extends QuickSearchListView<CategoryListIt
     @Override
     protected URI getImageURI(CategoryListItem item) {
         Media media = ActivityBankFactory.getInstance(getContext()).readMediaItem(item.getIconMediaKey());
+        final int width = getContext().getResources().getDimensionPixelSize(R.dimen.uiBlockSize);
+        URI imageURI = media != null ? ActivityBankFactory.getInstance(getContext()).getMediaItemURI(media, width, width) : null;
         if (media != null) {
-            return media.getURI();
+            return imageURI;
         } else {
             return null;
         }
