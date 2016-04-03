@@ -1,6 +1,7 @@
 package se.devscout.android.controller.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.text.util.Linkify;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import se.devscout.android.R;
@@ -224,9 +226,10 @@ public class ActivityFragment extends ActivityBankFragment implements Background
             body.append("## " + getString(R.string.activity_notes) + "\n" + activityProperties.getDescriptionNotes() + "\n");
         }
 
-        if (!activityProperties.getMediaItems().isEmpty()) {
+        Collection<Media> mediaFilesToShow = getMediaItemsToShow(activityProperties);
+        if (!mediaFilesToShow.isEmpty()) {
             body.append("## " + getString(R.string.activity_tab_photos) + "\n");
-            for (Media media : activityProperties.getMediaItems()) {
+            for (Media media : mediaFilesToShow) {
                 body.append(/*"* " + */media.getURI().toString() + "\n");
             }
         }
@@ -238,6 +241,17 @@ public class ActivityFragment extends ActivityBankFragment implements Background
         }
 
         return body.toString().trim();
+    }
+
+    @NonNull
+    private Collection<Media> getMediaItemsToShow(Activity activityProperties) {
+        Collection<Media> mediaFilesToShow = new ArrayList<>();
+        for (Media media : activityProperties.getMediaItems()) {
+            if (!"localhost".equals(media.getURI().getHost())) {
+                mediaFilesToShow.add(media);
+            }
+        }
+        return mediaFilesToShow;
     }
 
     @Override
